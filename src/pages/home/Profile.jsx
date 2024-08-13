@@ -81,7 +81,7 @@ const Profile = () => {
                       gutterBottom
                       sx={{ color: "#758694" }}
                     >
-                      Birthday: <span>2-Aug-1994</span>
+                      Birthday: 2-Aug-1994
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
