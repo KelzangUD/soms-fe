@@ -15,7 +15,7 @@ import SubHeader from "../../common/SubHeader";
 import Notification from "../../ui/Notification";
 import Route from "../../routes/Route";
 
-const Profile = () => {
+const ChangePassword = () => {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     empId: "",
@@ -164,7 +164,7 @@ const Profile = () => {
     <>
     <Box sx={{ px: 2 }}>
       <Grid container spacing={4} alignItems="center">
-        <SubHeader text="My Profile" />
+        <SubHeader text="Change Password" />
         <Grid item xs={12}>
           <Paper elevation={1} sx={{ p: 2 }}>
             <Grid container spacing={2} sx={{ my: 2 }}>
@@ -310,4 +310,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ChangePassword;

@@ -3,10 +3,11 @@ import Nav from "../layout/dashboard/Nav";
 import SideNav from "../layout/dashboard/SideNav";
 import { Box, Grid, Paper } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
-import Profile from "./admin/Profile";
-import Dashboard from "./admin/Dashboard";
-import SystemSetting from "./admin/SystemSetting";
-import Report from "./admin/Report";
+import Profile from "./home/Profile";
+import Dashboard from "./home/Dashboard";
+import SystemSetting from "./home/SystemSetting";
+import Report from "./home/Report";
+import ChangePassword from "./home/ChangePassword";
 import { styled } from "@mui/material/styles";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -30,6 +31,7 @@ const Home = () => {
                     <Routes>
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/profile" element={<Profile />} />
+                      <Route path="/change-password" element={<ChangePassword />} />
                       <Route path="/system-setting/*" element={<SystemSetting />} />
                       <Route path="/report/*" element={<Report />} />
                     </Routes>

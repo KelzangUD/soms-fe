@@ -46,6 +46,9 @@ const Nav = () => {
   const profileHandle = () => {
     navigation("/home/profile")
   };
+  const changePasswordHandle = () => {
+    navigation("/home/change-password");
+  };
   const token = localStorage.getItem("token");
   const logoutHandle = async () => {
     navigation("/");
@@ -85,7 +88,7 @@ const Nav = () => {
         </ListItemIcon>
         My Profile
       </MenuItem>
-      <MenuItem onClick={profileHandle}>
+      <MenuItem onClick={changePasswordHandle}>
         <ListItemIcon>
           <KeyIcon fontSize="small" />
         </ListItemIcon>
