@@ -195,7 +195,39 @@ export default function SideNav() {
     {
       label: "Setting",
       icon: <SettingsIcon />,
-      onClick: () => routeHandle("/home/setting"),
+      onClick: () => handleNestedItemClick(9),
+      nestedItems: [
+        {
+          label: "Company Setting",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("setting/company-setting"),
+        },
+        {
+          label: "Roles & Permission",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("setting/roles-and-permission"),
+        },
+        {
+          label: "System Users",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("setting/system-users"),
+        },
+        {
+          label: "Approval Rule",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("setting/approval-rule"),
+        },
+        {
+          label: "Hierarchy",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("setting/hierarchy"),
+        },
+        {
+          label: "Delegation",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("setting/delegation"),
+        },
+      ],
     },
   ];
   const [openStates, setOpenStates] = React.useState(
