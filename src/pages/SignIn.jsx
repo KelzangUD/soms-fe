@@ -7,9 +7,11 @@ import {
   Typography,
   TextField,
   Button,
+  Avatar,
 } from "@mui/material";
 import dashboard_img from "../assets/svgs/dashboard_1.svg";
 import LoginIcon from "@mui/icons-material/Login";
+import LockIcon from "@mui/icons-material/Lock";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import Notification from "../ui/Notification";
@@ -30,7 +32,7 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    navigagte("/home/dashboard")
+    navigagte("/home/dashboard");
     // const res = await Route("POST", "/login", null, formData, null);
     // if (res?.status === 200) {
     //   localStorage.setItem("user", JSON.stringify(res?.data?.user));
@@ -61,8 +63,13 @@ const SignIn = () => {
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={6}>
               <Container maxWidth="xs" sx={{ py: 2 }}>
+                <Box sx={{ display: "flex", justifyContent: "center" }} pb={2}>
+                  <Avatar sx={{ bgcolor: "#0F67B1", width: "50px", height: "50px" }}>
+                    <LockIcon sx={{  width: "30px", height: "30px" }} />
+                  </Avatar>
+                </Box>
                 <Typography variant="h4" align="center" sx={{ mb: 4 }}>
-                  Welcome Back
+                  Sign In
                 </Typography>
                 <form onSubmit={handleSubmit}>
                   <Box sx={{ display: "grid", gap: 2 }}>

@@ -1,38 +1,25 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Paper,
-  Grid,
-  Button,
-  InputBase,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-} from "@mui/material";
-import SubHeader from "../../../common/SubHeader";
+import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
+import SubHeader from "../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
-import Route from "../../../routes/Route";
+import Route from "../routes/Route";
 import {
-  filterDataBasedOnYear,
+  filterDataBasedOnCurrentYearAndMonth,
   getUniqueTestNames,
   reportColumns,
   yearlyReport,
-} from "../../../util/CommonUtil";
+} from "../util/CommonUtil";
 
-const UserYearReport = () => {
+const SystemUsers = () => {
   const [results, setResults] = useState([]);
   const [columns, setColumns] = useState([]);
-  const [yearlyData, setYearlyData] = useState([]);
+  const [currentMonthData, setCurrentMonthData] = useState([]);
   const [reportData, setReportData] = useState([]);
-  const [year, setYear] = useState(new Date().getFullYear());
-  const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
   const fetchResults = async () => {
-    const res = await Route("GET", `/results/${user?.id}`, token, null, null);
+    const res = await Route("GET", "/results", token, null, null);
     if (res?.status === 200) {
       setResults(res?.data?.results);
     }
@@ -40,24 +27,21 @@ const UserYearReport = () => {
   useEffect(() => {
     fetchResults();
   }, []);
-  const filterBasedOnYear = () => {
-    setYearlyData(filterDataBasedOnYear(results, year.toString()));
-  };
-  const yearHandle = (e) => {
-    setYear(e.target.value);
+  const filterBasedOnHalf = () => {
+    setCurrentMonthData(filterDataBasedOnCurrentYearAndMonth(results));
   };
   useEffect(() => {
-    filterBasedOnYear();
-  }, [results, year]);
+    filterBasedOnHalf();
+  }, [results]);
   useEffect(() => {
-    setColumns(reportColumns(getUniqueTestNames(yearlyData)));
-    setReportData(yearlyReport(yearlyData));
-  }, [yearlyData]);
+    setColumns(reportColumns(getUniqueTestNames(currentMonthData)));
+    setReportData(yearlyReport(currentMonthData));
+  }, [currentMonthData]);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="One Year Report" />
+          <SubHeader text="Current Month Report" />
           <Grid
             item
             xs={12}
@@ -86,37 +70,14 @@ const UserYearReport = () => {
                 </IconButton>
               </Paper>
             </Grid>
-            <Grid
-              item
-              con
-              sx={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Grid item sx={{ mr: 2 }}>
-                <Box sx={{ minWidth: 120 }}>
-                  <FormControl fullWidth size="small">
-                    <InputLabel id="select-label">Select</InputLabel>
-                    <Select
-                      labelId="select-label"
-                      id="simple-select"
-                      defaultValue={new Date().getFullYear()}
-                      label="Select"
-                      onChange={yearHandle}
-                    >
-                      <MenuItem value={2023}>2023</MenuItem>
-                      <MenuItem value={2024}>2024</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="success"
-                  endIcon={<FileDownloadIcon />}
-                >
-                  Export
-                </Button>
-              </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="success"
+                endIcon={<FileDownloadIcon />}
+              >
+                Export
+              </Button>
             </Grid>
           </Grid>
           <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
@@ -142,4 +103,4 @@ const UserYearReport = () => {
   );
 };
 
-export default UserYearReport;
+export default SystemUsers;
