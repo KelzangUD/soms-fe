@@ -213,9 +213,9 @@ export default function SideNav() {
           onClick: () => routeHandle("setting/system-users"),
         },
         {
-          label: "Approval Rule",
+          label: "Approval Rules",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("setting/approval-rule"),
+          onClick: () => routeHandle("setting/approval-rules"),
         },
         {
           label: "Hierarchy",
