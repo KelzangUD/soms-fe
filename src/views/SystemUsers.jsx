@@ -4,44 +4,70 @@ import SubHeader from "../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../routes/Route";
-import {
-  filterDataBasedOnCurrentYearAndMonth,
-  getUniqueTestNames,
-  reportColumns,
-  yearlyReport,
-} from "../util/CommonUtil";
 
 const SystemUsers = () => {
-  const [results, setResults] = useState([]);
-  const [columns, setColumns] = useState([]);
-  const [currentMonthData, setCurrentMonthData] = useState([]);
-  const [reportData, setReportData] = useState([]);
-  const token = localStorage.getItem("token");
-  const fetchResults = async () => {
-    const res = await Route("GET", "/results", token, null, null);
-    if (res?.status === 200) {
-      setResults(res?.data?.results);
-    }
-  };
-  useEffect(() => {
-    fetchResults();
-  }, []);
-  const filterBasedOnHalf = () => {
-    setCurrentMonthData(filterDataBasedOnCurrentYearAndMonth(results));
-  };
-  useEffect(() => {
-    filterBasedOnHalf();
-  }, [results]);
-  useEffect(() => {
-    setColumns(reportColumns(getUniqueTestNames(currentMonthData)));
-    setReportData(yearlyReport(currentMonthData));
-  }, [currentMonthData]);
+  const columns = [
+    { field: "sl", headerName: "Sl. No", width: 40 },
+    { field: "name", headerName: "Name", width: 300 },
+    { field: "email", headerName: "Email", width: 300 },
+    { field: "created_date", headerName: "Created Date", width: 150 },
+    {
+      field: "role",
+      headerName: "Role",
+      width: 250,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 150,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 150,
+      renderCell: (params) => (
+        <>
+          <IconButton aria-label="edit" size="small">
+            <EditIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton aria-label="view" size="small">
+            <VisibilityIcon fontSize="inherit" />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+  const rows = [
+    {
+      id: 1,
+      name: "Anita Ghalley",
+      email: "accountant3.revenue@tashicell.com",
+      created_date: "Jul 18, 2019",
+      role: "CCE Executive Extension",
+      status: "Active",
+    },
+  ];
+
+  //   const token = localStorage.getItem("token");
+  //   const fetchResults = async () => {
+  //     const res = await Route("GET", "/results", token, null, null);
+  //     if (res?.status === 200) {
+  //       setResults(res?.data?.results);
+  //     }
+  //   };
+  //   useEffect(() => {
+  //     fetchResults();
+  //   }, []);
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Current Month Report" />
+          <SubHeader text="System Users" />
           <Grid
             item
             xs={12}
@@ -73,6 +99,14 @@ const SystemUsers = () => {
             <Grid item>
               <Button
                 variant="contained"
+                color="primary"
+                endIcon={<AddIcon />}
+                sx={{ mr: 2 }}
+              >
+                Add New
+              </Button>
+              <Button
+                variant="contained"
                 color="success"
                 endIcon={<FileDownloadIcon />}
               >
@@ -83,7 +117,7 @@ const SystemUsers = () => {
           <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
             <div style={{ height: "auto", width: "100%" }}>
               <DataGrid
-                rows={reportData?.map((row, index) => ({
+                rows={rows?.map((row, index) => ({
                   ...row,
                   sl: index + 1,
                 }))}
