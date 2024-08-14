@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import SubHeader from "../common/SubHeader";
+import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import Route from "../routes/Route";
+import Route from "../../routes/Route";
 
 const Hierarchy = () => {
   const columns = [

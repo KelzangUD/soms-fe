@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-import SubHeader from "../common/SubHeader";
-import ModuleAccess from "../component/roles_and_permission/ModuleAccess";
+import SubHeader from "../../common/SubHeader";
+import ModuleAccess from "../../component/roles_and_permission/ModuleAccess";
 
 const RolesAndPermission = () => {
   const roles_list = [

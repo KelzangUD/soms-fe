@@ -9,14 +9,14 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import SubHeader from "../common/SubHeader";
+import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Route from "../routes/Route";
+import Route from "../../routes/Route";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
