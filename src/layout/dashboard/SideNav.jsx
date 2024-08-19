@@ -57,14 +57,39 @@ export default function SideNav() {
       onClick: () => handleNestedItemClick(1),
       nestedItems: [
         {
-          label: "User",
+          label: "Business Unit",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/user"),
+          onClick: () => routeHandle("work-structures/business-unit"),
         },
         {
-          label: "Activity Logs",
+          label: "Geography",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/activity-logs"),
+          onClick: () => routeHandle("work-structures/geography"),
+        },
+        {
+          label: "Department",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("work-structures/department"),
+        },
+        {
+          label: "Designation",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("work-structures/designation"),
+        },
+        {
+          label: "Grade",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("work-structures/grade"),
+        },
+        {
+          label: "Store Location Mapping",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("work-structures/store-location-mapping"),
+        },
+        {
+          label: "Section",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("work-structures/section"),
         },
       ],
     },
