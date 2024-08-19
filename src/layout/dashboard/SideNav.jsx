@@ -99,14 +99,14 @@ export default function SideNav() {
       onClick: () => handleNestedItemClick(2),
       nestedItems: [
         {
-          label: "User",
+          label: "Employee List",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/user"),
+          onClick: () => routeHandle("employee/employee-list"),
         },
         {
-          label: "Activity Logs",
+          label: "Directory",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/activity-logs"),
+          onClick: () => routeHandle("employee/directory"),
         },
       ],
     },
