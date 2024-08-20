@@ -116,14 +116,29 @@ export default function SideNav() {
       onClick: () => handleNestedItemClick(3),
       nestedItems: [
         {
-          label: "User",
+          label: "Sales Order",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/user"),
+          onClick: () => routeHandle("pos-management/sales-order"),
         },
         {
-          label: "Activity Logs",
+          label: "Sales Return",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/activity-logs"),
+          onClick: () => routeHandle("pos-management/sales-return"),
+        },
+        {
+          label: "Apply EMI",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("pos-management/apply-emi"),
+        },
+        {
+          label: "EMI History",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("pos-management/emi-history"),
+        },
+        {
+          label: "EMI Approval",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("pos-management/emi-approval"),
         },
       ],
     },
