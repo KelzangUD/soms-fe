@@ -1,31 +1,25 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Paper,
-  Grid,
-  Button,
-  InputBase,
-  IconButton,
-  Tabs,
-  Tab,
-} from "@mui/material";
+import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
 import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
+import PrintIcon from "@mui/icons-material/Print";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
 
-const Department = () => {
-  const department_columns = [
+const RequisitionApproval = () => {
+  const requisiton_approval_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "department_name", headerName: "Department Name", width: 350 },
-    { field: "head", headerName: "Head", width: 250 },
+    { field: "requisition_no", headerName: "Requisition No", width: 200 },
+    { field: "requisition_type", headerName: "Requisition Type", width: 200 },
+    { field: "creation_date", headerName: "Creation Date", width: 150 },
+    { field: "item_description", headerName: "Item Description", width: 550 },
     {
       field: "status",
-      headerName: "Status",
+      headerName: "Approval Status",
       width: 150,
     },
     {
@@ -44,12 +38,15 @@ const Department = () => {
       ),
     },
   ];
-  const department_rows = [
+  const requisition_approval_rows = [
     {
       id: 1,
-      department_name: "Human Resorce & Administration",
-      head: "24 (Sangay Tenzin)",
-      status: "Active",
+      requisition_no: "EM/DP1/2024/00001",
+      requisition_type: "Samsung",
+      creation_date: "20-Aug-2024",
+      item_description:
+        "Samsung Galaxy A04 4GB RAM 64GB, Copper (SM-A045FZCGINS)",
+      status: "Submitted",
     },
   ];
 
@@ -68,7 +65,7 @@ const Department = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Department" />
+          <SubHeader text="Requsition Approval" />
           <Grid
             item
             xs={12}
@@ -104,15 +101,23 @@ const Department = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
+                  <Grid item>
+                    <Button variant="outlined" color="error" sx={{ mr: 2 }}>
+                      Reject
+                    </Button>
+                    <Button variant="contained" color="success">
+                      Approve
+                    </Button>
+                  </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
                   <div style={{ height: "auto", width: "100%" }}>
                     <DataGrid
-                      rows={department_rows?.map((row, index) => ({
+                      rows={requisition_approval_rows?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
                       }))}
-                      columns={department_columns}
+                      columns={requisiton_approval_columns}
                       initialState={{
                         pagination: {
                           paginationModel: { page: 0, pageSize: 5 },
@@ -131,4 +136,4 @@ const Department = () => {
   );
 };
 
-export default Department;
+export default RequisitionApproval;

@@ -195,14 +195,19 @@ export default function SideNav() {
       onClick: () => handleNestedItemClick(5),
       nestedItems: [
         {
-          label: "User",
+          label: "Requisitions",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/user"),
+          onClick: () => routeHandle("purchase/requisitions"),
         },
         {
-          label: "Activity Logs",
+          label: "Requisition List",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/activity-logs"),
+          onClick: () => routeHandle("purchase/requisition-list"),
+        },
+        {
+          label: "Requisition Approval",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("purchase/requisition-approval"),
         },
       ],
     },
