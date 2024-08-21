@@ -148,14 +148,44 @@ export default function SideNav() {
       onClick: () => handleNestedItemClick(4),
       nestedItems: [
         {
-          label: "User",
+          label: "Cash Receipt",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/user"),
+          onClick: () => routeHandle("collections/cash-receipt"),
         },
         {
-          label: "Activity Logs",
+          label: "Recharge",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/activity-logs"),
+          onClick: () => routeHandle("collections/recharge"),
+        },
+        {
+          label: "Bank Receipt",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("collections/bank-receipt"),
+        },
+        {
+          label: "Credit/EMI Collection",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("collections/credit-or-emi-collection"),
+        },
+        {
+          label: "Advance Collection",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("collections/advance-collection"),
+        },
+        {
+          label: "Advance Collection History",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("collections/advance-collection-history"),
+        },
+        {
+          label: "Advance Refund",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("collections/advance-refund"),
+        },
+        {
+          label: "Advance Refund History",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("collections/advance-refund-history"),
         },
       ],
     },

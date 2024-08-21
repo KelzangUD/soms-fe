@@ -8,6 +8,7 @@ import Dashboard from "./home/Dashboard";
 import WorkStructures from "./home/WorkStructures";
 import Employee from "./home/Employee";
 import POSManagement from "./home/POSManagement";
+import Collections from "./home/Collections";
 import Setting from "./home/Setting";
 import SystemSetting from "./home/SystemSetting";
 import Report from "./home/Report";
@@ -39,6 +40,7 @@ const Home = () => {
                       <Route path="/work-structures/*" element={<WorkStructures />} />
                       <Route path="/employee/*" element={<Employee />} />
                       <Route path="/pos-management/*" element={<POSManagement />} />
+                      <Route path="/collections/*" element={<Collections />} />
                       <Route path="/setting/*" element={<Setting />} />
                       <Route path="/system-setting/*" element={<SystemSetting />} />
                       <Route path="/report/*" element={<Report />} />
