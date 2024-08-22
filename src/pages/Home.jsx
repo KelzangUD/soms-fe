@@ -10,6 +10,7 @@ import Employee from "./home/Employee";
 import POSManagement from "./home/POSManagement";
 import Collections from "./home/Collections";
 import Purchase from "./home/Purchase";
+import Inventory from "./home/Inventory";
 import Setting from "./home/Setting";
 import SystemSetting from "./home/SystemSetting";
 import Report from "./home/Report";
@@ -43,6 +44,7 @@ const Home = () => {
                       <Route path="/pos-management/*" element={<POSManagement />} />
                       <Route path="/collections/*" element={<Collections />} />
                       <Route path="/purchase/*" element={<Purchase />} />
+                      <Route path="/inventory/*" element={<Inventory />} />
                       <Route path="/setting/*" element={<Setting />} />
                       <Route path="/system-setting/*" element={<SystemSetting />} />
                       <Route path="/report/*" element={<Report />} />

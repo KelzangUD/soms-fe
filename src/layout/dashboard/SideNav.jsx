@@ -217,14 +217,29 @@ export default function SideNav() {
       onClick: () => handleNestedItemClick(6),
       nestedItems: [
         {
-          label: "User",
+          label: "Transfer Orders",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/user"),
+          onClick: () => routeHandle("inventory/transfer-orders"),
         },
         {
-          label: "Activity Logs",
+          label: "Transfer Order Outward",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/activity-logs"),
+          onClick: () => routeHandle("inventory/transfer-order-outward"),
+        },
+        {
+          label: "Posted Transfer Shipment",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("inventory/posted-transfer-shipment"),
+        },
+        {
+          label: "Transfer Order Inward",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("inventory/transfer-order-inward"),
+        },
+        {
+          label: "Posted Transfer Receipt",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("inventory/posted-transfer-receipt"),
         },
       ],
     },
