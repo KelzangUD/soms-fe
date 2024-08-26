@@ -244,24 +244,69 @@ export default function SideNav() {
       ],
     },
     {
-      label: "Report",
+      label: "Reports",
       icon: <AssessmentIcon />,
       onClick: () => handleNestedItemClick(7),
       nestedItems: [
         {
-          label: "Current Month",
+          label: "Posted Sales Report",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("report/current-month"),
+          onClick: () => routeHandle("reports/posted-sales-invoice"),
         },
         {
-          label: "Six Months",
+          label: "Sales Order List",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("report/six-months"),
+          onClick: () => routeHandle("reports/sales-order-list"),
         },
         {
-          label: "One Year",
+          label: "Return Sale Invoice",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("report/one-year"),
+          onClick: () => routeHandle("reports/return-sale-invoice"),
+        },
+        {
+          label: "Payment Collection",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/payment-collection"),
+        },
+        {
+          label: "Recharge Collection",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/recharge-collection"),
+        },
+        {
+          label: "Bank Collection",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/bank-collection"),
+        },
+        {
+          label: "On Hand Report",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/on-hand-report"),
+        },
+        {
+          label: "Sales Order Report",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/sales-order-report"),
+        },
+        {
+          label: "Sales & Stock Report",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/sales-and-stock-report"),
+        },
+        {
+          label: "Sales Report-All",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/sales-report-all"),
+        },
+        {
+          label: "Credit Sale Report",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/credit-sale-report"),
+        },
+        {
+          label: "Transfer Order Report",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("reports/transfer-order-report"),
         },
       ],
     },
