@@ -316,14 +316,49 @@ export default function SideNav() {
       onClick: () => handleNestedItemClick(8),
       nestedItems: [
         {
-          label: "User",
+          label: "Service Log Report",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/user"),
+          onClick: () => routeHandle("ebs-reports/service-log-report"),
         },
         {
-          label: "Activity Logs",
+          label: "EBS Log For Sales Order",
           icon: <KeyboardArrowRightIcon />,
-          onClick: () => routeHandle("system-setting/activity-logs"),
+          onClick: () => routeHandle("ebs-reports/ebs-log-for-sales-order"),
+        },
+        {
+          label: "EBS Log For Sales Receipt",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("ebs-reports/ebs-log-for-sales-receipt"),
+        },
+        {
+          label: "EBS Log For Sales Return",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("ebs-reports/ebs-log-for-sales-return"),
+        },
+        {
+          label: "EBS Log For Requisition",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("ebs-reports/ebs-log-for-requisition"),
+        },
+        {
+          label: "EBS Log For Transfer Order",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("ebs-reports/ebs-log-for-transfer-order"),
+        },
+        {
+          label: "EBS Log For Transfer Order Receipt",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("ebs-reports/ebs-log-for-transfer-order-receipt"),
+        },
+        {
+          label: "EBS Log For Recharge",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("ebs-reports/ebs-log-for-recharge"),
+        },
+        {
+          label: "EBS Log For Cash Collection Report",
+          icon: <KeyboardArrowRightIcon />,
+          onClick: () => routeHandle("ebs-reports/ebs-log-for-cash-collection-report"),
         },
       ],
     },

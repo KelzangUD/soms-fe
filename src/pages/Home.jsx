@@ -12,6 +12,7 @@ import Collections from "./home/Collections";
 import Purchase from "./home/Purchase";
 import Inventory from "./home/Inventory";
 import Reports from "./home/Reports";
+import EBSReports from "./home/EBSReport";
 import Setting from "./home/Setting";
 import ChangePassword from "./home/ChangePassword";
 import { styled } from "@mui/material/styles";
@@ -45,6 +46,7 @@ const Home = () => {
                       <Route path="/purchase/*" element={<Purchase />} />
                       <Route path="/inventory/*" element={<Inventory />} />
                       <Route path="/reports/*" element={<Reports />} />
+                      <Route path="/ebs-reports/*" element={<EBSReports />} />
                       <Route path="/setting/*" element={<Setting />} />
                     </Routes>
                   </Item>
