@@ -4,10 +4,16 @@ import {
   Grid,
   Box,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Typography,
   TextField,
   Button,
   Avatar,
+  Link,
 } from "@mui/material";
 import dashboard_img from "../assets/svgs/dashboard_1.svg";
 import LoginIcon from "@mui/icons-material/Login";
@@ -25,6 +31,8 @@ const SignIn = () => {
   });
   const [message, setMessage] = React.useState("");
   const [open, setOpen] = useState(false);
+  const [openForgotPasswordDialog, setOpenForgotPasswordDialog] =
+    useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,6 +54,10 @@ const SignIn = () => {
     // }
   };
 
+  const forgotPasswordHandle = () => {
+    setOpenForgotPasswordDialog(true);
+  };
+
   return (
     <>
       <Container>
@@ -63,48 +75,56 @@ const SignIn = () => {
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={6}>
               <Container maxWidth="xs" sx={{ py: 2 }}>
-                <Box sx={{ display: "flex", justifyContent: "center" }} pb={2}>
-                  <Avatar sx={{ bgcolor: "#0F67B1", width: "50px", height: "50px" }}>
-                    <LockIcon sx={{  width: "30px", height: "30px" }} />
+                <Box sx={{ display: "flex", justifyContent: "center" }} pb={1}>
+                  <Avatar
+                    sx={{ bgcolor: "#0F67B1", width: "50px", height: "50px" }}
+                  >
+                    <LockIcon sx={{ width: "30px", height: "30px" }} />
                   </Avatar>
                 </Box>
                 <Typography variant="h4" align="center" sx={{ mb: 4 }}>
                   Sign In
                 </Typography>
-                <form onSubmit={handleSubmit}>
-                  <Box sx={{ display: "grid", gap: 2 }}>
-                    <TextField
-                      label="User Name"
-                      variant="outlined"
-                      fullWidth
-                      type="text"
-                      name="empId"
-                      value={formData.empId}
-                      onChange={handleChange}
-                      required
-                    />
-                    <TextField
-                      label="Password"
-                      variant="outlined"
-                      fullWidth
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      required
-                    />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      fullWidth
-                      endIcon={<LoginIcon />}
-                    >
-                      Sign In
-                    </Button>
-                  </Box>
-                </form>
+                <Box sx={{ display: "grid", gap: 2 }}>
+                  <TextField
+                    label="User Name"
+                    variant="outlined"
+                    fullWidth
+                    type="text"
+                    name="empId"
+                    value={formData.empId}
+                    onChange={handleChange}
+                    required
+                  />
+                  <TextField
+                    label="Password"
+                    variant="outlined"
+                    fullWidth
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <Link
+                    component="button"
+                    onClick={forgotPasswordHandle}
+                    variant="body2"
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    Forgot your password?
+                  </Link>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    fullWidth
+                    onClick={handleSubmit}
+                    endIcon={<LoginIcon />}
+                  >
+                    Sign In
+                  </Button>
+                </Box>
               </Container>
             </Grid>
             <Grid item xs={6}>
@@ -119,6 +139,45 @@ const SignIn = () => {
         <Footer />
       </Container>
       {open && <Notification open={open} setOpen={setOpen} message={message} />}
+      {openForgotPasswordDialog && (
+        <Dialog
+          open={openForgotPasswordDialog}
+          onClose={() => setOpenForgotPasswordDialog(false)}
+          aria-labelledby="title"
+          aria-describedby="description"
+        >
+          <DialogTitle id="title">Reset Password</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="description">
+              <Typography mb={1} variant="subtitle1">
+                Enter your account's email address, and we will send you a link
+                to reset your password.
+              </Typography>
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                type="email"
+                name="email"
+                required
+                size="small"
+              />
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions style={{ marginBottom: "16px" }}>
+            <Button onClick={() => setOpenForgotPasswordDialog(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => setOpenForgotPasswordDialog(false)}
+              variant="contained"
+              style={{ marginRight: "16px" }}
+            >
+              Continue
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </>
   );
 };

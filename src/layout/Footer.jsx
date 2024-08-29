@@ -5,18 +5,15 @@ const Footer = () => {
   return (
     <Box sx={{ backgroundColor: "#f4f4f4", py: 5 }}>
       <Container maxWidth="xl">
-        <Grid container spacing={4} alignItems="center">
-          <Grid item xs={6}></Grid>
-          <Grid
-            item
-            xs={6}
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="body1" sx={{ color: "text.secondary" }}>
+        <Grid
+          container
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end"
+          }}
+        >
+          <Grid item xs={6}>
+            <Typography variant="body1" sx={{ color: "text.secondary", textAlign: "right" }}>
               © 2024 Software & Application Section
             </Typography>
           </Grid>

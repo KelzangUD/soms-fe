@@ -426,12 +426,12 @@ export default function SideNav() {
               <img
                 src={Logo}
                 alt="Logo"
-                style={{ width: "30%", height: "auto" }}
+                style={{ width: "18%", height: "auto" }}
               />
             </Button>
           </Grid>
           <Grid item xs={12} marginBottom={2}>
-            <Typography variant="body1" align="center">
+            <Typography variant="body2" align="center">
               Sales & Order Management System
             </Typography>
           </Grid>
@@ -439,7 +439,7 @@ export default function SideNav() {
       </Box>
       <Divider />
       <List
-        sx={{ width: "100%", maxWidth: 360 }}
+        sx={{ width: "100%", maxWidth: 360, maxHeight: "100vh", overflowY: 'auto' }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
