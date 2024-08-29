@@ -21,10 +21,10 @@ const CompanySetting = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          <SubHeader text="Company Setting" />
+          {/* <SubHeader text="Company Setting" /> */}
           <Grid item xs={12}>
-            <Paper elevation={1} sx={{ p: 2 }}>
-              <Grid container spacing={2} sx={{ my: 4 }}>
+            <Paper elevation={1} sx={{ px: 2 }}>
+              <Grid container spacing={2}>
                 <Grid item xs={12} sx={{ my: 1 }}>
                   <TextField
                     label="Company Name"

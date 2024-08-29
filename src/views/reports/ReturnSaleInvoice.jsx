@@ -79,7 +79,7 @@ const ReturnSaleInvoice = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Return Sales Invoice" />
+          {/* <SubHeader text="Return Sales Invoice" /> */}
           <Grid
             item
             xs={12}

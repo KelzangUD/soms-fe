@@ -79,7 +79,7 @@ const EBSLogForRecharge = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="EBS Log for Recharge" />
+          {/* <SubHeader text="EBS Log for Recharge" /> */}
           <Grid
             item
             xs={12}

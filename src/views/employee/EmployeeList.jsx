@@ -73,7 +73,7 @@ const EmployeeList = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Employee List" />
+          {/* <SubHeader text="Employee List" /> */}
           <Grid
             item
             xs={12}

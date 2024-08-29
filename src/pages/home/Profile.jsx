@@ -30,7 +30,7 @@ const Profile = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          <SubHeader text="My Profile" />
+          {/* <SubHeader text="My Profile" /> */}
           <Grid item xs={12}>
             <Paper elevation={1} sx={{ p: 2 }}>
               <Grid container spacing={2} sx={{ my: 4 }}>

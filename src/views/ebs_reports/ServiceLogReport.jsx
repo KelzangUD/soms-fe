@@ -70,7 +70,7 @@ const ServiceLogReport = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Service Log Report" />
+          {/* <SubHeader text="Service Log Report" /> */}
           <Grid
             item
             xs={12}

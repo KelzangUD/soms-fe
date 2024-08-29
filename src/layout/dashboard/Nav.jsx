@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
+  Divider,
   Toolbar,
   IconButton,
   MenuItem,
@@ -10,22 +11,27 @@ import {
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import KeyIcon from '@mui/icons-material/Key';
+import KeyIcon from "@mui/icons-material/Key";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Logout from "@mui/icons-material/Logout";
 import Notification from "../../ui/Notification";
 import Route from "../../routes/Route";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Nav = () => {
+  const location = useLocation();
   const navigation = useNavigate();
-  const [message, setMessage] = React.useState("");
+  const [message, setMessage] = useState("");
+  const [currentLocation, setCurrentLocation] = useState("");
   const [open, setOpen] = useState(false);
   const [openNotification, setOpenNotification] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  useEffect(() => {
+    setCurrentLocation(location?.pathname?.split("/").pop());
+  },[location]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,7 +50,7 @@ const Nav = () => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
   const profileHandle = () => {
-    navigation("/home/profile")
+    navigation("/home/profile");
   };
   const changePasswordHandle = () => {
     navigation("/home/change-password");
@@ -79,7 +85,7 @@ const Nav = () => {
       onClose={handleMenuClose}
       sx={{
         width: 440,
-        marginTop: 4,
+        marginTop: 10,
       }}
     >
       <MenuItem onClick={profileHandle}>
@@ -134,12 +140,37 @@ const Nav = () => {
       </MenuItem>
     </Menu>
   );
-
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" sx={{ background: "#fff", color: "#393E46" }}>
-          <Toolbar sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+        }}
+      >
+        <AppBar
+          position="static"
+          sx={{
+            background: "#fff",
+            color: "#393E46",
+            boxShadow: "none",
+            height: "auto",
+            paddingY: "35px",
+          }}
+        >
+          <Toolbar sx={{ justifyContent: "space-between", alignItems: "cen" }}>
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontWeight: 300,
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              {currentLocation.toUpperCase()}
+            </Typography>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton
                 size="large"
@@ -167,6 +198,7 @@ const Nav = () => {
             </Box>
           </Toolbar>
         </AppBar>
+        <Divider />
         {renderMobileMenu}
         {renderMenu}
       </Box>

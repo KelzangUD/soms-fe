@@ -64,7 +64,7 @@ const AdvanceCollectionHistory = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Advance Collection History" />
+          {/* <SubHeader text="Advance Collection History" /> */}
           <Grid
             item
             xs={12}

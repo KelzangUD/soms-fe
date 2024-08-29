@@ -28,7 +28,7 @@ const AdvanceRefund = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          <SubHeader text="Advance Refund" />
+          {/* <SubHeader text="Advance Refund" /> */}
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid

@@ -110,7 +110,7 @@ const EBSLogForSalesOrder = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="EBS Log for Sales Report" />
+          {/* <SubHeader text="EBS Log for Sales Report" /> */}
           <Grid
             item
             xs={12}

@@ -48,7 +48,7 @@ const RolesAndPermission = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          <SubHeader text="Roles And Permission" />
+          {/* <SubHeader text="Roles And Permission" /> */}
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={3} container spacing={2} sx={{ mb: 1 }}>

@@ -67,7 +67,7 @@ const SystemUsers = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="System Users" />
+          {/* <SubHeader text="System Users" /> */}
           <Grid
             item
             xs={12}

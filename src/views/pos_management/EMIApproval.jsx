@@ -54,7 +54,7 @@ const EMIApproval = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="EMI Approval" />
+          {/* <SubHeader text="EMI Approval" /> */}
           <Grid
             item
             xs={12}

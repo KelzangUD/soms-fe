@@ -82,7 +82,7 @@ const BankCollection = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Bank Collection" />
+          {/* <SubHeader text="Bank Collection" /> */}
           <Grid
             item
             xs={12}

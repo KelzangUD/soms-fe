@@ -92,7 +92,7 @@ const EBSLogForTransferOrder = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="EBS Log for Transfer Order" />
+          {/* <SubHeader text="EBS Log for Transfer Order" /> */}
           <Grid
             item
             xs={12}

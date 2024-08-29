@@ -169,7 +169,7 @@ const Geography = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Geography" />
+          {/* <SubHeader text="Geography" /> */}
           <Grid
             item
             xs={12}

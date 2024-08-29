@@ -28,7 +28,7 @@ const Requisitions = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          <SubHeader text="Requisitions" />
+          {/* <SubHeader text="Requisitions" /> */}
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid container padding={2}>

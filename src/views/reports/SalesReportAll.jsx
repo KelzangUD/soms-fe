@@ -91,7 +91,7 @@ const SalesReportAll = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Sales Report-All" />
+          {/* <SubHeader text="Sales Report-All" /> */}
           <Grid
             item
             xs={12}

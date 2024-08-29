@@ -32,26 +32,27 @@ const Home = () => {
           </Grid>
           <Grid item xs={10}>
             <Nav />
-            <Grid container>
-                <Grid item xs={12}>
-                  <Item>
-                    <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/change-password" element={<ChangePassword />} />
-                      <Route path="/work-structures/*" element={<WorkStructures />} />
-                      <Route path="/employee/*" element={<Employee />} />
-                      <Route path="/pos-management/*" element={<POSManagement />} />
-                      <Route path="/collections/*" element={<Collections />} />
-                      <Route path="/purchase/*" element={<Purchase />} />
-                      <Route path="/inventory/*" element={<Inventory />} />
-                      <Route path="/reports/*" element={<Reports />} />
-                      <Route path="/ebs-reports/*" element={<EBSReports />} />
-                      <Route path="/setting/*" element={<Setting />} />
-                    </Routes>
-                  </Item>
-                </Grid>
-              </Grid>
+            <Grid item xs={12}>
+              <Item>
+                <Routes>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/change-password" element={<ChangePassword />} />
+                  <Route
+                    path="/work-structures/*"
+                    element={<WorkStructures />}
+                  />
+                  <Route path="/employee/*" element={<Employee />} />
+                  <Route path="/pos-management/*" element={<POSManagement />} />
+                  <Route path="/collections/*" element={<Collections />} />
+                  <Route path="/purchase/*" element={<Purchase />} />
+                  <Route path="/inventory/*" element={<Inventory />} />
+                  <Route path="/reports/*" element={<Reports />} />
+                  <Route path="/ebs-reports/*" element={<EBSReports />} />
+                  <Route path="/setting/*" element={<Setting />} />
+                </Routes>
+              </Item>
+            </Grid>
           </Grid>
         </Grid>
       </Box>

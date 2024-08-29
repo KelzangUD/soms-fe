@@ -52,7 +52,7 @@ const Designation = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Designation" />
+          {/* <SubHeader text="Designation" /> */}
           <Grid
             item
             xs={12}

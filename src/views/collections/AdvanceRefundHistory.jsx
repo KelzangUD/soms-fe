@@ -66,7 +66,7 @@ const AdvanceRefundHistory = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Advance Refund History" />
+          {/* <SubHeader text="Advance Refund History" /> */}
           <Grid
             item
             xs={12}

@@ -39,7 +39,7 @@ const Delegation = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Delegation" />
+          {/* <SubHeader text="Delegation" /> */}
           <Grid
             item
             xs={12}
