@@ -227,7 +227,7 @@ const Geography = () => {
                     sx={{ px: 2 }}
                     xs={12}
                   >
-                    <div style={{ height: "auto", width: "100%" }}>
+                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
                         rows={country_rows?.map((row, index) => ({
                           ...row,
@@ -283,7 +283,7 @@ const Geography = () => {
                     sx={{ px: 2 }}
                     xs={12}
                   >
-                    <div style={{ height: "auto", width: "100%" }}>
+                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
                         rows={time_zone_rows?.map((row, index) => ({
                           ...row,
@@ -339,7 +339,7 @@ const Geography = () => {
                     sx={{ px: 2 }}
                     xs={12}
                   >
-                    <div style={{ height: "auto", width: "100%" }}>
+                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
                         rows={region_rows?.map((row, index) => ({
                           ...row,
@@ -395,7 +395,7 @@ const Geography = () => {
                     sx={{ px: 2 }}
                     xs={12}
                   >
-                    <div style={{ height: "auto", width: "100%" }}>
+                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
                         rows={dzongkhag_rows?.map((row, index) => ({
                           ...row,
@@ -451,7 +451,7 @@ const Geography = () => {
                     sx={{ px: 2 }}
                     xs={12}
                   >
-                    <div style={{ height: "auto", width: "100%" }}>
+                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
                         rows={store_location_rows?.map((row, index) => ({
                           ...row,

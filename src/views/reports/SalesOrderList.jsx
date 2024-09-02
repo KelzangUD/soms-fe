@@ -100,13 +100,13 @@ const SalesOrderList = () => {
                   <Grid
                     item
                     container
-                    xs={9}
+                    xs={8}
                     direction="column-reverse"
                     spacing={2}
                   >
                     <Grid item container spacing={1} alignItems="center">
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
+                      <Grid item xs={3}>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="region-or-extension-select-label">
                             Region/Extension
                           </InputLabel>
@@ -124,20 +124,20 @@ const SalesOrderList = () => {
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="From*" />
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="To*" />
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={3}>
                         <TextField
                           label="Customer Name"
                           variant="outlined"
@@ -145,6 +145,7 @@ const SalesOrderList = () => {
                           name="customer_name"
                           required
                           // onChange={oldPasswordHandle}
+                          style={{ background: "#fff"}}
                         />
                       </Grid>
                       <Grid item xs={2}>
@@ -155,6 +156,7 @@ const SalesOrderList = () => {
                           name="pos_no"
                           required
                           // onChange={oldPasswordHandle}
+                          style={{ background: "#fff"}}
                         />
                       </Grid>
                       <Grid item xs={2}>
@@ -185,7 +187,7 @@ const SalesOrderList = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Button
                       variant="contained"
                       color="error"
@@ -212,7 +214,7 @@ const SalesOrderList = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={sales_order_list_rows?.map((row, index) => ({
                         ...row,

@@ -224,7 +224,7 @@ const PostedSalesInvoice = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={posted_sales_invoice_rows?.map((row, index) => ({
                         ...row,

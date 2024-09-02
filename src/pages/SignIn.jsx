@@ -165,15 +165,19 @@ const SignIn = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions style={{ marginBottom: "16px" }}>
-            <Button onClick={() => setOpenForgotPasswordDialog(false)}>
-              Cancel
-            </Button>
             <Button
               onClick={() => setOpenForgotPasswordDialog(false)}
               variant="contained"
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={() => setOpenForgotPasswordDialog(false)}
+              variant="outlined"
+              color="error"
               style={{ marginRight: "16px" }}
             >
-              Continue
+              Cancel
             </Button>
           </DialogActions>
         </Dialog>

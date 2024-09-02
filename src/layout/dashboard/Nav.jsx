@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import PersonIcon from '@mui/icons-material/Person';
 import MoreIcon from "@mui/icons-material/MoreVert";
 import KeyIcon from "@mui/icons-material/Key";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -21,17 +22,22 @@ import { useNavigate, useLocation } from "react-router-dom";
 const Nav = () => {
   const location = useLocation();
   const navigation = useNavigate();
+  const [paddingY, setPaddingY] = useState("30px");
   const [message, setMessage] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
   const [open, setOpen] = useState(false);
   const [openNotification, setOpenNotification] = useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   useEffect(() => {
     setCurrentLocation(location?.pathname?.split("/").pop());
+    console.log(window.innerWidth);
   },[location]);
+  useEffect(() => {
+    setPaddingY(window.innerWidth > 1536 ? "36px": "30px");
+  },[window.innerWidth]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -56,6 +62,7 @@ const Nav = () => {
     navigation("/home/change-password");
   };
   const token = localStorage.getItem("token");
+  
   const logoutHandle = async () => {
     navigation("/");
     // const user = JSON.parse(localStorage.getItem("user"));
@@ -90,7 +97,7 @@ const Nav = () => {
     >
       <MenuItem onClick={profileHandle}>
         <ListItemIcon>
-          <AccountCircle fontSize="small" />
+          <PersonIcon fontSize="small" />
         </ListItemIcon>
         My Profile
       </MenuItem>
@@ -134,7 +141,7 @@ const Nav = () => {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          <PersonIcon />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
@@ -150,11 +157,11 @@ const Nav = () => {
         <AppBar
           position="static"
           sx={{
-            background: "#fff",
+            background: "#F5F7F8",
             color: "#393E46",
             boxShadow: "none",
             height: "auto",
-            paddingY: "35px",
+            paddingY: paddingY,
           }}
         >
           <Toolbar sx={{ justifyContent: "space-between", alignItems: "cen" }}>
@@ -181,7 +188,7 @@ const Nav = () => {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle />
+                <AccountCircle sx={{ width: 40, height: 40 }} />
               </IconButton>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>

@@ -94,14 +94,14 @@ const PostedTransferShipment = () => {
                   <Grid item container xs={9} direction="column-reverse" spacing={2}>
                     <Grid item container spacing={1} alignItems="center">
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="From*" />
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="To*" />
                           </LocalizationProvider>
@@ -162,7 +162,7 @@ const PostedTransferShipment = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={posted_transfer_shipment_rows?.map((row, index) => ({
                         ...row,

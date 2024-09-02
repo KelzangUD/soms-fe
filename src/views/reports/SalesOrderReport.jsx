@@ -106,7 +106,7 @@ const SalesOrderReport = () => {
                   <Grid
                     item
                     container
-                    xs={9}
+                    xs={8}
                     direction="column-reverse"
                     spacing={2}
                   >
@@ -119,6 +119,7 @@ const SalesOrderReport = () => {
                           name="store_name"
                           required
                           disabled
+                          style={{ background: "#fff"}}
                         />
                       </Grid>
                       <Grid item xs={2}>
@@ -129,6 +130,7 @@ const SalesOrderReport = () => {
                           name="region_name"
                           required
                           disabled
+                          style={{ background: "#fff"}}
                         />
                       </Grid>
                       <Grid item xs={2}>
@@ -139,10 +141,11 @@ const SalesOrderReport = () => {
                           name="as_of_date"
                           required
                           disabled
+                          style={{ background: "#fff"}}
                         />
                       </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
+                      <Grid item xs={3}>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="employee-select-label">
                             Employee
                           </InputLabel>
@@ -160,14 +163,14 @@ const SalesOrderReport = () => {
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="From Date" />
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="To Date" />
                           </LocalizationProvider>
@@ -201,7 +204,7 @@ const SalesOrderReport = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Button
                       variant="contained"
                       color="error"
@@ -228,7 +231,7 @@ const SalesOrderReport = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={sales_order_report_rows?.map((row, index) => ({
                         ...row,

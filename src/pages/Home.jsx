@@ -16,6 +16,7 @@ import EBSReports from "./home/EBSReport";
 import Setting from "./home/Setting";
 import ChangePassword from "./home/ChangePassword";
 import { styled } from "@mui/material/styles";
+import bg from "../assets/images/bg.png";
 
 const Item = styled(Paper)(({ theme }) => ({
   borderRadius: 0,
@@ -30,10 +31,10 @@ const Home = () => {
           <Grid item xs={2}>
             <SideNav />
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} >
             <Nav />
             <Grid item xs={12}>
-              <Item>
+              <Item style={{ backgroundImage: `url(${bg})`}}>
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/profile" element={<Profile />} />

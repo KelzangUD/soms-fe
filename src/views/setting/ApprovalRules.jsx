@@ -252,7 +252,7 @@ const ApprovalRules = () => {
                     sx={{ px: 2 }}
                     xs={12}
                   >
-                    <div style={{ height: "auto", width: "100%" }}>
+                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
                         rows={requisition_rows?.map((row, index) => ({
                           ...row,
@@ -317,7 +317,7 @@ const ApprovalRules = () => {
                     sx={{ px: 2 }}
                     xs={12}
                   >
-                    <div style={{ height: "auto", width: "100%" }}>
+                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
                         rows={transfer_order_rows?.map((row, index) => ({
                           ...row,
@@ -382,7 +382,7 @@ const ApprovalRules = () => {
                     sx={{ px: 2 }}
                     xs={12}
                   >
-                    <div style={{ height: "auto", width: "100%" }}>
+                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
                         rows={emi_rows?.map((row, index) => ({
                           ...row,

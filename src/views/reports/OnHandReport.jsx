@@ -88,7 +88,7 @@ const OnHandReport = () => {
                   <Grid
                     item
                     container
-                    xs={9}
+                    xs={8}
                     direction="column-reverse"
                     spacing={2}
                   >
@@ -101,10 +101,11 @@ const OnHandReport = () => {
                           name="as_on_date"
                           required
                           disabled
+                          style={{ background: "#fff"}}
                         />
                       </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
+                      <Grid item xs={3}>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="region-or-extension-select-label">
                             Region/Extension
                           </InputLabel>
@@ -121,8 +122,8 @@ const OnHandReport = () => {
                           </Select>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
+                      <Grid item xs={6}>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="item-select-label">
                             Item
                           </InputLabel>
@@ -140,7 +141,7 @@ const OnHandReport = () => {
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="creator-select-label">
                             Creator
                           </InputLabel>
@@ -164,9 +165,10 @@ const OnHandReport = () => {
                           fullWidth
                           name="serial_no"
                           required
+                          style={{ background: "#fff"}}
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={3}>
                         <TextField
                           label="IMEI No."
                           variant="outlined"
@@ -174,6 +176,7 @@ const OnHandReport = () => {
                           name="imei_no"
                           required
                           // onChange={oldPasswordHandle}
+                          style={{ background: "#fff"}}
                         />
                       </Grid>
                       <Grid item xs={2}>
@@ -204,7 +207,7 @@ const OnHandReport = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Button
                       variant="contained"
                       color="error"
@@ -231,7 +234,7 @@ const OnHandReport = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={on_hand_report_rows?.map((row, index) => ({
                         ...row,
