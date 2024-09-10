@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -18,9 +18,56 @@ import {
   TableCell,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import SubHeader from "../../common/SubHeader";
+import productsTypeData from "../../data/productsType.json";
+import Route from "../../routes/Route";
+
 
 const SalesOrder = () => {
+  const [salesType, setSalesType] = useState([]);
+  const [productsType, setProductsType] = useState([]);
+  const [salesOrderDetails, setSalesDetails] = useState({
+    pos_no: "",
+    posting_date: new Date().toDateString(),
+    sales_type: "",
+    product_type: "",
+    mobile_no: "",
+    customer_no: "",
+    customer_name: "",
+    permenant_address: "",
+    current_address: "",
+    city: "",
+    repair_or_replacement: "",
+    remarks: ""
+  });
+  const fetchSalesType = async () => {
+    const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
+    if (res?.status === 200) {
+      setSalesType(res?.data);
+    };
+  };
+  const fetchProductsType = async () => {
+    const res = await Route("GET", "/Common/FetchProductType", null, null, 1);
+    console.log(res);
+    if (res?.status === 200) {
+      setProductsType(res?.data);
+    };
+  };
+  useEffect(() => {
+    fetchSalesType();
+    fetchProductsType();
+  }, []);
+  const salesTypeHandle = (e) => {
+    setSalesDetails(prev => ({
+      ...prev,
+      sales_type: e.target.value
+    }))
+  };
+  const productsTypeHandle = (e) => {
+    setSalesDetails(prev => ({
+      ...prev,
+      product_type: e.target.value
+    }))
+  };
   return (
     <>
       <Box sx={{ px: 2 }}>
@@ -61,6 +108,7 @@ const SalesOrder = () => {
                       variant="outlined"
                       fullWidth
                       name="posting_date"
+                      defaultValue={new Date().toDateString()}
                       disabled
                     />
                   </Grid>
@@ -72,11 +120,15 @@ const SalesOrder = () => {
                       <Select
                         labelId="sales-type-select-label"
                         id="sales-type-select"
-                        // value={age}
+                        value={salesOrderDetails?.sales_type}
                         label="Sales Type"
-                        // onChange={handleChange}
+                        onChange={salesTypeHandle}
                       >
-                        <MenuItem value={1}>Walkin Customer</MenuItem>
+                        {salesType?.map((item) => (
+                          <MenuItem value={item?.code} key={item?.id}>
+                            {item?.type}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
@@ -88,11 +140,15 @@ const SalesOrder = () => {
                       <Select
                         labelId="product-type-select-label"
                         id="product-type-select"
-                        // value={age}
+                        value={salesOrderDetails?.product_type}
                         label="Product Type"
-                        // onChange={handleChange}
+                        onChange={productsTypeHandle}
                       >
-                        <MenuItem value={1}>Phone</MenuItem>
+                        {productsType?.map((item) => (
+                          <MenuItem value={item?.code} key={item?.id}>
+                            {item?.type}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
@@ -127,20 +183,20 @@ const SalesOrder = () => {
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
-                      label="Address"
+                      label="Permenant Address"
                       variant="outlined"
                       fullWidth
-                      name="address"
+                      name="permanent_address"
                     />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2} sx={{ my: 1 }}>
                   <Grid item xs={3}>
                     <TextField
-                      label="Address 1"
+                      label="Current Address"
                       variant="outlined"
                       fullWidth
-                      name="address_1"
+                      name="current_address"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -531,10 +587,16 @@ const SalesOrder = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={4} >
-            <Button variant="outlined" disabled>Save As Draft</Button>
-            <Button variant="contained" disabled sx={{ ml: 2 }}>Post & Print</Button>
-            <Button variant="contained" sx={{ ml: 2 }}>Close</Button>
+          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
+            <Button variant="outlined" disabled style={{  background: "#fff"}}>
+              Save As Draft
+            </Button>
+            <Button variant="contained" disabled sx={{ ml: 2 }} style={{  background: "#fff"}}>
+              Post & Print
+            </Button>
+            <Button variant="contained" sx={{ ml: 2 }}>
+              Close
+            </Button>
           </Grid>
         </Grid>
       </Box>

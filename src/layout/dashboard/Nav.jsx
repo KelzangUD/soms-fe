@@ -61,9 +61,12 @@ const Nav = () => {
   const changePasswordHandle = () => {
     navigation("/home/change-password");
   };
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("access_token");
   
   const logoutHandle = async () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
     navigation("/");
     // const user = JSON.parse(localStorage.getItem("user"));
     // const data = {

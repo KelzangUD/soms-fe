@@ -99,6 +99,10 @@ export const MenuItems = [
     itemNumber: 4,
     nestedItems: [
       {
+        page: "Payment Receipt",
+        route: "collections/payment-receipt",
+      },
+      {
         page: "Cash Receipt",
         route: "collections/cash-receipt",
       },

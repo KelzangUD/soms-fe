@@ -2,6 +2,7 @@ export const privileges = [
   {
     module: "Dashboard",
     order: "1",
+    pages: null,
   },
   {
     module: "Work Structures",
@@ -37,11 +38,11 @@ export const privileges = [
     module: "Collections",
     order: "5",
     pages: [
-      "Cash Payment",
-      "Cash Receipt",
+      "Payment Receipt",
+      // "Cash Receipt",
       "Recharge",
       "Bank Payment",
-      "Bank Receipt",
+      // "Bank Receipt",
       "Contra Voucher",
       "Credit/EMI Collection",
       "Advance Collection",

@@ -1,3 +1,4 @@
+export { default as PaymentReceipt } from "./PaymentReceipt";
 export { default as CashReceipt } from "./CashReceipt";
 export { default as Recharge } from "./Recharge";
 export { default as BankReceipt } from "./BankReceipt";

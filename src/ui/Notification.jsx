@@ -7,7 +7,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const Notification = ({ open, setOpen, message }) => {
+const Notification = ({ open, setOpen, message, severity ="info" }) => {
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>
       <Snackbar
@@ -18,7 +18,7 @@ const Notification = ({ open, setOpen, message }) => {
       >
         <Alert
           onClose={() => setOpen(false)}
-          severity="info"
+          severity={severity}
           sx={{ width: "100%" }}
         >
           {message}

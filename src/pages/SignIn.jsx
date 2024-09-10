@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Alert,
   Grid,
   Box,
   Container,
@@ -22,14 +23,15 @@ import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import Notification from "../ui/Notification";
 import Route from "../routes/Route";
+import login from "../data/login.json";
 
 const SignIn = () => {
   const navigagte = useNavigate();
   const [formData, setFormData] = useState({
-    empId: "",
+    username: "",
     password: "",
   });
-  const [message, setMessage] = React.useState("");
+  const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [openForgotPasswordDialog, setOpenForgotPasswordDialog] =
     useState(false);
@@ -40,18 +42,24 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    navigagte("/home/dashboard");
-    // const res = await Route("POST", "/login", null, formData, null);
-    // if (res?.status === 200) {
-    //   localStorage.setItem("user", JSON.stringify(res?.data?.user));
-    //   localStorage.setItem("token", res?.data?.token);
-    //   res?.data?.user?.isAdmin
-    //     ? navigagte("/admin/dashboard")
-    //     : navigagte("/user/dashboard");
-    // } else {
-    //   setMessage(res?.data?.message);
-    //   setOpen(true);
-    // }
+    if (formData?.username == "" || formData?.password === "") {
+      setMessage("Please Fill Up with neccessary information");
+      setOpen(true);
+    } else {
+      localStorage.setItem("username", login?.username);
+      localStorage.setItem("access_token", login?.access_token);
+      localStorage.setItem("refresh_token", login?.refresh_token);
+      navigagte("/home/dashboard");
+      // const res = await Route("POST", "/auth/authenticate", null, formData, null);
+      // if (res?.status === 200) {
+      //   localStorage.setItem("user", JSON.stringify(res?.data?.user));
+      //   localStorage.setItem("token", res?.data?.access_token);
+      //   navigagte("/home/dashboard");
+      // } else {
+      //   setMessage(res?.data?.message);
+      //   setOpen(true);
+      // }
+    }
   };
 
   const forgotPasswordHandle = () => {
@@ -91,8 +99,8 @@ const SignIn = () => {
                     variant="outlined"
                     fullWidth
                     type="text"
-                    name="empId"
-                    value={formData.empId}
+                    name="username"
+                    value={formData.username}
                     onChange={handleChange}
                     required
                   />
