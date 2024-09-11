@@ -41,7 +41,7 @@ const PaymentReceipt = () => {
   const [paymentReceiptDetails, setPaymentReceiptDetails] = useState({
     serviceType: "",
     mobileNo: "",
-    postingDate: new Date(),
+    postingDate: new Date().toString(),
     paymentType: "",
     accountCode: "",
     bankId: null,
@@ -52,9 +52,9 @@ const PaymentReceipt = () => {
     acctKey: "",
     billAmount: "",
     chequeNo: "",
-    chequeDate: new Date(),
+    chequeDate: new Date().toString(),
     remarks: "",
-    payment: "",
+    payment: "1",
     outstandingBalance: "",
   });
   const [disableFields, setDisabledFields] = useState({
@@ -156,13 +156,14 @@ const PaymentReceipt = () => {
   const postingDateHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
-      postingDate: e.$d,
+      postingDate: e.$d.toString(),
     }));
   };
   const paymentMethodHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
-      paymentType: e?.target?.value === "1" ? "1" : "2",
+      paymentType: e?.target?.value,
+      accountCode: e?.target?.value === "1" ? "1" : "2",
     }));
     setPaymentMethod(e?.target?.value);
     e?.target?.value === "2"
@@ -180,10 +181,10 @@ const PaymentReceipt = () => {
         }));
   };
   const paymentHandle = (e) => {
-    // setPaymentReceiptDetails((prev) => ({
-    //   ...prev,
-    //   paymentType: e?.target?.value === "1" ? "1" : "2",
-    // }));
+    setPaymentReceiptDetails((prev) => ({
+      ...prev,
+      payment: e?.target?.value,
+    }));
   };
   const amountHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
@@ -206,7 +207,7 @@ const PaymentReceipt = () => {
   const chequeDateHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
-      postingDate: e.$d,
+      postingDate: e.$d.toString(),
     }));
   };
   const chequeCopyHandle = (e) => {
@@ -224,9 +225,8 @@ const PaymentReceipt = () => {
     e.preventDefault();
     let formData = new FormData();
     formData.append("cheque", chequeCopy);
-    formData.append("billingDetails", paymentReceiptDetails, {
-      contentType: "application/json",
-    });
+    const jsonDataBlob = new Blob([JSON.stringify(paymentReceiptDetails)], { type: "application/json" });
+    formData.append("billingDetails", jsonDataBlob, "data.json");
     const res = await Route(
       "POST",
       `/Billing/getOutstandingDetail`,
@@ -234,6 +234,8 @@ const PaymentReceipt = () => {
       formData,
       null
     );
+    console.log(res);
+    console.log(paymentReceiptDetails);
     if (res?.status === 201) {
       setNotificationMsg(res?.data?.message);
       setSeverity("success");
@@ -310,6 +312,24 @@ const PaymentReceipt = () => {
                       value={paymentReceiptDetails?.mobileNo}
                     />
                   </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth>
+                      <InputLabel id="payment-select-label">Payment</InputLabel>
+                      <Select
+                        labelId="payment-select-label"
+                        id="payment-select"
+                        value={paymentReceiptDetails?.payment}
+                        label="Payment"
+                        onChange={paymentHandle}
+                      >
+                        {paymentOptions?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.type}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
                   <Grid item xs={3} alignContent="center">
                     <Button
                       variant="outlined"
@@ -352,24 +372,6 @@ const PaymentReceipt = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
-                      <InputLabel id="payment-select-label">Payment</InputLabel>
-                      <Select
-                        labelId="payment-select-label"
-                        id="payment-select"
-                        // value={age}
-                        label="Payment"
-                        onChange={paymentHandle}
-                      >
-                        {paymentOptions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={3}>
                     <TextField
                       label="Amount"
                       variant="outlined"
@@ -380,8 +382,6 @@ const PaymentReceipt = () => {
                       value={paymentReceiptDetails?.amount}
                     />
                   </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <InputLabel id="bank-acc-select-label">
@@ -402,6 +402,8 @@ const PaymentReceipt = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+                </Grid>
+                <Grid container spacing={2} sx={{ mt: 1 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Cheque No"
@@ -455,6 +457,8 @@ const PaymentReceipt = () => {
                       required
                       onChange={remarksHandle}
                       value={paymentReceiptDetails?.remarks}
+                      multiline
+                      maxRows={3}
                     />
                   </Grid>
                 </Grid>

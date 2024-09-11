@@ -55,15 +55,15 @@ const Recharge = () => {
   const [paymentType, setPaymentType] = useState([]);
   const [bankAccounts, setBankAccounts] = useState([]);
   const [rechargeDetails, setRechargeDetails] = useState({
-    postingDate: new Date(),
+    postingDate: new Date().toISOString(),
     mobileNo: "",
     amount: "",
     paymentType: null,
     bankId: null,
     cardOrChequeNo: "",
     userId: userID,
-    type: "",
-    chequeDate: new Date(),
+    type: "S",
+    chequeDate: new Date().toISOString(),
   });
   const [disableFields, setDisabledFields] = useState({
     cardOrChequeNo: true,
@@ -71,8 +71,8 @@ const Recharge = () => {
     chequeCopy: true,
   });
   const [fileName, setFileName] = useState("Upload File");
-  const [file, setFile] = useState(null);
-  const [chequeCopy, setChequeCopy] = useState(null);
+  const [file, setFile] = useState("text.csv");
+  const [chequeCopy, setChequeCopy] = useState("cheque.png");
   const fetchPaymentType = async () => {
     const res = await Route("GET", "/Common/PaymentType", null, null, null);
     if (res?.status === 200) {
@@ -115,7 +115,7 @@ const Recharge = () => {
   const paymentTypeHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
-      paymentType: e?.target?.value,
+      paymentType: e?.target?.value?.id,
     }));
     fetchBankAccount(e?.target?.value?.id);
     if (e?.target?.value?.id === "1") {
@@ -144,7 +144,7 @@ const Recharge = () => {
   const bankAccHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
-      bankId: e?.target?.value,
+      bankId: e?.target?.value?.id,
     }));
   };
   const cardOrChequeNumberHandle = (e) => {
@@ -182,20 +182,35 @@ const Recharge = () => {
       setSeverity("info");
       setShowNofication(true);
     } else {
+      setRechargeDetails((prev) => ({
+        ...prev,
+        type: "B",
+      }));
       setFile(e?.target?.files[0]);
     }
   };
   const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
+    console.log(rechargeDetails);
     e.preventDefault();
     let formData = new FormData();
     formData.append("cheque", chequeCopy);
     formData.append("file", file);
-    formData.append("billingDetails", rechargeDetails, {
-      contentType: "application/json",
+    const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
+      type: "application/json",
     });
-    const res = await Route("POST", `Recharge/eTop_Up`, token, formData, null);
-    if (res?.status === 201) {
+
+    formData.append("recharge", jsonDataBlob, "data.json");
+
+    // console.log(formData);
+    // You can't directly log FormData, so use this approach to inspect its content:
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ":", pair[1]);
+    }
+    const res = await Route("POST", `/Recharge/eTop_Up`, null, formData, null);
+
+    console.log(res);
+    if (res?.status === 200) {
       setNotificationMsg(res?.data?.message);
       setSeverity("success");
       setShowNofication(true);
@@ -219,7 +234,7 @@ const Recharge = () => {
       }));
       setFileName("Upload File");
     } else {
-      setNotificationMsg(res?.data?.message);
+      setNotificationMsg(res?.response?.data?.message);
       setSeverity("error");
       setShowNofication(true);
     }
@@ -336,7 +351,7 @@ const Recharge = () => {
                         id="payment-type-select"
                         label="Payment Type*"
                         onChange={paymentTypeHandle}
-                        value={rechargeDetails?.paymentType}
+                        // value={rechargeDetails?.paymentType}
                       >
                         {paymentType?.map((item) => (
                           <MenuItem value={item} key={item?.id}>
@@ -356,7 +371,7 @@ const Recharge = () => {
                         id="bank-ac-name-select"
                         label="Bank A/C Name*"
                         onChange={bankAccHandle}
-                        value={rechargeDetails?.bankId}
+                        // value={rechargeDetails?.bankId}
                       >
                         {bankAccounts?.map((item) => (
                           <MenuItem value={item} key={item?.id}>
@@ -500,6 +515,14 @@ const Recharge = () => {
           </Grid>
         </Grid>
       </Box>
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
     </>
   );
 };
