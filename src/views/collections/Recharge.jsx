@@ -33,6 +33,7 @@ import dayjs from "dayjs";
 // import DialogUi from "../../ui/DialogUi";
 import Route from "../../routes/Route";
 import BulkRechargeFormat from "../../assets/files/BulkRechargeFormat.csv";
+import { dateFormatter } from "../../util/CommonUtil"; 
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -55,7 +56,7 @@ const Recharge = () => {
   const [paymentType, setPaymentType] = useState([]);
   const [bankAccounts, setBankAccounts] = useState([]);
   const [rechargeDetails, setRechargeDetails] = useState({
-    postingDate: new Date().toISOString(),
+    postingDate: dateFormatter(new Date().toISOString()),
     mobileNo: "",
     amount: "",
     paymentType: null,
@@ -63,7 +64,7 @@ const Recharge = () => {
     cardOrChequeNo: "",
     userId: userID,
     type: "S",
-    chequeDate: new Date().toISOString(),
+    chequeDate: dateFormatter(new Date().toISOString()),
   });
   const [disableFields, setDisabledFields] = useState({
     cardOrChequeNo: true,
@@ -97,7 +98,7 @@ const Recharge = () => {
   const postingDateHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
-      postingDate: e?.$d,
+      postingDate: dateFormatter(e?.$d),
     }));
   };
   const prepaidNumberHandle = (e) => {
@@ -156,7 +157,7 @@ const Recharge = () => {
   const chequeDateHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
-      chequeDate: e?.$d,
+      chequeDate: dateFormatter(e?.$d),
     }));
   };
   const chequeCopyHandle = (e) => {
