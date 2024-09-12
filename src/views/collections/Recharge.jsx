@@ -71,8 +71,8 @@ const Recharge = () => {
     chequeCopy: true,
   });
   const [fileName, setFileName] = useState("Upload File");
-  const [file, setFile] = useState("text.csv");
-  const [chequeCopy, setChequeCopy] = useState("cheque.png");
+  const [file, setFile] = useState(null);
+  const [chequeCopy, setChequeCopy] = useState(null);
   const fetchPaymentType = async () => {
     const res = await Route("GET", "/Common/PaymentType", null, null, null);
     if (res?.status === 200) {
@@ -194,8 +194,18 @@ const Recharge = () => {
     console.log(rechargeDetails);
     e.preventDefault();
     let formData = new FormData();
-    formData.append("cheque", chequeCopy);
-    formData.append("file", file);
+    if (chequeCopy && chequeCopy.length > 0) {
+      formData.append("cheque", chequeCopy);
+    } else {
+      const placeholderFile = new File([""], "cheque.png");
+      formData.append("cheque", placeholderFile);
+    }
+    if (file && file.length > 0) {
+      formData.append("file", file);
+    } else {
+      const placeholderFile = new File([""], "file.csv");
+      formData.append("file", placeholderFile);
+    }
     const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
       type: "application/json",
     });
@@ -203,11 +213,14 @@ const Recharge = () => {
     formData.append("recharge", jsonDataBlob, "data.json");
 
     // console.log(formData);
-    // You can't directly log FormData, so use this approach to inspect its content:
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ":", pair[1]);
-    }
-    const res = await Route("POST", `/Recharge/eTop_Up`, null, formData, null);
+    const res = await Route(
+      "POST",
+      `/Recharge/eTop_Up`,
+      null,
+      formData,
+      null,
+      "multipart/form-data"
+    );
 
     console.log(res);
     if (res?.status === 200) {
