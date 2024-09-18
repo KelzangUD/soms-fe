@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Paper,
   Grid,
   TextField,
@@ -10,30 +15,23 @@ import {
   IconButton,
   InputLabel,
   Select,
+  Slide,
   Typography,
-  // Table,
-  // TableContainer,
-  // TableHead,
-  // TableRow,
-  // TableBody,
-  // TableCell,
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import DownloadIcon from "@mui/icons-material/Download";
-// import AddBoxIcon from "@mui/icons-material/AddBox";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import ImageIcon from "@mui/icons-material/Image";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Notification from "../../ui/Notification";
+import RechargeReceipt from "../../ui/RechargeReceipt";
 import dayjs from "dayjs";
 // import DialogUi from "../../ui/DialogUi";
 import Route from "../../routes/Route";
 import BulkRechargeFormat from "../../assets/files/BulkRechargeFormat.csv";
-import { dateFormatter } from "../../util/CommonUtil"; 
+import { dateFormatter } from "../../util/CommonUtil";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -47,11 +45,15 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
   outlineColor: "#fff",
 });
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Recharge = () => {
   const userID = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
+  const [responseData, setResponseData] = useState({});
   const [severity, setSeverity] = useState("info");
   const [paymentType, setPaymentType] = useState([]);
   const [bankAccounts, setBankAccounts] = useState([]);
@@ -60,7 +62,9 @@ const Recharge = () => {
     mobileNo: "",
     amount: "",
     paymentType: null,
+    payment: {},
     bankId: null,
+    bank: {},
     cardOrChequeNo: "",
     userId: userID,
     type: "S",
@@ -117,6 +121,7 @@ const Recharge = () => {
     setRechargeDetails((prev) => ({
       ...prev,
       paymentType: e?.target?.value?.id,
+      payment: e?.target?.value,
     }));
     fetchBankAccount(e?.target?.value?.id);
     if (e?.target?.value?.id === "1") {
@@ -146,6 +151,7 @@ const Recharge = () => {
     setRechargeDetails((prev) => ({
       ...prev,
       bankId: e?.target?.value?.id,
+      bank: e?.target?.value,
     }));
   };
   const cardOrChequeNumberHandle = (e) => {
@@ -224,9 +230,10 @@ const Recharge = () => {
     );
 
     console.log(res);
-    if (res?.status === 200) {
-      setNotificationMsg(res?.data?.message);
+    if (res?.status === 201) {
+      setResponseData(res?.data);
       setSeverity("success");
+      setNotificationMsg(res?.data?.status);
       setShowNofication(true);
       setRechargeDetails((prev) => ({
         ...prev,
@@ -234,7 +241,9 @@ const Recharge = () => {
         mobileNo: "",
         amount: "",
         paymentType: null,
+        payment: {},
         bankId: null,
+        bank: {},
         cardOrChequeNo: "",
         userId: userID,
         type: "",
@@ -252,6 +261,11 @@ const Recharge = () => {
       setSeverity("error");
       setShowNofication(true);
     }
+  };
+  const openInNewTab = () =>{
+    const queryParams = new URLSearchParams(responseData).toString();
+    const newWindow = window.open(`/recharge-receipt?${queryParams}`, '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
   };
   return (
     <>
@@ -365,7 +379,7 @@ const Recharge = () => {
                         id="payment-type-select"
                         label="Payment Type*"
                         onChange={paymentTypeHandle}
-                        // value={rechargeDetails?.paymentType}
+                        value={rechargeDetails?.payment}
                       >
                         {paymentType?.map((item) => (
                           <MenuItem value={item} key={item?.id}>
@@ -385,7 +399,7 @@ const Recharge = () => {
                         id="bank-ac-name-select"
                         label="Bank A/C Name*"
                         onChange={bankAccHandle}
-                        // value={rechargeDetails?.bankId}
+                        value={rechargeDetails?.bank}
                       >
                         {bankAccounts?.map((item) => (
                           <MenuItem value={item} key={item?.id}>
@@ -438,104 +452,61 @@ const Recharge = () => {
                       />
                     </Button>
                   </Grid>
-                  {/* <Grid item xs={3} display="flex" alignItems="center">
-                    <IconButton onClick={paymentDetailsHandle}>
-                      <AddBoxIcon />
-                    </IconButton>
-                  </Grid> */}
                 </Grid>
-                {/* <Grid container spacing={2} sx={{ mt: 1 }} padding={2}>
-                  <TableContainer component={Paper}>
-                    <Table
-                      sx={{ minWidth: 650 }}
-                      aria-label="customer detail table"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Payment Amount</TableCell>
-                          <TableCell>Payment Type</TableCell>
-                          <TableCell>Bank A/C Name</TableCell>
-                          <TableCell>Card Number</TableCell>
-                          <TableCell>Cheque Number</TableCell>
-                          <TableCell>Cheque Date</TableCell>
-                          <TableCell align="right">Cheque Copy</TableCell>
-                          <TableCell align="right">Action</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      {rechargeDetails?.payment?.length > 0 && (
-                        <TableBody>
-                          {rechargeDetails?.payment.map((row, index) => (
-                            <TableRow
-                              key={index}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <TableCell component="th" scope="row">
-                                {row?.amount}
-                              </TableCell>
-                              <TableCell>
-                                {row.paymentTypeName}
-                              </TableCell>
-                              <TableCell>
-                                {row.bankName}
-                              </TableCell>
-                              <TableCell>
-                                {row.cardNumber}
-                              </TableCell>
-                              <TableCell>
-                                {row.chequeNumber}
-                              </TableCell>
-                              <TableCell>
-                                {row.chaqueDate}
-                              </TableCell>
-                              <TableCell align="right">
-                                {row?.chequeCopy !== null && (
-                                  <Button
-                                    // variant="outlined"
-                                    endIcon={<ImageIcon />}
-                                    color="primary"
-                                  >
-                                    File
-                                  </Button>
-                                )}
-                              </TableCell>
-                              <TableCell align="right">
-                                <IconButton
-                                  onClick={() => deleteItemHandle(row)}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      )}
-                    </Table>
-                  </TableContainer>
-                </Grid> */}
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={6}>
-            <Button variant="outlined" disabled style={{ background: "#fff" }}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
+            {/* <Button variant="outlined" disabled style={{ background: "#fff" }}>
               Print
-            </Button>
+            </Button> */}
             <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
               Create & Post
             </Button>
           </Grid>
         </Grid>
       </Box>
-      {showNotification && (
+      {showNotification && severity=== "error" && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}
           message={notificationMsg}
           severity={severity}
         />
+      )}
+      {showNotification && (
+        <React.Fragment>
+          <Dialog
+            open={showNotification}
+            TransitionComponent={Transition}
+            keepMounted
+            fullWidth
+            size="sm"
+            aria-describedby="alert-dialog-slide-description"
+            onClose={(event, reason) => {
+              if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
+                setShowNofication(false);
+              }
+            }}
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                <DialogTitle>{notificationMsg}</DialogTitle>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={openInNewTab} variant="outlined">
+                View Receipt
+              </Button>
+              <Button
+                onClick={() => setShowNofication(false)}
+                variant="contained"
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </React.Fragment>
       )}
     </>
   );

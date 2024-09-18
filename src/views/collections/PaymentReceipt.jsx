@@ -225,14 +225,21 @@ const PaymentReceipt = () => {
     e.preventDefault();
     let formData = new FormData();
     formData.append("cheque", chequeCopy);
+    if (chequeCopy && chequeCopy.length > 0) {
+      formData.append("cheque", chequeCopy);
+    } else {
+      const placeholderFile = new File([""], "cheque.png");
+      formData.append("cheque", placeholderFile);
+    }
     const jsonDataBlob = new Blob([JSON.stringify(paymentReceiptDetails)], { type: "application/json" });
     formData.append("billingDetails", jsonDataBlob, "data.json");
     const res = await Route(
       "POST",
       `/Billing/getOutstandingDetail`,
-      token,
+      null,
       formData,
-      null
+      null,
+      "multipart/form-data"
     );
     console.log(res);
     console.log(paymentReceiptDetails);
