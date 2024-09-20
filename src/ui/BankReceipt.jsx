@@ -12,7 +12,7 @@ const BankReceipt = () => {
   const createdBy = query.get("createdBy");
   const customerNo = query.get("customerNo");
   const description = query.get("description");
-  const rechargeDate = query.get("rechargeDate");
+  const paymentDate = query.get("paymentDate");
   return (
     <>
       <div style={{ width: "400px", padding: "8px", lineHeight: "1.5" }}>
@@ -24,7 +24,7 @@ const BankReceipt = () => {
         <hr />
         <div>
           <p>Receipt No: {applicationNo}</p>
-          <p>Receipt Date: {rechargeDate}</p>
+          <p>Payment Date: {paymentDate}</p>
           <p>Customer Name: {customerName}</p>
           <p>Customer No: {customerNo}</p>
           <p>Billing: {billing}</p>
