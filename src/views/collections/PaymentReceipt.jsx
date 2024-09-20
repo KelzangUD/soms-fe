@@ -68,6 +68,7 @@ const PaymentReceipt = () => {
     payment: "",
     outstandingBalance: "",
   });
+  const [disablePaymentSelect, setDisablePaymentSelect] = useState(true);
   const [disableFields, setDisabledFields] = useState({
     chequeNoField: true,
     chequeDateField: true,
@@ -120,9 +121,17 @@ const PaymentReceipt = () => {
     fetchBankAccountName();
   }, [paymentMethod]);
   const serviceTypeHandle = (e) => {
+    e?.target?.value === "1"
+      ? setDisablePaymentSelect(false)
+      : setDisablePaymentSelect(true);
     setPaymentReceiptDetails((prev) => ({
       ...prev,
       serviceType: e?.target?.value,
+    }));
+    e?.target?.value !== "1"
+    && setPaymentReceiptDetails((prev) => ({
+      ...prev,
+      payment: "1",
     }));
   };
   const mobileNoHandle = (e) => {
@@ -134,7 +143,8 @@ const PaymentReceipt = () => {
   const fetchCustomerDetailsHandle = async () => {
     if (
       paymentReceiptDetails?.serviceType === "" ||
-      paymentReceiptDetails?.mobileNo === "" || paymentReceiptDetails?.payment === ""
+      paymentReceiptDetails?.mobileNo === "" ||
+      paymentReceiptDetails?.payment === ""
     ) {
       setNotificationMsg(
         "Please Fill Up Both Service Type and Mobile Number fields"
@@ -242,7 +252,9 @@ const PaymentReceipt = () => {
       const placeholderFile = new File([""], "cheque.png");
       formData.append("cheque", placeholderFile);
     }
-    const jsonDataBlob = new Blob([JSON.stringify(paymentReceiptDetails)], { type: "application/json" });
+    const jsonDataBlob = new Blob([JSON.stringify(paymentReceiptDetails)], {
+      type: "application/json",
+    });
     formData.append("billingDetails", jsonDataBlob, "data.json");
     const res = await Route(
       "POST",
@@ -292,9 +304,13 @@ const PaymentReceipt = () => {
       setShowNofication(true);
     }
   };
-  const openInNewTab = () =>{
+  const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
-    const newWindow = window.open(`/bank-receipt?${queryParams}`, '_blank', 'noopener,noreferrer');
+    const newWindow = window.open(
+      `/bank-receipt?${queryParams}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
     if (newWindow) newWindow.opener = null;
   };
   return (
@@ -326,17 +342,6 @@ const PaymentReceipt = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <TextField
-                      label="Mobile Number"
-                      variant="outlined"
-                      fullWidth
-                      name="mobile_no"
-                      required
-                      onChange={mobileNoHandle}
-                      value={paymentReceiptDetails?.mobileNo}
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
                     <FormControl fullWidth>
                       <InputLabel id="payment-select-label">Payment</InputLabel>
                       <Select
@@ -345,6 +350,7 @@ const PaymentReceipt = () => {
                         value={paymentReceiptDetails?.payment}
                         label="Payment"
                         onChange={paymentHandle}
+                        disabled={disablePaymentSelect}
                       >
                         {paymentOptions?.map((item) => (
                           <MenuItem value={item?.id} key={item?.id}>
@@ -353,6 +359,17 @@ const PaymentReceipt = () => {
                         ))}
                       </Select>
                     </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      label="Mobile Number/Account Code"
+                      variant="outlined"
+                      fullWidth
+                      name="mobile_no"
+                      required
+                      onChange={mobileNoHandle}
+                      value={paymentReceiptDetails?.mobileNo}
+                    />
                   </Grid>
                   <Grid item xs={3} alignContent="center">
                     <Button
@@ -549,7 +566,7 @@ const PaymentReceipt = () => {
           </Grid>
         </Grid>
       </Box>
-      {showNotification && severity=== "error" && (
+      {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}
@@ -581,10 +598,7 @@ const PaymentReceipt = () => {
               <Button onClick={openInNewTab} variant="outlined">
                 View Receipt
               </Button>
-              <Button
-                onClick={() => setShowDialog(false)}
-                variant="contained"
-              >
+              <Button onClick={() => setShowDialog(false)} variant="contained">
                 Close
               </Button>
             </DialogActions>
