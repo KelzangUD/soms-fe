@@ -26,9 +26,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Notification from "../../ui/Notification";
-import RechargeReceipt from "../../ui/RechargeReceipt";
 import dayjs from "dayjs";
-// import DialogUi from "../../ui/DialogUi";
 import Route from "../../routes/Route";
 import BulkRechargeFormat from "../../assets/files/BulkRechargeFormat.csv";
 import { dateFormatter } from "../../util/CommonUtil";
@@ -198,7 +196,7 @@ const Recharge = () => {
   };
   const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
-    console.log(rechargeDetails);
+    // console.log(rechargeDetails);
     e.preventDefault();
     let formData = new FormData();
     if (chequeCopy && chequeCopy.length > 0) {
@@ -229,7 +227,7 @@ const Recharge = () => {
       "multipart/form-data"
     );
 
-    console.log(res);
+    // console.log(res);
     if (res?.status === 201) {
       setResponseData(res?.data);
       setSeverity("success");

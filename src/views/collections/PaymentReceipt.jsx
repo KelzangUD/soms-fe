@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Paper,
   Grid,
   TextField,
@@ -9,6 +14,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Slide,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -32,10 +38,15 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
   outlineColor: "#fff",
 });
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const PaymentReceipt = () => {
   const userId = localStorage?.getItem("username");
+  const [responseData, setResponseData] = useState({});
   const [showNotification, setShowNofication] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [paymentReceiptDetails, setPaymentReceiptDetails] = useState({
@@ -54,7 +65,7 @@ const PaymentReceipt = () => {
     chequeNo: "",
     chequeDate: new Date().toString(),
     remarks: "",
-    payment: "1",
+    payment: "",
     outstandingBalance: "",
   });
   const [disableFields, setDisabledFields] = useState({
@@ -123,7 +134,7 @@ const PaymentReceipt = () => {
   const fetchCustomerDetailsHandle = async () => {
     if (
       paymentReceiptDetails?.serviceType === "" ||
-      paymentReceiptDetails?.mobileNo === ""
+      paymentReceiptDetails?.mobileNo === "" || paymentReceiptDetails?.payment === ""
     ) {
       setNotificationMsg(
         "Please Fill Up Both Service Type and Mobile Number fields"
@@ -133,7 +144,7 @@ const PaymentReceipt = () => {
     } else {
       const res = await Route(
         "GET",
-        `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}`,
+        `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
         null,
         null,
         null
@@ -235,23 +246,24 @@ const PaymentReceipt = () => {
     formData.append("billingDetails", jsonDataBlob, "data.json");
     const res = await Route(
       "POST",
-      `/Billing/getOutstandingDetail`,
+      `/Billing/outStandingBillPayment`,
       null,
       formData,
       null,
       "multipart/form-data"
     );
-    console.log(res);
     console.log(paymentReceiptDetails);
-    if (res?.status === 201) {
-      setNotificationMsg(res?.data?.message);
+    console.log(res);
+    if (res?.status === 200) {
+      setResponseData(res?.data);
+      setNotificationMsg(res?.data?.status);
       setSeverity("success");
-      setShowNofication(true);
+      setShowDialog(true);
       setPaymentReceiptDetails((prev) => ({
         ...prev,
         serviceType: "",
         mobileNo: "",
-        postingDate: new Date(),
+        postingDate: new Date().toString(),
         paymentType: "",
         accountCode: "",
         bankId: null,
@@ -262,7 +274,7 @@ const PaymentReceipt = () => {
         acctKey: "",
         billAmount: "",
         chequeNo: "",
-        chequeDate: "",
+        chequeDate: new Date().toString(),
         remarks: "",
         payment: "",
         outstandingBalance: "",
@@ -279,6 +291,11 @@ const PaymentReceipt = () => {
       setSeverity("error");
       setShowNofication(true);
     }
+  };
+  const openInNewTab = () =>{
+    const queryParams = new URLSearchParams(responseData).toString();
+    const newWindow = window.open(`/bank-receipt?${queryParams}`, '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
   };
   return (
     <>
@@ -525,20 +542,54 @@ const PaymentReceipt = () => {
             </Paper>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={4}>
-            <Button variant="outlined">Print</Button>
+            {/* <Button variant="outlined">Print</Button> */}
             <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
               Create & Post
             </Button>
           </Grid>
         </Grid>
       </Box>
-      {showNotification && (
+      {showNotification && severity=== "error" && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}
           message={notificationMsg}
           severity={severity}
         />
+      )}
+      {showDialog && (
+        <React.Fragment>
+          <Dialog
+            open={showDialog}
+            TransitionComponent={Transition}
+            keepMounted
+            fullWidth
+            size="sm"
+            aria-describedby="alert-dialog-slide-description"
+            onClose={(event, reason) => {
+              if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
+                setShowDialog(false);
+              }
+            }}
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                <DialogTitle>{notificationMsg}</DialogTitle>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={openInNewTab} variant="outlined">
+                View Receipt
+              </Button>
+              <Button
+                onClick={() => setShowDialog(false)}
+                variant="contained"
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </React.Fragment>
       )}
     </>
   );

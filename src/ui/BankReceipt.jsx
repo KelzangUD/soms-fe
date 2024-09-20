@@ -1,16 +1,7 @@
 import React from "react";
-// import {
-//   Br,
-//   Cut,
-//   Line,
-//   Printer,
-//   Text,
-//   Row,
-//   render,
-// } from "react-thermal-printer";
 import { useLocation } from "react-router-dom";
 
-const RechargeReceipt = () => {
+const BankReceipt = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const applicationNo = query.get("applicationNo");
@@ -28,7 +19,7 @@ const RechargeReceipt = () => {
         <div style={{ textAlign: "center" }}>
           <h3>{companyName}</h3>
           <p>{customerName}</p>
-          <h4>Cash Receipt</h4>
+          <h4>Bank Receipt</h4>
         </div>
         <hr />
         <div>
@@ -71,4 +62,4 @@ const RechargeReceipt = () => {
   );
 };
 
-export default RechargeReceipt;
+export default BankReceipt;
