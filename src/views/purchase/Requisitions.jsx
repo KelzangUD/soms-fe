@@ -40,8 +40,8 @@ const Requisitions = () => {
   const [requisitionData, setRequisitionData] = useState({
     requisitionType: null,
     createdBy: empId,
-    needByDate: dateFormatter(new Date().toISOString()),
-    requisitionDate: dateFormatter(new Date().toISOString()),
+    needByDate: new Date(),
+    requisitionDate: new Date(),
     itemDTOList: [],
   });
   const [itemDTOList, setItemDTOList] = useState({
@@ -89,13 +89,13 @@ const Requisitions = () => {
   const requisitionDateHandle = (e) => {
     setRequisitionData((prev) => ({
       ...prev,
-      requisitionDate: dateFormatter(e.$d?.toISOString()),
+      requisitionDate: e.$d,
     }));
   };
   const needByDateHandle = (e) => {
     setRequisitionData((prev) => ({
       ...prev,
-      needByDate: dateFormatter(e.$d?.toISOString()),
+      needByDate: e.$d,
     }));
   };
   const selectItemHandle = (e, value) => {
@@ -136,14 +136,14 @@ const Requisitions = () => {
     e.preventDefault();
     const res = await Route(
       "POST",
-      `requisition/createRequisition`,
+      `/requisition/createRequisition`,
       null,
       requisitionData,
       null
     );
     console.log(res);
-    if (res?.status === 200) {
-      setNotificationMsg(res?.data?.status);
+    if (res?.status === 201) {
+      setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
       setShowNofication(true);
       setRequisitionData((prev) => ({
