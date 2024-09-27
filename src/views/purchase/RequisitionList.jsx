@@ -1,24 +1,63 @@
 import React, { useState, useEffect } from "react";
-import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
+import {
+  Box,
+  Paper,
+  Grid,
+  Button,
+  InputBase,
+  IconButton,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import EditIcon from "@mui/icons-material/Edit";
+// import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
+import Notification from "../../ui/Notification";
+import ViewRequisitionItemDetails from "./ViewRequisitionItemDetails";
 
 const RequisitionList = () => {
+  const empId = localStorage.getItem("username");
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const [requisitionList, setRequisitionList] = useState([]);
+  const [itemDetails, setItemDetails] = useState([]);
+  const [showViewDetails, setShowViewDetails] = useState(false);
+
+  const viewDetailsHandle = async (params) => {
+    // console.log(params?.row);
+    const res = await Route(
+      "GET",
+      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empId}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      console?.log(res);
+      setItemDetails(res?.data);
+      setShowViewDetails(true);
+    } else {
+      setNotificationMsg(res?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
+  };
+
   const requisiton_list_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "requisition_no", headerName: "Requisition No", width: 200 },
-    { field: "requisiton_type", headerName: "Requisition Type", width: 200 },
-    { field: "creation_date", headerName: "Creation Date", width: 150 },
-    { field: "item_description", headerName: "Item Description", width: 450 },
+    { field: "requisitionNo", headerName: "Requisition No", width: 200 },
     {
-      field: "approval_status",
+      field: "requisitionTypeName",
+      headerName: "Requisition Type",
+      width: 200,
+    },
+    { field: "requisition_Date", headerName: "Requisition Date", width: 150 },
+    {
+      field: "approvalStatus",
       headerName: "Approval Status",
       width: 150,
     },
@@ -28,38 +67,36 @@ const RequisitionList = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="edit" size="small">
+          {/* <IconButton aria-label="edit" size="small">
             <EditIcon fontSize="inherit" />
-          </IconButton>
-          <IconButton aria-label="view" size="small">
+          </IconButton> */}
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => viewDetailsHandle(params)}
+          >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const requisiton_list_rows = [
-    {
-      id: 1,
-      requisition_no: "EM/DP1/2024/00001",
-      requisiton_type: "Type",
-      creation_date: "11-Jul-2024",
-      item_description:
-        "Samsung Galaxy A04 4GB RAM 64GB, Copper (SM-A045FZCGINS)",
-      approval_status: "Submitted",
-    },
-  ];
-
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const token = localStorage.getItem("token");
+  const fetchRequisitionList = async () => {
+    const res = await Route(
+      "GET",
+      `/requisition/viewRequisitionListByCreator/${empId}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setRequisitionList(res?.data);
+    }
+  };
+  useEffect(() => {
+    fetchRequisitionList();
+  }, []);
 
   return (
     <>
@@ -128,9 +165,15 @@ const RequisitionList = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
-                      rows={requisiton_list_rows?.map((row, index) => ({
+                      rows={requisitionList?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
                       }))}
@@ -149,6 +192,21 @@ const RequisitionList = () => {
           </Grid>
         </Grid>
       </Box>
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
+      {showViewDetails && (
+        <ViewRequisitionItemDetails
+          open={showViewDetails}
+          setOpen={setShowViewDetails}
+          details={itemDetails}
+        />
+      )}
     </>
   );
 };
