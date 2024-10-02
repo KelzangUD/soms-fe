@@ -9,16 +9,70 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
+import Notification from "../../ui/Notification";
+import UpdateRequisition from "./UpdateRequisition";
+import ApproveRequisition from "./ApproveRequisition";
 
 const RequisitionApproval = () => {
+  const approver = "E00337";
+  // const approver = "E00029";
+  const [requisitionList, setRequisitionList] = useState([]);
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const [itemDetails, setItemDetails] = useState([]);
+  const [showViewDetails, setShowViewDetails] = useState(false);
+  const [showApproveDetails, setShowApproveDetails] = useState(false);
+
+  const updateHandle = async (params) => {
+    // console.log(params?.row);
+    const res = await Route(
+      "GET",
+      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${approver}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      // console?.log(res);
+      setItemDetails(res?.data);
+      setShowViewDetails(true);
+    } else {
+      setNotificationMsg(res?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
+  };
+  const viewDetailsHandle = async (params) => {
+    const res = await Route(
+      "GET",
+      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${approver}`,
+      null,
+      null,
+      null
+    );
+    console.log(res);
+    if (res?.status === 200) {
+      // console?.log(res);
+      setItemDetails(res?.data);
+      setShowApproveDetails(true);
+    } else {
+      setNotificationMsg(res?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
+  };
   const requisiton_approval_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "requisition_no", headerName: "Requisition No", width: 200 },
-    { field: "requisition_type", headerName: "Requisition Type", width: 200 },
-    { field: "creation_date", headerName: "Creation Date", width: 150 },
-    { field: "item_description", headerName: "Item Description", width: 550 },
+    { field: "requisitionNo", headerName: "Requisition No", width: 200 },
     {
-      field: "status",
+      field: "requisitionTypeName",
+      headerName: "Requisition Type",
+      width: 200,
+    },
+    { field: "requisition_Date", headerName: "Requisition Date", width: 150 },
+    {
+      field: "approvalStatus",
       headerName: "Approval Status",
       width: 150,
     },
@@ -28,38 +82,40 @@ const RequisitionApproval = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="edit" size="small">
+          <IconButton
+            aria-label="edit"
+            size="small"
+            onClick={() => updateHandle(params)}
+          >
             <EditIcon fontSize="inherit" />
           </IconButton>
-          <IconButton aria-label="view" size="small">
+          <IconButton
+            aria-label="approve"
+            size="small"
+            onClick={() => viewDetailsHandle(params)}
+          >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const requisition_approval_rows = [
-    {
-      id: 1,
-      requisition_no: "EM/DP1/2024/00001",
-      requisition_type: "Samsung",
-      creation_date: "20-Aug-2024",
-      item_description:
-        "Samsung Galaxy A04 4GB RAM 64GB, Copper (SM-A045FZCGINS)",
-      status: "Submitted",
-    },
-  ];
-
   //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const fetchRequisitionListByApprover = async () => {
+    const res = await Route(
+      "GET",
+      `/requisition/viewRequisitionListByApprover/${approver}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setRequisitionList(res?.data);
+    }
+  };
+  useEffect(() => {
+    fetchRequisitionListByApprover();
+  }, []);
 
   return (
     <>
@@ -101,19 +157,25 @@ const RequisitionApproval = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
-                  <Grid item>
+                  {/* <Grid item>
                     <Button variant="outlined" color="error" sx={{ mr: 2 }}>
                       Reject
                     </Button>
                     <Button variant="contained" color="success">
                       Approve
                     </Button>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
-                      rows={requisition_approval_rows?.map((row, index) => ({
+                      rows={requisitionList?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
                       }))}
@@ -132,6 +194,30 @@ const RequisitionApproval = () => {
           </Grid>
         </Grid>
       </Box>
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
+      {showViewDetails && (
+        <UpdateRequisition
+          open={showViewDetails}
+          setOpen={setShowViewDetails}
+          details={itemDetails}
+          fetchRequisitionListByApprover={fetchRequisitionListByApprover}
+        />
+      )}
+      {showApproveDetails && (
+        <ApproveRequisition
+          open={showApproveDetails}
+          setOpen={setShowApproveDetails}
+          details={itemDetails}
+          fetchRequisitionListByApprover={fetchRequisitionListByApprover}
+        />
+      )}
     </>
   );
 };

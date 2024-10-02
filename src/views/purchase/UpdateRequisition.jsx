@@ -1,13 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Button, Dialog, Slide, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Button,
+  Dialog,
+  Slide,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import Notification from "../../ui/Notification";
+import Route from "../../routes/Route";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
+const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByApprover }) => {
+  const approver = "E00337";
+  // const approver = "E00029";
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
   const [itemDTOlist, setItemDTOList] = useState([]);
-
+  const [updateRequisitionItems, setApproveRequisitionItems] = useState({
+    requisitionNo: details?.requisitionNo,
+    employeeCode: approver,
+    itemDTOList: details?.itemDTOList?.map((item) => ({
+      req_Item_No: item?.req_Item_No,
+      received_Qty:
+        details?.hierarchyLevel === "Level1"
+          ? item?.level1_Qty
+          : item?.level2_Qty,
+      received_Remark: item?.received_Remark,
+    })),
+  });
   useEffect(() => {
     setItemDTOList(
       details?.itemDTOList?.map((item) => ({
@@ -17,9 +44,36 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
         uom: item?.uom,
         qty: item?.qty,
         level1_Qty: item?.level1_Qty,
+        received_Remark: item?.received_Remark,
       }))
     );
   }, [details]);
+  const approveQtyHandle = (e, params) => {
+    const { id } = params;
+    const qty = e?.target?.value;
+    if (qty > params?.row?.qty) {
+      setNotificationMsg("Approve Qty should not be greater than Actual Qty!");
+      setSeverity("info");
+      setShowNofication(true);
+    } else {
+      setApproveRequisitionItems((prev) => ({
+        ...prev,
+        itemDTOList: prev?.itemDTOList?.map((item) =>
+          item?.req_Item_No == id ? { ...item, received_Qty: qty } : item
+        ),
+      }));
+    }
+  };
+  const remarksHandle = (e, params) => {
+    const { id } = params;
+    const remarks = e?.target?.value;
+    setApproveRequisitionItems((prev) => ({
+      ...prev,
+      itemDTOList: prev?.itemDTOList?.map((item) =>
+        item?.req_Item_No == id ? { ...item, received_Remark: remarks } : item
+      ),
+    }));
+  };
   const requisiton_item_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "item_Number", headerName: "Item Number", width: 200 },
@@ -32,15 +86,82 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
     { field: "qty", headerName: "Quantity", width: 150 },
     {
       field: "level1_Qty",
+      headerName: "Actual Quantity",
+      width: 150,
+    },
+    {
+      field: "approve_quantity",
       headerName: "Approve Quantity",
       width: 150,
+      renderCell: (params) => (
+        <>
+          <TextField
+            id="outlined-basic"
+            label="Approve Qty"
+            variant="outlined"
+            size="small"
+            defaultValue={
+              approver === "E00337"
+                ? params?.row?.level1_Qty
+                : params?.row?.level2_Qty
+            }
+            onChange={(e) => approveQtyHandle(e, params)}
+          />
+        </>
+      ),
     },
     {
       field: "received_Remark",
       headerName: "Remarks",
-      width: 150,
+      width: 500,
+      renderCell: (params) => (
+        <>
+          <TextField
+            id="outlined-basic"
+            label="Remarks"
+            variant="outlined"
+            size="small"
+            defaultValue={params?.row?.received_Remark}
+            onChange={(e) => remarksHandle(e, params)}
+          />
+        </>
+      ),
     },
   ];
+  const updateHandle = async () => {
+    // console.log(updateRequisitionItems);
+    const res = await Route(
+      "PUT",
+      `/requisition/updateRequisitionItemDetails`,
+      null,
+      updateRequisitionItems,
+      null
+    );
+    console.log(res);
+    if (res?.status === 200) {
+      setNotificationMsg(res?.data?.responseText);
+      setSeverity("success");
+      setShowNofication(true);
+      setApproveRequisitionItems((prev) => ({
+        ...prev,
+        requisitionNo: details?.requisitionNo,
+        employeeCode: approver,
+        itemDTOList: details?.itemDTOList?.map((item) => ({
+          req_Item_No: item?.req_Item_No,
+          received_Qty:
+            details?.hierarchyLevel === "Level1"
+              ? item?.level1_Qty
+              : item?.level2_Qty,
+          received_Remark: "",
+        })),
+      }));
+      fetchRequisitionListByApprover();
+    } else {
+      setNotificationMsg(res?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
+  };
   return (
     <>
       <Dialog
@@ -131,8 +252,11 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
               xs={12}
               alignItems="right"
               paddingX={2}
-              sx={{ display: "flex", justifyContent: "flex-end" }}
+              sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
+              <Button variant="contained" onClick={updateHandle}>
+                Update
+              </Button>
               <Button variant="outlined" onClick={() => setOpen(false)}>
                 Close
               </Button>
@@ -140,8 +264,16 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
           </Grid>
         </Box>
       </Dialog>
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
     </>
   );
 };
 
-export default ViewRequisitionItemDetails;
+export default UpdateRequisition;

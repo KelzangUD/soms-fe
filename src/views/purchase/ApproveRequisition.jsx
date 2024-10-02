@@ -1,13 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Button, Dialog, Slide, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Button,
+  Dialog,
+  Slide,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import Notification from "../../ui/Notification";
+import Route from "../../routes/Route";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
+const ApproveRequisition = ({ open, setOpen, details, fetchRequisitionListByApprover }) => {
+  // const approver = "E00337";
+  const approver = "E00029";
+  const empID = localStorage.getItem("username");
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
   const [itemDTOlist, setItemDTOList] = useState([]);
-
   useEffect(() => {
     setItemDTOList(
       details?.itemDTOList?.map((item) => ({
@@ -17,6 +33,7 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
         uom: item?.uom,
         qty: item?.qty,
         level1_Qty: item?.level1_Qty,
+        received_Remark: item?.received_Remark,
       }))
     );
   }, [details]);
@@ -32,15 +49,69 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
     { field: "qty", headerName: "Quantity", width: 150 },
     {
       field: "level1_Qty",
+      headerName: "Actual Quantity",
+      width: 150,
+    },
+    {
+      field: "approve_quantity",
       headerName: "Approve Quantity",
       width: 150,
+      renderCell: (params) => (
+        <>
+          <TextField
+            id="outlined-basic"
+            label="Approve Qty"
+            variant="outlined"
+            size="small"
+            disabled
+            defaultValue={
+              approver === "E00337"
+                ? params?.row?.level1_Qty
+                : params?.row?.level2_Qty
+            }
+          />
+        </>
+      ),
     },
     {
       field: "received_Remark",
       headerName: "Remarks",
-      width: 150,
+      width: 500,
+      renderCell: (params) => (
+        <>
+          <TextField
+            id="outlined-basic"
+            label="Remarks"
+            variant="outlined"
+            size="small"
+            disabled
+            defaultValue={params?.row?.received_Remark}
+          />
+        </>
+      ),
     },
   ];
+  const updateHandle = async () => {
+    const res = await Route(
+      "PUT",
+      `/requisition/approveRequisitionDetails?requisitionNo=${details?.requisitionNo}&empID=${approver}`,
+      null,
+      null,
+      null
+    );
+    console.log(res);
+    if (res?.status === 200) {
+      setNotificationMsg(res?.data?.responseText);
+      setSeverity("success");
+      setShowNofication(true);
+      fetchRequisitionListByApprover();
+      setOpen(false);
+    } else {
+      setNotificationMsg(res?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
+  };
   return (
     <>
       <Dialog
@@ -131,8 +202,11 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
               xs={12}
               alignItems="right"
               paddingX={2}
-              sx={{ display: "flex", justifyContent: "flex-end" }}
+              sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
+              <Button variant="contained" onClick={updateHandle}>
+                Approve
+              </Button>
               <Button variant="outlined" onClick={() => setOpen(false)}>
                 Close
               </Button>
@@ -140,8 +214,16 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
           </Grid>
         </Box>
       </Dialog>
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
     </>
   );
 };
 
-export default ViewRequisitionItemDetails;
+export default ApproveRequisition;

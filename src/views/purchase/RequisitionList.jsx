@@ -37,7 +37,7 @@ const RequisitionList = () => {
       null
     );
     if (res?.status === 200) {
-      console?.log(res);
+      // console?.log(res);
       setItemDetails(res?.data);
       setShowViewDetails(true);
     } else {

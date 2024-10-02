@@ -45,8 +45,8 @@ const Requisitions = () => {
     itemDTOList: [],
   });
   const [itemDTOList, setItemDTOList] = useState({
-    item_description: null,
-    item_number: "",
+    item_Description: null,
+    item_Number: "",
     uom: "",
     amount: "",
     qty: "",
@@ -101,8 +101,8 @@ const Requisitions = () => {
   const selectItemHandle = (e, value) => {
     setItemDTOList((prev) => ({
       ...prev,
-      item_description: value?.label,
-      item_number: value?.item_Number,
+      item_Description: value?.label,
+      item_Number: value?.item_Number,
       uom: value?.uom,
     }));
   };
@@ -119,8 +119,8 @@ const Requisitions = () => {
     }));
     setItemDTOList((prev) => ({
       ...prev,
-      item_description: null,
-      item_number: "",
+      item_Description: null,
+      item_Number: "",
       uom: "",
       qty: "",
     }));
