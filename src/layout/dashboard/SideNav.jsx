@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { MenuItems } from "./SideBar";
 import { menuListFilter } from "../../util/CommonUtil";
-import { privileges } from "../../data/dummy";
+// import { privileges } from "../../data/dummy";
 
 export default function SideNav() {
   const navigation = useNavigate();
@@ -42,8 +42,9 @@ export default function SideNav() {
   const [menuList, setMenuList] = useState([]);
 
   useEffect(() => {
-    console.log(menuListFilter(MenuItems, privileges));
-    setMenuList(menuListFilter(MenuItems, privileges))
+    if (localStorage?.getItem("privileges")?.length > 0) {
+      setMenuList(menuListFilter(MenuItems, JSON.parse(localStorage?.getItem("privileges"))));
+    }
   },[]);
 
   return (

@@ -23,7 +23,7 @@ import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import Notification from "../ui/Notification";
 import Route from "../routes/Route";
-import login from "../data/login.json";
+import { jwtDecode } from "jwt-decode";
 
 const SignIn = () => {
   const navigagte = useNavigate();
@@ -46,19 +46,37 @@ const SignIn = () => {
       setMessage("Please Fill Up with neccessary information");
       setOpen(true);
     } else {
-      localStorage.setItem("username", login?.username);
-      localStorage.setItem("access_token", login?.access_token);
-      localStorage.setItem("refresh_token", login?.refresh_token);
-      navigagte("/home/dashboard");
-      // const res = await Route("POST", "/auth/authenticate", null, formData, null);
-      // if (res?.status === 200) {
-      //   localStorage.setItem("user", JSON.stringify(res?.data?.user));
-      //   localStorage.setItem("token", res?.data?.access_token);
-      //   navigagte("/home/dashboard");
-      // } else {
-      //   setMessage(res?.data?.message);
-      //   setOpen(true);
-      // }
+      const res = await Route(
+        "POST",
+        "/api/v1/auth/authenticate",
+        null,
+        formData,
+        null
+      );
+      if (res?.status === 200) {
+        const decoded = jwtDecode(res?.data?.access_token);
+        if (decoded) {
+          const response = await Route(
+            "GET",
+            `/UserDtls/Module?role=${decoded?.roles[1]}`,
+            null,
+            null,
+            null
+          );
+          if (response?.status === 200) {
+            console.log(response?.data);
+            localStorage.setItem("username", formData?.username);
+            localStorage.setItem("access_token", res?.data?.access_token);
+            localStorage.setItem("refresh_token", res?.data?.refresh_token);
+            localStorage.setItem("privileges", JSON.stringify(response?.data))
+            navigagte("/home/dashboard");
+          } else {
+            setMessage(res?.data?.message);
+            setOpen(true);
+          }
+        }
+      } else {
+      }
     }
   };
 

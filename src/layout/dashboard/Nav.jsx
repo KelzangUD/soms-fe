@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import KeyIcon from "@mui/icons-material/Key";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -34,10 +34,10 @@ const Nav = () => {
   useEffect(() => {
     setCurrentLocation(location?.pathname?.split("/").pop());
     console.log(window.innerWidth);
-  },[location]);
+  }, [location]);
   useEffect(() => {
-    setPaddingY(window.innerWidth > 1536 ? "36px": "30px");
-  },[window.innerWidth]);
+    setPaddingY(window.innerWidth > 1536 ? "36px" : "30px");
+  }, [window.innerWidth]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -61,26 +61,24 @@ const Nav = () => {
   const changePasswordHandle = () => {
     navigation("/home/change-password");
   };
-  // const token = localStorage.getItem("access_token");
-  
+  const token = localStorage.getItem("access_token");
+
   const logoutHandle = async () => {
-    localStorage.removeItem("username");
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    navigation("/");
     // const user = JSON.parse(localStorage.getItem("user"));
     // const data = {
     //   empId: user?.empId,
     // };
-    // const res = await Route("POST", "/logout", token, data, null);
-    // if (res?.status === 200) {
-    //   localStorage.removeItem("user");
-    //   localStorage.removeItem("token");
-    //   navigation("/sign-in");
-    // } else {
-    //   setMessage(res?.response?.data?.message);
-    //   setOpen(true);
-    // }
+    const res = await Route("GET", "/api/v1/auth/logout", token, null, null);
+    if (res?.status === 200) {
+      localStorage.removeItem("username");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("user");
+      navigation("/");
+    } else {
+      setMessage(res?.response?.data?.message);
+      setOpen(true);
+    }
   };
 
   const menuId = "primary-search-account-menu";
