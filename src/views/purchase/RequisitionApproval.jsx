@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
-import PrintIcon from "@mui/icons-material/Print";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
@@ -14,8 +10,7 @@ import UpdateRequisition from "./UpdateRequisition";
 import ApproveRequisition from "./ApproveRequisition";
 
 const RequisitionApproval = () => {
-  const approver = "E00337";
-  // const approver = "E00029";
+  const empID = localStorage.getItem("username");
   const [requisitionList, setRequisitionList] = useState([]);
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -25,16 +20,14 @@ const RequisitionApproval = () => {
   const [showApproveDetails, setShowApproveDetails] = useState(false);
 
   const updateHandle = async (params) => {
-    // console.log(params?.row);
     const res = await Route(
       "GET",
-      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${approver}`,
+      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
       null,
       null,
       null
     );
     if (res?.status === 200) {
-      // console?.log(res);
       setItemDetails(res?.data);
       setShowViewDetails(true);
     } else {
@@ -46,14 +39,12 @@ const RequisitionApproval = () => {
   const viewDetailsHandle = async (params) => {
     const res = await Route(
       "GET",
-      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${approver}`,
+      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
       null,
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200) {
-      // console?.log(res);
       setItemDetails(res?.data);
       setShowApproveDetails(true);
     } else {
@@ -104,7 +95,7 @@ const RequisitionApproval = () => {
   const fetchRequisitionListByApprover = async () => {
     const res = await Route(
       "GET",
-      `/requisition/viewRequisitionListByApprover/${approver}`,
+      `/requisition/viewRequisitionListByApprover/${empID}`,
       null,
       null,
       null
@@ -121,7 +112,6 @@ const RequisitionApproval = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Requsition Approval" /> */}
           <Grid
             item
             xs={12}
@@ -157,14 +147,6 @@ const RequisitionApproval = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
-                  {/* <Grid item>
-                    <Button variant="outlined" color="error" sx={{ mr: 2 }}>
-                      Reject
-                    </Button>
-                    <Button variant="contained" color="success">
-                      Approve
-                    </Button>
-                  </Grid> */}
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
                   <div

@@ -6,16 +6,22 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
+import CreateTransferOrder from "./CreateTransferOrder";
 
 const TransferOrders = () => {
+  const [open, setOpen] = useState(false);
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "transfer_order_no", headerName: "Transfer Order No", width: 250 },
-    { field: "transfer_from_code", headerName: "Transfer From Code", width: 250 },
+    {
+      field: "transfer_from_code",
+      headerName: "Transfer From Code",
+      width: 250,
+    },
     { field: "transfer_to_code", headerName: "Tansfer To Code", width: 250 },
     { field: "posted_date", headerName: "Posted Date", width: 150 },
     {
@@ -102,13 +108,24 @@ const TransferOrders = () => {
                     </Paper>
                   </Grid>
                   <Grid item>
-                    <Button variant="contained" color="primary" endIcon={<AddIcon />}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      endIcon={<AddIcon />}
+                      onClick={() => setOpen(true)}
+                    >
                       Add New
                     </Button>
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
                       rows={transfer_order_rows?.map((row, index) => ({
                         ...row,
@@ -129,6 +146,7 @@ const TransferOrders = () => {
           </Grid>
         </Grid>
       </Box>
+      {open && <CreateTransferOrder open={open} setOpen={setOpen} />}
     </>
   );
 };

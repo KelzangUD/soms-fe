@@ -19,7 +19,6 @@ import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { MenuItems } from "./SideBar";
 import { menuListFilter } from "../../util/CommonUtil";
-// import { privileges } from "../../data/dummy";
 
 export default function SideNav() {
   const navigation = useNavigate();

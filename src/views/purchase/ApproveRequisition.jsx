@@ -16,9 +16,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ApproveRequisition = ({ open, setOpen, details, fetchRequisitionListByApprover }) => {
-  // const approver = "E00337";
-  const approver = "E00029";
+const ApproveRequisition = ({
+  open,
+  setOpen,
+  details,
+  fetchRequisitionListByApprover,
+}) => {
   const empID = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -65,9 +68,9 @@ const ApproveRequisition = ({ open, setOpen, details, fetchRequisitionListByAppr
             size="small"
             disabled
             defaultValue={
-              approver === "E00337"
-                ? params?.row?.level1_Qty
-                : params?.row?.level2_Qty
+              details?.hierarchyLevel === "Level1"
+                ? details?.itemDTOList?.map((item) => (item?.level1_Qty)) 
+                : details?.itemDTOList?.map((item) => (item?.level2_Qty)) 
             }
           />
         </>
@@ -94,12 +97,11 @@ const ApproveRequisition = ({ open, setOpen, details, fetchRequisitionListByAppr
   const updateHandle = async () => {
     const res = await Route(
       "PUT",
-      `/requisition/approveRequisitionDetails?requisitionNo=${details?.requisitionNo}&empID=${approver}`,
+      `/requisition/approveRequisitionDetails?requisitionNo=${details?.requisitionNo}&empID=${empID}`,
       null,
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200) {
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");

@@ -216,8 +216,6 @@ const Recharge = () => {
     });
 
     formData.append("recharge", jsonDataBlob, "data.json");
-
-    // console.log(formData);
     const res = await Route(
       "POST",
       `/Recharge/eTop_Up`,
@@ -226,8 +224,6 @@ const Recharge = () => {
       null,
       "multipart/form-data"
     );
-
-    // console.log(res);
     if (res?.status === 201) {
       setResponseData(res?.data);
       setSeverity("success");

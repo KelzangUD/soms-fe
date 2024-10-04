@@ -17,15 +17,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByApprover }) => {
-  const approver = "E00337";
-  // const approver = "E00029";
+  const empID = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [itemDTOlist, setItemDTOList] = useState([]);
   const [updateRequisitionItems, setApproveRequisitionItems] = useState({
     requisitionNo: details?.requisitionNo,
-    employeeCode: approver,
+    employeeCode: empID,
     itemDTOList: details?.itemDTOList?.map((item) => ({
       req_Item_No: item?.req_Item_No,
       received_Qty:
@@ -101,9 +100,9 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
             variant="outlined"
             size="small"
             defaultValue={
-              approver === "E00337"
-                ? params?.row?.level1_Qty
-                : params?.row?.level2_Qty
+              details?.hierarchyLevel === "Level1"
+              ? details?.itemDTOList?.map((item) => (item?.level1_Qty)) 
+              : details?.itemDTOList?.map((item) => (item?.level2_Qty)) 
             }
             onChange={(e) => approveQtyHandle(e, params)}
           />
@@ -129,7 +128,6 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
     },
   ];
   const updateHandle = async () => {
-    // console.log(updateRequisitionItems);
     const res = await Route(
       "PUT",
       `/requisition/updateRequisitionItemDetails`,
@@ -137,7 +135,6 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
       updateRequisitionItems,
       null
     );
-    console.log(res);
     if (res?.status === 200) {
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
@@ -145,7 +142,7 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
       setApproveRequisitionItems((prev) => ({
         ...prev,
         requisitionNo: details?.requisitionNo,
-        employeeCode: approver,
+        employeeCode: empID,
         itemDTOList: details?.itemDTOList?.map((item) => ({
           req_Item_No: item?.req_Item_No,
           received_Qty:

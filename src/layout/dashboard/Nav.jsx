@@ -33,7 +33,6 @@ const Nav = () => {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   useEffect(() => {
     setCurrentLocation(location?.pathname?.split("/").pop());
-    console.log(window.innerWidth);
   }, [location]);
   useEffect(() => {
     setPaddingY(window.innerWidth > 1536 ? "36px" : "30px");
@@ -62,12 +61,7 @@ const Nav = () => {
     navigation("/home/change-password");
   };
   const token = localStorage.getItem("access_token");
-
   const logoutHandle = async () => {
-    // const user = JSON.parse(localStorage.getItem("user"));
-    // const data = {
-    //   empId: user?.empId,
-    // };
     const res = await Route("GET", "/api/v1/auth/logout", token, null, null);
     if (res?.status === 200) {
       localStorage.removeItem("username");

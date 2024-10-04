@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Alert,
   Grid,
   Box,
   Container,
@@ -58,7 +57,7 @@ const SignIn = () => {
         if (decoded) {
           const response = await Route(
             "GET",
-            `/UserDtls/Module?role=${decoded?.roles[1]}`,
+            `/UserDtls/Module?role=${decoded?.roles[1]}&userId=${formData?.username}`,
             null,
             null,
             null
