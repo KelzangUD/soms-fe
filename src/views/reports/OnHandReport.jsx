@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Autocomplete,
   Box,
   Paper,
   Grid,
@@ -40,17 +41,38 @@ const OnHandReport = () => {
     {
       field: "item_Description",
       headerName: "Item Description",
-      width: 350,
+      width: 450,
     },
     { field: "uom", headerName: "UOM", width: 100 },
     { field: "transaction_Quantity", headerName: "Quantity", width: 100 },
-    { field: "serial_Number", headerName: "Serial No", width: 150 },
+    { field: "serial_Number", headerName: "Serial No", width: 200 },
     { field: "imei_number", headerName: "IMEI No", width: 150 },
     { field: "sub_inventory_id", headerName: "Sub-Inventory", width: 150 },
     { field: "locator_id", headerName: "Locator", width: 150 },
   ];
+  const [regionOrExtension, setRegionOrExtension] = useState([]);
+  const [itemsList, setItemsList] = useState([]);
+  const [locatorsList, setLocatorsList] = useState([]);
   const token = localStorage.getItem("access_token");
   const username = localStorage.getItem("username");
+  const fetchRegionOrExtension = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchAllRegionOrExtension`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setRegionOrExtension(res?.data);
+    }
+  };
+  const fetchItemsList = async () => {
+    const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
+    if (res?.status === 200) {
+      setItemsList(res?.data);
+    }
+  };
   const fetchUserDetails = async () => {
     const res = await Route(
       "GET",
@@ -62,29 +84,79 @@ const OnHandReport = () => {
     if (res?.status === 200) {
       setDetails((prev) => ({
         ...prev,
-        storeName: res?.data?.region_NAME
+        storeName: res?.data?.region_NAME,
       }));
     }
   };
-  const fetchOnHandReports = async () => {
-    const res = await Route("GET", "/OnHand/Fetch_OnHand_Items", null, details, null);
-    console.log(res);
+  const fetchLocatorsBasedOnExtension = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchLocatorByExtension?extension=${details?.storeName}`,
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
-      setOnHandReports(res?.data)
+      setLocatorsList(res?.data);
+    }
+  };
+  const fetchOnHandReports = async () => {
+    const res = await Route(
+      "GET",
+      `/OnHand/Fetch_OnHand_Items?storeName=${details?.storeName}&item=${details?.item}&locator_id=${details?.locator_id}&serialNo=${details?.serialNo}&imei_no=${details?.imei_no}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setOnHandReports(res?.data);
     }
   };
   useEffect(() => {
+    fetchRegionOrExtension();
+    fetchItemsList();
     fetchUserDetails();
   }, []);
   useEffect(() => {
+    fetchLocatorsBasedOnExtension();
     fetchOnHandReports();
   }, [details]);
+  const storeHandle = (e, value) => {
+    setDetails((prev) => ({
+      ...prev,
+      storeName: value?.id,
+      locator_id: "ALL",
+    }));
+  };
+  const itemHandle = (e, value) => {
+    setDetails((prev) => ({
+      ...prev,
+      item: value?.id,
+    }));
+  };
+  const locatorHandle = (e, value) => {
+    setDetails((prev) => ({
+      ...prev,
+      locator_id: value?.id,
+    }));
+  };
+  const serialNoHandle = (e) => {
+    setDetails((prev) => ({
+      ...prev,
+      serialNo: e?.target?.value,
+    }));
+  };
+  const imeiNoHandle = (e) => {
+    setDetails((prev) => ({
+      ...prev,
+      imei_no: e?.target?.value,
+    }));
+  };
 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="On Hand Report" /> */}
           <Grid
             item
             xs={12}
@@ -95,106 +167,9 @@ const OnHandReport = () => {
                 <Grid
                   item
                   xs={12}
-                  spacing={2}
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <Grid
-                    item
-                    container
-                    xs={8}
-                    direction="column-reverse"
-                    spacing={2}
-                  >
-                    <Grid item container spacing={1} alignItems="center">
-                      <Grid item xs={2}>
-                        <TextField
-                          label="As On Date"
-                          variant="outlined"
-                          fullWidth
-                          name="as_on_date"
-                          required
-                          disabled
-                          style={{ background: "#fff" }}
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <FormControl fullWidth style={{ background: "#fff" }}>
-                          <InputLabel id="region-or-extension-select-label">
-                            Region/Extension
-                          </InputLabel>
-                          <Select
-                            labelId="region-or-extension-select-label"
-                            id="region-or-extension-select"
-                            // value={age}
-                            label="Region/Extension"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>
-                              TIPL_Dagapela Extension
-                            </MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormControl fullWidth style={{ background: "#fff" }}>
-                          <InputLabel id="item-select-label">Item</InputLabel>
-                          <Select
-                            labelId="item-select-label"
-                            id="item-select"
-                            // value={age}
-                            label="Item"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>
-                              20W USB-C POWER ADAPTER-ITP (MHJF32P/A)
-                              (OM-SPE-SPA-IPN-20WPN)
-                            </MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff" }}>
-                          <InputLabel id="creator-select-label">
-                            Creator
-                          </InputLabel>
-                          <Select
-                            labelId="creator-select-label"
-                            id="creator-select"
-                            // value={age}
-                            label="Creator"
-                            // onChange={handleChange}
-                          >
-                            {/* <MenuItem value={1}>
-                              20W USB-C POWER ADAPTER-ITP (MHJF32P/A) (OM-SPE-SPA-IPN-20WPN)
-                            </MenuItem> */}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <TextField
-                          label="Serial No."
-                          variant="outlined"
-                          fullWidth
-                          name="serial_no"
-                          required
-                          style={{ background: "#fff" }}
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <TextField
-                          label="IMEI No."
-                          variant="outlined"
-                          fullWidth
-                          name="imei_no"
-                          required
-                          // onChange={oldPasswordHandle}
-                          style={{ background: "#fff" }}
-                        />
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Button variant="contained">Search</Button>
-                      </Grid>
-                    </Grid>
+                  <Grid item>
                     <Grid item>
                       <Paper
                         sx={{
@@ -219,7 +194,7 @@ const OnHandReport = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item sx={{ mr: 2 }}>
                     <Button
                       variant="contained"
                       color="error"
@@ -242,6 +217,91 @@ const OnHandReport = () => {
                       endIcon={<PrintIcon />}
                     >
                       Print
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Grid item container spacing={2} sx={{ px: 2, pt: 2 }}>
+                  <Grid item xs={1}>
+                    <TextField
+                      label="As On Date"
+                      variant="outlined"
+                      fullWidth
+                      name="as_on_date"
+                      required
+                      disabled
+                      value={new Date().toString()}
+                      style={{ background: "#fff" }}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Autocomplete
+                      disablePortal
+                      options={regionOrExtension?.map((item) => ({
+                        label: item?.extensionName,
+                        id: item?.id,
+                      }))}
+                      value={details?.storeName}
+                      onChange={storeHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Region/Extension" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Autocomplete
+                      disablePortal
+                      options={itemsList?.map((item) => ({
+                        label: item?.item_number,
+                        id: item?.item_number,
+                      }))}
+                      value={details?.item}
+                      onChange={itemHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Item" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Autocomplete
+                      disablePortal
+                      options={locatorsList?.map((item) => ({
+                        label: item?.locator,
+                        id: item?.locator,
+                      }))}
+                      value={details?.locator_id}
+                      onChange={locatorHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Locator" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Serial No."
+                      variant="outlined"
+                      fullWidth
+                      name="serial_no"
+                      required
+                      value={details?.serialNo}
+                      onChange={serialNoHandle}
+                      style={{ background: "#fff" }}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      label="IMEI No."
+                      variant="outlined"
+                      fullWidth
+                      name="imei_no"
+                      required
+                      value={details?.imei_no}
+                      onChange={imeiNoHandle}
+                      style={{ background: "#fff" }}
+                    />
+                  </Grid>
+                  <Grid item xs={2} alignContent="center">
+                    <Button variant="contained" onClick={fetchOnHandReports}>
+                      Search
                     </Button>
                   </Grid>
                 </Grid>

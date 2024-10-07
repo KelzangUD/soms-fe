@@ -132,7 +132,6 @@ const Requisitions = () => {
     }));
   };
   const createHandle = async (e) => {
-    console.log(requisitionData);
     e.preventDefault();
     const res = await Route(
       "POST",

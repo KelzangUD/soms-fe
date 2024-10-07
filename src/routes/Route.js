@@ -20,26 +20,15 @@ const Route = async (
     method,
     headers,
   };
-  // if (contentType === "application/json") {
-  //   if (data) {
-  //     requestOptions.data = JSON.stringify(data);
-  //   }
-  // } else {
-  //   requestOptions.data = data;
-  // }
    // Handle JSON or FormData content types
    if (contentType === "application/json") {
-    if (data) {
-      
-      requestOptions.data = JSON.stringify(data);
-      headers["Content-Type"] = "application/json";
-      console.log(requestOptions);
-    }
+    requestOptions.data = JSON.stringify(data);
+    headers["Content-Type"] = "application/json"; 
   } else if (contentType === "multipart/form-data") {
     requestOptions.data = data;
   } else {
     requestOptions.data = data;
-    headers["Content-Type"] = contentType;
+    // headers["Content-Type"] = contentType;
   }
 
   try {
