@@ -30,14 +30,14 @@ const Route = async (
    // Handle JSON or FormData content types
    if (contentType === "application/json") {
     if (data) {
+      
       requestOptions.data = JSON.stringify(data);
-      headers["Content-Type"] = "application/json"; // Set Content-Type only for JSON
+      headers["Content-Type"] = "application/json";
+      console.log(requestOptions);
     }
   } else if (contentType === "multipart/form-data") {
-    requestOptions.data = data; // FormData is passed directly, no need to stringify
-    // Do not set Content-Type header; axios will do it automatically for FormData
+    requestOptions.data = data;
   } else {
-    // For any other content types
     requestOptions.data = data;
     headers["Content-Type"] = contentType;
   }

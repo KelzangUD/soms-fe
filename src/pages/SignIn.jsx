@@ -63,7 +63,6 @@ const SignIn = () => {
             null
           );
           if (response?.status === 200) {
-            console.log(response?.data);
             localStorage.setItem("username", formData?.username);
             localStorage.setItem("access_token", res?.data?.access_token);
             localStorage.setItem("refresh_token", res?.data?.refresh_token);

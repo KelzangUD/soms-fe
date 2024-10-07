@@ -12,7 +12,6 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -27,45 +26,59 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Route from "../../routes/Route";
 
 const OnHandReport = () => {
+  const [details, setDetails] = useState({
+    storeName: "",
+    item: "ALL",
+    locator_id: "ALL",
+    serialNo: "ALL",
+    imei_no: "ALL",
+  });
+  const [onHandReports, setOnHandReports] = useState([]);
   const on_hand_report_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_no", headerName: "Item No", width: 250 },
+    { field: "item", headerName: "Item No", width: 250 },
     {
-      field: "item_description",
+      field: "item_Description",
       headerName: "Item Description",
       width: 350,
     },
     { field: "uom", headerName: "UOM", width: 100 },
-    { field: "qty", headerName: "Quantity", width: 100 },
-    { field: "serial_no", headerName: "Serial No", width: 150 },
-    { field: "imei_no", headerName: "IMEI No", width: 150 },
-    { field: "sub_inventory", headerName: "Sub-Inventory", width: 150 },
-    { field: "locator", headerName: "Locator", width: 150 },
+    { field: "transaction_Quantity", headerName: "Quantity", width: 100 },
+    { field: "serial_Number", headerName: "Serial No", width: 150 },
+    { field: "imei_number", headerName: "IMEI No", width: 150 },
+    { field: "sub_inventory_id", headerName: "Sub-Inventory", width: 150 },
+    { field: "locator_id", headerName: "Locator", width: 150 },
   ];
-  const on_hand_report_rows = [
-    {
-      id: 1,
-      item_no: "SM-SIM-SIM-SIM-USIMC",
-      item_description: "Combo USIM, 64K, Java, Postpaid",
-      uom: "Number",
-      qty: 1,
-      serial_no: "866208067573669",
-      imei_no: "BOB",
-      sub_inventory: "WAREH",
-      locator: "FRESHS",
-    },
-  ];
-
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const token = localStorage.getItem("access_token");
+  const username = localStorage.getItem("username");
+  const fetchUserDetails = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/fetchUserDtls?userId=${username}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setDetails((prev) => ({
+        ...prev,
+        storeName: res?.data?.region_NAME
+      }));
+    }
+  };
+  const fetchOnHandReports = async () => {
+    const res = await Route("GET", "/OnHand/Fetch_OnHand_Items", null, details, null);
+    console.log(res);
+    if (res?.status === 200) {
+      setOnHandReports(res?.data)
+    }
+  };
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
+  useEffect(() => {
+    fetchOnHandReports();
+  }, [details]);
 
   return (
     <>
@@ -101,11 +114,11 @@ const OnHandReport = () => {
                           name="as_on_date"
                           required
                           disabled
-                          style={{ background: "#fff"}}
+                          style={{ background: "#fff" }}
                         />
                       </Grid>
                       <Grid item xs={3}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
+                        <FormControl fullWidth style={{ background: "#fff" }}>
                           <InputLabel id="region-or-extension-select-label">
                             Region/Extension
                           </InputLabel>
@@ -123,10 +136,8 @@ const OnHandReport = () => {
                         </FormControl>
                       </Grid>
                       <Grid item xs={6}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
-                          <InputLabel id="item-select-label">
-                            Item
-                          </InputLabel>
+                        <FormControl fullWidth style={{ background: "#fff" }}>
+                          <InputLabel id="item-select-label">Item</InputLabel>
                           <Select
                             labelId="item-select-label"
                             id="item-select"
@@ -135,13 +146,14 @@ const OnHandReport = () => {
                             // onChange={handleChange}
                           >
                             <MenuItem value={1}>
-                              20W USB-C POWER ADAPTER-ITP (MHJF32P/A) (OM-SPE-SPA-IPN-20WPN)
+                              20W USB-C POWER ADAPTER-ITP (MHJF32P/A)
+                              (OM-SPE-SPA-IPN-20WPN)
                             </MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
+                        <FormControl fullWidth style={{ background: "#fff" }}>
                           <InputLabel id="creator-select-label">
                             Creator
                           </InputLabel>
@@ -165,7 +177,7 @@ const OnHandReport = () => {
                           fullWidth
                           name="serial_no"
                           required
-                          style={{ background: "#fff"}}
+                          style={{ background: "#fff" }}
                         />
                       </Grid>
                       <Grid item xs={3}>
@@ -176,7 +188,7 @@ const OnHandReport = () => {
                           name="imei_no"
                           required
                           // onChange={oldPasswordHandle}
-                          style={{ background: "#fff"}}
+                          style={{ background: "#fff" }}
                         />
                       </Grid>
                       <Grid item xs={2}>
@@ -234,9 +246,15 @@ const OnHandReport = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
-                      rows={on_hand_report_rows?.map((row, index) => ({
+                      rows={onHandReports?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
                       }))}

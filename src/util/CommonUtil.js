@@ -1,6 +1,5 @@
 // ======================================================= Menu List Filter ==============================================
 export const menuListFilter = (menu, privileges) => {
-  console.log(privileges)
   return privileges?.map((privilege) => {
     const matchedModule = menu?.find((menuItem) => privilege?.module === menuItem?.module);
     if (matchedModule) {
