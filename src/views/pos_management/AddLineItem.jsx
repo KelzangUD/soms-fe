@@ -38,7 +38,7 @@ const AddLineItem = ({
     qty: "",
     priceLocator: "N",
     discPercentage: "",
-    TDS_Amount: "",
+    tdsAmount: "",
     itemNo: "",
     mrp: "",
     discountedAmount: "",
@@ -119,12 +119,12 @@ const AddLineItem = ({
         priceLocator: res?.data?.priceLocator,
         mrp: res?.data?.mrp,
         discPercentage: res?.data?.discPercentage,
-        TDS_Amount: res?.data?.tdsAmount,
+        tdsAmount: parseInt(res?.data?.tdsAmount),
         mrp: res?.data?.mrp,
         discountedAmount: res?.data?.discountAmt,
         sellingPrice: res?.data?.sellingPrice,
-        taxPercentage: res?.data?.taxPercentage,
-        additionalDiscount: res?.data?.additionalDiscount,
+        taxPercentage: parseInt(res?.data?.taxPercentage),
+        additionalDiscount: parseInt(res?.data?.additionalDiscount),
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
@@ -152,12 +152,12 @@ const AddLineItem = ({
         priceLocator: res?.data?.priceLocator,
         mrp: res?.data?.mrp,
         discPercentage: res?.data?.discPercentage,
-        TDS_Amount: res?.data?.tdsAmount,
+        tdsAmount: parseInt(res?.data?.tdsAmount),
         mrp: res?.data?.mrp,
         discountedAmount: res?.data?.discountAmt,
         sellingPrice: res?.data?.sellingPrice,
-        taxPercentage: res?.data?.taxPercentage,
-        additionalDiscount: res?.data?.additionalDiscount,
+        taxPercentage: parseInt(res?.data?.taxPercentage),
+        additionalDiscount: parseInt(res?.data?.additionalDiscount),
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
@@ -183,10 +183,10 @@ const AddLineItem = ({
       setLineItemDetail((prev) => ({
         ...prev,
         discPercentage: res?.data?.discPercentage,
-        tdsAmount: res?.data?.tdsAmount,
+        tdsAmount: parseInt(res?.data?.tdsAmount),
         mrp: res?.data?.mrp,
-        additionalDiscount: res?.data?.additionalDiscount,
-        taxPercentage: res?.data?.taxPercentage,
+        additionalDiscount: parseInt(res?.data?.additionalDiscount),
+        taxPercentage: parseInt(res?.data?.taxPercentage),
         sellingPrice: res?.data?.sellingPrice,
         discountAmt: res?.data?.discountAmt,
         amountExclTax: res?.data?.amountExclTax,
@@ -406,7 +406,7 @@ const AddLineItem = ({
                     variant="outlined"
                     fullWidth
                     disabled
-                    value={lineItemDetail?.TDS_Amount}
+                    value={lineItemDetail?.tdsAmount}
                   />
                 </Grid>
                 <Grid item xs={3}>

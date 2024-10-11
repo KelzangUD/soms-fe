@@ -60,7 +60,7 @@ const SalesOrder = () => {
   const [customersList, setCustomersList] = useState([]);
   const [salesOrderDetails, setSalesOrderDetails] = useState({
     pos_no: "",
-    postingDate: new Date().toDateString(),
+    postingDate: dateFormatter(new Date().toDateString()),
     salesType: "",
     productType: "",
     mobileNo: "",
@@ -71,7 +71,7 @@ const SalesOrder = () => {
     city: "",
     serviceRemarks: "",
     advanceNo: "",
-    advanceAmt: "",
+    advanceAmt: 0,
     adjType: "",
   });
   const [paymentType, setPaymentType] = useState([]);
@@ -168,14 +168,15 @@ const SalesOrder = () => {
   const salesTypeHandle = (e) => {
     setSalesOrderDetails((prev) => ({
       ...prev,
-      salesType: e.target.value,
+      salesType: parseInt(e.target.value),
     }));
     e?.target?.value === "2" ? setBulkUpload(true) : setBulkUpload(false);
   };
   const productsTypeHandle = (e) => {
+    console.log(e?.target?.value);
     setSalesOrderDetails((prev) => ({
       ...prev,
-      productType: e.target.value,
+      productType: parseInt(e.target.value),
     }));
   };
   const customerNameHandle = (e, value) => {
@@ -238,7 +239,7 @@ const SalesOrder = () => {
   const chequeNoHandle = (e) => {
     setPaymentLinesItem((prev) => ({
       ...prev,
-      cardNumber: e?.target?.value,
+      chequeNumber: e?.target?.value,
     }));
   };
   const chequeDateHandle = (e) => {
@@ -293,7 +294,7 @@ const SalesOrder = () => {
         tdsAmount: lineItems?.length > 0 &&
         lineItems?.reduce(
           (accumulator, currentObject) =>
-            accumulator + currentObject?.TDS_Amount,
+            accumulator + currentObject?.tdsAmount,
           0
         ),
         netAmount: lineItems?.length > 0 &&
@@ -317,6 +318,7 @@ const SalesOrder = () => {
 
     formData.append("details", jsonDataBlob, "data.json");
     console.log(formData);
+    console.log(data)
     const res = await Route(
       "POST",
       `/SalesOrder/UpdateItemSales`,
@@ -330,11 +332,11 @@ const SalesOrder = () => {
     if (res?.status === 201) {
       setResponseData(res?.data);
       setSeverity("success");
-      setNotificationMsg(res?.data?.status);
+      setNotificationMsg("Successfully Created");
       setShowNofication(true);
       setSalesOrderDetails((prev) => ({
         ...prev,
-        postingDate: dayjs(new Date()),
+        postingDate: dateFormatter(dayjs(new Date())),
         salesType: "",
         productType: "",
         mobileNo: "",
@@ -345,7 +347,7 @@ const SalesOrder = () => {
         city: "",
         serviceRemarks: "",
         advanceNo: "",
-        advanceAmt: "",
+        advanceAmt: 0,
         adjType: "",
       }));
       setPaymentType([]);
@@ -446,7 +448,7 @@ const SalesOrder = () => {
                         onChange={productsTypeHandle}
                       >
                         {productsType?.map((item) => (
-                          <MenuItem value={item?.code} key={item?.id}>
+                          <MenuItem value={item?.id} key={item?.id}>
                             {item?.type}
                           </MenuItem>
                         ))}
@@ -609,7 +611,7 @@ const SalesOrder = () => {
                                 {item?.additionalDiscount}
                               </TableCell>
                               <TableCell align="right">
-                                {item?.TDS_Amount}
+                                {item?.tdsAmount}
                               </TableCell>
                               <TableCell align="right">
                                 {item?.advanceTaxAmount}
@@ -698,7 +700,7 @@ const SalesOrder = () => {
                             {lineItems?.length > 0 &&
                               lineItems?.reduce(
                                 (accumulator, currentObject) =>
-                                  accumulator + currentObject?.TDS_Amount,
+                                  accumulator + currentObject?.tdsAmount,
                                 0
                               )}
                           </TableCell>
