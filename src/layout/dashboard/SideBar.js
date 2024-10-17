@@ -103,16 +103,8 @@ export const MenuItems = [
         route: "collections/payment-receipt",
       },
       {
-        page: "Cash Receipt",
-        route: "collections/cash-receipt",
-      },
-      {
         page: "Recharge",
         route: "collections/recharge",
-      },
-      {
-        page: "Bank Receipt",
-        route: "collections/bank-receipt",
       },
       {
         page: "Credit/EMI Collection",
@@ -290,7 +282,7 @@ export const MenuItems = [
         route: "setting/company-setting",
       },
       {
-        page: "Roles & Permissions",
+        page: "Roles & permissions",
         route: "setting/roles-and-permission",
       },
       {
@@ -298,7 +290,7 @@ export const MenuItems = [
         route: "setting/system-users",
       },
       {
-        page: "Approval Rules",
+        page: "Approval Rule",
         route: "setting/approval-rules",
       },
       {
