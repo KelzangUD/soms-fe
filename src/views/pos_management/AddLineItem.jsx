@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import Route from "../../routes/Route";
+import Notification from "../../ui/Notification";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -23,6 +24,9 @@ const AddLineItem = ({
   salesType,
   setLineItems,
 }) => {
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
   const [subInventory, setSubInventory] = useState([]);
   const [locator, setLocator] = useState([]);
   const [desc, setDesc] = useState("");
@@ -113,7 +117,7 @@ const AddLineItem = ({
       null
     );
     console.log(res);
-    if (res?.status === 200) {
+    if (res?.status === 200 && res?.data?.available === "Y") {
       setLineItemDetail((prev) => ({
         ...prev,
         priceLocator: res?.data?.priceLocator,
@@ -136,6 +140,14 @@ const AddLineItem = ({
         priceLocator: res?.data?.priceLocator,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
       }));
+    } else if (res?.status === 200 && res?.data?.available === "N") {
+      setNotificationMsg("Item Not Avaliable");
+      setSeverity("info");
+      setShowNofication(true);
+    } else {
+      setNotificationMsg(res?.response?.data?.detail);
+      setSeverity("info");
+      setShowNofication(true);
     }
   };
   const fetchItemDescriptionWithOutSerialNO = async () => {
@@ -207,7 +219,9 @@ const AddLineItem = ({
     fetchOnHandItems();
   }, [desc]);
   useEffect(() => {
-    fetchItemDescriptionWithOutSerialNO();
+    if (salesType !== null && storeName !== "" && lineItemDetail?.itemNo !== "" && lineItemDetail?.subInventoryId !== "" && lineItemDetail?.locatorId !== "" && lineItemDetail?.qty !== "") {
+      fetchItemDescriptionWithOutSerialNO();
+    }
   }, [
     salesType,
     storeName,
@@ -217,10 +231,19 @@ const AddLineItem = ({
     lineItemDetail?.qty,
   ]);
   useEffect(() => {
-    fetchItemDescriptionWithSerialNO();
+    if (lineItemDetail?.serialNo !== "" && lineItemDetail?.qty !== "") {
+      fetchItemDescriptionWithSerialNO();
+    }
+    if (lineItemDetail?.serialNo !== "" && lineItemDetail?.qty === "") {
+      setNotificationMsg("Please enter quantity!");
+      setSeverity("info");
+      setShowNofication(true);
+    }
   }, [lineItemDetail?.serialNo, lineItemDetail?.qty]);
   useEffect(() => {
-    fetchPriceLocatorDetails();
+    if (pricingID !== "") {
+      fetchPriceLocatorDetails();
+    }
   }, [pricingID]);
 
   const subInventoryHandle = (e, value) => {
@@ -564,6 +587,14 @@ const AddLineItem = ({
           </Grid>
         </Box>
       </Dialog>
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
     </>
   );
 };
