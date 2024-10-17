@@ -19,7 +19,7 @@ export const MenuItems = [
   {
     module: "Work Structures",
     icon: <ManageAccountsIcon />,
-    itemNumber: 1,
+    // itemNumber: 1,
     nestedItems: [
       {
         page: "Business Unit",
@@ -54,7 +54,7 @@ export const MenuItems = [
   {
     module: "Employee",
     icon: <PeopleIcon />,
-    itemNumber: 2,
+    // itemNumber: 2,
     nestedItems: [
       {
         page: "Employee List",
@@ -69,7 +69,7 @@ export const MenuItems = [
   {
     module: "POS Management",
     icon: <PointOfSaleIcon />,
-    itemNumber: 3,
+    // itemNumber: 3,
     nestedItems: [
       {
         page: "Sales Order",
@@ -96,7 +96,7 @@ export const MenuItems = [
   {
     module: "Collections",
     icon: <CollectionsIcon />,
-    itemNumber: 4,
+    // itemNumber: 4,
     nestedItems: [
       {
         page: "Payment Receipt",
@@ -139,7 +139,7 @@ export const MenuItems = [
   {
     module: "Purchase",
     icon: <ShoppingCartIcon />,
-    itemNumber: 5,
+    // itemNumber: 5,
     nestedItems: [
       {
         page: "Requisitions",
@@ -158,7 +158,7 @@ export const MenuItems = [
   {
     module: "Inventory",
     icon: <InventoryIcon />,
-    itemNumber: 6,
+    // itemNumber: 6,
     nestedItems: [
       {
         page: "Transfer Orders",
@@ -185,7 +185,7 @@ export const MenuItems = [
   {
     module: "Reports",
     icon: <AssessmentIcon />,
-    itemNumber: 7,
+    // itemNumber: 7,
     nestedItems: [
       {
         page: "Posted Sales Report",
@@ -240,7 +240,7 @@ export const MenuItems = [
   {
     module: "EBS Report",
     icon: <DescriptionIcon />,
-    itemNumber: 8,
+    // itemNumber: 8,
     nestedItems: [
       {
         page: "Service Log Report",
@@ -283,7 +283,7 @@ export const MenuItems = [
   {
     module: "Settings",
     icon: <SettingsIcon />,
-    itemNumber: 9,
+    // itemNumber: 9,
     nestedItems: [
       {
         page: "Company Settings",
