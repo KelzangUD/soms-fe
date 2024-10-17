@@ -821,7 +821,7 @@ const SalesOrder = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {paymentLinesItem?.paymentType == "3" && (
+                  {paymentLinesItem?.paymentType === "3" && (
                     <Grid item sx={2}>
                       <TextField
                         label="Card No"
@@ -831,7 +831,7 @@ const SalesOrder = () => {
                       />
                     </Grid>
                   )}
-                  {paymentLinesItem?.paymentType == "2" && (
+                  {paymentLinesItem?.paymentType === "2" && (
                     <Grid item sx={2}>
                       <TextField
                         label="Cheque No"
@@ -841,7 +841,7 @@ const SalesOrder = () => {
                       />
                     </Grid>
                   )}
-                  {paymentLinesItem?.paymentType == "2" && (
+                  {paymentLinesItem?.paymentType === "2" && (
                     <Grid item sx={1}>
                       <FormControl fullWidth>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -854,7 +854,7 @@ const SalesOrder = () => {
                       </FormControl>
                     </Grid>
                   )}
-                  {paymentLinesItem?.paymentType == "2" && (
+                  {paymentLinesItem?.paymentType === "2" && (
                     <Grid item sx={2} display="flex">
                       <Button
                         component="label"
