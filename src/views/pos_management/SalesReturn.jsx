@@ -12,6 +12,7 @@ import {
   Select,
   Typography,
   Table,
+  TableBody,
   TableContainer,
   TableHead,
   TableRow,

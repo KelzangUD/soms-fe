@@ -335,7 +335,7 @@ const AddLineItem = ({
                     disablePortal
                     options={subInventory?.map((item) => ({
                       id: item?.id,
-                      label: item?.sub_inv,
+                      label: item?.id,
                     }))}
                     onChange={subInventoryHandle}
                     renderInput={(params) => (
