@@ -12,6 +12,7 @@ import {
   Select,
   Typography,
   Table,
+  TableBody,
   TableContainer,
   TableHead,
   TableRow,
@@ -191,131 +192,47 @@ const SalesReturn = () => {
                           <TableCell align="right">Line Item Amount</TableCell>
                         </TableRow>
                       </TableHead>
-                      {/* <TableBody>
-                      </TableBody> */}
+                      <TableBody>
+                        <TableRow>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={1}>Gross Total</TableCell>
+                          <TableCell align="right">0</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={1}>Tax Amount</TableCell>
+                          <TableCell align="right">0</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={1}>Disc/Comm Amount</TableCell>
+                          <TableCell align="right">0</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={1}>Additional Discount</TableCell>
+                          <TableCell align="right">0</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={1}>
+                            Lots of Sales Discount
+                          </TableCell>
+                          <TableCell align="right">0</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={1}>TDS Amount</TableCell>
+                          <TableCell align="right">0</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={1}>Net Total (Nu)</TableCell>
+                          <TableCell align="right">0</TableCell>
+                        </TableRow>
+                      </TableBody>
                     </Table>
                   </TableContainer>
-                </Grid>
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  sx={{ px: 2 }}
-                >
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Gross Total"
-                      variant="outlined"
-                      fullWidth
-                      name="gross_total"
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  sx={{ mt: 1, px: 2 }}
-                >
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Tax Amount"
-                      variant="outlined"
-                      fullWidth
-                      name="tax_amount"
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  sx={{ mt: 1, px: 2 }}
-                >
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Disc/Comm Amount"
-                      variant="outlined"
-                      fullWidth
-                      name="disc_or_comm_amount"
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  sx={{ mt: 1, px: 2 }}
-                >
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Additional Discount"
-                      variant="outlined"
-                      fullWidth
-                      name="additional_discount"
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  sx={{ mt: 1, px: 2 }}
-                >
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Lots of Sales Discount"
-                      variant="outlined"
-                      fullWidth
-                      name="lots_of_sales_discount"
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  sx={{ mt: 1, px: 2 }}
-                >
-                  <Grid item xs={4}>
-                    <TextField
-                      label="TDS Amount"
-                      variant="outlined"
-                      fullWidth
-                      name="tds_amount"
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  sx={{ my: 1, px: 2 }}
-                >
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Net Total (Nu)"
-                      variant="outlined"
-                      fullWidth
-                      name="tax_amount"
-                      size="small"
-                      disabled
-                    />
-                  </Grid>
                 </Grid>
               </Grid>
             </Paper>
