@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
-import PrintIcon from "@mui/icons-material/Print";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CreateTransferOrder from "./CreateTransferOrder";
 import ViewTransferOrder from "./ViewTransferOrder";
+import UpdateTransferOrder from "./UpdateTransferOrder";
 import Route from "../../routes/Route";
 
 const TransferOrders = () => {
@@ -21,7 +19,7 @@ const TransferOrders = () => {
   const [view, setView] = useState(false);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
 
-  const fetchViewTransferOrderDetails = async (transferOrderNo) => {
+  const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
     const res = await Route(
       "GET",
       `/transferOrder/viewTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
@@ -31,14 +29,15 @@ const TransferOrders = () => {
     );
     if (res?.status === 200) {
       setTransferOrderDetails(res?.data);
+      type === "view" ? setView(true) : setEdit(true);
     }
   };
   const editHandle = (params) => {
-    console.log(params);
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "edit");
   };
   const viewHandle = (params) => {
-    fetchViewTransferOrderDetails(params?.row?.transfer_order_no);
-    setView(true);
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view");
+    
   };
   const shipHandle = (params) => {
     console.log(params);
@@ -203,6 +202,14 @@ const TransferOrders = () => {
         <ViewTransferOrder
           open={view}
           setOpen={setView}
+          transferOrderDetails={transferOrderDetails}
+        />
+      )}
+      {edit && (
+        <UpdateTransferOrder
+          open={edit}
+          setOpen={setEdit}
+          fetchTransferOrderList={fetchTransferOrderList}
           transferOrderDetails={transferOrderDetails}
         />
       )}
