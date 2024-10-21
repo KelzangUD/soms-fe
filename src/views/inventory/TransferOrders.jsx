@@ -9,10 +9,14 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CreateTransferOrder from "./CreateTransferOrder";
 import ViewTransferOrder from "./ViewTransferOrder";
 import UpdateTransferOrder from "./UpdateTransferOrder";
+import Notification from "../../ui/Notification";
 import Route from "../../routes/Route";
 
 const TransferOrders = () => {
   const empID = localStorage.getItem("username");
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
   const [open, setOpen] = useState(false);
   const [viewTransferOrderList, setViewTransferOrderList] = useState([]);
   const [edit, setEdit] = useState(false);
@@ -32,6 +36,47 @@ const TransferOrders = () => {
       type === "view" ? setView(true) : setEdit(true);
     }
   };
+  const fetchTransferOrderList = async () => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewTransferOrderList/${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setViewTransferOrderList(
+        res?.data?.map((item, index) => ({
+          id: index,
+          transfer_order_no: item?.transfer_Order_Number,
+          transfer_from_code: item?.transfer_From_Name,
+          transfer_to_code: item?.transfer_To_Name,
+          posted_date: item?.creation_Date,
+          status: item?.status,
+        }))
+      );
+    }
+  };
+  const updateTransferOrderShipment = async (transferOrderNo) => {
+    console.log(transferOrderNo)
+    const res = await Route(
+      "PUT",
+      `/transferOrder/transferOrderShipment?transferOrderNo=${transferOrderNo}&empId=${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setSeverity("success");
+      setNotificationMsg(res?.data?.responseText);
+      setShowNofication(true);
+      fetchTransferOrderList();
+    } else {
+      setSeverity("error");
+      setNotificationMsg(res?.data?.responseText);
+      setShowNofication(true);
+    }
+  };
   const editHandle = (params) => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "edit");
   };
@@ -40,7 +85,7 @@ const TransferOrders = () => {
     
   };
   const shipHandle = (params) => {
-    console.log(params);
+    updateTransferOrderShipment(params?.row?.transfer_order_no)
   };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
@@ -88,27 +133,6 @@ const TransferOrders = () => {
       ),
     },
   ];
-  const fetchTransferOrderList = async () => {
-    const res = await Route(
-      "GET",
-      `/transferOrder/viewTransferOrderList/${empID}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setViewTransferOrderList(
-        res?.data?.map((item, index) => ({
-          id: index,
-          transfer_order_no: item?.transfer_Order_Number,
-          transfer_from_code: item?.transfer_From_Name,
-          transfer_to_code: item?.transfer_To_Name,
-          posted_date: item?.creation_Date,
-          status: item?.status,
-        }))
-      );
-    }
-  };
   useEffect(() => {
     fetchTransferOrderList();
   }, []);
@@ -211,6 +235,14 @@ const TransferOrders = () => {
           setOpen={setEdit}
           fetchTransferOrderList={fetchTransferOrderList}
           transferOrderDetails={transferOrderDetails}
+        />
+      )}
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
         />
       )}
     </>

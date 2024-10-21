@@ -347,19 +347,6 @@ const UpdateTransferOrder = ({
 
   const updateHandle = async (e) => {
     e.preventDefault();
-    // let formData = new FormData();
-    // if (file && file.length > 0) {
-    //   formData.append("File", file);
-    // } else {
-    //   const placeholderFile = new File([""], "file.csv");
-    //   formData.append("File", placeholderFile);
-    // }
-    // const jsonDataBlob = new Blob([JSON.stringify(parameters)], {
-    //   type: "application/json",
-    // });
-
-    // formData.append("data", jsonDataBlob, "data.json");
-    console.log(parameters);
     const res = await Route(
       "PUT",
       `/transferOrder/updateTransferOrderDetails`,
