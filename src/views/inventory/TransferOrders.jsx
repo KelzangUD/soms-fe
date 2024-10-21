@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -8,12 +7,42 @@ import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Route from "../../routes/Route";
 import CreateTransferOrder from "./CreateTransferOrder";
+import ViewTransferOrder from "./ViewTransferOrder";
+import Route from "../../routes/Route";
 
 const TransferOrders = () => {
+  const empID = localStorage.getItem("username");
   const [open, setOpen] = useState(false);
+  const [viewTransferOrderList, setViewTransferOrderList] = useState([]);
+  const [edit, setEdit] = useState(false);
+  const [view, setView] = useState(false);
+  const [transferOrderDetails, setTransferOrderDetails] = useState({});
+
+  const fetchViewTransferOrderDetails = async (transferOrderNo) => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferOrderDetails(res?.data);
+    }
+  };
+  const editHandle = (params) => {
+    console.log(params);
+  };
+  const viewHandle = (params) => {
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no);
+    setView(true);
+  };
+  const shipHandle = (params) => {
+    console.log(params);
+  };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "transfer_order_no", headerName: "Transfer Order No", width: 250 },
@@ -35,43 +64,60 @@ const TransferOrders = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="edit" size="small">
+          <IconButton
+            aria-label="edit"
+            size="small"
+            onClick={() => editHandle(params)}
+          >
             <EditIcon fontSize="inherit" />
           </IconButton>
-          <IconButton aria-label="view" size="small">
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => viewHandle(params)}
+          >
             <VisibilityIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton
+            aria-label="ship"
+            size="small"
+            onClick={() => shipHandle(params)}
+          >
+            <LocalShippingIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const transfer_order_rows = [
-    {
-      id: 1,
-      transfer_order_no: 1,
-      transfer_from_code: "EM/DP1/2024/00001",
-      transfer_to_code: "EM/DP1/2024/00001",
-      posted_date: "20-Aug-2024",
-      status: "Submitted",
-    },
-  ];
-
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const fetchTransferOrderList = async () => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewTransferOrderList/${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setViewTransferOrderList(
+        res?.data?.map((item, index) => ({
+          id: index,
+          transfer_order_no: item?.transfer_Order_Number,
+          transfer_from_code: item?.transfer_From_Name,
+          transfer_to_code: item?.transfer_To_Name,
+          posted_date: item?.creation_Date,
+          status: item?.status,
+        }))
+      );
+    }
+  };
+  useEffect(() => {
+    fetchTransferOrderList();
+  }, []);
 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Transfer Order" /> */}
           <Grid
             item
             xs={12}
@@ -127,7 +173,7 @@ const TransferOrders = () => {
                     }}
                   >
                     <DataGrid
-                      rows={transfer_order_rows?.map((row, index) => ({
+                      rows={viewTransferOrderList?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
                       }))}
@@ -146,7 +192,20 @@ const TransferOrders = () => {
           </Grid>
         </Grid>
       </Box>
-      {open && <CreateTransferOrder open={open} setOpen={setOpen} />}
+      {open && (
+        <CreateTransferOrder
+          open={open}
+          setOpen={setOpen}
+          fetchTransferOrderList={fetchTransferOrderList}
+        />
+      )}
+      {view && (
+        <ViewTransferOrder
+          open={view}
+          setOpen={setView}
+          transferOrderDetails={transferOrderDetails}
+        />
+      )}
     </>
   );
 };

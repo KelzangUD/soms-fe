@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CreateTransferOrder = ({ open, setOpen }) => {
+const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
   const empID = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -338,8 +338,6 @@ const CreateTransferOrder = ({ open, setOpen }) => {
       null,
       "multipart/form-data"
     );
-    console.log(parameters)
-    console.log(res);
     if (res?.status === 200 && res?.data?.success === true) {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
@@ -361,6 +359,7 @@ const CreateTransferOrder = ({ open, setOpen }) => {
         transferOrderItemDTOList: [],
       }));
       setSerialInputDisabled(true);
+      fetchTransferOrderList();
       setOpen(false);
     } else {
       setNotificationMsg(res?.response?.data?.message);
