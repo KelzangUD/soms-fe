@@ -140,7 +140,7 @@ const Requisitions = () => {
       requisitionData,
       null
     );
-    console.log(res);
+    // console.log(res);
     if (res?.status === 201) {
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
@@ -273,7 +273,7 @@ const Requisitions = () => {
                             uom: item?.uom,
                           }))}
                           onChange={selectItemHandle}
-                          value={itemDTOList?.item_description}
+                          value={itemDTOList?.item_Description}
                           renderInput={(params) => (
                             <TextField {...params} label="Description" />
                           )}

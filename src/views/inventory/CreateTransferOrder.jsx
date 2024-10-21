@@ -25,7 +25,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import UploadIcon from "@mui/icons-material/Upload";
 import TransferBulkUploader from "../../assets/files/TransferBulkUploader.csv";
 import Route from "../../routes/Route";
-import { dateFormatter } from "../../util/CommonUtil";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,12 +43,16 @@ const CreateTransferOrder = ({ open, setOpen }) => {
   const [toSubInventory, setToSubInventory] = useState([]);
   const [toLocator, setToLocator] = useState([]);
   const [modeOfTransport, setModeOfTransport] = useState([]);
+  const [itemList, setItemList] = useState([]);
+  const [file, setFile] = useState(null);
   const [parameters, setParameters] = useState({
+    transfer_Date: dateFormatterTwo(new Date()),
     transfer_Type: "",
     transfer_From: "",
     transfer_From_SubInventory: "",
     transfer_From_Locator: "",
     transfer_To: "",
+    transfer_To_SubInventory: "",
     transfer_To_Locator: "",
     transfer_Mode: "",
     vehicle_Number: "",
@@ -57,21 +61,51 @@ const CreateTransferOrder = ({ open, setOpen }) => {
     transferOrderItemDTOList: [],
   });
   const [transferOrderItemDTOList, setTransferOrderDTOList] = useState({
+    id: "",
     item_Description: "",
     item_Number: "",
     item_Serial_Number: "",
     uom: "",
     qty: "",
   });
+  const [serialInputDisabled, setSerialInputDisabled] = useState(true);
+
+  const fetchUserDetails = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/fetchUserDtls?userId=${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setParameters((prev) => ({
+        ...prev,
+        transfer_From: res?.data?.storeId,
+      }));
+    }
+  };
 
   const fetchTransferType = async () => {
-    const res = await Route("GET", "/Common/FetchTransferType", null, null, null);
+    const res = await Route(
+      "GET",
+      "/Common/FetchTransferType",
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setTransferType(res?.data);
     }
   };
   const fetchModeOfTransport = async () => {
-    const res = await Route("GET", "/Common/fetchTransferMode", null, null, null);
+    const res = await Route(
+      "GET",
+      "/Common/fetchTransferMode",
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setModeOfTransport(res?.data);
     }
@@ -100,12 +134,58 @@ const CreateTransferOrder = ({ open, setOpen }) => {
       setFromLocator(res?.data);
     }
   };
+  const fetchToLocator = async (id) => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchLocator?userId=${empID}&subInventory=${id}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setToLocator(res?.data);
+    }
+  };
+  const fetchToStore = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchStore?userId=${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setToStore(res?.data);
+    }
+  };
+  const fetchAllItems = async () => {
+    const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
+    if (res?.status === 200) {
+      setItemList(res?.data);
+    }
+  };
+
   useEffect(() => {
+    fetchUserDetails();
     fetchTransferType();
     fetchModeOfTransport();
     fetchFromSubInventory();
+    fetchToStore();
+    fetchAllItems();
   }, []);
 
+  const transferOrderDateHandle = (e) => {
+    setParameters((prev) => ({
+      ...prev,
+      transfer_Date: dateFormatterTwo(e?.$d),
+    }));
+  };
+  const transferTypeHandle = (e) => {
+    setParameters((prev) => ({
+      ...prev,
+      transfer_Type: e?.target?.value,
+    }));
+  };
   const fromSubInventoryHandle = (e) => {
     fetchFromLocator(e?.target?.value);
     setParameters((prev) => ({
@@ -113,7 +193,102 @@ const CreateTransferOrder = ({ open, setOpen }) => {
       transfer_From_SubInventory: e?.target?.value,
     }));
   };
-
+  const fromLocatorHandle = (e) => {
+    setParameters((prev) => ({
+      ...prev,
+      transfer_From_Locator: e?.target?.value,
+    }));
+  };
+  const toStoreHandle = (e) => {
+    setParameters((prev) => ({
+      ...prev,
+      transfer_To: parseInt(e?.target?.value),
+    }));
+  };
+  const transferToSubInvHandle = (e) => {
+    fetchToLocator(e?.target?.value);
+    setParameters((prev) => ({
+      ...prev,
+      transfer_To_SubInventory: e?.target?.value,
+    }));
+  };
+  const toLocatorHandle = (e) => {
+    setParameters((prev) => ({
+      ...prev,
+      transfer_To_Locator: e?.target?.value,
+    }));
+  };
+  const transferModeHandle = (e) => {
+    setParameters((prev) => ({
+      ...prev,
+      transfer_Mode: e?.target?.value,
+    }));
+  };
+  const vehicleNoHandle = (e) => {
+    setParameters((prev) => ({
+      ...prev,
+      vehicle_Number: e?.target?.value,
+    }));
+  };
+  const remarksHandle = (e) => {
+    setParameters((prev) => ({
+      ...prev,
+      remarks: e?.target?.value,
+    }));
+  };
+  const descriptionHandle = (e, value) => {
+    if (value === null) {
+      setTransferOrderDTOList((prev) => ({
+        ...prev,
+        item_Description: "",
+        item_Number: "",
+        uom: "",
+      }));
+    } else {
+      setTransferOrderDTOList((prev) => ({
+        ...prev,
+        item_Description: value?.label,
+        item_Number: value?.item_Number,
+        uom: value?.uom,
+      }));
+      setSerialInputDisabled(value?.serial_controlled === "N" ? true : false);
+    }
+  };
+  const serialNumberHandle = (e) => {
+    setTransferOrderDTOList((prev) => ({
+      ...prev,
+      item_Serial_Number: e?.target?.value,
+    }));
+  };
+  const qtyHandle = (e) => {
+    setTransferOrderDTOList((prev) => ({
+      ...prev,
+      qty: e?.target?.value,
+    }));
+  };
+  const addHandle = () => {
+    if (transferOrderItemDTOList?.qty === "") {
+      setNotificationMsg("Please Enter Quantity");
+      setSeverity("info");
+      setShowNofication(true);
+    } else {
+      setParameters((prev) => ({
+        ...prev,
+        transferOrderItemDTOList: [
+          ...prev.transferOrderItemDTOList,
+          transferOrderItemDTOList,
+        ],
+      }));
+      setTransferOrderDTOList((prev) => ({
+        ...prev,
+        item_Description: "",
+        item_Number: "",
+        item_Serial_Number: "",
+        uom: "",
+        qty: "",
+      }));
+    }
+  };
   const item_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "item_Number", headerName: "Item Number", width: 200 },
@@ -129,11 +304,6 @@ const CreateTransferOrder = ({ open, setOpen }) => {
     },
     { field: "uom", headerName: "UOM", width: 150 },
     { field: "qty", headerName: "Quantity", width: 150 },
-    {
-      field: "level1_Qty",
-      headerName: "Actual Quantity",
-      width: 150,
-    },
   ];
   const fileDownloadHandle = () => {
     const fileUrl = TransferBulkUploader;
@@ -145,25 +315,58 @@ const CreateTransferOrder = ({ open, setOpen }) => {
     document.body.removeChild(link); // Clean up the link element
   };
 
-  const updateHandle = async () => {
-    // const res = await Route(
-    //   "PUT",
-    //   `/requisition/approveRequisitionDetails?requisitionNo=${details?.requisitionNo}&empID=${approver}`,
-    //   null,
-    //   null,
-    //   null
-    // );
-    // if (res?.status === 200) {
-    //   setNotificationMsg(res?.data?.responseText);
-    //   setSeverity("success");
-    //   setShowNofication(true);
-    //   fetchRequisitionListByApprover();
-    //   setOpen(false);
-    // } else {
-    //   setNotificationMsg(res?.data?.message);
-    //   setSeverity("error");
-    //   setShowNofication(true);
-    // }
+  const createHandle = async (e) => {
+    e.preventDefault();
+    let formData = new FormData();
+    if (file && file.length > 0) {
+      formData.append("File", file);
+    } else {
+      const placeholderFile = new File([""], "file.csv");
+      formData.append("File", placeholderFile);
+    }
+    const jsonDataBlob = new Blob([JSON.stringify(parameters)], {
+      type: "application/json",
+    });
+    console.log(jsonDataBlob);
+
+    formData.append("data", jsonDataBlob, "data.json");
+    const res = await Route(
+      "POST",
+      `/transferOrder/createTransferOrder`,
+      null,
+      formData,
+      null,
+      "multipart/form-data"
+    );
+    console.log(parameters)
+    console.log(res);
+    if (res?.status === 200 && res?.data?.success === true) {
+      setSeverity("success");
+      setNotificationMsg(res?.data?.responseText);
+      setShowNofication(true);
+      setParameters((prev) => ({
+        ...prev,
+        transfer_Date: dateFormatterTwo(new Date()),
+        transfer_Type: "",
+        transfer_From: "",
+        transfer_From_SubInventory: "",
+        transfer_From_Locator: "",
+        transfer_To: "",
+        transfer_To_SubInventory: "",
+        transfer_To_Locator: "",
+        transfer_Mode: "",
+        vehicle_Number: "",
+        remarks: "",
+        created_By: empID,
+        transferOrderItemDTOList: [],
+      }));
+      setSerialInputDisabled(true);
+      setOpen(false);
+    } else {
+      setNotificationMsg(res?.response?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
   };
   return (
     <>
@@ -209,8 +412,8 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Transfer Order Create Date"
-                      //   value={dayjs(paymentReceiptDetails?.postingDate)}
-                      //   onChange={postingDateHandle}
+                      value={dayjs(parameters?.transfer_Date)}
+                      onChange={transferOrderDateHandle}
                     />
                   </LocalizationProvider>
                 </FormControl>
@@ -224,14 +427,14 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                     labelId="transfer-type-select-label"
                     id="transfer-type-select"
                     label="Transfer Type*"
-                    // onChange={paymentTypeHandle}
-                    // value={rechargeDetails?.payment}
+                    onChange={transferTypeHandle}
+                    value={parameters?.transfer_Type}
                   >
                     {transferType?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
+                      <MenuItem value={item?.type} key={item?.id}>
+                        {item?.type}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -260,8 +463,8 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                     value={parameters?.transfer_From_SubInventory}
                   >
                     {fromSubInventory?.map((item) => (
-                      <MenuItem value={item?.sub_inv} key={item?.id}>
-                        {item?.sub_inv}
+                      <MenuItem value={item?.id} key={item?.id}>
+                        {item?.id}
                       </MenuItem>
                     ))}
                   </Select>
@@ -276,11 +479,11 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                     labelId="from-locator-select-label"
                     id="from-locator-select"
                     label="From Locator"
-                    // onChange={paymentTypeHandle}
-                    // value={rechargeDetails?.payment}
+                    onChange={fromLocatorHandle}
+                    value={parameters?.transfer_From_Locator}
                   >
                     {fromLocator?.map((item) => (
-                      <MenuItem value={item} key={item?.id}>
+                      <MenuItem value={item?.name} key={item?.id}>
                         {item?.name}
                       </MenuItem>
                     ))}
@@ -294,14 +497,14 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                     labelId="to-store-select-label"
                     id="to-store-select"
                     label="To Store"
-                    // onChange={paymentTypeHandle}
-                    // value={rechargeDetails?.payment}
+                    onChange={toStoreHandle}
+                    value={parameters?.transfer_To}
                   >
-                    {/* {paymentType?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))} */}
+                    {toStore?.map((item) => (
+                      <MenuItem value={item?.id} key={item?.id}>
+                        {item?.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -314,12 +517,12 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                     labelId="to-sub-inventory-select-label"
                     id="to-sub-inventory-select"
                     label="To Sub-Inventory"
-                    // onChange={paymentTypeHandle}
-                    // value={rechargeDetails?.payment}
+                    onChange={transferToSubInvHandle}
+                    value={parameters?.transfer_To_SubInventory}
                   >
                     {fromSubInventory?.map((item) => (
-                      <MenuItem value={item?.sub_inv} key={item?.id}>
-                        {item?.sub_inv}
+                      <MenuItem value={item?.id} key={item?.id}>
+                        {item?.id}
                       </MenuItem>
                     ))}
                   </Select>
@@ -336,11 +539,11 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                     labelId="to-locator-select-label"
                     id="to-locator-select"
                     label="To Locator"
-                    // onChange={paymentTypeHandle}
-                    // value={rechargeDetails?.payment}
+                    onChange={toLocatorHandle}
+                    value={parameters?.transfer_To_Locator}
                   >
-                    {fromLocator?.map((item) => (
-                      <MenuItem value={item} key={item?.id}>
+                    {toLocator?.map((item) => (
+                      <MenuItem value={item?.name} key={item?.id}>
                         {item?.name}
                       </MenuItem>
                     ))}
@@ -356,14 +559,14 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                     labelId="mode-of-transport-select-label"
                     id="mode-of-transport-select"
                     label="Mode Of Transport"
-                    // onChange={paymentTypeHandle}
-                    // value={rechargeDetails?.payment}
+                    onChange={transferModeHandle}
+                    value={parameters?.transfer_Mode}
                   >
                     {modeOfTransport?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
+                      <MenuItem value={item?.type} key={item?.id}>
+                        {item?.type}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -374,6 +577,8 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                   variant="outlined"
                   required
                   fullWidth
+                  onChange={vehicleNoHandle}
+                  value={parameters?.vehicle_Number}
                 />
               </Grid>
               <Grid item xs={3}>
@@ -382,6 +587,8 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                   label="Remarks"
                   variant="outlined"
                   fullWidth
+                  onChange={remarksHandle}
+                  value={parameters?.remarks}
                 />
               </Grid>
             </Grid>
@@ -413,7 +620,16 @@ const CreateTransferOrder = ({ open, setOpen }) => {
               <Grid item xs={3} paddingRight={1}>
                 <Autocomplete
                   disablePortal
-                  options={[]}
+                  options={itemList?.map((item, index) => ({
+                    label: item?.description,
+                    value: item?.description,
+                    item_Number: item?.item_number,
+                    serial_controlled: item?.serial_controlled,
+                    uom: item?.uom,
+                    id: index,
+                  }))}
+                  value={transferOrderItemDTOList?.item_Description}
+                  onChange={descriptionHandle}
                   renderInput={(params) => (
                     <TextField {...params} label="Description" />
                   )}
@@ -427,15 +643,18 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                   required
                   fullWidth
                   disabled
+                  value={transferOrderItemDTOList?.item_Number}
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
-                <Autocomplete
-                  disablePortal
-                  options={[]}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Serial Number" />
-                  )}
+                <TextField
+                  id="outlined-basic"
+                  label="Serial Number"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  onChange={serialNumberHandle}
+                  disabled={serialInputDisabled}
                 />
               </Grid>
               <Grid item xs={2} paddingRight={1}>
@@ -446,21 +665,23 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                   required
                   fullWidth
                   disabled
+                  value={transferOrderItemDTOList?.uom}
                 />
               </Grid>
               <Grid item container xs={2} paddingRight={1} alignItems="center">
                 <Grid item>
                   <TextField
                     id="outlined-basic"
-                    label="Item Number"
+                    label="Quantity"
                     variant="outlined"
                     required
                     fullWidth
-                    disabled
+                    value={transferOrderItemDTOList?.qty}
+                    onChange={qtyHandle}
                   />
                 </Grid>
                 <Grid>
-                  <IconButton aria-label="delete">
+                  <IconButton aria-label="add" onClick={addHandle}>
                     <AddBoxIcon />
                   </IconButton>
                 </Grid>
@@ -475,11 +696,13 @@ const CreateTransferOrder = ({ open, setOpen }) => {
                 }}
               >
                 <DataGrid
-                  //   rows={itemDTOlist?.map((row, index) => ({
-                  //     ...row,
-                  //     sl: index + 1,
-                  //   }))}
-                  rows={[]}
+                  rows={parameters?.transferOrderItemDTOList?.map(
+                    (row, index) => ({
+                      ...row,
+                      sl: index + 1,
+                      id: index,
+                    })
+                  )}
                   columns={item_columns}
                   initialState={{
                     pagination: {
@@ -497,7 +720,7 @@ const CreateTransferOrder = ({ open, setOpen }) => {
               paddingX={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
-              <Button variant="contained" onClick={updateHandle}>
+              <Button variant="contained" onClick={createHandle}>
                 Create
               </Button>
               <Button variant="outlined" onClick={() => setOpen(false)}>

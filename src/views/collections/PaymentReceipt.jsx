@@ -128,11 +128,11 @@ const PaymentReceipt = () => {
       ...prev,
       serviceType: e?.target?.value,
     }));
-    e?.target?.value !== "1"
-    && setPaymentReceiptDetails((prev) => ({
-      ...prev,
-      payment: "1",
-    }));
+    e?.target?.value !== "1" &&
+      setPaymentReceiptDetails((prev) => ({
+        ...prev,
+        payment: "1",
+      }));
   };
   const mobileNoHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
@@ -174,6 +174,19 @@ const PaymentReceipt = () => {
       }
     }
   };
+  useEffect(() => {
+    if (
+      paymentReceiptDetails?.serviceType !== "" &&
+      paymentReceiptDetails?.mobileNo !== "" &&
+      paymentReceiptDetails?.payment !== ""
+    ) {
+      fetchCustomerDetailsHandle();
+    }
+  }, [
+    paymentReceiptDetails?.serviceType,
+    paymentReceiptDetails?.mobileNo,
+    paymentReceiptDetails?.payment,
+  ]);
   const postingDateHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
@@ -371,16 +384,14 @@ const PaymentReceipt = () => {
                       value={paymentReceiptDetails?.mobileNo}
                     />
                   </Grid>
-                  <Grid item xs={3} alignContent="center">
+                  {/* <Grid item xs={3} alignContent="center">
                     <Button
                       variant="outlined"
                       onClick={fetchCustomerDetailsHandle}
                     >
                       Fetch Details
                     </Button>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                  </Grid> */}
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -392,6 +403,8 @@ const PaymentReceipt = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
+                </Grid>
+                <Grid container spacing={2} sx={{ mt: 1 }}>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <InputLabel id="payment-method-select-label">
@@ -443,8 +456,6 @@ const PaymentReceipt = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Cheque No"
@@ -456,6 +467,8 @@ const PaymentReceipt = () => {
                       value={paymentReceiptDetails?.chequeNo}
                     />
                   </Grid>
+                </Grid>
+                <Grid container spacing={2} sx={{ mt: 1 }}>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>

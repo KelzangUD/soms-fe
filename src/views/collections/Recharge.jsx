@@ -90,6 +90,7 @@ const Recharge = () => {
       null,
       null
     );
+    console.log(res);
     if (res?.status === 200) {
       setBankAccounts(res?.data);
     }
