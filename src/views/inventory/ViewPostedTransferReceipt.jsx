@@ -1,101 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Grid,
   Button,
   Dialog,
+  FormControl,
   Slide,
   TextField,
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Notification from "../../ui/Notification";
-import Route from "../../routes/Route";
-import { dateFormatterTwo } from "../../util/CommonUtil";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const UpdateTransferOrderInward = ({
-  open,
-  setOpen,
-  fetchInwardTrasnferOrderList,
-  transferOrderDetails,
-}) => {
-  const empID = localStorage.getItem("username");
-  const [showNotification, setShowNofication] = useState(false);
-  const [notificationMsg, setNotificationMsg] = useState("");
-  const [severity, setSeverity] = useState("info");
-  const [parameters, setParameters] = useState({
-    transfer_Order_Id: "",
-    transfer_Order_Number: "",
-    transfer_Date: "",
-    transfer_Type: "",
-    transfer_From_Name: "",
-    transfer_From: "",
-    transfer_From_SubInventory: "",
-    transfer_From_Locator: "",
-    transfer_To_Name: "",
-    transfer_To: "",
-    transfer_To_SubInventory: "",
-    transfer_To_Locator: "",
-    transfer_Mode: "",
-    vehicle_Number: "",
-    remarks: "",
-    transferOrderItemDTOList: [],
-    last_Updated_By: "",
-  });
-  useEffect(() => {
-    setParameters((prev) => ({
-      ...prev,
-      transfer_Order_Id: transferOrderDetails?.transfer_Order_Id,
-      transfer_Order_Number: transferOrderDetails?.transfer_Order_Number,
-      transfer_Date: dateFormatterTwo(transferOrderDetails?.transfer_Date),
-      transfer_Type: transferOrderDetails?.transfer_Type,
-      transfer_From_Name: transferOrderDetails?.transfer_From_Name,
-      transfer_From: "",
-      transfer_From_SubInventory:
-        transferOrderDetails?.transfer_From_SubInventory,
-      transfer_From_Locator: transferOrderDetails?.transfer_From_Locator,
-      transfer_To_Name: transferOrderDetails?.transfer_To_Name,
-      transfer_To: "",
-      transfer_To_SubInventory: transferOrderDetails?.transfer_To_SubInventory,
-      transfer_To_Locator: transferOrderDetails?.transfer_To_Locator,
-      transfer_Mode: transferOrderDetails?.transfer_Mode,
-      vehicle_Number: transferOrderDetails?.vehicle_Number,
-      remarks: transferOrderDetails?.remarks,
-      transferOrderItemDTOList: transferOrderDetails?.transferOrderItemDTOList,
-      last_Updated_By: empID,
-    }));
-  }, [transferOrderDetails]);
-  const [transferOrderItemDTOList, setTransferOrderDTOList] = useState({
-    transaction_Item_No: "",
-    received_Qty: "",
-    received_Remark: "",
-  });
-
-  const receivedQtyHandle = (e, params) => {
-    setParameters((prev) => ({
-      ...prev,
-      transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
-        item?.transaction_Item_No === params?.row?.transaction_Item_No
-          ? { ...item, received_Qty: parseInt(e?.target?.value) }
-          : item
-      ),
-    }));
-  };
-
-  const descriptionHandle = (e, params) => {
-    setParameters((prev) => ({
-      ...prev,
-      transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
-        item?.transaction_Item_No === params?.row?.transaction_Item_No
-          ? { ...item, received_Remark: e?.target?.value }
-          : item
-      ),
-    }));
-  };
+const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails }) => {
   const item_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "item_Number", headerName: "Item Number", width: 200 },
@@ -111,81 +35,9 @@ const UpdateTransferOrderInward = ({
     },
     { field: "uom", headerName: "UOM", width: 150 },
     { field: "qty", headerName: "Quantity", width: 150 },
-    {
-      field: "rec_qty",
-      headerName: "Rec. Qty",
-      width: 150,
-      renderCell: (params) => (
-        <>
-          <TextField
-            id="outlined-basic"
-            variant="outlined"
-            required
-            fullWidth
-            size="small"
-            type="number"
-            onChange={(e) => receivedQtyHandle(e, params)}
-          />
-        </>
-      ),
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      width: 150,
-      renderCell: (params) => (
-        <>
-          <TextField
-            id="outlined-basic"
-            variant="outlined"
-            required
-            fullWidth
-            size="small"
-            onChange={(e) => descriptionHandle(e, params)}
-          />
-        </>
-      ),
-    },
+    { field: "received_Qty", headerName: "Received Qty", width: 150 },
+    { field: "received_Remark", headerName: "Received Remarks", width: 150 },
   ];
-
-  const updateHandle = async (e) => {
-    e.preventDefault();
-    const res = await Route(
-      "PUT",
-      `/transferOrder/updateInwardTransferItemDetails`,
-      null,
-      parameters,
-      null
-    );
-    console.log(res);
-    if (res?.status === 200 && res?.data?.success === true) {
-      setSeverity("success");
-      setNotificationMsg(res?.data?.responseText);
-      setShowNofication(true);
-      setParameters((prev) => ({
-        ...prev,
-        transfer_Date: dateFormatterTwo(new Date()),
-        transfer_Type: "",
-        transfer_From: "",
-        transfer_From_SubInventory: "",
-        transfer_From_Locator: "",
-        transfer_To: "",
-        transfer_To_SubInventory: "",
-        transfer_To_Locator: "",
-        transfer_Mode: "",
-        vehicle_Number: "",
-        remarks: "",
-        created_By: empID,
-        transferOrderItemDTOList: [],
-      }));
-      fetchInwardTrasnferOrderList();
-      setOpen(false);
-    } else {
-      setNotificationMsg(res?.response?.data?.message);
-      setSeverity("error");
-      setShowNofication(true);
-    }
-  };
   return (
     <>
       <Dialog
@@ -209,7 +61,7 @@ const UpdateTransferOrderInward = ({
               >
                 <Grid item paddingX={2}>
                   <Typography variant="subtitle1">
-                    Update Transfer Order Inward
+                    View Transfer Order
                   </Typography>
                 </Grid>
               </Grid>
@@ -225,19 +77,19 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_Order_Number}
+                  value={transferOrderDetails?.transfer_Order_Number}
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
-                <TextField
-                  id="outlined-basic"
-                  label="Transfer Order Created Date"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={parameters?.transfer_Date}
-                />
+                <FormControl fullWidth>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Transfer Order Create Date"
+                      value={dayjs(transferOrderDetails?.transfer_Date)}
+                      disabled
+                    />
+                  </LocalizationProvider>
+                </FormControl>
               </Grid>
               <Grid item xs={3} paddingRight={1}>
                 <TextField
@@ -247,7 +99,7 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_Type}
+                  value={transferOrderDetails?.transfer_Type}
                 />
               </Grid>
               <Grid item xs={3}>
@@ -258,7 +110,7 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_From_Name}
+                  value={transferOrderDetails?.transfer_From_Name}
                 />
               </Grid>
             </Grid>
@@ -271,7 +123,7 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_From_SubInventory}
+                  value={transferOrderDetails?.transfer_From_SubInventory}
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -282,7 +134,7 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_From_Locator}
+                  value={transferOrderDetails?.transfer_From_Locator}
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -293,7 +145,7 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_To_Name}
+                  value={transferOrderDetails?.transfer_To_Name}
                 />
               </Grid>
               <Grid item xs={3}>
@@ -304,7 +156,7 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_To_SubInventory}
+                  value={transferOrderDetails?.transfer_To_SubInventory}
                 />
               </Grid>
             </Grid>
@@ -317,7 +169,7 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_To_Locator}
+                  value={transferOrderDetails?.transfer_To_Locator}
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -328,7 +180,7 @@ const UpdateTransferOrderInward = ({
                   required
                   disabled
                   fullWidth
-                  value={parameters?.transfer_Mode}
+                  value={transferOrderDetails?.transfer_Mode}
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -339,7 +191,7 @@ const UpdateTransferOrderInward = ({
                   required
                   fullWidth
                   disabled
-                  value={parameters?.vehicle_Number}
+                  value={transferOrderDetails?.vehicle_Number}
                 />
               </Grid>
               <Grid item xs={3}>
@@ -349,7 +201,7 @@ const UpdateTransferOrderInward = ({
                   variant="outlined"
                   fullWidth
                   disabled
-                  value={parameters?.remarks}
+                  value={transferOrderDetails?.remarks}
                 />
               </Grid>
             </Grid>
@@ -362,13 +214,13 @@ const UpdateTransferOrderInward = ({
                 }}
               >
                 <DataGrid
-                  rows={parameters?.transferOrderItemDTOList?.map(
+                  rows={transferOrderDetails?.transferOrderItemDTOList !== null ? transferOrderDetails?.transferOrderItemDTOList?.map(
                     (row, index) => ({
                       ...row,
                       sl: index + 1,
                       id: index,
                     })
-                  )}
+                  ) : []}
                   columns={item_columns}
                   initialState={{
                     pagination: {
@@ -386,9 +238,6 @@ const UpdateTransferOrderInward = ({
               paddingX={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
-              <Button variant="contained" onClick={updateHandle}>
-                Update
-              </Button>
               <Button variant="outlined" onClick={() => setOpen(false)}>
                 Close
               </Button>
@@ -396,16 +245,8 @@ const UpdateTransferOrderInward = ({
           </Grid>
         </Box>
       </Dialog>
-      {showNotification && (
-        <Notification
-          open={showNotification}
-          setOpen={setShowNofication}
-          message={notificationMsg}
-          severity={severity}
-        />
-      )}
     </>
   );
 };
 
-export default UpdateTransferOrderInward;
+export default ViewPostedTransferOrderReceipt;

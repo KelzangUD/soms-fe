@@ -177,7 +177,7 @@ export const MenuItems = [
         route: "inventory/transfer-order-inward",
       },
       {
-        page: "Posted Transfer Receipt",
+        page: "Posted Transfer Receipts",
         route: "inventory/posted-transfer-receipt",
       },
     ],
