@@ -19,7 +19,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
+const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
   const item_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "item_Number", headerName: "Item Number", width: 200 },
@@ -35,7 +35,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
     },
     { field: "uom", headerName: "UOM", width: 150 },
     { field: "qty", headerName: "Quantity", width: 150 },
-  ]; 
+  ];
   return (
     <>
       <Dialog
@@ -100,76 +100,6 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   value={transferOrderDetails?.transfer_Type}
                 />
               </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  id="outlined-basic"
-                  label="From Store"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={transferOrderDetails?.transfer_From_Name}
-                />
-              </Grid>
-            </Grid>
-            <Grid item container xs={12} paddingTop={2}>
-              <Grid item xs={3} paddingRight={1}>
-                <TextField
-                  id="outlined-basic"
-                  label="From Sub-Inventory"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={transferOrderDetails?.transfer_From_SubInventory}
-                />
-              </Grid>
-              <Grid item xs={3} paddingRight={1}>
-                <TextField
-                  id="outlined-basic"
-                  label="From Locator"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={transferOrderDetails?.transfer_From_Locator}
-                />
-              </Grid>
-              <Grid item xs={3} paddingRight={1}>
-                <TextField
-                  id="outlined-basic"
-                  label="To Store"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={transferOrderDetails?.transfer_To_Name}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  id="outlined-basic"
-                  label="To Sub-Inventory"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={transferOrderDetails?.transfer_To_SubInventory}
-                />
-              </Grid>
-            </Grid>
-            <Grid item container xs={12} paddingY={2}>
-              <Grid item xs={3} paddingRight={1}>
-                <TextField
-                  id="outlined-basic"
-                  label="To Locator"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={transferOrderDetails?.transfer_To_Locator}
-                />
-              </Grid>
               <Grid item xs={3} paddingRight={1}>
                 <TextField
                   id="outlined-basic"
@@ -181,6 +111,9 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   value={transferOrderDetails?.transfer_Mode}
                 />
               </Grid>
+            </Grid>
+
+            <Grid item container xs={12} paddingY={2}>
               <Grid item xs={3} paddingRight={1}>
                 <TextField
                   id="outlined-basic"
@@ -212,13 +145,17 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                 }}
               >
                 <DataGrid
-                  rows={transferOrderDetails?.transferOrderItemDTOList !== null ? transferOrderDetails?.transferOrderItemDTOList?.map(
-                    (row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                      id: index,
-                    })
-                  ) : []}
+                  rows={
+                    transferOrderDetails?.transferOrderItemDTOList !== null
+                      ? transferOrderDetails?.transferOrderItemDTOList?.map(
+                          (row, index) => ({
+                            ...row,
+                            sl: index + 1,
+                            id: index,
+                          })
+                        )
+                      : []
+                  }
                   columns={item_columns}
                   initialState={{
                     pagination: {
@@ -247,4 +184,4 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
   );
 };
 
-export default ViewTransferOrder;
+export default ViewInwardTransferOrder;

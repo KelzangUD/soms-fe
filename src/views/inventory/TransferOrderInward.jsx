@@ -8,21 +8,43 @@ import {
   IconButton,
   FormControl,
 } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import ViewInwardTransferOrder from "./ViewInwardTransferOrder";
 import Route from "../../routes/Route";
 
 const TransferOrderInward = () => {
+  const empID = localStorage.getItem("username");
+  const [inwardTransferOrderList, setInwardTransferOrderList] = useState([]);
+  const [transferOrderDetails, setTransferOrderDetails] = useState({});
+  const [view, setView] = useState(false);
+  const [edit, setEdit] = useState(false);
+
+
+  const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewInTransitTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferOrderDetails(res?.data);
+      type === "view" ? setView(true) : setEdit(true);
+    };
+  };
+  const viewHandle = (params) => {
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view")
+  }
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "transfer_order_no", headerName: "Transfer Order No", width: 250 },
@@ -47,34 +69,32 @@ const TransferOrderInward = () => {
           <IconButton aria-label="edit" size="small">
             <EditIcon fontSize="inherit" />
           </IconButton>
-          <IconButton aria-label="view" size="small">
+          <IconButton aria-label="view" size="small" onClick={() => viewHandle(params)}>
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const transfer_order_rows = [
-    {
-      id: 1,
-      transfer_order_no: 1,
-      transfer_from_code: "EM/DP1/2024/00001",
-      transfer_to_code: "EM/DP1/2024/00001",
-      posted_date: "20-Aug-2024",
-      status: "Submitted",
-    },
-  ];
 
   //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+    const fetchInwardTrasnferOrderList = async () => {
+      const res = await Route("GET", `/transferOrder/viewInwardTransferOrderList/${empID}`, null, null, null);
+      if (res?.status === 200) {
+        setInwardTransferOrderList(res?.data?.map((item, index) => ({
+          id: item?.transfer_Order_Id,
+          sl: index+1,
+          transfer_order_no: item?.transfer_Order_Number,
+          transfer_from_code: item?.transfer_From_Name,
+          transfer_to_code: item?.transfer_To_Name,
+          posted_date: item?.stringTransferDate,
+          status: item?.status
+        })));
+      }
+    };
+    useEffect(() => {
+      fetchInwardTrasnferOrderList();
+    }, []);
 
   return (
     <>
@@ -94,7 +114,7 @@ const TransferOrderInward = () => {
                   spacing={2}
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <Grid item container xs={9} direction="column-reverse" spacing={2}>
+                  <Grid item container xs={8} direction="column-reverse" spacing={2}>
                     <Grid item container spacing={1} alignItems="center">
                       <Grid item xs={2}>
                         <FormControl fullWidth style={{ background: "#fff"}}>
@@ -138,7 +158,7 @@ const TransferOrderInward = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Button
                       variant="contained"
                       color="error"
@@ -167,10 +187,7 @@ const TransferOrderInward = () => {
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
                   <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
-                      rows={transfer_order_rows?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
+                      rows={inwardTransferOrderList}
                       columns={transfer_order_columns}
                       initialState={{
                         pagination: {
@@ -186,6 +203,13 @@ const TransferOrderInward = () => {
           </Grid>
         </Grid>
       </Box>
+      {view && (
+        <ViewInwardTransferOrder
+          open={view}
+          setOpen={setView}
+          transferOrderDetails={transferOrderDetails}
+        />
+      )}
     </>
   );
 };

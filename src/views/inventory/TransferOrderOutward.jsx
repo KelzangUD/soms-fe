@@ -20,9 +20,31 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import ViewTransferOrder from "./ViewTransferOrder";
 import Route from "../../routes/Route";
 
 const TransferOrderOutward = () => {
+  const empID = localStorage.getItem("username");
+  const [transferOrderList, setTransferOrderList] = useState([]);
+  const [transferOrderDetails, setTransferOrderDetails] = useState({});
+  const [view, setView] = useState(false);
+
+  const fetchViewTransferOrderDetails = async (transferOrderNo) => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewInTransitTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferOrderDetails(res?.data);
+      setView(true);
+    };
+  };
+  const viewHandle = (params) => {
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no);
+  };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "transfer_order_no", headerName: "Transfer Order No", width: 250 },
@@ -44,37 +66,43 @@ const TransferOrderOutward = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="edit" size="small">
-            <EditIcon fontSize="inherit" />
-          </IconButton>
-          <IconButton aria-label="view" size="small">
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => viewHandle(params)}
+          >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const transfer_order_rows = [
-    {
-      id: 1,
-      transfer_order_no: 1,
-      transfer_from_code: "EM/DP1/2024/00001",
-      transfer_to_code: "EM/DP1/2024/00001",
-      posted_date: "20-Aug-2024",
-      status: "Submitted",
-    },
-  ];
 
   //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const fetchTransferOrderOutward = async () => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewTransferOrderOutwardList/${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferOrderList(
+        res?.data?.map((item, index) => ({
+          id: index,
+          transfer_order_no: item?.transfer_Order_Number,
+          transfer_from_code: item?.transfer_From_Name,
+          transfer_to_code: item?.transfer_To_Name,
+          posted_date: item?.stringTransferDate,
+          status: item?.status,
+        }))
+      );
+    }
+  };
+  useEffect(() => {
+    fetchTransferOrderOutward();
+  }, []);
 
   return (
     <>
@@ -94,17 +122,23 @@ const TransferOrderOutward = () => {
                   spacing={2}
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <Grid item container xs={9} direction="column-reverse" spacing={2}>
+                  <Grid
+                    item
+                    container
+                    xs={8}
+                    direction="column-reverse"
+                    spacing={2}
+                  >
                     <Grid item container spacing={1} alignItems="center">
                       <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
+                        <FormControl fullWidth style={{ background: "#fff" }}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="From*" />
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
+                        <FormControl fullWidth style={{ background: "#fff" }}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="To*" />
                           </LocalizationProvider>
@@ -138,7 +172,7 @@ const TransferOrderOutward = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Button
                       variant="contained"
                       color="error"
@@ -165,9 +199,15 @@ const TransferOrderOutward = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
-                      rows={transfer_order_rows?.map((row, index) => ({
+                      rows={transferOrderList?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
                       }))}
@@ -186,6 +226,13 @@ const TransferOrderOutward = () => {
           </Grid>
         </Grid>
       </Box>
+      {view && (
+        <ViewTransferOrder
+          open={view}
+          setOpen={setView}
+          transferOrderDetails={transferOrderDetails}
+        />
+      )}
     </>
   );
 };

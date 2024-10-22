@@ -58,7 +58,6 @@ const TransferOrders = () => {
     }
   };
   const updateTransferOrderShipment = async (transferOrderNo) => {
-    console.log(transferOrderNo)
     const res = await Route(
       "PUT",
       `/transferOrder/transferOrderShipment?transferOrderNo=${transferOrderNo}&empId=${empID}`,
@@ -81,8 +80,7 @@ const TransferOrders = () => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "edit");
   };
   const viewHandle = (params) => {
-    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view");
-    
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view"); 
   };
   const shipHandle = (params) => {
     updateTransferOrderShipment(params?.row?.transfer_order_no)
