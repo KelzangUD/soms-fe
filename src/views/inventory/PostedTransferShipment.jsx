@@ -20,9 +20,32 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import ViewPostedTransferShipment from "./ViewPostedTransferShipment";
 import Route from "../../routes/Route";
 
 const PostedTransferShipment = () => {
+  const empID = localStorage.getItem("username");
+  const [transferShipment, setTransferShipment] = useState([]);
+  const [transferShipmentDetails, setTransferShipmentDetails] = useState({});
+  const [view, setView] = useState(false);
+
+  const fetchPostedTransferShipmentDetails = async (transferOrderNo) => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewPostedTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferShipmentDetails(res?.data);
+      setView(true);
+    }
+  };
+
+  const viewHandle = (params) => {
+    fetchPostedTransferShipmentDetails(params?.id)
+  };
   const posted_transfer_shipment_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "transfer_order_no", headerName: "Transfer Order No", width: 250 },
@@ -44,34 +67,40 @@ const PostedTransferShipment = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small">
+          <IconButton aria-label="view" size="small" onClick={() => viewHandle(params)}>
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const posted_transfer_shipment_rows = [
-    {
-      id: 1,
-      transfer_order_no: 1,
-      transfer_from_code: "EM/DP1/2024/00001",
-      transfer_to_code: "EM/DP1/2024/00001",
-      posted_date: "20-Aug-2024",
-      status: "Submitted",
-    },
-  ];
 
   //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const fetchPostedTransferShipment = async () => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewPostedOutwardTransferOrderList/${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferShipment(
+        res?.data?.map((item, index) => ({
+          id: item?.transfer_Order_Number,
+          sl: index+1,
+          transfer_order_no: item?.transfer_Order_Number,
+          transfer_from_code: item?.transfer_From_Name,
+          transfer_to_code: item?.transfer_To_Name,
+          posted_date: item?.stringTransferDate,
+          status: item?.status,
+        }))
+      );
+    }
+  };
+  useEffect(() => {
+    fetchPostedTransferShipment();
+  }, []);
 
   return (
     <>
@@ -91,17 +120,23 @@ const PostedTransferShipment = () => {
                   spacing={2}
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <Grid item container xs={9} direction="column-reverse" spacing={2}>
+                  <Grid
+                    item
+                    container
+                    xs={9}
+                    direction="column-reverse"
+                    spacing={2}
+                  >
                     <Grid item container spacing={1} alignItems="center">
                       <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
+                        <FormControl fullWidth style={{ background: "#fff" }}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="From*" />
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
+                        <FormControl fullWidth style={{ background: "#fff" }}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="To*" />
                           </LocalizationProvider>
@@ -162,12 +197,15 @@ const PostedTransferShipment = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
-                      rows={posted_transfer_shipment_rows?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
+                      rows={transferShipment}
                       columns={posted_transfer_shipment_columns}
                       initialState={{
                         pagination: {
@@ -183,6 +221,13 @@ const PostedTransferShipment = () => {
           </Grid>
         </Grid>
       </Box>
+      {view && (
+        <ViewPostedTransferShipment
+          open={view}
+          setOpen={setView}
+          transferOrderDetails={transferShipmentDetails}
+        />
+      )}
     </>
   );
 };
