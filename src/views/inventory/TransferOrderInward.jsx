@@ -19,6 +19,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewInwardTransferOrder from "./ViewInwardTransferOrder";
+import UpdateTransferOrderInward from "./UpdateTransferOrderInward";
 import Route from "../../routes/Route";
 
 const TransferOrderInward = () => {
@@ -42,9 +43,12 @@ const TransferOrderInward = () => {
       type === "view" ? setView(true) : setEdit(true);
     };
   };
+  const editHandle = (params) => {
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "edit");
+  };
   const viewHandle = (params) => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view")
-  }
+  };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "transfer_order_no", headerName: "Transfer Order No", width: 250 },
@@ -66,7 +70,7 @@ const TransferOrderInward = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="edit" size="small">
+          <IconButton aria-label="edit" size="small" onClick={() => editHandle(params)}>
             <EditIcon fontSize="inherit" />
           </IconButton>
           <IconButton aria-label="view" size="small" onClick={() => viewHandle(params)}>
@@ -203,6 +207,14 @@ const TransferOrderInward = () => {
           </Grid>
         </Grid>
       </Box>
+      {edit && (
+        <UpdateTransferOrderInward
+          open={edit}
+          setOpen={setEdit}
+          fetchInwardTrasnferOrderList={fetchInwardTrasnferOrderList}
+          transferOrderDetails={transferOrderDetails}
+        />
+      )}
       {view && (
         <ViewInwardTransferOrder
           open={view}
