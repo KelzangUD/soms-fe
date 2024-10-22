@@ -33,6 +33,7 @@ export default function SideNav() {
     navigation(route);
   };
   const handleNestedItemClick = (index) => {
+    debugger;
     const newOpenStates = [...openStates];
     newOpenStates[index] = !newOpenStates[index];
     setOpenStates(newOpenStates);
