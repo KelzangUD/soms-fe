@@ -70,7 +70,7 @@ const ServiceLogReport = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Service Log Report" />
+          {/* <SubHeader text="Service Log Report" /> */}
           <Grid
             item
             xs={12}
@@ -87,12 +87,12 @@ const ServiceLogReport = () => {
                   <Grid
                     item
                     container
-                    xs={9}
+                    xs={8}
                     direction="column-reverse"
                     spacing={2}
                   >
                     <Grid item container spacing={1} alignItems="center">
-                      <Grid item xs={2}>
+                      <Grid item xs={3}>
                         <FormControl fullWidth>
                           <InputLabel id="service-type-select-label">
                             Service Type
@@ -152,7 +152,7 @@ const ServiceLogReport = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Button
                       variant="contained"
                       color="error"
@@ -179,7 +179,7 @@ const ServiceLogReport = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={service_log_report_rows?.map((row, index) => ({
                         ...row,

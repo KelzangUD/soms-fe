@@ -22,14 +22,15 @@ import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import Notification from "../ui/Notification";
 import Route from "../routes/Route";
+import { jwtDecode } from "jwt-decode";
 
 const SignIn = () => {
   const navigagte = useNavigate();
   const [formData, setFormData] = useState({
-    empId: "",
+    username: "",
     password: "",
   });
-  const [message, setMessage] = React.useState("");
+  const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [openForgotPasswordDialog, setOpenForgotPasswordDialog] =
     useState(false);
@@ -40,18 +41,41 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    navigagte("/home/dashboard");
-    // const res = await Route("POST", "/login", null, formData, null);
-    // if (res?.status === 200) {
-    //   localStorage.setItem("user", JSON.stringify(res?.data?.user));
-    //   localStorage.setItem("token", res?.data?.token);
-    //   res?.data?.user?.isAdmin
-    //     ? navigagte("/admin/dashboard")
-    //     : navigagte("/user/dashboard");
-    // } else {
-    //   setMessage(res?.data?.message);
-    //   setOpen(true);
-    // }
+    if (formData?.username == "" || formData?.password === "") {
+      setMessage("Please Fill Up with neccessary information");
+      setOpen(true);
+    } else {
+      const res = await Route(
+        "POST",
+        "/api/v1/auth/authenticate",
+        null,
+        formData,
+        null
+      );
+      if (res?.status === 200) {
+        const decoded = jwtDecode(res?.data?.access_token);
+        if (decoded) {
+          const response = await Route(
+            "GET",
+            `/UserDtls/Module?role=${decoded?.roles[1]}&userId=${formData?.username}`,
+            null,
+            null,
+            null
+          );
+          if (response?.status === 200) {
+            localStorage.setItem("username", formData?.username);
+            localStorage.setItem("access_token", res?.data?.access_token);
+            localStorage.setItem("refresh_token", res?.data?.refresh_token);
+            localStorage.setItem("privileges", JSON.stringify(response?.data))
+            navigagte("/home/dashboard");
+          } else {
+            setMessage(res?.data?.message);
+            setOpen(true);
+          }
+        }
+      } else {
+      }
+    }
   };
 
   const forgotPasswordHandle = () => {
@@ -91,8 +115,8 @@ const SignIn = () => {
                     variant="outlined"
                     fullWidth
                     type="text"
-                    name="empId"
-                    value={formData.empId}
+                    name="username"
+                    value={formData.username}
                     onChange={handleChange}
                     required
                   />
@@ -165,15 +189,19 @@ const SignIn = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions style={{ marginBottom: "16px" }}>
-            <Button onClick={() => setOpenForgotPasswordDialog(false)}>
-              Cancel
-            </Button>
             <Button
               onClick={() => setOpenForgotPasswordDialog(false)}
               variant="contained"
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={() => setOpenForgotPasswordDialog(false)}
+              variant="outlined"
+              color="error"
               style={{ marginRight: "16px" }}
             >
-              Continue
+              Cancel
             </Button>
           </DialogActions>
         </Dialog>

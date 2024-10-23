@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import {
+  PaymentReceipt,
   CashReceipt,
   Recharge,
   BankReceipt,
@@ -8,13 +9,14 @@ import {
   AdvanceCollection,
   AdvanceCollectionHistory,
   AdvanceRefund,
-  AdvanceRefundHistory
+  AdvanceRefundHistory,
 } from "../../views/collections/index";
 
 const Collections = () => {
   return (
     <>
       <Routes>
+        <Route path="/payment-receipt" element={<PaymentReceipt />} />
         <Route path="/cash-receipt" element={<CashReceipt />} />
         <Route path="/recharge" element={<Recharge />} />
         <Route path="/bank-receipt" element={<BankReceipt />} />
@@ -27,11 +29,8 @@ const Collections = () => {
           path="/advance-collection-history"
           element={<AdvanceCollectionHistory />}
         />
+        <Route path="/advance-refund" element={<AdvanceRefund />} />
         <Route
-          path="/advance-refund"
-          element={<AdvanceRefund />}
-        />
-         <Route
           path="/advance-refund-history"
           element={<AdvanceRefundHistory />}
         />

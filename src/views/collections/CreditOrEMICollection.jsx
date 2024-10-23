@@ -24,7 +24,7 @@ const CreditOrEMICollection = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          <SubHeader text="Credit/EMI Collection" />
+          {/* <SubHeader text="Credit/EMI Collection" /> */}
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid container padding={2}>

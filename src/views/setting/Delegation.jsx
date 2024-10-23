@@ -39,7 +39,7 @@ const Delegation = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Delegation" />
+          {/* <SubHeader text="Delegation" /> */}
           <Grid
             item
             xs={12}
@@ -87,7 +87,7 @@ const Delegation = () => {
             </Grid>
           </Grid>
           <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-            <div style={{ height: "auto", width: "100%" }}>
+            <div style={{ height: "auto", width: "100%", background: "#fff" }}>
               <DataGrid
                 rows={rows?.map((row, index) => ({
                   ...row,

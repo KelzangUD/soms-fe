@@ -94,7 +94,7 @@ const EBSLogForCashCollectionReport = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="EBS Log for Cash Collection Report" />
+          {/* <SubHeader text="EBS Log for Cash Collection Report" /> */}
           <Grid
             item
             xs={12}

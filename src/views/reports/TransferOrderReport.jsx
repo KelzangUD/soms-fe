@@ -83,7 +83,7 @@ const TransferOrderReport = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Transfer Order Report" />
+          {/* <SubHeader text="Transfer Order Report" /> */}
           <Grid
             item
             xs={12}
@@ -100,13 +100,13 @@ const TransferOrderReport = () => {
                   <Grid
                     item
                     container
-                    xs={9}
+                    xs={8}
                     direction="column-reverse"
                     spacing={2}
                   >
                     <Grid item container spacing={1} alignItems="center">
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="transfer-type-select-label">
                             Transfer Type
                           </InputLabel>
@@ -122,13 +122,13 @@ const TransferOrderReport = () => {
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="From Date" />
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={2} style={{ background: "#fff"}}>
                         <FormControl fullWidth>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="To Date" />
@@ -136,7 +136,7 @@ const TransferOrderReport = () => {
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="from-select-label">
                             From Store
                           </InputLabel>
@@ -152,7 +152,7 @@ const TransferOrderReport = () => {
                         </FormControl>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="to-select-label">To Store</InputLabel>
                           <Select
                             labelId="to-select-label"
@@ -172,11 +172,12 @@ const TransferOrderReport = () => {
                           fullWidth
                           name="item_description"
                           required
+                          style={{ background: "#fff"}}
                           // onChange={oldPasswordHandle}
                         />
                       </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
+                      <Grid item xs={4}>
+                        <FormControl fullWidth style={{ background: "#fff"}}>
                           <InputLabel id="transaction-status-select-label">
                             Transaction Status
                           </InputLabel>
@@ -220,7 +221,7 @@ const TransferOrderReport = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Button
                       variant="contained"
                       color="error"
@@ -247,7 +248,7 @@ const TransferOrderReport = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={transfer_order_report_rows?.map((row, index) => ({
                         ...row,

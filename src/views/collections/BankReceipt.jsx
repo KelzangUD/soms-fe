@@ -30,7 +30,7 @@ const BankReceipt = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          <SubHeader text="Bank Receipt" />
+          {/* <SubHeader text="Bank Receipt" /> */}
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid container padding={2}>

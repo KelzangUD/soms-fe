@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -8,15 +7,32 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
+import AddSystemUserDialog from "./AddSysteUserDialog";
+import ViewEditSystemUserModal from "./ViewEditSystemUserModal";
 
 const SystemUsers = () => {
+  const [systemUsers, setSystemUsers] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [actionType, setActionType] = useState('');
+  const [userDtls, setUserDtls] = useState('');
+
+  const handleAction = async (userCode, type) => {
+    setActionType(type);
+    const res = await Route("GET", `/UserDtls/fetchUserDetails?userId=${userCode}`, null, null, null);
+    if (res?.status === 200) {
+      setUserDtls(res?.data);
+      setShowViewModal(true);
+    }
+  };
+
   const columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "name", headerName: "Name", width: 300 },
-    { field: "email", headerName: "Email", width: 300 },
-    { field: "created_date", headerName: "Created Date", width: 150 },
+    { field: "full_name", headerName: "Name", width: 300 },
+    { field: "email_address", headerName: "Email", width: 300 },
+    { field: "createdDate", headerName: "Created Date", width: 150 },
     {
-      field: "role",
+      field: "roleName",
       headerName: "Role",
       width: 250,
     },
@@ -31,43 +47,54 @@ const SystemUsers = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="edit" size="small">
+          <IconButton
+            aria-label="edit"
+            size="small"
+            onClick={() => handleAction(params.row.user_code, 'edit')}
+          >
             <EditIcon fontSize="inherit" />
           </IconButton>
-          <IconButton aria-label="view" size="small">
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => handleAction(params.row.user_code, 'view')}
+          >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const rows = [
-    {
-      id: 1,
-      name: "Anita Ghalley",
-      email: "accountant3.revenue@tashicell.com",
-      created_date: "Jul 18, 2019",
-      role: "CCE Executive Extension",
-      status: "Active",
-    },
-  ];
 
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const fetchSystemUsers = async () => {
+    const res = await Route("GET", "/UserDtls/getAllUserList", null, null, null);
+    if (res?.status === 200) {
+      const rowsWithIds = (res?.data || []).map((item, index) => ({ ...item, id: index + 1 }));
+      setSystemUsers(rowsWithIds);
+    }
+  };
+
+  useEffect(() => {
+    fetchSystemUsers();
+  }, []);
+
+  const handleAddUser = () => {
+    setShowAddModal(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setShowAddModal(false);
+  };
+
+  const handleCloseViewModal = () => {
+    setShowViewModal(false);
+  };
 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="System Users" />
+          {/* <SubHeader text="System Users" /> */}
           <Grid
             item
             xs={12}
@@ -102,6 +129,7 @@ const SystemUsers = () => {
                 color="primary"
                 endIcon={<AddIcon />}
                 sx={{ mr: 2 }}
+                onClick={handleAddUser}
               >
                 Add New
               </Button>
@@ -115,9 +143,9 @@ const SystemUsers = () => {
             </Grid>
           </Grid>
           <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-            <div style={{ height: "auto", width: "100%" }}>
+            <div style={{ height: "auto", width: "100%", background: "#fff" }}>
               <DataGrid
-                rows={rows?.map((row, index) => ({
+                rows={systemUsers?.map((row, index) => ({
                   ...row,
                   sl: index + 1,
                 }))}
@@ -127,12 +155,14 @@ const SystemUsers = () => {
                     paginationModel: { page: 0, pageSize: 5 },
                   },
                 }}
-                pageSizeOptions={[5, 10]}
+                pageSizeOptions={[5, 10, 100]}
               />
             </div>
           </Grid>
         </Grid>
       </Box>
+      {showAddModal && <AddSystemUserDialog open={showAddModal} handleClose={handleCloseAddModal} fetchSystemUser={fetchSystemUsers}/>}
+      {showViewModal && <ViewEditSystemUserModal open={showViewModal} handleClose={handleCloseViewModal} fetchSystemUser={fetchSystemUsers} data={userDtls} actionType={actionType}/>}
     </>
   );
 };

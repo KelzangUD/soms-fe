@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Grid } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import StatusCard from "../../ui/StatusCard";
 import Revenue from "../../charts/Revenue";
 
@@ -26,7 +25,6 @@ const Dashboard = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-        <SubHeader text="Dashboard" />
         <Grid item container xs={12} spacing={2}>
           {status?.map((item, index) => (
             <Grid item xs={3} key={item?.title}>

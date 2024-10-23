@@ -21,7 +21,7 @@ const BusinessUnit = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          <SubHeader text="Business Unit" />
+          {/* <SubHeader text="Business Unit" /> */}
           <Grid item xs={12}>
             <Paper elevation={1} sx={{ p: 2 }}>
               <Grid container spacing={2} sx={{ my: 1 }}>

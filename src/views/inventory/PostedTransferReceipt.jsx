@@ -77,7 +77,7 @@ const PostedTransferReceipt = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Posted Transfer Receipt" />
+          {/* <SubHeader text="Posted Transfer Receipt" /> */}
           <Grid
             item
             xs={12}

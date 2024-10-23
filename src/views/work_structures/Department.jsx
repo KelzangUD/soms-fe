@@ -68,7 +68,7 @@ const Department = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Department" />
+          {/* <SubHeader text="Department" /> */}
           <Grid
             item
             xs={12}
@@ -106,7 +106,7 @@ const Department = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={department_rows?.map((row, index) => ({
                         ...row,

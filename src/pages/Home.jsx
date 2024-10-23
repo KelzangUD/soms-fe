@@ -16,6 +16,7 @@ import EBSReports from "./home/EBSReport";
 import Setting from "./home/Setting";
 import ChangePassword from "./home/ChangePassword";
 import { styled } from "@mui/material/styles";
+import bg from "../assets/images/bg.png";
 
 const Item = styled(Paper)(({ theme }) => ({
   borderRadius: 0,
@@ -30,28 +31,29 @@ const Home = () => {
           <Grid item xs={2}>
             <SideNav />
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} >
             <Nav />
-            <Grid container>
-                <Grid item xs={12}>
-                  <Item>
-                    <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/change-password" element={<ChangePassword />} />
-                      <Route path="/work-structures/*" element={<WorkStructures />} />
-                      <Route path="/employee/*" element={<Employee />} />
-                      <Route path="/pos-management/*" element={<POSManagement />} />
-                      <Route path="/collections/*" element={<Collections />} />
-                      <Route path="/purchase/*" element={<Purchase />} />
-                      <Route path="/inventory/*" element={<Inventory />} />
-                      <Route path="/reports/*" element={<Reports />} />
-                      <Route path="/ebs-reports/*" element={<EBSReports />} />
-                      <Route path="/setting/*" element={<Setting />} />
-                    </Routes>
-                  </Item>
-                </Grid>
-              </Grid>
+            <Grid item xs={12}>
+              <Item style={{ backgroundImage: `url(${bg})`}}>
+                <Routes>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/change-password" element={<ChangePassword />} />
+                  <Route
+                    path="/work-structures/*"
+                    element={<WorkStructures />}
+                  />
+                  <Route path="/employee/*" element={<Employee />} />
+                  <Route path="/pos-management/*" element={<POSManagement />} />
+                  <Route path="/collections/*" element={<Collections />} />
+                  <Route path="/purchase/*" element={<Purchase />} />
+                  <Route path="/inventory/*" element={<Inventory />} />
+                  <Route path="/reports/*" element={<Reports />} />
+                  <Route path="/ebs-reports/*" element={<EBSReports />} />
+                  <Route path="/setting/*" element={<Setting />} />
+                </Routes>
+              </Item>
+            </Grid>
           </Grid>
         </Grid>
       </Box>

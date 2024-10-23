@@ -91,7 +91,7 @@ const SalesReportAll = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Sales Report-All" />
+          {/* <SubHeader text="Sales Report-All" /> */}
           <Grid
             item
             xs={12}
@@ -260,7 +260,7 @@ const SalesReportAll = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={sales_report_all_rows?.map((row, index) => ({
                         ...row,

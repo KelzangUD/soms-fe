@@ -73,7 +73,7 @@ const EmployeeList = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <SubHeader text="Employee List" />
+          {/* <SubHeader text="Employee List" /> */}
           <Grid
             item
             xs={12}
@@ -136,7 +136,7 @@ const EmployeeList = () => {
                     </Grid>
                 </Grid>
                 <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                     <DataGrid
                       rows={employee_list_rows?.map((row, index) => ({
                         ...row,
