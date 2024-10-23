@@ -50,6 +50,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
     transfer_Type: "",
     transfer_From: "",
     transfer_From_SubInventory: "",
+    region_NAME: "",
     transfer_From_Locator: "",
     transfer_To: "",
     transfer_To_SubInventory: "",
@@ -82,6 +83,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
       setParameters((prev) => ({
         ...prev,
         transfer_From: res?.data?.storeId,
+        region_NAME: res?.data?.region_NAME,
       }));
     }
   };
@@ -344,6 +346,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
       setParameters((prev) => ({
         ...prev,
         transfer_Date: dateFormatterTwo(new Date()),
+        region_NAME: "",
         transfer_Type: "",
         transfer_From: "",
         transfer_From_SubInventory: "",
@@ -444,6 +447,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
                   required
                   disabled
                   fullWidth
+                  value={parameters?.region_NAME}
                 />
               </Grid>
             </Grid>

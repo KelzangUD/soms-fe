@@ -139,6 +139,8 @@ const AddLineItem = ({
         taxAmt: res?.data?.taxAmount,
         priceLocator: res?.data?.priceLocator,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+        description: res?.data?.description,
+        itemNo: res?.data?.itemNo,
       }));
     } else if (res?.status === 200 && res?.data?.available === "N") {
       setNotificationMsg("Item Not Avaliable");
@@ -361,6 +363,7 @@ const AddLineItem = ({
                     disablePortal
                     options={onHandItems}
                     onChange={descriptionHandle}
+                    value={lineItemDetail?.description}
                     onInputChange={(e, inputValue) =>
                       handleInputChange(inputValue)
                     }

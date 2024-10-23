@@ -66,10 +66,10 @@ const TransferOrders = () => {
       null
     );
     if (res?.status === 200) {
+      fetchTransferOrderList();
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
       setShowNofication(true);
-      fetchTransferOrderList();
     } else {
       setSeverity("error");
       setNotificationMsg(res?.data?.responseText);
