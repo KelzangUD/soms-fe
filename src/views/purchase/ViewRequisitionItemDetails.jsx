@@ -44,7 +44,8 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
   return (
     <>
       <Dialog
-        fullScreen
+         maxWidth="xl"
+         fullWidth
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -70,32 +71,36 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
               </Grid>
               <Grid container padding={2}>
                 <Grid container spacing={2}>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography variant="subtitle1">
                       Requisition Number: {details?.requisitionNo}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Employee Name: {details?.employeeName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Employee Code: {details?.employeeCode}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                </Grid>
+              </Grid>
+              <Grid container paddingX={2}>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Store Name: {details?.requisitionStoreName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2} display="flex">
+                  <Grid item xs={4} display="flex">
                     <Typography variant="body1">
                       Region Name: {details?.regionName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={1} display="flex">
+                  <Grid item xs={4} display="flex">
                     <Typography variant="body1">
                       Requisition Date: {details?.requisition_Date}
                     </Typography>
@@ -123,6 +128,7 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
                     },
                   }}
                   pageSizeOptions={[5, 10]}
+                  sx={{ mx: 2 }}
                 />
               </div>
             </Grid>
@@ -131,6 +137,8 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
               xs={12}
               alignItems="right"
               paddingX={2}
+              marginBottom={2}
+              marginX={2}
               sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Button variant="outlined" onClick={() => setOpen(false)}>

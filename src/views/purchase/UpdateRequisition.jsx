@@ -16,7 +16,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByApprover }) => {
+const UpdateRequisition = ({
+  open,
+  setOpen,
+  details,
+  fetchRequisitionListByApprover,
+}) => {
   const empID = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -73,6 +78,9 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
       ),
     }));
   };
+  useEffect(() => {
+    console.log(details)
+  },[]);
   const requisiton_item_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "item_Number", headerName: "Item Number", width: 200 },
@@ -82,9 +90,9 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
       width: 500,
     },
     { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
+    // { field: "qty", headerName: "Quantity", width: 150 },
     {
-      field: "level1_Qty",
+      field: "qty",
       headerName: "Actual Quantity",
       width: 150,
     },
@@ -96,13 +104,12 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
         <>
           <TextField
             id="outlined-basic"
-            label="Approve Qty"
             variant="outlined"
             size="small"
             defaultValue={
               details?.hierarchyLevel === "Level1"
-              ? details?.itemDTOList?.map((item) => (item?.level1_Qty)) 
-              : details?.itemDTOList?.map((item) => (item?.level2_Qty)) 
+                ? params?.row?.qty
+                : params?.row?.level1_Qty
             }
             onChange={(e) => approveQtyHandle(e, params)}
           />
@@ -117,7 +124,6 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
         <>
           <TextField
             id="outlined-basic"
-            label="Remarks"
             variant="outlined"
             size="small"
             defaultValue={params?.row?.received_Remark}
@@ -153,6 +159,7 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
         })),
       }));
       fetchRequisitionListByApprover();
+      setOpen(false);
     } else {
       setNotificationMsg(res?.data?.message);
       setSeverity("error");
@@ -162,7 +169,8 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
   return (
     <>
       <Dialog
-        fullScreen
+        maxWidth="xl"
+        fullWidth
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -188,32 +196,36 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
               </Grid>
               <Grid container padding={2}>
                 <Grid container spacing={2}>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography variant="subtitle1">
                       Requisition Number: {details?.requisitionNo}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Employee Name: {details?.employeeName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Employee Code: {details?.employeeCode}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                </Grid>
+              </Grid>
+              <Grid container padding={2}>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Store Name: {details?.requisitionStoreName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2} display="flex">
+                  <Grid item xs={4} display="flex">
                     <Typography variant="body1">
                       Region Name: {details?.regionName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={1} display="flex">
+                  <Grid item xs={4} display="flex">
                     <Typography variant="body1">
                       Requisition Date: {details?.requisition_Date}
                     </Typography>
@@ -241,6 +253,7 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
                     },
                   }}
                   pageSizeOptions={[5, 10]}
+                  sx={{ marginX: 2 }}
                 />
               </div>
             </Grid>
@@ -249,6 +262,7 @@ const UpdateRequisition = ({ open, setOpen, details, fetchRequisitionListByAppro
               xs={12}
               alignItems="right"
               paddingX={2}
+              paddingBottom={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
               <Button variant="contained" onClick={updateHandle}>

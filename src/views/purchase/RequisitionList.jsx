@@ -41,7 +41,7 @@ const RequisitionList = () => {
       setItemDetails(res?.data);
       setShowViewDetails(true);
     } else {
-      setNotificationMsg(res?.data?.message);
+      setNotificationMsg(res?.response?.data?.message);
       setSeverity("error");
       setShowNofication(true);
     }
@@ -81,7 +81,7 @@ const RequisitionList = () => {
       ),
     },
   ];
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
   const fetchRequisitionList = async () => {
     const res = await Route(
       "GET",
@@ -90,6 +90,7 @@ const RequisitionList = () => {
       null,
       null
     );
+    console.log(res);
     if (res?.status === 200) {
       setRequisitionList(res?.data);
     }

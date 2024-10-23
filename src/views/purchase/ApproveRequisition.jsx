@@ -36,6 +36,7 @@ const ApproveRequisition = ({
         uom: item?.uom,
         qty: item?.qty,
         level1_Qty: item?.level1_Qty,
+        level2_Qty: item?.level2_Qty,
         received_Remark: item?.received_Remark,
       }))
     );
@@ -49,9 +50,9 @@ const ApproveRequisition = ({
       width: 500,
     },
     { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
+    // { field: "qty", headerName: "Quantity", width: 150 },
     {
-      field: "level1_Qty",
+      field: "qty",
       headerName: "Actual Quantity",
       width: 150,
     },
@@ -63,14 +64,13 @@ const ApproveRequisition = ({
         <>
           <TextField
             id="outlined-basic"
-            label="Approve Qty"
             variant="outlined"
             size="small"
             disabled
             defaultValue={
               details?.hierarchyLevel === "Level1"
-                ? details?.itemDTOList?.map((item) => (item?.level1_Qty)) 
-                : details?.itemDTOList?.map((item) => (item?.level2_Qty)) 
+                ? params?.row?.level1_Qty
+                : params?.row?.level2_Qty
             }
           />
         </>
@@ -84,7 +84,6 @@ const ApproveRequisition = ({
         <>
           <TextField
             id="outlined-basic"
-            label="Remarks"
             variant="outlined"
             size="small"
             disabled
@@ -107,7 +106,7 @@ const ApproveRequisition = ({
       setSeverity("success");
       setShowNofication(true);
       fetchRequisitionListByApprover();
-      setOpen(false);
+      // setOpen(false);
     } else {
       setNotificationMsg(res?.data?.message);
       setSeverity("error");
@@ -117,7 +116,8 @@ const ApproveRequisition = ({
   return (
     <>
       <Dialog
-        fullScreen
+        maxWidth="xl"
+        fullWidth
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -143,32 +143,36 @@ const ApproveRequisition = ({
               </Grid>
               <Grid container padding={2}>
                 <Grid container spacing={2}>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography variant="subtitle1">
                       Requisition Number: {details?.requisitionNo}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Employee Name: {details?.employeeName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Employee Code: {details?.employeeCode}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                </Grid>
+              </Grid>
+              <Grid container padding={2}>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
                     <Typography variant="body1">
                       Store Name: {details?.requisitionStoreName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2} display="flex">
+                  <Grid item xs={4} display="flex">
                     <Typography variant="body1">
                       Region Name: {details?.regionName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={1} display="flex">
+                  <Grid item xs={4} display="flex">
                     <Typography variant="body1">
                       Requisition Date: {details?.requisition_Date}
                     </Typography>
@@ -196,6 +200,7 @@ const ApproveRequisition = ({
                     },
                   }}
                   pageSizeOptions={[5, 10]}
+                  sx={{ mx: 2 }}
                 />
               </div>
             </Grid>
@@ -204,6 +209,7 @@ const ApproveRequisition = ({
               xs={12}
               alignItems="right"
               paddingX={2}
+              paddingBottom={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
               <Button variant="contained" onClick={updateHandle}>
@@ -219,7 +225,10 @@ const ApproveRequisition = ({
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={() => { 
+            setShowNofication(false);
+            setOpen(false); 
+          }}
           message={notificationMsg}
           severity={severity}
         />
