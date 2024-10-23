@@ -34,7 +34,7 @@ const Requisitions = () => {
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [userDetails, setUserDetails] = useState([]);
+  const [userDetails, setUserDetails] = useState({});
   const [requisitionType, setRquisitionType] = useState([]);
   const [requisitionItems, setRequisitionItems] = useState([]);
   const [requisitionData, setRequisitionData] = useState({
@@ -65,6 +65,7 @@ const Requisitions = () => {
   };
   const fetchRequisitionType = async () => {
     const res = await Route("GET", "/Common/RequisitionType", null, null, null);
+    console.log(res);
     if (res?.status === 200) {
       setRquisitionType(res?.data);
     }
@@ -140,7 +141,6 @@ const Requisitions = () => {
       requisitionData,
       null
     );
-    // console.log(res);
     if (res?.status === 201) {
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
@@ -153,9 +153,8 @@ const Requisitions = () => {
         requisitionDate: dateFormatter(new Date().toISOString()),
         itemDTOList: [],
       }));
-      console.log(requisitionData);
     } else {
-      setNotificationMsg(res?.data?.message);
+      setNotificationMsg(res?.response?.data?.message);
       setSeverity("error");
       setShowNofication(true);
     }
@@ -229,7 +228,6 @@ const Requisitions = () => {
                       variant="outlined"
                       fullWidth
                       name="employee_name"
-                      disabled
                       value={userDetails?.userName}
                       required
                     />
@@ -343,9 +341,9 @@ const Requisitions = () => {
                           requisitionData?.itemDTOList?.map((item, index) => (
                             <TableRow key={item?.index}>
                               <TableCell component="th" scope="row">
-                                {item?.item_description}
+                                {item?.item_Description}
                               </TableCell>
-                              <TableCell>{item?.item_number}</TableCell>
+                              <TableCell>{item?.item_Number}</TableCell>
                               <TableCell>{item?.uom}</TableCell>
                               <TableCell>{item?.qty}</TableCell>
                               <TableCell align="right">
