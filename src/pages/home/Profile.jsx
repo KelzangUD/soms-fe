@@ -1,36 +1,63 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Avatar, Typography, Divider } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
-// import Route from "../../routes/Route";
+import Route from "../../routes/Route";
 
 const Profile = () => {
-  // const fetchUser = async () => {
-  //   const response = await Route("GET", "/users", token, null, user?.id);
-  //   if (response?.status === 200) {
-  //     localStorage.removeItem("user");
-  //     localStorage.setItem("user", JSON.stringify(response?.data?.user));
-  //     setUserDetails((prev) => ({
-  //       ...prev,
-  //       empId: response?.data?.user?.empId,
-  //       name: response?.data?.user?.name,
-  //       email: response?.data?.user?.email,
-  //       designation: response?.data?.user?.designation,
-  //       gender: response?.data?.user?.gender,
-  //       contact: response?.data?.user?.contact,
-  //       region: response?.data?.user?.region,
-  //       extension: response?.data?.user?.extension,
-  //     }));
-  //   } else {
-  //     setMessage(response?.data?.message);
-  //     setOpenNotification(true);
-  //   }
-  // };
+  const empID = localStorage.getItem("username");
+  const [userDetails, setUserDetails] = useState({
+    userName: "",
+    roleName: "",
+    region: "",
+    subInventory: "",
+    locator: "",
+    storeId: null,
+    toStoreName: null,
+    toStoreId: null,
+    customer_NAME: null,
+    region_NAME: "",
+    city: null,
+    country: null,
+    person_FIRST_NAME: null,
+    person_LAST_NAME: null,
+    store_LOCATION: null,
+    customerId: null,
+    customer_NUMBER: null,
+    customer_TYPE: null,
+    address1: null,
+    address2: null,
+    address3: null,
+    address4: null,
+    mobile_NUMBER: null,
+  });
+  const fetchUserDetails = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/fetchUserDtls?userId=${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setUserDetails((prev) => ({
+        ...prev,
+        userName: res?.data?.userName,
+        roleName: res?.data?.roleName,
+        region: res?.data?.region,
+        subInventory: res?.data?.subInventory,
+        locator: res?.data?.locator,
+        storeId: res?.data?.storeId,
+        region_NAME: res?.data?.region_NAME,
+      }));
+    };
+  };
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   return (
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          {/* <SubHeader text="My Profile" /> */}
           <Grid item xs={12}>
             <Paper elevation={1} sx={{ p: 2 }}>
               <Grid container spacing={2} sx={{ my: 4 }}>
@@ -43,7 +70,7 @@ const Profile = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Avatar sx={{ width: 100, height: 100 }}>T</Avatar>
+                  <Avatar sx={{ width: 100, height: 100 }}>{userDetails?.userName !== "" && userDetails?.userName[0].toUpperCase()}</Avatar>
                 </Grid>
                 <Grid item xs={10}>
                   <Typography
@@ -51,27 +78,31 @@ const Profile = () => {
                     sx={{ fontWeight: "800", fontSize: "24px" }}
                     gutterBottom
                   >
-                    Tshedup Gyeltshen
+                    {userDetails?.userName}
                   </Typography>
                   <Typography
                     variant="subtitle1"
                     gutterBottom
                     sx={{ color: "#758694" }}
                   >
-                    E00882
+                    {empID}
                   </Typography>
                   <Typography
                     variant="subtitle1"
                     gutterBottom
                     sx={{ color: "#758694" }}
                   >
-                    TICL_Dagapela Extension, Thimphu
+                    {userDetails?.region_NAME}, {userDetails?.region}
                   </Typography>
                 </Grid>
               </Grid>
               <Divider />
               <Grid sx={{ my: 4 }}>
-                <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: "600" }}>
+                <Typography
+                  variant="subtitle1"
+                  gutterBottom
+                  sx={{ fontWeight: "600" }}
+                >
                   Personal Information
                 </Typography>
                 <Grid container spacing={2}>
@@ -97,7 +128,11 @@ const Profile = () => {
               </Grid>
               <Divider />
               <Grid sx={{ my: 2 }}>
-                <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: "600" }}>
+                <Typography
+                  variant="subtitle1"
+                  gutterBottom
+                  sx={{ fontWeight: "600" }}
+                >
                   Professional Information
                 </Typography>
                 <Grid container spacing={2}>
@@ -107,7 +142,7 @@ const Profile = () => {
                       gutterBottom
                       sx={{ color: "#758694" }}
                     >
-                      Role: Administration
+                      Role: {userDetails?.roleName}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
