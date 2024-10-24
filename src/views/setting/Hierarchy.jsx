@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -122,13 +121,6 @@ const Hierarchy = () => {
               >
                 Add New
               </Button>
-              <Button
-                variant="contained"
-                color="success"
-                endIcon={<FileDownloadIcon />}
-              >
-                Export
-              </Button>
             </Grid>
           </Grid>
           <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
@@ -144,13 +136,13 @@ const Hierarchy = () => {
                     paginationModel: { page: 0, pageSize: 5 },
                   },
                 }}
-                pageSizeOptions={[5, 10]}
+                pageSizeOptions={[5, 10, 50, 100]}
               />
             </div>
           </Grid>
         </Grid>
       </Box>
-      {showEditModal && <EditHierarchyDialog hierarchyDtls={hierarchyDtls} hierarchyRole={hierarchyRole} hierarchyName={hierarchyName} handleClose={handleClose}/>}
+      {showEditModal && <EditHierarchyDialog hierarchyDtls={hierarchyDtls} hierarchyRole={hierarchyRole} hierarchyName={hierarchyName} handleClose={handleClose} open={showEditModal}/>}
       {showAddModal && <AddHierarchyDialog hierarchyRole={hierarchyRole} handleClose={handleCloseAddModal} fetchHierarchyList={fetchHierarchyList} open={showAddModal}/>}
     </>
   );

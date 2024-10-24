@@ -1,5 +1,24 @@
 import React, { useRef, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Grid, IconButton, MenuItem, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
+import { 
+  Button, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogTitle, 
+  FormHelperText, 
+  Grid, 
+  IconButton, 
+  MenuItem, 
+  Paper, 
+  styled, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  tableCellClasses, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Formik } from 'formik';
 import Route from '../../routes/Route';
@@ -46,18 +65,32 @@ const AddHierarchyDialog = ({ hierarchyRole, handleClose, fetchHierarchyList, op
   const [notificationMsg, setNotificationMsg] = useState('');
   const [showNotification, setShowNofication] = useState(false);
   const [severity, setSeverity] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(null);
 
   const handleHierarchyName = (val) => {
     setHierarchyName(val);
   };
 
+  const [initialValues, setInitialValues] = useState({
+    hierarchyName: hierarchyName,
+    createdBy: user,
+    approvalStatus: '',
+    approvalRoleId: '',
+    roleName: '',
+    maxHierarchyLevel: '',
+  });
+
   const handleDelete = (indexToRemove) => {
     setHierarchyDetails(prevDetails => prevDetails.filter((_, index) => index !== indexToRemove));
   };
 
-  // const handleEdit = (index) => {
-  //   console.log(index);
-  // };
+  const handleEdit = (index) => {
+    const rowData = hierarchyDetails[index];
+    setInitialValues(rowData); // Initialize form with row data
+    setIsEditing(true); // Set editing state to true
+    setCurrentIndex(index);
+  };
 
   const saveNewHierarchy = async () => {
     try {
@@ -109,14 +142,7 @@ const AddHierarchyDialog = ({ hierarchyRole, handleClose, fetchHierarchyList, op
         <DialogContent dividers>
           <Formik
             enableReinitialize
-            initialValues={{
-              hierarchyName: hierarchyName,
-              createdBy: user,
-              approvalStatus: '',
-              roleName: '',
-              approvalRoleId: '',
-              maxHierarchyLevel: ''
-            }}
+            initialValues={initialValues}
             validationSchema={Yup.object().shape({
               hierarchyName: Yup.string().required('Hierarchy name is required'),
               approvalStatus: Yup.string().required('Approval status is required'),
@@ -124,8 +150,26 @@ const AddHierarchyDialog = ({ hierarchyRole, handleClose, fetchHierarchyList, op
               maxHierarchyLevel: Yup.string().required('Level is required')
             })}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
-              setHierarchyDetails(prevDetails => [...prevDetails, values]);
-              resetForm();
+              if (isEditing && currentIndex !== null) {
+                setHierarchyDetails(prevDetails =>
+                  prevDetails.map((detail, index) =>
+                    index === currentIndex ? values : detail
+                  )
+                );
+                setInitialValues({
+                  hierarchyName: hierarchyName,
+                  createdBy: user,
+                  approvalStatus: '',
+                  approvalRoleId: '',
+                  roleName: '',
+                  maxHierarchyLevel: '',
+                });
+                setIsEditing(false);
+                setCurrentIndex(null);
+              } else {
+                setHierarchyDetails(prevDetails => [...prevDetails, values]);
+                resetForm();
+              }
               setSubmitting(false);
             }}
           >
@@ -239,7 +283,7 @@ const AddHierarchyDialog = ({ hierarchyRole, handleClose, fetchHierarchyList, op
                     variant="contained"
                     color="primary"
                   >
-                    Add
+                    {isEditing ? 'Update' : 'Add'}
                   </Button>
                 </DialogActions>
               </form>
@@ -268,9 +312,9 @@ const AddHierarchyDialog = ({ hierarchyRole, handleClose, fetchHierarchyList, op
                         <StyledTableCell align="right">{row.roleName}</StyledTableCell>
                         <StyledTableCell align="right">{row.approvalStatus}</StyledTableCell>
                         <StyledTableCell align="right">
-                          {/* <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(index)}>
+                          <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(index)}>
                             <EditIcon />
-                          </IconButton> */}
+                          </IconButton>
                           <IconButton color="secondary" aria-label="delete" onClick={() => handleDelete(index)}>
                             <DeleteIcon />
                           </IconButton>
