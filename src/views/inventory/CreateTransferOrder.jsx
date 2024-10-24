@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
+const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetails }) => {
   const empID = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -151,7 +151,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
   const fetchToStore = async () => {
     const res = await Route(
       "GET",
-      `/Common/FetchStore?userId=${empID}`,
+      `/Common/FetchToStore?StoreID=${userDetails?.storeId}&storeName=${userDetails?.region_NAME}`,
       null,
       null,
       null
@@ -167,7 +167,9 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
     }
   };
 
+
   useEffect(() => {
+    console.log(parameters)
     fetchUserDetails();
     fetchTransferType();
     fetchModeOfTransport();
@@ -372,7 +374,9 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
   return (
     <>
       <Dialog
-        fullScreen
+        // fullScreen
+        fullWidth
+        maxWidth="lg"
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -447,7 +451,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
                   required
                   disabled
                   fullWidth
-                  value={parameters?.region_NAME}
+                  value={userDetails?.region_NAME}
                 />
               </Grid>
             </Grid>
@@ -503,8 +507,8 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
                     value={parameters?.transfer_To}
                   >
                     {toStore?.map((item) => (
-                      <MenuItem value={item?.id} key={item?.id}>
-                        {item?.name}
+                      <MenuItem value={item?.toStoreId} key={item?.id}>
+                        {item?.toStoreName}
                       </MenuItem>
                     ))}
                   </Select>
@@ -720,7 +724,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList }) => {
               xs={12}
               alignItems="right"
               paddingX={2}
-              sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
+              sx={{ display: "flex", justifyContent: "flex-end", gap: "8px", mb: 2 }}
             >
               <Button variant="contained" onClick={createHandle}>
                 Create

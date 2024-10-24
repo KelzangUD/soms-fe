@@ -22,7 +22,20 @@ const TransferOrders = () => {
   const [edit, setEdit] = useState(false);
   const [view, setView] = useState(false);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
+  const [userDetails, setUserDetails] = useState([]);
 
+  const fetchUserDetails = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/fetchUserDtls?userId=${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setUserDetails(res?.data);
+    }
+  };
   const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
     const res = await Route(
       "GET",
@@ -132,6 +145,7 @@ const TransferOrders = () => {
     },
   ];
   useEffect(() => {
+  fetchUserDetails();
     fetchTransferOrderList();
   }, []);
 
@@ -218,6 +232,7 @@ const TransferOrders = () => {
           open={open}
           setOpen={setOpen}
           fetchTransferOrderList={fetchTransferOrderList}
+          userDetails={userDetails}
         />
       )}
       {view && (

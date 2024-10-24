@@ -277,11 +277,11 @@ const PaymentReceipt = () => {
       null,
       "multipart/form-data"
     );
-    console.log(paymentReceiptDetails);
-    console.log(res);
+    // console.log(paymentReceiptDetails);
+    // console.log(res);
     if (res?.status === 200) {
       setResponseData(res?.data);
-      setNotificationMsg(res?.data?.status);
+      setNotificationMsg(`Successfully Paid and your Application No is ${res?.data?.applicationNo}`);
       setSeverity("success");
       setShowDialog(true);
       setPaymentReceiptDetails((prev) => ({
@@ -312,7 +312,7 @@ const PaymentReceipt = () => {
       }));
       setFileName("Upload File");
     } else {
-      setNotificationMsg(res?.data?.message);
+      setNotificationMsg(res?.response?.data?.message);
       setSeverity("error");
       setShowNofication(true);
     }
