@@ -8,6 +8,7 @@ import {
   FormControl,
   IconButton,
   InputLabel,
+  InputAdornment,
   MenuItem,
   Select,
   Slide,
@@ -31,7 +32,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetails }) => {
+const CreateTransferOrder = ({
+  open,
+  setOpen,
+  fetchTransferOrderList,
+  userDetails,
+}) => {
   const empID = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -167,9 +173,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
     }
   };
 
-
   useEffect(() => {
-    console.log(parameters)
     fetchUserDetails();
     fetchTransferType();
     fetchModeOfTransport();
@@ -302,7 +306,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
       width: 500,
     },
     {
-      field: "serial_no",
+      field: "item_Serial_Number",
       headerName: "Serial No",
       width: 400,
     },
@@ -317,6 +321,39 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link); // Clean up the link element
+  };
+  const handleFileUpload = async (e) => {
+    let formData = new FormData();
+    formData.append("File", e?.target?.files[0]);
+    formData.append("empID", empID);
+    const res = await Route(
+      "POST",
+      `/transferOrder/getBulkTransferItems`,
+      null,
+      formData,
+      null,
+      "multipart/form-data"
+    );
+    console.log(res);
+    if (res?.status === 200) {
+      setParameters((prev) => ({
+        ...prev,
+        transferOrderItemDTOList: [
+          ...(prev.transferOrderItemDTOList || []), // Spread existing list or initialize if empty
+          ...res?.data?.map((item) => ({
+            item_Description: item?.item_Description,
+            item_Number: item?.item_Number,
+            item_Serial_Number: item?.item_Serial_Number,
+            uom: item?.uom,
+            qty: item?.qty,
+          })),
+        ],
+      }));
+    } else {
+      setNotificationMsg(res?.response?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
   };
 
   const createHandle = async (e) => {
@@ -341,6 +378,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
       null,
       "multipart/form-data"
     );
+    console.log(res);
     if (res?.status === 200 && res?.data?.success === true) {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
@@ -364,7 +402,6 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
       }));
       setSerialInputDisabled(true);
       fetchTransferOrderList();
-      setOpen(false);
     } else {
       setNotificationMsg(res?.response?.data?.message);
       setSeverity("error");
@@ -609,16 +646,29 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
                   backgroundColor: "#EEEDEB",
                 }}
               >
-                <Grid item paddingX={2}>
+                <Grid
+                  item
+                  paddingX={2}
+                  alignItems="center"
+                  justifyContent="center"
+                >
                   <IconButton
                     aria-label="download"
                     onClick={fileDownloadHandle}
                   >
                     <DownloadIcon />
                   </IconButton>
-                  <IconButton aria-label="upload">
-                    <UploadIcon />
-                  </IconButton>
+                  <FormControl>
+                    <input
+                      type="file"
+                      id="file-upload"
+                      style={{ display: "none" }} // Hide the default input
+                      onChange={(e) => handleFileUpload(e)}
+                    />
+                    <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
+                      <UploadIcon sx={{ mt: 1 }} /> {/* Upload icon */}
+                    </label>
+                  </FormControl>
                 </Grid>
               </Grid>
             </Grid>
@@ -675,7 +725,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
                 />
               </Grid>
               <Grid item container xs={2} paddingRight={1} alignItems="center">
-                <Grid item>
+                <Grid item xs={9}>
                   <TextField
                     id="outlined-basic"
                     label="Quantity"
@@ -686,7 +736,7 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
                     onChange={qtyHandle}
                   />
                 </Grid>
-                <Grid>
+                <Grid item xs={3}>
                   <IconButton aria-label="add" onClick={addHandle}>
                     <AddBoxIcon />
                   </IconButton>
@@ -724,7 +774,12 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
               xs={12}
               alignItems="right"
               paddingX={2}
-              sx={{ display: "flex", justifyContent: "flex-end", gap: "8px", mb: 2 }}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "8px",
+                mb: 2,
+              }}
             >
               <Button variant="contained" onClick={createHandle}>
                 Create
@@ -739,7 +794,10 @@ const CreateTransferOrder = ({ open, setOpen, fetchTransferOrderList, userDetail
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={() => {
+            setShowNofication(false);
+            setOpen(false);
+          }}
           message={notificationMsg}
           severity={severity}
         />
