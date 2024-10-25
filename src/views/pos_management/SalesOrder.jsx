@@ -73,6 +73,7 @@ const SalesOrder = () => {
     advanceNo: "",
     advanceAmt: 0,
     adjType: "",
+    storeName: "",
   });
   const [paymentType, setPaymentType] = useState([]);
   const [paymentLines, setPaymentLines] = useState([]);
@@ -135,6 +136,15 @@ const SalesOrder = () => {
       }));
     }
   };
+  const fetchUserDetails = async () => {
+    const res = await Route("GET", `/Common/fetchUserDtls?userId=${user}`, null, null, null);
+    if (res?.status === 200) {
+      setSalesOrderDetails((prev) => ({
+        ...prev,
+        storeName: res?.data?.region_NAME
+      }));
+    }
+  };
   const fetchPaymentType = async () => {
     const res = await Route("GET", "/Common/PaymentType", null, null, null);
     if (res?.status === 200) {
@@ -157,6 +167,7 @@ const SalesOrder = () => {
     fetchSalesType();
     fetchProductsType();
     fetchPaymentType();
+    fetchUserDetails();
   }, []);
   useEffect(() => {
     fetchCustomersList();
@@ -996,7 +1007,7 @@ const SalesOrder = () => {
         <AddLineItem
           open={openDialog}
           setOpen={setOpenDialog}
-          storeName={salesOrderDetails?.customerName}
+          storeName={salesOrderDetails?.storeName}
           user={user}
           salesType={salesOrderDetails?.salesType}
           setLineItems={setLineItems}
