@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -27,55 +27,65 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SettingsIcon from "@mui/icons-material/Settings";
+import Route from "../../routes/Route";
 
-const ModuleAccess = () => {
-  const list = [
-    {
-      id: 1,
-      role: "Work Structures",
-      icon: <ManageAccountsIcon />,
-    },
-    {
-      id: 2,
-      role: "Employee",
-      icon: <PeopleIcon />,
-    },
-    {
-      id: 3,
-      role: "POS Management",
-      icon: <PointOfSaleIcon />,
-    },
-    {
-      id: 4,
-      role: "Collections",
-      icon: <CollectionsIcon />,
-    },
-    {
-      id: 5,
-      role: "Purchase",
-      icon: <ShoppingCartIcon />,
-    },
-    {
-      id: 6,
-      role: "Inventory",
-      icon: <InventoryIcon />,
-    },
-    {
-      id: 7,
-      role: "Reports",
-      icon: <AssessmentIcon />,
-    },
-    {
-      id: 8,
-      role: "EBS Report",
-      icon: <DescriptionIcon />,
-    },
-    {
-      id: 9,
-      role: "Settings",
-      icon: <SettingsIcon />,
-    },
-  ];
+const iconList = [
+  { role: "Work Structures", icon: <ManageAccountsIcon /> },
+  { role: "Employee", icon: <PeopleIcon /> },
+  { role: "POS Management", icon: <PointOfSaleIcon /> },
+  { role: "Collections", icon: <CollectionsIcon /> },
+  { role: "Purchase", icon: <ShoppingCartIcon /> },
+  { role: "Inventory", icon: <InventoryIcon /> },
+  { role: "Reports", icon: <AssessmentIcon /> },
+  { role: "EBS Report", icon: <DescriptionIcon /> },
+  { role: "Settings", icon: <SettingsIcon /> },
+];
+
+const ModuleAccess = ({ moduleAccess, roleId }) => {
+  const [moduleList, setModuleList] = useState([]);
+  const [access, setAccess] = useState([]);
+
+  useEffect(() => {
+    setAccess(moduleAccess);
+  }, [moduleAccess]);
+
+  const fetchAllModule = async () => {
+    const res = await Route("GET", `/Common/getAllModule`, null, null, null);
+    if (res?.status === 200) {
+      const modulesWithIcons = res.data.map(module => ({
+        ...module,
+        icon: getIconForModule(module.module_name)
+      }));
+      setModuleList(modulesWithIcons);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllModule();
+  }, []);
+
+  const getIconForModule = (moduleName) => {
+    const match = iconList.find(item => item.role === moduleName);
+    return match ? match.icon : null; // Return the icon or null if not found
+  };
+
+  const combinedModules = moduleList.map(module => {
+    const accessModule = access.find(access => access.module_id === module.module_id);
+    return {
+      ...module,
+      isactive: accessModule ? accessModule.isactive : 0
+    };
+  });
+
+  const handleSwitchChange = (moduleId, currentState) => {
+    const newState = currentState === 1 ? 0 : 1;
+    setAccess((prevAccess) => 
+      prevAccess.map((access) => 
+        access.module_id === moduleId ? { ...access, isactive: newState } : access
+      )
+    );
+  };
+
   return (
     <>
       <Box sx={{ px: 2 }}>
@@ -89,20 +99,19 @@ const ModuleAccess = () => {
                 </Typography>
                 <Paper>
                   <List sx={{ paddingX: "16px" }}>
-                    {list?.map((item) => (
-                      <ListItem disablePadding key={item?.id}>
-                        <ListItemIcon>{item?.icon}</ListItemIcon>
-                        <ListItemText primary={item?.role} />
-                        <Switch
-                          edge="end"
-                          //   onChange={handleToggle("wifi")}
-                          //   checked={checked.indexOf("wifi") !== -1}
-                          //   inputProps={{
-                          //     "aria-labelledby": "switch-list-label-wifi",
-                          //   }}
-                        />
-                      </ListItem>
-                    ))}
+                    {
+                      combinedModules?.map((item) => (
+                        <ListItem disablePadding key={item?.id}>
+                          <ListItemIcon>{item?.icon}</ListItemIcon>
+                          <ListItemText primary={item?.module_name} />
+                          <Switch
+                            edge="end"
+                            checked={item?.isactive === 1}
+                            onChange={() => handleSwitchChange(item.module_id, item.isactive)}
+                          />
+                        </ListItem>
+                      ))
+                    }
                   </List>
                 </Paper>
               </Grid>
@@ -171,7 +180,7 @@ const ModuleAccess = () => {
                 <Button
                   variant="contained"
                   size="large"
-                  // onClick={updateHandle}
+                // onClick={updateHandle}
                 >
                   Save/Update
                 </Button>
