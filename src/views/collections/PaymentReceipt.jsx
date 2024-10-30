@@ -548,67 +548,66 @@ const PaymentReceipt = () => {
                   </Grid>
                 </Grid>
                 <Grid item xs={3} container>
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{
-                      border: "1px solid #EEEDEB",
-                    }}
-                  >
+                  <Paper>
                     <Grid
-                      container
-                      padding={2}
-                      sx={{
-                        backgroundColor: "#EEEDEB",
-                      }}
+                      item
+                      xs={12}
                     >
-                      <Grid item>
-                        <Typography variant="subtitle1">
-                          Customer Details
-                        </Typography>
+                      <Grid
+                        container
+                        padding={2}
+                        sx={{
+                          backgroundColor: "#EEEDEB",
+                        }}
+                      >
+                        <Grid item>
+                          <Typography variant="subtitle1">
+                            Customer Details
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid
+                        container
+                        paddingY={2}
+                        spacing={2}
+                        sx={{
+                          display: "flex",
+                          flexFlow: "column",
+                        }}
+                      >
+                        <Grid item marginX={2}>
+                          <TextField
+                            label="Customer Name"
+                            variant="outlined"
+                            fullWidth
+                            name="customer_name"
+                            disabled
+                            value={paymentReceiptDetails?.name}
+                          />
+                        </Grid>
+                        <Grid item marginX={2}>
+                          <TextField
+                            label="Account Id"
+                            variant="outlined"
+                            fullWidth
+                            name="account_id"
+                            disabled
+                            value={paymentReceiptDetails?.accountId}
+                          />
+                        </Grid>
+                        <Grid item marginX={2}>
+                          <TextField
+                            label="Outstanding Balance"
+                            variant="outlined"
+                            fullWidth
+                            name="outstanding_balance"
+                            disabled
+                            value={paymentReceiptDetails?.outstandingBalance}
+                          />
+                        </Grid>
                       </Grid>
                     </Grid>
-                    <Grid
-                      container
-                      paddingY={2}
-                      spacing={2}
-                      sx={{
-                        display: "flex",
-                        flexFlow: "column",
-                      }}
-                    >
-                      <Grid item marginX={2}>
-                        <TextField
-                          label="Customer Name"
-                          variant="outlined"
-                          fullWidth
-                          name="customer_name"
-                          disabled
-                          value={paymentReceiptDetails?.name}
-                        />
-                      </Grid>
-                      <Grid item marginX={2}>
-                        <TextField
-                          label="Account Id"
-                          variant="outlined"
-                          fullWidth
-                          name="account_id"
-                          disabled
-                          value={paymentReceiptDetails?.accountId}
-                        />
-                      </Grid>
-                      <Grid item marginX={2}>
-                        <TextField
-                          label="Outstanding Balance"
-                          variant="outlined"
-                          fullWidth
-                          name="outstanding_balance"
-                          disabled
-                          value={paymentReceiptDetails?.outstandingBalance}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  </Paper>
                 </Grid>
               </Grid>
             </Paper>
