@@ -68,6 +68,8 @@ const Nav = () => {
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
       localStorage.removeItem("user");
+      localStorage.removeItem("privileges");
+      localStorage.removeItem("userDetails");
       navigation("/");
     } else {
       setMessage(res?.response?.data?.message);

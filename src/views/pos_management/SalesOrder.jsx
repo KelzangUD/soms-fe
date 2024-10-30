@@ -93,6 +93,7 @@ const SalesOrder = () => {
   const [fileName, setFileName] = useState("Upload File");
   const [banks, setbanks] = useState([]);
   const [responseData, setResponseData] = useState({});
+  const [userDetails, setUserDetails] = useState(JSON.parse(localStorage?.getItem("userDetails")));
   const fetchSalesType = async () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
     if (res?.status === 200) {
@@ -490,6 +491,7 @@ const SalesOrder = () => {
                       name="mobile_no"
                       required
                       value={salesOrderDetails?.mobileNo}
+                      disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -500,6 +502,7 @@ const SalesOrder = () => {
                       name="customer_no"
                       required
                       value={salesOrderDetails?.customerNumber}
+                      disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -509,6 +512,7 @@ const SalesOrder = () => {
                       fullWidth
                       name="address"
                       value={salesOrderDetails?.address}
+                      disabled
                     />
                   </Grid>
                 </Grid>
@@ -520,6 +524,7 @@ const SalesOrder = () => {
                       fullWidth
                       name="address 1"
                       value={salesOrderDetails?.address1}
+                      disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -529,6 +534,7 @@ const SalesOrder = () => {
                       fullWidth
                       name="city"
                       value={salesOrderDetails?.city}
+                      disabled
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -1011,6 +1017,7 @@ const SalesOrder = () => {
           user={user}
           salesType={salesOrderDetails?.salesType}
           setLineItems={setLineItems}
+          userDetails={userDetails}
         />
       )}
     </>
