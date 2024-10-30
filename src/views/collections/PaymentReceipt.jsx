@@ -49,6 +49,7 @@ const PaymentReceipt = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
+  const [incorrectFormant, setIncorrectFormat] = useState(false);
   const [paymentReceiptDetails, setPaymentReceiptDetails] = useState({
     serviceType: "",
     mobileNo: "",
@@ -135,6 +136,7 @@ const PaymentReceipt = () => {
       }));
   };
   const mobileNoHandle = (e) => {
+    setIncorrectFormat(false);
     setPaymentReceiptDetails((prev) => ({
       ...prev,
       mobileNo: e?.target?.value,
@@ -142,16 +144,13 @@ const PaymentReceipt = () => {
   };
   const fetchCustomerDetailsHandle = async () => {
     if (
-      paymentReceiptDetails?.serviceType === "" ||
-      paymentReceiptDetails?.mobileNo === "" ||
-      paymentReceiptDetails?.payment === ""
+      (paymentReceiptDetails?.serviceType == "1" &&
+        paymentReceiptDetails?.mobileNo?.length == 8) ||
+      (paymentReceiptDetails?.serviceType == "1" &&
+        paymentReceiptDetails?.mobileNo?.startsWith("77")) ||
+      (paymentReceiptDetails?.serviceType == "2" &&
+        paymentReceiptDetails?.mobileNo?.length == 9)
     ) {
-      setNotificationMsg(
-        "Please Fill Up Both Service Type and Mobile Number fields"
-      );
-      setSeverity("info");
-      setShowNofication(true);
-    } else {
       const res = await Route(
         "GET",
         `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
@@ -172,6 +171,8 @@ const PaymentReceipt = () => {
           outstandingBalance: res?.data?.billAmount,
         }));
       }
+    } else {
+      setIncorrectFormat(true);
     }
   };
   useEffect(() => {
@@ -257,64 +258,76 @@ const PaymentReceipt = () => {
   const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
     e.preventDefault();
-    let formData = new FormData();
-    formData.append("cheque", chequeCopy);
-    if (chequeCopy && chequeCopy.length > 0) {
+    console.log(paymentReceiptDetails?.mobileNo?.length);
+    if (
+      (paymentReceiptDetails?.serviceType == "1" &&
+        paymentReceiptDetails?.mobileNo?.length !== 8) ||
+      (paymentReceiptDetails?.serviceType == "2" &&
+        paymentReceiptDetails?.mobileNo?.length !== 9)
+    ) {
+      setIncorrectFormat(true);
+    } else {
+      let formData = new FormData();
       formData.append("cheque", chequeCopy);
-    } else {
-      const placeholderFile = new File([""], "cheque.png");
-      formData.append("cheque", placeholderFile);
-    }
-    const jsonDataBlob = new Blob([JSON.stringify(paymentReceiptDetails)], {
-      type: "application/json",
-    });
-    formData.append("billingDetails", jsonDataBlob, "data.json");
-    const res = await Route(
-      "POST",
-      `/Billing/outStandingBillPayment`,
-      null,
-      formData,
-      null,
-      "multipart/form-data"
-    );
-    // console.log(paymentReceiptDetails);
-    // console.log(res);
-    if (res?.status === 200) {
-      setResponseData(res?.data);
-      setNotificationMsg(`Successfully Paid and your Application No is ${res?.data?.applicationNo}`);
-      setSeverity("success");
-      setShowDialog(true);
-      setPaymentReceiptDetails((prev) => ({
-        ...prev,
-        serviceType: "",
-        mobileNo: "",
-        postingDate: new Date().toString(),
-        paymentType: "",
-        accountCode: "",
-        bankId: null,
-        userId: userId,
-        name: "",
-        amount: "",
-        accountId: "",
-        acctKey: "",
-        billAmount: "",
-        chequeNo: "",
-        chequeDate: new Date().toString(),
-        remarks: "",
-        payment: "",
-        outstandingBalance: "",
-      }));
-      setDisabledFields((prev) => ({
-        ...prev,
-        chequeNoField: true,
-        chequeDateField: true,
-        chequeCopyField: true,
-      }));
-      setFileName("Upload File");
-    } else {
-      setNotificationMsg(res?.response?.data?.message);
-      setSeverity("error");
-      setShowNofication(true);
+      if (chequeCopy && chequeCopy.length > 0) {
+        formData.append("cheque", chequeCopy);
+      } else {
+        const placeholderFile = new File([""], "cheque.png");
+        formData.append("cheque", placeholderFile);
+      }
+      const jsonDataBlob = new Blob([JSON.stringify(paymentReceiptDetails)], {
+        type: "application/json",
+      });
+      formData.append("billingDetails", jsonDataBlob, "data.json");
+      const res = await Route(
+        "POST",
+        `/Billing/outStandingBillPayment`,
+        null,
+        formData,
+        null,
+        "multipart/form-data"
+      );
+      console.log(paymentReceiptDetails);
+      console.log(res);
+      if (res?.status === 200) {
+        setResponseData(res?.data);
+        setNotificationMsg(
+          `Successfully Paid and your Application No is ${res?.data?.applicationNo}`
+        );
+        setSeverity("success");
+        setShowDialog(true);
+        setPaymentReceiptDetails((prev) => ({
+          ...prev,
+          serviceType: "",
+          mobileNo: "",
+          postingDate: new Date().toString(),
+          paymentType: "",
+          accountCode: "",
+          bankId: null,
+          userId: userId,
+          name: "",
+          amount: "",
+          accountId: "",
+          acctKey: "",
+          billAmount: "",
+          chequeNo: "",
+          chequeDate: new Date().toString(),
+          remarks: "",
+          payment: "",
+          outstandingBalance: "",
+        }));
+        setDisabledFields((prev) => ({
+          ...prev,
+          chequeNoField: true,
+          chequeDateField: true,
+          chequeCopyField: true,
+        }));
+        setFileName("Upload File");
+      } else {
+        setNotificationMsg(res?.response?.data?.message);
+        setSeverity("error");
+        setShowNofication(true);
+      }
     }
   };
   const openInNewTab = () => {
@@ -332,210 +345,239 @@ const PaymentReceipt = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Paper elevation={1}>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
-                  <Grid item xs={3}>
-                    <FormControl fullWidth>
-                      <InputLabel id="service-type-select-label">
-                        Service Type*
-                      </InputLabel>
-                      <Select
-                        labelId="service-type-select-label"
-                        id="service-type-select"
-                        label="Service Type*"
-                        onChange={serviceTypeHandle}
-                        value={paymentReceiptDetails?.serviceType}
-                      >
-                        {serviceType?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <FormControl fullWidth>
-                      <InputLabel id="payment-select-label">Payment</InputLabel>
-                      <Select
-                        labelId="payment-select-label"
-                        id="payment-select"
-                        value={paymentReceiptDetails?.payment}
-                        label="Payment"
-                        onChange={paymentHandle}
-                        disabled={disablePaymentSelect}
-                      >
-                        {paymentOptions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Mobile Number/Account Code"
-                      variant="outlined"
-                      fullWidth
-                      name="mobile_no"
-                      required
-                      onChange={mobileNoHandle}
-                      value={paymentReceiptDetails?.mobileNo}
-                    />
-                  </Grid>
-                  {/* <Grid item xs={3} alignContent="center">
-                    <Button
-                      variant="outlined"
-                      onClick={fetchCustomerDetailsHandle}
-                    >
-                      Fetch Details
-                    </Button>
-                  </Grid> */}
-                  <Grid item xs={3}>
-                    <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Posting Date"
-                          value={dayjs(paymentReceiptDetails?.postingDate)}
-                          onChange={postingDateHandle}
-                        />
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
-                  <Grid item xs={3}>
-                    <FormControl fullWidth>
-                      <InputLabel id="payment-method-select-label">
-                        Payment Method
-                      </InputLabel>
-                      <Select
-                        labelId="payment-method-select-label"
-                        id="payment-method-select"
-                        label="Payment Type"
-                        onChange={paymentMethodHandle}
-                        value={paymentReceiptDetails?.paymentType}
-                      >
-                        {paymentType?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Amount"
-                      variant="outlined"
-                      fullWidth
-                      name="amount"
-                      required
-                      onChange={amountHandle}
-                      value={paymentReceiptDetails?.amount}
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <FormControl fullWidth>
-                      <InputLabel id="bank-acc-select-label">
-                        Bank Account Name
-                      </InputLabel>
-                      <Select
-                        labelId="bank-acc-select-label"
-                        id="bank-acc-select"
-                        value={paymentReceiptDetails?.bankId}
-                        label="Bank Account Name"
-                        onChange={bankHandle}
-                      >
-                        {bankAccountNames?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.bankName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Cheque No"
-                      variant="outlined"
-                      fullWidth
-                      name="cheque_no"
-                      onChange={chequeNoHandle}
-                      disabled={disableFields?.chequeNoField}
-                      value={paymentReceiptDetails?.chequeNo}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
-                  <Grid item xs={3}>
-                    <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Cheque Date"
-                          value={dayjs(paymentReceiptDetails?.chequeDate)}
-                          onChange={chequeDateHandle}
-                          disabled={disableFields?.chequeDateField}
-                        />
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={3} display="flex">
-                    <Button
-                      component="label"
-                      role={undefined}
-                      tabIndex={-1}
-                      startIcon={<CloudUploadIcon />}
-                      fullWidth
-                      variant="outlined"
-                      disabled={disableFields?.chequeCopyField}
-                      style={{ border: "1px solid #B4B4B8", color: "#686D76" }}
-                    >
-                      {fileName}
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={chequeCopyHandle}
-                        multiple
+              <Grid container padding={2} spacing={2}>
+                <Grid item xs={9} container>
+                  <Grid container spacing={2}>
+                    <Grid item xs={3}>
+                      <FormControl fullWidth>
+                        <InputLabel id="service-type-select-label">
+                          Service Type*
+                        </InputLabel>
+                        <Select
+                          labelId="service-type-select-label"
+                          id="service-type-select"
+                          label="Service Type*"
+                          onChange={serviceTypeHandle}
+                          value={paymentReceiptDetails?.serviceType}
+                        >
+                          {serviceType?.map((item) => (
+                            <MenuItem value={item?.id} key={item?.id}>
+                              {item?.type}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControl fullWidth>
+                        <InputLabel id="payment-select-label">
+                          Payment
+                        </InputLabel>
+                        <Select
+                          labelId="payment-select-label"
+                          id="payment-select"
+                          value={paymentReceiptDetails?.payment}
+                          label="Payment"
+                          onChange={paymentHandle}
+                          disabled={disablePaymentSelect}
+                        >
+                          {paymentOptions?.map((item) => (
+                            <MenuItem value={item?.id} key={item?.id}>
+                              {item?.type}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        error={incorrectFormant}
+                        label="Mobile Number/Account Code"
+                        variant="outlined"
+                        fullWidth
+                        name="mobile_no"
+                        required
+                        onChange={mobileNoHandle}
+                        value={paymentReceiptDetails?.mobileNo}
+                        helperText={incorrectFormant && "Incorrect Entry"}
                       />
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Remarks"
-                      variant="outlined"
-                      fullWidth
-                      name="remarks"
-                      required
-                      onChange={remarksHandle}
-                      value={paymentReceiptDetails?.remarks}
-                      multiline
-                      maxRows={3}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} marginTop={4}>
-                  <Grid
-                    container
-                    padding={2}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      backgroundColor: "#EEEDEB",
-                    }}
-                  >
-                    <Grid item>
-                      <Typography variant="subtitle1">
-                        Customer Details
-                      </Typography>
                     </Grid>
                   </Grid>
-                  <Grid container paddingY={2}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={3}>
+                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item xs={3}>
+                      <FormControl fullWidth>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Posting Date"
+                            value={dayjs(paymentReceiptDetails?.postingDate)}
+                            onChange={postingDateHandle}
+                          />
+                        </LocalizationProvider>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControl fullWidth>
+                        <InputLabel id="payment-method-select-label">
+                          Payment Method
+                        </InputLabel>
+                        <Select
+                          labelId="payment-method-select-label"
+                          id="payment-method-select"
+                          label="Payment Type"
+                          onChange={paymentMethodHandle}
+                          value={paymentReceiptDetails?.paymentType}
+                        >
+                          {paymentType?.map((item) => (
+                            <MenuItem value={item?.id} key={item?.id}>
+                              {item?.type}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        label="Amount"
+                        variant="outlined"
+                        fullWidth
+                        name="amount"
+                        required
+                        onChange={amountHandle}
+                        value={paymentReceiptDetails?.amount}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControl fullWidth>
+                        <InputLabel id="bank-acc-select-label">
+                          Bank Account Name
+                        </InputLabel>
+                        <Select
+                          labelId="bank-acc-select-label"
+                          id="bank-acc-select"
+                          value={paymentReceiptDetails?.bankId}
+                          label="Bank Account Name"
+                          onChange={bankHandle}
+                        >
+                          {bankAccountNames?.map((item) => (
+                            <MenuItem value={item?.id} key={item?.id}>
+                              {item?.bankName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item xs={3}>
+                      <TextField
+                        label="Cheque No"
+                        variant="outlined"
+                        fullWidth
+                        name="cheque_no"
+                        onChange={chequeNoHandle}
+                        disabled={disableFields?.chequeNoField}
+                        value={paymentReceiptDetails?.chequeNo}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControl fullWidth>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Cheque Date"
+                            value={dayjs(paymentReceiptDetails?.chequeDate)}
+                            onChange={chequeDateHandle}
+                            disabled={disableFields?.chequeDateField}
+                          />
+                        </LocalizationProvider>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={3} display="flex">
+                      <Button
+                        component="label"
+                        role={undefined}
+                        tabIndex={-1}
+                        // endIcon={<CloudUploadIcon />}
+                        fullWidth
+                        variant="outlined"
+                        style={{
+                          border: "1px solid #B4B4B8",
+                          color: "#686D76",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                          padding: "8px",
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <span
+                          style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            flexGrow: 1,
+                          }}
+                        >
+                          {fileName}
+                        </span>
+                        <CloudUploadIcon />
+                        <VisuallyHiddenInput
+                          type="file"
+                          onChange={chequeCopyHandle}
+                          multiple
+                          disabled={disableFields?.chequeNoField}
+                        />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Remarks"
+                        variant="outlined"
+                        fullWidth
+                        name="remarks"
+                        required
+                        onChange={remarksHandle}
+                        value={paymentReceiptDetails?.remarks}
+                        multiline
+                        maxRows={3}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={3} container>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      border: "1px solid #EEEDEB",
+                    }}
+                  >
+                    <Grid
+                      container
+                      padding={2}
+                      sx={{
+                        backgroundColor: "#EEEDEB",
+                      }}
+                    >
+                      <Grid item>
+                        <Typography variant="subtitle1">
+                          Customer Details
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid
+                      container
+                      paddingY={2}
+                      spacing={2}
+                      sx={{
+                        display: "flex",
+                        flexFlow: "column",
+                      }}
+                    >
+                      <Grid item marginX={2}>
                         <TextField
                           label="Customer Name"
                           variant="outlined"
@@ -545,7 +587,7 @@ const PaymentReceipt = () => {
                           value={paymentReceiptDetails?.name}
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item marginX={2}>
                         <TextField
                           label="Account Id"
                           variant="outlined"
@@ -555,7 +597,7 @@ const PaymentReceipt = () => {
                           value={paymentReceiptDetails?.accountId}
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item marginX={2}>
                         <TextField
                           label="Outstanding Balance"
                           variant="outlined"
