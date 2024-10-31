@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Chip,
   Grid,
   Button,
   Dialog,
@@ -19,29 +20,38 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ViewPostedTransferShipment = ({ open, setOpen, transferOrderDetails }) => {
+const ViewPostedTransferShipment = ({
+  open,
+  setOpen,
+  transferOrderDetails,
+}) => {
   const item_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "item_Number", headerName: "Item Number", width: 200 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      width: 400,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 400,
+      width: 300,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
-    { field: "received_Qty", headerName: "Received Qty", width: 150 },
-    { field: "received_Remark", headerName: "Received Remarks", width: 150 },
+    { field: "uom", headerName: "UOM", width: 70 },
+    { field: "qty", headerName: "Quantity", width: 100 },
+    { field: "received_Qty", headerName: "Received Qty", width: 100 },
+    {
+      field: "received_Remark",
+      headerName: "Received Remarks",
+      width: 150,
+    },
   ];
   return (
     <>
       <Dialog
-        fullScreen
+        fullWidth
+        maxWidth="xl"
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -56,7 +66,9 @@ const ViewPostedTransferShipment = ({ open, setOpen, transferOrderDetails }) => 
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#1976d2",
+                  color: "#eee",
+                  paddingY: "20px",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -172,7 +184,7 @@ const ViewPostedTransferShipment = ({ open, setOpen, transferOrderDetails }) => 
               item
               xs={12}
               alignItems="right"
-              paddingX={2}
+              marginBottom={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
               <Button variant="outlined" onClick={() => setOpen(false)}>

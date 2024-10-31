@@ -64,7 +64,7 @@ const PostedTransferShipment = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small" onClick={() => viewHandle(params)}>
+          <IconButton aria-label="view" size="small" color="primary" onClick={() => viewHandle(params)}>
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
@@ -103,7 +103,6 @@ const PostedTransferShipment = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Posted Transfer Shipment" /> */}
           <Grid
             item
             xs={12}
@@ -114,13 +113,13 @@ const PostedTransferShipment = () => {
                 <Grid
                   item
                   xs={12}
-                  spacing={2}
+                  // spacing={2}
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Grid
                     item
                     container
-                    xs={9}
+                    xs={8}
                     direction="column-reverse"
                     spacing={2}
                   >
@@ -167,7 +166,7 @@ const PostedTransferShipment = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Button
                       variant="contained"
                       color="error"
