@@ -34,7 +34,7 @@ const Requisitions = () => {
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [userDetails, setUserDetails] = useState({});
+  const [userDetails, setUserDetails] = useState(JSON?.parse(localStorage.getItem("userDetails")));
   const [requisitionType, setRquisitionType] = useState([]);
   const [requisitionItems, setRequisitionItems] = useState([]);
   const [requisitionData, setRequisitionData] = useState({
@@ -51,18 +51,6 @@ const Requisitions = () => {
     amount: "",
     qty: "",
   });
-  const fetchUserDetails = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/fetchUserDtls?userId=${empId}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setUserDetails(res?.data);
-    }
-  };
   const fetchRequisitionType = async () => {
     const res = await Route("GET", "/Common/RequisitionType", null, null, null);
     console.log(res);
@@ -77,7 +65,6 @@ const Requisitions = () => {
     }
   };
   useEffect(() => {
-    fetchUserDetails();
     fetchRequisitionType();
     fetchRequisitionItem();
   }, []);
@@ -230,6 +217,7 @@ const Requisitions = () => {
                       name="employee_name"
                       value={userDetails?.userName}
                       required
+                      disabled
                     />
                   </Grid>
                   <Grid item xs={3} display="flex">
