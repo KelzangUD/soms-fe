@@ -38,6 +38,19 @@ const SignIn = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  
+  const fetchUserDetails = async (username) => {
+    const res = await Route(
+      "GET",
+      `/Common/fetchUserDtls?userId=${username}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      localStorage.setItem("userDetails", JSON.stringify(res?.data));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,6 +76,7 @@ const SignIn = () => {
             null
           );
           if (response?.status === 200) {
+            fetchUserDetails(formData?.username)
             localStorage.setItem("username", formData?.username);
             localStorage.setItem("access_token", res?.data?.access_token);
             localStorage.setItem("refresh_token", res?.data?.refresh_token);

@@ -18,7 +18,7 @@ const BankReceipt = () => {
       <div style={{ width: "400px", padding: "8px", lineHeight: "1.5" }}>
         <div style={{ textAlign: "center" }}>
           <h3>{companyName}</h3>
-          <p>{customerName}</p>
+          <p>{JSON.parse(localStorage.getItem("userDetails"))?.region_NAME}</p>
           <h4>Bank Receipt</h4>
         </div>
         <hr />

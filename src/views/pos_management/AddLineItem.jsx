@@ -23,19 +23,20 @@ const AddLineItem = ({
   user,
   salesType,
   setLineItems,
+  userDetails,
 }) => {
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [subInventory, setSubInventory] = useState([]);
-  const [locator, setLocator] = useState([]);
+  // const [subInventory, setSubInventory] = useState([]);
+  // const [locator, setLocator] = useState([]);
   const [desc, setDesc] = useState("");
   const [onHandItems, setOnHandItems] = useState([]);
   const [pricingID, setPricingID] = useState("");
   const [lineItemDetail, setLineItemDetail] = useState({
     storeName: storeName,
-    subInventoryId: "",
-    locatorId: "",
+    subInventoryId: userDetails?.subInventory,
+    locatorId: userDetails?.locator,
     description: "",
     serialNo: "",
     imeiNo: "",
@@ -65,30 +66,33 @@ const AddLineItem = ({
     volumeDiscount: "",
     priceLocatorDTOs: [],
   });
-  const fetchSubInventory = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchSubInventory?userId=${user}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setSubInventory(res?.data);
-    }
-  };
-  const fetchLocator = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchLocator?userId=${user}&subInventory=${lineItemDetail?.subInventoryId}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setLocator(res?.data);
-    }
-  };
+  useEffect(() => {
+    console.log(typeof userDetails);
+  },[])
+  // const fetchSubInventory = async () => {
+  //   const res = await Route(
+  //     "GET",
+  //     `/Common/FetchSubInventory?userId=${user}`,
+  //     null,
+  //     null,
+  //     null
+  //   );
+  //   if (res?.status === 200) {
+  //     setSubInventory(res?.data);
+  //   }
+  // };
+  // const fetchLocator = async () => {
+  //   const res = await Route(
+  //     "GET",
+  //     `/Common/FetchLocator?userId=${user}&subInventory=${lineItemDetail?.subInventoryId}`,
+  //     null,
+  //     null,
+  //     null
+  //   );
+  //   if (res?.status === 200) {
+  //     setLocator(res?.data);
+  //   }
+  // };
   const fetchOnHandItems = async () => {
     const res = await Route(
       "GET",
@@ -139,6 +143,8 @@ const AddLineItem = ({
         taxAmt: res?.data?.taxAmount,
         priceLocator: res?.data?.priceLocator,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+        description: res?.data?.description,
+        itemNo: res?.data?.itemNo,
       }));
     } else if (res?.status === 200 && res?.data?.available === "N") {
       setNotificationMsg("Item Not Avaliable");
@@ -209,17 +215,24 @@ const AddLineItem = ({
       }));
     }
   };
-  useEffect(() => {
-    fetchSubInventory();
-  }, []);
-  useEffect(() => {
-    fetchLocator();
-  }, [lineItemDetail?.subInventoryId]);
+  // useEffect(() => {
+  //   fetchSubInventory();
+  // }, []);
+  // useEffect(() => {
+  //   fetchLocator();
+  // }, [lineItemDetail?.subInventoryId]);
   useEffect(() => {
     fetchOnHandItems();
   }, [desc]);
   useEffect(() => {
-    if (salesType !== null && storeName !== "" && lineItemDetail?.itemNo !== "" && lineItemDetail?.subInventoryId !== "" && lineItemDetail?.locatorId !== "" && lineItemDetail?.qty !== "") {
+    if (
+      salesType !== null &&
+      storeName !== "" &&
+      lineItemDetail?.itemNo !== "" &&
+      lineItemDetail?.subInventoryId !== "" &&
+      lineItemDetail?.locatorId !== "" &&
+      lineItemDetail?.qty !== ""
+    ) {
       fetchItemDescriptionWithOutSerialNO();
     }
   }, [
@@ -246,18 +259,18 @@ const AddLineItem = ({
     }
   }, [pricingID]);
 
-  const subInventoryHandle = (e, value) => {
-    setLineItemDetail((prev) => ({
-      ...prev,
-      subInventoryId: value?.id,
-    }));
-  };
-  const locatorHandle = (e, value) => {
-    setLineItemDetail((prev) => ({
-      ...prev,
-      locatorId: value?.id,
-    }));
-  };
+  // const subInventoryHandle = (e, value) => {
+  //   setLineItemDetail((prev) => ({
+  //     ...prev,
+  //     subInventoryId: value?.id,
+  //   }));
+  // };
+  // const locatorHandle = (e, value) => {
+  //   setLineItemDetail((prev) => ({
+  //     ...prev,
+  //     locatorId: value?.id,
+  //   }));
+  // };
   const handleInputChange = (inputValue) => {
     setDesc(inputValue);
   };
@@ -331,7 +344,7 @@ const AddLineItem = ({
                   />
                 </Grid>
                 <Grid item xs={3}>
-                  <Autocomplete
+                  {/* <Autocomplete
                     disablePortal
                     options={subInventory?.map((item) => ({
                       id: item?.id,
@@ -341,10 +354,18 @@ const AddLineItem = ({
                     renderInput={(params) => (
                       <TextField {...params} label="Sub-Inventory" />
                     )}
+                  /> */}
+                  <TextField
+                    id="outlined-basic"
+                    label="Sub-Inventory"
+                    variant="outlined"
+                    fullWidth
+                    value={lineItemDetail?.subInventoryId}
+                    disabled
                   />
                 </Grid>
                 <Grid item xs={3}>
-                  <Autocomplete
+                  {/* <Autocomplete
                     disablePortal
                     options={locator?.map((item) => ({
                       id: item?.id,
@@ -354,6 +375,14 @@ const AddLineItem = ({
                     renderInput={(params) => (
                       <TextField {...params} label="Locator" />
                     )}
+                  /> */}
+                  <TextField
+                    id="outlined-basic"
+                    label="Locator"
+                    variant="outlined"
+                    fullWidth
+                    value={lineItemDetail?.locatorId}
+                    disabled
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -361,6 +390,7 @@ const AddLineItem = ({
                     disablePortal
                     options={onHandItems}
                     onChange={descriptionHandle}
+                    value={lineItemDetail?.description}
                     onInputChange={(e, inputValue) =>
                       handleInputChange(inputValue)
                     }
