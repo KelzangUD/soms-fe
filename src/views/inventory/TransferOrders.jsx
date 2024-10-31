@@ -22,20 +22,8 @@ const TransferOrders = () => {
   const [edit, setEdit] = useState(false);
   const [view, setView] = useState(false);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
-  const [userDetails, setUserDetails] = useState([]);
+  const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
 
-  const fetchUserDetails = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/fetchUserDtls?userId=${empID}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setUserDetails(res?.data);
-    }
-  };
   const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
     const res = await Route(
       "GET",
@@ -123,6 +111,7 @@ const TransferOrders = () => {
             aria-label="edit"
             size="small"
             onClick={() => editHandle(params)}
+            color="primary"
           >
             <EditIcon fontSize="inherit" />
           </IconButton>
@@ -130,6 +119,7 @@ const TransferOrders = () => {
             aria-label="view"
             size="small"
             onClick={() => viewHandle(params)}
+            color="primary"
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
@@ -137,6 +127,7 @@ const TransferOrders = () => {
             aria-label="ship"
             size="small"
             onClick={() => shipHandle(params)}
+            color="primary"
           >
             <LocalShippingIcon fontSize="inherit" />
           </IconButton>
@@ -145,7 +136,6 @@ const TransferOrders = () => {
     },
   ];
   useEffect(() => {
-  fetchUserDetails();
     fetchTransferOrderList();
   }, []);
 
@@ -188,7 +178,7 @@ const TransferOrders = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
-                  <Grid item>
+                  <Grid item  sx={{ px: 2 }}>
                     <Button
                       variant="contained"
                       color="primary"
