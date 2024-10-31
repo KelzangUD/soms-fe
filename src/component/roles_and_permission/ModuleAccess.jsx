@@ -28,6 +28,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Route from "../../routes/Route";
+import Notification from '../../ui/Notification';
 
 const iconList = [
   { role: "Work Structures", icon: <ManageAccountsIcon /> },
@@ -41,13 +42,19 @@ const iconList = [
   { role: "Settings", icon: <SettingsIcon /> },
 ];
 
-const ModuleAccess = ({ moduleAccess, roleId }) => {
+const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
+  const user = localStorage.getItem('username');
   const [moduleList, setModuleList] = useState([]);
   const [access, setAccess] = useState([]);
+  const [permissionList, setPermissionList] = useState([]);
+  const [notificationMsg, setNotificationMsg] = useState('');
+  const [showNotification, setShowNofication] = useState(false);
+  const [severity, setSeverity] = useState('');
 
   useEffect(() => {
     setAccess(moduleAccess);
-  }, [moduleAccess]);
+    setPermissionList(modulePermission);
+  }, [moduleAccess, modulePermission]);
 
   const fetchAllModule = async () => {
     const res = await Route("GET", `/Common/getAllModule`, null, null, null);
@@ -79,11 +86,54 @@ const ModuleAccess = ({ moduleAccess, roleId }) => {
 
   const handleSwitchChange = (moduleId, currentState) => {
     const newState = currentState === 1 ? 0 : 1;
-    setAccess((prevAccess) => 
-      prevAccess.map((access) => 
+    setAccess((prevAccess) =>
+      prevAccess.map((access) =>
         access.module_id === moduleId ? { ...access, isactive: newState } : access
       )
     );
+  };
+
+  // Group permissions by page
+  const groupedPermissions = permissionList.reduce((acc, permission) => {
+    const { page_name, module_name } = permission;
+    const key = `${module_name} - ${page_name}`;
+
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+
+    acc[key].push(permission);
+    return acc;
+  }, {});
+
+  const handleToggle = (id) => {
+    setPermissionList((prevList) =>
+      prevList.map((item) =>
+        item.role_permission_id === id
+          ? { ...item, status: item.status === "Active" ? "In_Active" : "Active" }
+          : item
+      )
+    );
+  };
+
+  const updateRolePermission = async () => {
+    let data = {
+      'moduleAccessDtos': access,
+      'roleAndPermissionDtos': permissionList,
+      'roleId': roleId,
+      'createdBy': user
+    }
+
+    const res = await Route("POST", `/UserDtls/updateRolePermission`, null, data, null);
+    if (res?.status === 200) {
+      setNotificationMsg('Role Permission has been successfully updated.');
+      setSeverity("info");
+      setShowNofication(true);
+    } else {
+      setNotificationMsg('Error occured updating role permission. Try again!');
+      setSeverity("error");
+      setShowNofication(true);
+    }
   };
 
   return (
@@ -143,28 +193,42 @@ const ModuleAccess = ({ moduleAccess, roleId }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
+                    {Object.entries(groupedPermissions).map(([page, permissions]) => {
+                  // Check if the associated module is active
+                  const moduleId = permissions[0]?.module_id; // Assuming all permissions have the same module_id
+                  const module = combinedModules.find(mod => mod.module_id === moduleId);
+                  
+                  return (
+                    module?.isactive === 1 && ( // Only render if the module is active
                       <TableRow
+                        key={page}
+                        id={`page-${page}`} // Set the id as "page-{page}"
                         sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
+                          '&:last-child td, &:last-child th': { border: 0 },
                         }}
                       >
-                        <TableCell>Business Unit (Work Structures)</TableCell>
-                        <TableCell align="right">
-                          <Checkbox />
+                        {/* Combine module_name and page_name for the first cell */}
+                        <TableCell>
+                          {`${permissions[0]?.module_name} (${permissions[0]?.page_name})`}
                         </TableCell>
-                        <TableCell align="right">
-                          <Checkbox />
-                        </TableCell>
-                        <TableCell align="right">
-                          <Checkbox />
-                        </TableCell>
-                        <TableCell align="right">
-                          <Checkbox />
-                        </TableCell>
-                        <TableCell align="right">
-                          <Checkbox />
-                        </TableCell>
+
+                        {/* Render checkboxes for each permission type */}
+                        {['View', 'Create', 'Update', 'Import', 'Export'].map((perm) => {
+                          const permission = permissions.find((p) => p.permission_name === perm);
+                          return (
+                            <TableCell align="right" key={`${page}-${perm}`}>
+                              <Checkbox
+                                checked={permission?.status === 'Active'}
+                                onChange={() => handleToggle(permission?.role_permission_id)}
+                                disabled={!permission} // Disable if permission is not found
+                              />
+                            </TableCell>
+                          );
+                        })}
                       </TableRow>
+                    )
+                  );
+                })}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -174,13 +238,13 @@ const ModuleAccess = ({ moduleAccess, roleId }) => {
               item
               container
               spacing={2}
-              sx={{ display: "flex", justifyContent: "flex-end" }}
+              sx={{ justifyContent: 'center' }}
             >
               <Grid item>
                 <Button
                   variant="contained"
                   size="large"
-                // onClick={updateHandle}
+                  onClick={updateRolePermission}
                 >
                   Save/Update
                 </Button>
@@ -189,6 +253,14 @@ const ModuleAccess = ({ moduleAccess, roleId }) => {
           </Grid>
         </Grid>
       </Box>
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

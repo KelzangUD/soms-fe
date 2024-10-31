@@ -12,11 +12,14 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import ModuleAccess from "../../component/roles_and_permission/ModuleAccess";
 import Route from "../../routes/Route";
+import AddNewRoleModal from "./AddNewRoleModal";
 
 const RolesAndPermission = () => {
   const [roles_list, setRoles_list] = useState([]);
   const [selectedId, setSelectedId] = useState('');
   const [moduleAccess, setModuleAccess] = useState([]);
+  const [modulePermission, setModulePermission] = useState([]);
+  const [showAddRole, setShowAddRole] = useState(false);
 
   const fetchRoles = async () => {
     const res = await Route("GET", `/Common/FetchRole`, null, null, null);
@@ -25,6 +28,13 @@ const RolesAndPermission = () => {
       if (!selectedId && res.data.length > 0) {
         setSelectedId(res.data[0].id);
       }
+    }
+  };
+
+  const fetchModulePermission = async (id) => {
+    const res = await Route("GET", `/Common/fetchModulePermission?roleId=${id}`, null, null, null);
+    if (res?.status === 200) {
+      setModulePermission(res?.data);
     }
   };
 
@@ -42,12 +52,22 @@ const RolesAndPermission = () => {
   useEffect(() => {
     if (selectedId) {
       fetchModuleAccess(selectedId);
+      fetchModulePermission(selectedId);
     }
   }, [selectedId]);
 
   const handleItemClick = (id) => {
     setSelectedId(id);
   };
+
+  const addNewRole = () => {
+    setShowAddRole(true);
+  };
+
+  const closeAddModal = () => {
+    setShowAddRole(false);
+  };
+
   return (
     <>
       <Box sx={{ px: 2 }}>
@@ -61,7 +81,7 @@ const RolesAndPermission = () => {
                     variant="contained"
                     size="large"
                     fullWidth
-                    // onClick={updateHandle}
+                    onClick={addNewRole}
                     startIcon={<AddIcon />}
                     sx={{ mb: 2 }}
                   >
@@ -84,12 +104,13 @@ const RolesAndPermission = () => {
                 </Grid>
               </Grid>
               <Grid item xs={9} sx={{ my: 1 }}>
-                <ModuleAccess moduleAccess={ moduleAccess } roleId={selectedId}/>
+                <ModuleAccess moduleAccess={ moduleAccess } roleId={selectedId} modulePermission={modulePermission}/>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Box>
+      {showAddRole && <AddNewRoleModal open={showAddRole} handleClose={closeAddModal} fetchRole={fetchRoles}/>}
     </>
   );
 };
