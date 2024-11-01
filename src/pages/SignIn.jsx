@@ -16,7 +16,8 @@ import {
   Avatar,
   Link,
 } from "@mui/material";
-import dashboard_img from "../assets/svgs/dashboard_1.svg";
+// import dashboard_img from "../assets/svgs/dashboard_1.svg";
+import bg_img from "../assets/images/bg.png";
 import LoginIcon from "@mui/icons-material/Login";
 import LockIcon from "@mui/icons-material/Lock";
 import Header from "../layout/Header";
@@ -24,6 +25,7 @@ import Footer from "../layout/Footer";
 import Notification from "../ui/Notification";
 import Route from "../routes/Route";
 import { jwtDecode } from "jwt-decode";
+
 
 const SignIn = () => {
   const navigagte = useNavigate();
@@ -99,7 +101,7 @@ const SignIn = () => {
 
   return (
     <>
-      <Container>
+      <Container style={{ backgroundImage: `url(${bg_img})`}}>
         <Header />
         <Box
           sx={{
@@ -113,10 +115,14 @@ const SignIn = () => {
         >
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12}>
-                <Container maxWidth="xs" sx={{ py: 2 }}>
+              <Container maxWidth="xs" sx={{ py: 2 }}>
                 <Paper>
                   <Box
-                    sx={{ display: "flex", justifyContent: "center", paddingTop: "24px" }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      paddingTop: "34px",
+                    }}
                     pb={1}
                   >
                     <Avatar
@@ -128,7 +134,14 @@ const SignIn = () => {
                   <Typography variant="h4" align="center" sx={{ mb: 4 }}>
                     Sign In
                   </Typography>
-                  <Box sx={{ display: "grid", gap: 2, padding: "24px" }}>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gap: 2,
+                      paddingX: "24px",
+                      paddingBottom: "24px",
+                    }}
+                  >
                     <TextField
                       label="User Name"
                       variant="outlined"
@@ -168,8 +181,8 @@ const SignIn = () => {
                       Sign In
                     </Button>
                   </Box>
-                  </Paper>
-                </Container>
+                </Paper>
+              </Container>
             </Grid>
             {/* <Grid item xs={6}>
               <img
