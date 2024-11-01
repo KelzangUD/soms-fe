@@ -20,7 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import ClearIcon from "@mui/icons-material/Clear";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -34,9 +34,12 @@ const Requisitions = () => {
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [userDetails, setUserDetails] = useState(JSON?.parse(localStorage.getItem("userDetails")));
+  const [userDetails, setUserDetails] = useState(
+    JSON?.parse(localStorage.getItem("userDetails"))
+  );
   const [requisitionType, setRquisitionType] = useState([]);
   const [requisitionItems, setRequisitionItems] = useState([]);
+  const [isETop, setIsETop] = useState(false);
   const [requisitionData, setRequisitionData] = useState({
     requisitionType: null,
     createdBy: empId,
@@ -53,7 +56,6 @@ const Requisitions = () => {
   });
   const fetchRequisitionType = async () => {
     const res = await Route("GET", "/Common/RequisitionType", null, null, null);
-    console.log(res);
     if (res?.status === 200) {
       setRquisitionType(res?.data);
     }
@@ -69,6 +71,7 @@ const Requisitions = () => {
     fetchRequisitionItem();
   }, []);
   const requisitionTypeHandle = (e) => {
+    setIsETop(e?.target?.value === "3" ? true : false);
     setRequisitionData((prev) => ({
       ...prev,
       requisitionType: e?.target?.value,
@@ -100,6 +103,12 @@ const Requisitions = () => {
       qty: e?.target?.value,
     }));
   };
+  const itemDTOListAmountHandle = (e) => {
+    setItemDTOList((prev) => ({
+      ...prev,
+      amount: e?.target?.value,
+    }));
+  };
   const addItemListButtonHandle = () => {
     setRequisitionData((prev) => ({
       ...prev,
@@ -111,6 +120,7 @@ const Requisitions = () => {
       item_Number: "",
       uom: "",
       qty: "",
+      amount: "",
     }));
   };
   const removeItemHandle = (index) => {
@@ -192,6 +202,7 @@ const Requisitions = () => {
                           label="Requisition Date*"
                           value={dayjs(requisitionData?.requisitionDate)}
                           onChange={requisitionDateHandle}
+                          disabled
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -240,7 +251,8 @@ const Requisitions = () => {
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      backgroundColor: "#EEEDEB",
+                      backgroundColor: "#1976d2",
+                      color: "#eee",
                     }}
                   >
                     <Grid item>
@@ -272,7 +284,7 @@ const Requisitions = () => {
                           fullWidth
                           name="item_number"
                           disabled
-                          value={itemDTOList?.item_number}
+                          value={itemDTOList?.item_Number}
                         />
                       </Grid>
                       <Grid item xs={3}>
@@ -286,17 +298,31 @@ const Requisitions = () => {
                         />
                       </Grid>
                       <Grid item xs={3} display="flex">
-                        <Grid>
-                          <TextField
-                            label="Required Quantity"
-                            variant="outlined"
-                            fullWidth
-                            name="qty"
-                            type="number"
-                            onChange={itemDTOListqtyHandle}
-                            value={itemDTOList?.qty}
-                          />
-                        </Grid>
+                        {isETop ? (
+                          <Grid>
+                            <TextField
+                              label="Amount"
+                              variant="outlined"
+                              fullWidth
+                              name="amount"
+                              type="number"
+                              onChange={itemDTOListAmountHandle}
+                              value={itemDTOList?.amount}
+                            />
+                          </Grid>
+                        ) : (
+                          <Grid>
+                            <TextField
+                              label="Required Quantity"
+                              variant="outlined"
+                              fullWidth
+                              name="qty"
+                              type="number"
+                              onChange={itemDTOListqtyHandle}
+                              value={itemDTOList?.qty}
+                            />
+                          </Grid>
+                        )}
                         <Grid>
                           <IconButton
                             aria-label="add"
@@ -309,7 +335,7 @@ const Requisitions = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }} padding={2}>
+                <Grid container spacing={2} sx={{ mt: 1 }} paddingLeft={2}>
                   <TableContainer component={Paper}>
                     <Table
                       sx={{ minWidth: 650 }}
@@ -320,8 +346,10 @@ const Requisitions = () => {
                           <TableCell>Description</TableCell>
                           <TableCell>Item No</TableCell>
                           <TableCell>UOM</TableCell>
-                          <TableCell>Required Qty</TableCell>
-                          <TableCell alignItems="right"></TableCell>
+                          <TableCell>
+                            {isETop ? "Amount" : "Required Qty"}
+                          </TableCell>
+                          <TableCell alignItems="right">Action</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -333,13 +361,16 @@ const Requisitions = () => {
                               </TableCell>
                               <TableCell>{item?.item_Number}</TableCell>
                               <TableCell>{item?.uom}</TableCell>
-                              <TableCell>{item?.qty}</TableCell>
-                              <TableCell align="right">
+                              <TableCell>
+                                {isETop ? item?.amount : item?.qty}
+                              </TableCell>
+                              <TableCell>
                                 <IconButton
                                   aria-label="remove"
                                   onClick={() => removeItemHandle(index)}
+                                  color="error"
                                 >
-                                  <ClearIcon />
+                                  <DeleteIcon />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -351,7 +382,7 @@ const Requisitions = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={6}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
             <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
               Create
             </Button>

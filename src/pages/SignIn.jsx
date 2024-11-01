@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Paper,
   Typography,
   TextField,
   Button,
@@ -38,7 +39,7 @@ const SignIn = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  
+
   const fetchUserDetails = async (username) => {
     const res = await Route(
       "GET",
@@ -76,11 +77,11 @@ const SignIn = () => {
             null
           );
           if (response?.status === 200) {
-            fetchUserDetails(formData?.username)
+            fetchUserDetails(formData?.username);
             localStorage.setItem("username", formData?.username);
             localStorage.setItem("access_token", res?.data?.access_token);
             localStorage.setItem("refresh_token", res?.data?.refresh_token);
-            localStorage.setItem("privileges", JSON.stringify(response?.data))
+            localStorage.setItem("privileges", JSON.stringify(response?.data));
             navigagte("/home/dashboard");
           } else {
             setMessage(res?.data?.message);
@@ -111,67 +112,72 @@ const SignIn = () => {
           }}
         >
           <Grid container spacing={4} alignItems="center">
-            <Grid item xs={6}>
-              <Container maxWidth="xs" sx={{ py: 2 }}>
-                <Box sx={{ display: "flex", justifyContent: "center" }} pb={1}>
-                  <Avatar
-                    sx={{ bgcolor: "#0F67B1", width: "50px", height: "50px" }}
+            <Grid item xs={12}>
+                <Container maxWidth="xs" sx={{ py: 2 }}>
+                <Paper>
+                  <Box
+                    sx={{ display: "flex", justifyContent: "center", paddingTop: "24px" }}
+                    pb={1}
                   >
-                    <LockIcon sx={{ width: "30px", height: "30px" }} />
-                  </Avatar>
-                </Box>
-                <Typography variant="h4" align="center" sx={{ mb: 4 }}>
-                  Sign In
-                </Typography>
-                <Box sx={{ display: "grid", gap: 2 }}>
-                  <TextField
-                    label="User Name"
-                    variant="outlined"
-                    fullWidth
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    required
-                  />
-                  <TextField
-                    label="Password"
-                    variant="outlined"
-                    fullWidth
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                  <Link
-                    component="button"
-                    onClick={forgotPasswordHandle}
-                    variant="body2"
-                    sx={{ display: "flex", justifyContent: "flex-end" }}
-                  >
-                    Forgot your password?
-                  </Link>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    fullWidth
-                    onClick={handleSubmit}
-                    endIcon={<LoginIcon />}
-                  >
+                    <Avatar
+                      sx={{ bgcolor: "#0F67B1", width: "50px", height: "50px" }}
+                    >
+                      <LockIcon sx={{ width: "30px", height: "30px" }} />
+                    </Avatar>
+                  </Box>
+                  <Typography variant="h4" align="center" sx={{ mb: 4 }}>
                     Sign In
-                  </Button>
-                </Box>
-              </Container>
+                  </Typography>
+                  <Box sx={{ display: "grid", gap: 2, padding: "24px" }}>
+                    <TextField
+                      label="User Name"
+                      variant="outlined"
+                      fullWidth
+                      type="text"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
+                      required
+                    />
+                    <TextField
+                      label="Password"
+                      variant="outlined"
+                      fullWidth
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                    />
+                    <Link
+                      component="button"
+                      onClick={forgotPasswordHandle}
+                      variant="body2"
+                      sx={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      Forgot your password?
+                    </Link>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      fullWidth
+                      onClick={handleSubmit}
+                      endIcon={<LoginIcon />}
+                    >
+                      Sign In
+                    </Button>
+                  </Box>
+                  </Paper>
+                </Container>
             </Grid>
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
               <img
                 src={dashboard_img}
                 alt="dashboard"
                 style={{ width: "100%", height: "auto" }}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Box>
         <Footer />
