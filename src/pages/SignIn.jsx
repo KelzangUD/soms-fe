@@ -57,7 +57,7 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData?.username == "" || formData?.password === "") {
+    if (formData?.username === "" || formData?.password === "") {
       setMessage("Please Fill Up with neccessary information");
       setOpen(true);
     } else {

@@ -16,7 +16,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AddLineItem = ({
+const EditLineItem = ({
   open,
   setOpen,
   storeName,
@@ -24,6 +24,9 @@ const AddLineItem = ({
   salesType,
   setLineItems,
   userDetails,
+  editDetails,
+  lineItems,
+  editLineItemIndex
 }) => {
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -37,34 +40,37 @@ const AddLineItem = ({
     storeName: storeName,
     subInventoryId: userDetails?.subInventory,
     locatorId: userDetails?.locator,
-    description: "",
-    serialNo: "",
-    imeiNo: "",
-    qty: "",
-    priceLocator: "N",
-    discPercentage: "",
-    tdsAmount: "",
-    itemNo: "",
-    mrp: "",
-    discountedAmount: "",
-    sellingPrice: "",
-    taxPercentage: "",
-    additionalDiscount: "",
-    amountExclTax: "",
-    advanceTaxAmount: "",
-    itemTotalAddedQty: "",
-    lineItemAmt: "",
-    available: "N",
-    serialNoStatus: false,
-    taxAmt: "",
-    taxBasedAmt: "",
-    discountValue: "",
-    dineDiscountAmt: "",
-    tdsPercent: "",
-    base_amount_tds: "",
-    pricedIdForVarientCode: "",
-    volumeDiscount: "",
-    priceLocatorDTOs: [],
+    description: editDetails?.description,
+    serialNo: editDetails?.serialNo,
+    imeiNo: editDetails?.imeiNo,
+    qty: editDetails?.qty,
+    priceLocator: editDetails?.priceLocator,
+    discPercentage: editDetails?.discPercentage,
+    tdsAmount: editDetails?.tdsAmount,
+    itemNo: editDetails?.itemNo,
+    mrp: editDetails?.mrp,
+    discountedAmount: editDetails?.discountedAmount,
+    sellingPrice: editDetails?.sellingPrice,
+    taxPercentage: editDetails?.taxPercentage,
+    additionalDiscount: editDetails?.additionalDiscount,
+    amountExclTax: editDetails?.amountExclTax,
+    advanceTaxAmount: editDetails?.advanceTaxAmount,
+    itemTotalAddedQty: editDetails?.itemTotalAddedQty,
+    lineItemAmt: editDetails?.lineItemAmt,
+    available: editDetails?.available,
+    serialNoStatus: editDetails?.serialNoStatus,
+    taxAmt: editDetails?.taxAmt,
+    taxBasedAmt: editDetails?.taxBasedAmt,
+    discountValue: editDetails?.discountValue,
+    dineDiscountAmt: editDetails?.dineDiscountAmt,
+    tdsPercent: editDetails?.tdsPercent,
+    base_amount_tds: editDetails?.base_amount_tds,
+    pricedIdForVarientCode: editDetails?.pricedIdForVarientCode,
+    volumeDiscount: editDetails?.volumeDiscount,
+    priceLocatorDTOs:
+      editDetails?.priceLocatorDTOs !== null
+        ? editDetails?.priceLocatorDTOs
+        : [],
   });
   const fetchSubInventory = async () => {
     const res = await Route(
@@ -116,7 +122,6 @@ const AddLineItem = ({
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200 && res?.data?.available === "Y") {
       setLineItemDetail((prev) => ({
         ...prev,
@@ -293,7 +298,12 @@ const AddLineItem = ({
     setPricingID(value?.id);
   };
   const submitHandle = () => {
-    setLineItems((prev) => [...prev, lineItemDetail]);
+    // setLineItems((prev) => [...prev, lineItemDetail]);
+    setLineItems((prev) => 
+        prev.map((item, index) => 
+          index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
+        )
+      );
     setOpen(false);
   };
   return (
@@ -318,11 +328,11 @@ const AddLineItem = ({
                   alignItems: "center",
                   backgroundColor: "#0288d1",
                   paddingY: "24px",
-                  color: "#eee"
+                  color: "#eee",
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1">Add Line Item</Typography>
+                  <Typography variant="subtitle1">Edit Line Item</Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -613,7 +623,7 @@ const AddLineItem = ({
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
                 >
-                  Submit
+                  Update
                 </Button>
                 <Button variant="outlined" onClick={() => setOpen(false)}>
                   Close
@@ -635,4 +645,4 @@ const AddLineItem = ({
   );
 };
 
-export default AddLineItem;
+export default EditLineItem;

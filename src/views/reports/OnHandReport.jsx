@@ -27,8 +27,9 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Route from "../../routes/Route";
 
 const OnHandReport = () => {
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [details, setDetails] = useState({
-    storeName: "",
+    storeName: userDetails?.region_NAME,
     item: "ALL",
     locator_id: "ALL",
     serialNo: "ALL",
@@ -37,24 +38,23 @@ const OnHandReport = () => {
   const [onHandReports, setOnHandReports] = useState([]);
   const on_hand_report_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item", headerName: "Item No", width: 250 },
+    { field: "item", headerName: "Item No", width: 200 },
     {
       field: "item_Description",
       headerName: "Item Description",
-      width: 450,
+      width: 350,
     },
-    { field: "uom", headerName: "UOM", width: 100 },
-    { field: "transaction_Quantity", headerName: "Quantity", width: 100 },
+    { field: "uom", headerName: "UOM", width: 90 },
+    { field: "transaction_Quantity", headerName: "Quantity", width: 90 },
     { field: "serial_Number", headerName: "Serial No", width: 200 },
     { field: "imei_number", headerName: "IMEI No", width: 150 },
     { field: "sub_inventory_id", headerName: "Sub-Inventory", width: 150 },
-    { field: "locator_id", headerName: "Locator", width: 150 },
+    { field: "locator_id", headerName: "Locator", width: 200 },
   ];
   const [regionOrExtension, setRegionOrExtension] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [locatorsList, setLocatorsList] = useState([]);
-  const token = localStorage.getItem("access_token");
-  const username = localStorage.getItem("username");
+  // const token = localStorage.getItem("access_token");
   const fetchRegionOrExtension = async () => {
     const res = await Route(
       "GET",
@@ -71,21 +71,6 @@ const OnHandReport = () => {
     const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
     if (res?.status === 200) {
       setItemsList(res?.data);
-    }
-  };
-  const fetchUserDetails = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/fetchUserDtls?userId=${username}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setDetails((prev) => ({
-        ...prev,
-        storeName: res?.data?.region_NAME,
-      }));
     }
   };
   const fetchLocatorsBasedOnExtension = async () => {
@@ -115,9 +100,6 @@ const OnHandReport = () => {
   useEffect(() => {
     fetchRegionOrExtension();
     fetchItemsList();
-    fetchUserDetails();
-  }, []);
-  useEffect(() => {
     fetchLocatorsBasedOnExtension();
     fetchOnHandReports();
   }, [details]);
@@ -221,7 +203,7 @@ const OnHandReport = () => {
                   </Grid>
                 </Grid>
                 <Grid item container spacing={2} sx={{ px: 2, pt: 2 }}>
-                  <Grid item xs={1}>
+                  <Grid item xs={2}>
                     <TextField
                       label="As On Date"
                       variant="outlined"
@@ -233,7 +215,7 @@ const OnHandReport = () => {
                       style={{ background: "#fff" }}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Autocomplete
                       disablePortal
                       options={regionOrExtension?.map((item) => ({
@@ -245,6 +227,7 @@ const OnHandReport = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="Region/Extension" />
                       )}
+                      style={{ background: "#fff" }}
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -259,6 +242,7 @@ const OnHandReport = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="Item" />
                       )}
+                      style={{ background: "#fff" }}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -273,9 +257,10 @@ const OnHandReport = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="Locator" />
                       )}
+                      style={{ background: "#fff" }}
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={3}>
                     <TextField
                       label="Serial No."
                       variant="outlined"
@@ -325,6 +310,8 @@ const OnHandReport = () => {
                         },
                       }}
                       pageSizeOptions={[5, 10]}
+                      showCellVerticalBorder
+                      showColumnVerticalBorder
                     />
                   </div>
                 </Grid>

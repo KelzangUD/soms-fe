@@ -24,6 +24,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import Notification from "../../ui/Notification";
 import AddLineItem from "./AddLineItem";
+import EditLineItem from "./EditLineItem";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Route from "../../routes/Route";
@@ -55,6 +56,9 @@ const SalesOrder = () => {
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [openDialog, setOpenDialog] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [editLineItemIndex, setEditLineItemIndex] = useState(null);
+  const [editDetails, setEditDetails] = useState({});
   const [salesType, setSalesType] = useState([]);
   const [productsType, setProductsType] = useState([]);
   const [customersList, setCustomersList] = useState([]);
@@ -91,6 +95,7 @@ const SalesOrder = () => {
   const [bulkUpload, setBulkUpload] = useState(false);
   const [lineItems, setLineItems] = useState([]);
   const [fileName, setFileName] = useState("Upload File");
+  const [file, setFile] = useState(null);
   const [banks, setbanks] = useState([]);
   const [responseData, setResponseData] = useState({});
   const [userDetails, setUserDetails] = useState(JSON.parse(localStorage?.getItem("userDetails")));
@@ -98,13 +103,13 @@ const SalesOrder = () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
     if (res?.status === 200) {
       setSalesType(res?.data);
-    }
+    };
   };
   const fetchProductsType = async () => {
     const res = await Route("GET", "/Common/FetchProductType", null, null, 1);
     if (res?.status === 200) {
       setProductsType(res?.data);
-    }
+    };
   };
   const fetchCustomersList = async () => {
     const res = await Route(
@@ -116,7 +121,7 @@ const SalesOrder = () => {
     );
     if (res?.status === 200) {
       setCustomersList(res?.data);
-    }
+    };
   };
   const fetchCustomersDetails = async (customerID) => {
     const res = await Route(
@@ -217,8 +222,10 @@ const SalesOrder = () => {
       setOpenDialog(true);
     }
   };
-  const editLineItemHandle = (item) => {
-    console.log(item);
+  const editLineItemHandle = (e, item, index) => {
+    setEditLineItemIndex(index);
+    setEditDetails(item);
+    setEdit(true);
   };
   const deleteLineItemHandle = (e, indexToRemove) => {
     setLineItems((prev) => prev.filter((_, index) => index !== indexToRemove));
@@ -318,12 +325,12 @@ const SalesOrder = () => {
       },
       userId : user
     };
-    // if (file && file.length > 0) {
-    //   formData.append("file", file);
-    // } else {
-    //   const placeholderFile = new File([""], "file.csv");
-    //   formData.append("file", placeholderFile);
-    // }
+    if (file && file.length > 0) {
+      formData.append("file", file);
+    } else {
+      const placeholderFile = new File([""], "file.csv");
+      formData.append("file", placeholderFile);
+    }
     const jsonDataBlob = new Blob([JSON.stringify(data)], {
       type: "application/json",
     });
@@ -339,7 +346,6 @@ const SalesOrder = () => {
       null,
       "multipart/form-data"
     );
-
     console.log(res);
     if (res?.status === 201) {
       setResponseData(res?.data);
@@ -398,6 +404,7 @@ const SalesOrder = () => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "#007dc5",
+                  paddingY: "24px"
                 }}
               >
                 <Grid item>
@@ -653,7 +660,7 @@ const SalesOrder = () => {
                                 </IconButton>
                                 <IconButton
                                   aria-label="edit"
-                                  onClick={(item) => editLineItemHandle(item)}
+                                  onClick={(e) => editLineItemHandle(e, item, index)}
                                 >
                                   <EditIcon />
                                 </IconButton>
@@ -1018,6 +1025,20 @@ const SalesOrder = () => {
           salesType={salesOrderDetails?.salesType}
           setLineItems={setLineItems}
           userDetails={userDetails}
+        />
+      )}
+      {edit && (
+        <EditLineItem
+          open={edit}
+          setOpen={setEdit}
+          storeName={salesOrderDetails?.storeName}
+          user={user}
+          salesType={salesOrderDetails?.salesType}
+          setLineItems={setLineItems}
+          userDetails={userDetails}
+          editDetails={editDetails}
+          lineItems={lineItems}
+          editLineItemIndex={editLineItemIndex}
         />
       )}
     </>
