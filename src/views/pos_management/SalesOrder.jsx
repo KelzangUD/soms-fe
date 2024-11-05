@@ -98,18 +98,20 @@ const SalesOrder = () => {
   const [file, setFile] = useState(null);
   const [banks, setbanks] = useState([]);
   const [responseData, setResponseData] = useState({});
-  const [userDetails, setUserDetails] = useState(JSON.parse(localStorage?.getItem("userDetails")));
+  const [userDetails, setUserDetails] = useState(
+    JSON.parse(localStorage?.getItem("userDetails"))
+  );
   const fetchSalesType = async () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
     if (res?.status === 200) {
       setSalesType(res?.data);
-    };
+    }
   };
   const fetchProductsType = async () => {
     const res = await Route("GET", "/Common/FetchProductType", null, null, 1);
     if (res?.status === 200) {
       setProductsType(res?.data);
-    };
+    }
   };
   const fetchCustomersList = async () => {
     const res = await Route(
@@ -121,7 +123,7 @@ const SalesOrder = () => {
     );
     if (res?.status === 200) {
       setCustomersList(res?.data);
-    };
+    }
   };
   const fetchCustomersDetails = async (customerID) => {
     const res = await Route(
@@ -143,11 +145,17 @@ const SalesOrder = () => {
     }
   };
   const fetchUserDetails = async () => {
-    const res = await Route("GET", `/Common/fetchUserDtls?userId=${user}`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/Common/fetchUserDtls?userId=${user}`,
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setSalesOrderDetails((prev) => ({
         ...prev,
-        storeName: res?.data?.region_NAME
+        storeName: res?.data?.region_NAME,
       }));
     }
   };
@@ -299,31 +307,34 @@ const SalesOrder = () => {
       itemLines: lineItems,
       paymentLines,
       salesHeader: salesOrderDetails,
-      linesAmount : {
-        grossTotal: lineItems?.length > 0 &&
-        lineItems?.reduce(
-          (accumulator, currentObject) =>
-            accumulator + currentObject?.sellingPrice,
-          0
-        ),
+      linesAmount: {
+        grossTotal:
+          lineItems?.length > 0 &&
+          lineItems?.reduce(
+            (accumulator, currentObject) =>
+              accumulator + currentObject?.sellingPrice,
+            0
+          ),
         taxAmount: 0,
         discountAmount: 0,
         additionalDiscount: 0,
         lotOfSaleDiscount: 0,
-        tdsAmount: lineItems?.length > 0 &&
-        lineItems?.reduce(
-          (accumulator, currentObject) =>
-            accumulator + currentObject?.tdsAmount,
-          0
-        ),
-        netAmount: lineItems?.length > 0 &&
-        lineItems?.reduce(
-          (accumulator, currentObject) =>
-            accumulator + currentObject?.sellingPrice,
-          0
-        ),
+        tdsAmount:
+          lineItems?.length > 0 &&
+          lineItems?.reduce(
+            (accumulator, currentObject) =>
+              accumulator + currentObject?.tdsAmount,
+            0
+          ),
+        netAmount:
+          lineItems?.length > 0 &&
+          lineItems?.reduce(
+            (accumulator, currentObject) =>
+              accumulator + currentObject?.sellingPrice,
+            0
+          ),
       },
-      userId : user
+      userId: user,
     };
     if (file && file.length > 0) {
       formData.append("file", file);
@@ -337,7 +348,7 @@ const SalesOrder = () => {
 
     formData.append("details", jsonDataBlob, "data.json");
     console.log(formData);
-    console.log(data)
+    console.log(data);
     const res = await Route(
       "POST",
       `/SalesOrder/UpdateItemSales`,
@@ -381,7 +392,7 @@ const SalesOrder = () => {
         cardNumber: "",
         emiRefrenceNo: "",
         chequeCopy: "",
-      }))
+      }));
       setBulkUpload(false);
       setLineItems([]);
     } else {
@@ -389,6 +400,40 @@ const SalesOrder = () => {
       setSeverity("error");
       setShowNofication(true);
     }
+  };
+  const cancelHandle = () => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      postingDate: dateFormatter(dayjs(new Date())),
+      salesType: "",
+      productType: "",
+      mobileNo: "",
+      customerNumber: "",
+      customerName: "",
+      address: "",
+      address1: "",
+      city: "",
+      serviceRemarks: "",
+      advanceNo: "",
+      advanceAmt: 0,
+      adjType: "",
+    }));
+    setPaymentType([]);
+    setPaymentLines([]);
+    setPaymentLines((prev) => ({
+      ...prev,
+      paymentAmount: "",
+      paymentType: "",
+      paymentTypeName: "",
+      bankAccountNumber: "",
+      chequeNumber: "",
+      chequeDate: "",
+      cardNumber: "",
+      emiRefrenceNo: "",
+      chequeCopy: "",
+    }));
+    setBulkUpload(false);
+    setLineItems([]);
   };
   return (
     <>
@@ -404,7 +449,7 @@ const SalesOrder = () => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "#007dc5",
-                  paddingY: "24px"
+                  paddingY: "24px",
                 }}
               >
                 <Grid item>
@@ -660,7 +705,9 @@ const SalesOrder = () => {
                                 </IconButton>
                                 <IconButton
                                   aria-label="edit"
-                                  onClick={(e) => editLineItemHandle(e, item, index)}
+                                  onClick={(e) =>
+                                    editLineItemHandle(e, item, index)
+                                  }
                                 >
                                   <EditIcon />
                                 </IconButton>
@@ -1002,8 +1049,8 @@ const SalesOrder = () => {
             <Button variant="contained" onClick={postHandle}>
               Post
             </Button>
-            <Button variant="outlined" sx={{ ml: 2 }}>
-              Close
+            <Button variant="outlined" sx={{ ml: 2 }} onClick={cancelHandle}>
+              Cancel
             </Button>
           </Grid>
         </Grid>
