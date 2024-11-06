@@ -17,6 +17,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  CircularProgress,
 } from "@mui/material";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PeopleIcon from "@mui/icons-material/People";
@@ -50,10 +51,18 @@ const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
   const [notificationMsg, setNotificationMsg] = useState('');
   const [showNotification, setShowNofication] = useState(false);
   const [severity, setSeverity] = useState('');
+  const [changedAccess, setChangedAccess] = useState([]); // Store only changed access records
+  const [changedPermissions, setChangedPermissions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     setAccess(moduleAccess);
     setPermissionList(modulePermission);
+
+    setTimeout(() => {
+      setIsLoading(false); // Set loading to false once data is ready
+    }, 30000);
   }, [moduleAccess, modulePermission]);
 
   const fetchAllModule = async () => {
@@ -91,6 +100,20 @@ const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
         access.module_id === moduleId ? { ...access, isactive: newState } : access
       )
     );
+
+    // Record only the changed module
+    setChangedAccess((prevChanges) => {
+      const updatedModule = { module_id: moduleId, isactive: newState };
+      const isAlreadyChanged = prevChanges.some((change) => change.module_id === moduleId);
+
+      if (isAlreadyChanged) {
+        // If already in changes, replace it
+        return prevChanges.map((change) =>
+          change.module_id === moduleId ? updatedModule : change
+        );
+      }
+      return [...prevChanges, updatedModule]; // Add new change
+    });
   };
 
   // Group permissions by page
@@ -114,14 +137,33 @@ const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
           : item
       )
     );
+
+    // Record only the changed permission
+    setChangedPermissions((prevChanges) => {
+      const updatedPermission = {
+        role_permission_id: id,
+        status: permissionList.find((item) => item.role_permission_id === id)?.status === "Active"
+          ? "In_Active"
+          : "Active",
+      };
+      const isAlreadyChanged = prevChanges.some((change) => change.role_permission_id === id);
+
+      if (isAlreadyChanged) {
+        // If already in changes, replace it
+        return prevChanges.map((change) =>
+          change.role_permission_id === id ? updatedPermission : change
+        );
+      }
+      return [...prevChanges, updatedPermission]; // Add new change
+    });
   };
 
   const updateRolePermission = async () => {
     let data = {
-      'moduleAccessDtos': access,
-      'roleAndPermissionDtos': permissionList,
+      'moduleAccessDtos': changedAccess,
+      'roleAndPermissionDtos': changedPermissions,
       'roleId': roleId,
-      'createdBy': user
+      'updateBy': user
     }
 
     const res = await Route("POST", `/UserDtls/updateRolePermission`, null, data, null);
@@ -135,6 +177,14 @@ const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
       setShowNofication(true);
     }
   };
+
+  if (isLoading) {
+    return (
+      <Grid container justifyContent="center" alignItems="center" style={{ height: '100%' }}>
+        <CircularProgress /> {/* Loader while data is loading */}
+      </Grid>
+    );
+  }
 
   return (
     <>
@@ -193,42 +243,42 @@ const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    {Object.entries(groupedPermissions).map(([page, permissions]) => {
-                  // Check if the associated module is active
-                  const moduleId = permissions[0]?.module_id; // Assuming all permissions have the same module_id
-                  const module = combinedModules.find(mod => mod.module_id === moduleId);
-                  
-                  return (
-                    module?.isactive === 1 && ( // Only render if the module is active
-                      <TableRow
-                        key={page}
-                        id={`page-${page}`} // Set the id as "page-{page}"
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 },
-                        }}
-                      >
-                        {/* Combine module_name and page_name for the first cell */}
-                        <TableCell>
-                          {`${permissions[0]?.module_name} (${permissions[0]?.page_name})`}
-                        </TableCell>
+                      {Object.entries(groupedPermissions).map(([page, permissions]) => {
+                        // Check if the associated module is active
+                        const moduleId = permissions[0]?.module_id; // Assuming all permissions have the same module_id
+                        const module = combinedModules.find(mod => mod.module_id === moduleId);
 
-                        {/* Render checkboxes for each permission type */}
-                        {['View', 'Create', 'Update', 'Import', 'Export'].map((perm) => {
-                          const permission = permissions.find((p) => p.permission_name === perm);
-                          return (
-                            <TableCell align="right" key={`${page}-${perm}`}>
-                              <Checkbox
-                                checked={permission?.status === 'Active'}
-                                onChange={() => handleToggle(permission?.role_permission_id)}
-                                disabled={!permission} // Disable if permission is not found
-                              />
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    )
-                  );
-                })}
+                        return (
+                          module?.isactive === 1 && ( // Only render if the module is active
+                            <TableRow
+                              key={page}
+                              id={`page-${page}`} // Set the id as "page-{page}"
+                              sx={{
+                                '&:last-child td, &:last-child th': { border: 0 },
+                              }}
+                            >
+                              {/* Combine module_name and page_name for the first cell */}
+                              <TableCell>
+                                {`${permissions[0]?.module_name} (${permissions[0]?.page_name})`}
+                              </TableCell>
+
+                              {/* Render checkboxes for each permission type */}
+                              {['View', 'Create', 'Update', 'Import', 'Export'].map((perm) => {
+                                const permission = permissions.find((p) => p.permission_name === perm);
+                                return (
+                                  <TableCell align="right" key={`${page}-${perm}`}>
+                                    <Checkbox
+                                      checked={permission?.status === 'Active'}
+                                      onChange={() => handleToggle(permission?.role_permission_id)}
+                                      disabled={!permission} // Disable if permission is not found
+                                    />
+                                  </TableCell>
+                                );
+                              })}
+                            </TableRow>
+                          )
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </TableContainer>

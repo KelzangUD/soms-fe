@@ -17,6 +17,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
+  console.log(open);
   const ref = useRef(null);
   const user = localStorage.getItem('username');
   const [notificationMsg, setNotificationMsg] = useState('');

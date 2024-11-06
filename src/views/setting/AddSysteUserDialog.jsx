@@ -71,6 +71,7 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
   const [notificationMsg, setNotificationMsg] = useState('');
   const [showNotification, setShowNofication] = useState(false);
   const [severity, setSeverity] = useState('');
+  const [fullName, setFullName] = useState('');
 
   const fetchEmployeeList = async () => {
     const res = await Route("GET", "/UserDtls/fetchEmpCodeList", null, null, null);
@@ -100,10 +101,21 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
     }
   };
 
+  console.log(fullName);
   const fetchLocator = async (id, storeId) => {
-    const res = await Route("GET", `/Common/Fetch_Locator?workLocation=${storeId}&subInventory=${id}`, null, null, null);
-    if (res.status === 200) {
-      setLocator(res?.data);
+    if (id === 'FA') {
+      setLocator(previous => [
+        ...(previous || []),
+        {
+          id: fullName
+        }
+      ]);
+    }
+    else {
+      const res = await Route("GET", `/Common/Fetch_Locator?workLocation=${storeId}&subInventory=${id}`, null, null, null);
+      if (res.status === 200) {
+        setLocator(res?.data);
+      }
     }
   };
 
@@ -207,6 +219,8 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                         setFieldValue('employee_code', newValue ? newValue.user_code : '');
                         setFieldValue('full_name', newValue ? newValue.full_name : '');
                         setFieldValue('email_address', newValue ? newValue.email_address : '');
+
+                        setFullName(newValue ? newValue.full_name : '');
                       }}
                       onBlur={handleBlur}
                       renderInput={(params) => (
@@ -249,7 +263,7 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       fullWidth
                       label="Full Name"
                       margin="normal"
-                      name="user_code"
+                      name="full_name"
                       defaultValue='eg. John'
                       value={values.full_name}
                       disabled

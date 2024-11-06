@@ -9,7 +9,6 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -17,6 +16,8 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
+import AddApprovalRuleDialog from "./AddApprovalRuleDialog";
+import ViewApprovalRule from "./ViewApprovalRule";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -41,143 +42,99 @@ function a11yProps(index) {
   };
 }
 const ApprovalRules = () => {
-  const requisition_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "for", headerName: "For", width: 250 },
-    { field: "type", headerName: "Type", width: 150 },
-    { field: "rule_name", headerName: "Rule Name", width: 300 },
-    {
-      field: "start_date",
-      headerName: "Start Date",
-      width: 150,
-    },
-    {
-      field: "end_date",
-      headerName: "End Date",
-      width: 150,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 150,
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (params) => (
-        <>
-          <IconButton aria-label="edit" size="small">
-            <EditIcon fontSize="inherit" />
-          </IconButton>
-          <IconButton aria-label="view" size="small">
-            <VisibilityIcon fontSize="inherit" />
-          </IconButton>
-        </>
-      ),
-    },
-  ];
-  const requisition_rows = [
-    {
-      id: 1,
-      for: "CC Executive Extension",
-      type: "Etop Requisition",
-      rule_name: "CCE to RM",
-      start_date: "1-Aug-2020",
-      end_date: "1-Mar-2024",
-      status: "Active",
-    },
-  ];
-  const transfer_order_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "time_zone", headerName: "Time Zone", width: 100 },
-    {
-      field: "name_and_abbreviation",
-      headerName: "Name & Abbreviation",
-      width: 350,
-    },
-    { field: "country", headerName: "Country", width: 200 },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 150,
-    },
-  ];
-  const transfer_order_rows = [
-    {
-      id: 1,
-      time_zone: "BST",
-      name_and_abbreviation: "Requisition",
-      country: "Bhutan",
-      status: "Active",
-    },
-  ];
-  const emi_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "for", headerName: "For", width: 250 },
-    { field: "type", headerName: "Type", width: 150 },
-    { field: "rule_name", headerName: "Rule Name", width: 300 },
-    {
-      field: "start_date",
-      headerName: "Start Date",
-      width: 150,
-    },
-    {
-      field: "end_date",
-      headerName: "End Date",
-      width: 150,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 150,
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (params) => (
-        <>
-          <IconButton aria-label="edit" size="small">
-            <EditIcon fontSize="inherit" />
-          </IconButton>
-          <IconButton aria-label="view" size="small">
-            <VisibilityIcon fontSize="inherit" />
-          </IconButton>
-        </>
-      ),
-    },
-  ];
-  const emi_rows = [
-    {
-      id: 1,
-      for: "CC Executive Extension",
-      type: "Etop Requisition",
-      rule_name: "CCE to RM",
-      start_date: "1-Aug-2020",
-      end_date: "1-Mar-2024",
-      status: "Active",
-    },
-  ];
+  const [value, setValue] = useState(0);
+  const [ruleList, setRuleList] = useState([]);
+  const [selectedLabel, setSelectedLabel] = useState('Requisition');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showViewRule, setShowViewRule] = useState(false);
+  const [ruleId, setRuleId] = useState('');
 
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const fetchApprovalRules = async (type) => {
+    const res = await Route("GET", `/UserDtls/getApprovalRules/${type}`, null, null, null);
+    if (res?.status === 200) {
+      const rowsWithIds = (res?.data || []).map((item, index) => ({ ...item, id: index + 1 }));
+      setRuleList(rowsWithIds);
+    }
   };
+
+  useEffect(() => {
+    fetchApprovalRules(selectedLabel);
+  }, [selectedLabel]);
+
+  const approval_rules_columns = [
+    { field: "sl", headerName: "Sl. No", flex: 0.1 },
+    { field: "approvalUserRoleName", headerName: "For", flex: 0.2 },
+    { field: "approvalTypeName", headerName: "Type", flex: 0.2 },
+    { field: "approvalRuleName", headerName: "Rule Name", flex: 0.2 },
+    {
+      field: "approvalStatus",
+      headerName: "Status",
+      flex: 0.2,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 0.1,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            aria-label="edit"
+            size="small"
+            onClick={() => handleEditApprovalRule(params.row.approvalId)}
+          >
+            <EditIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => handleViewApprovalRule(params.row.approvalId)}
+          >
+            <VisibilityIcon fontSize="inherit" />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+  const handleChange = (_, newValue) => {
+    setValue(newValue);
+    const labels = ["Requisition", "Transfer Order", "EMI"];
+    setSelectedLabel(labels[newValue]);
+  };
+
+  const handleViewApprovalRule = (id) => {
+    setRuleId(id);
+    setShowViewRule(true);
+  };
+
+  const handleEditApprovalRule = (id) => {
+    setRuleId(id);
+    setShowAddModal(true);
+  };
+
+  const handleAddNewRule = () => {
+    setShowAddModal(true);
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
+          <Grid
+            item
+            xs={12}
+            sx={{ display: "flex", justifyContent: "flex-end", alignItems: 'center' }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<AddIcon />}
+              sx={{ mr: 2 }}
+              onClick={handleAddNewRule}
+            >
+              Add New
+            </Button>
+          </Grid>
+        </Grid>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
           {/* <SubHeader text="Approval Rules" /> */}
           <Grid
@@ -230,14 +187,6 @@ const ApprovalRules = () => {
                     <Grid item>
                       <Button
                         variant="contained"
-                        color="primary"
-                        endIcon={<AddIcon />}
-                        sx={{ mr: 2 }}
-                      >
-                        Add New
-                      </Button>
-                      <Button
-                        variant="contained"
                         color="success"
                         endIcon={<FileDownloadIcon />}
                       >
@@ -254,17 +203,17 @@ const ApprovalRules = () => {
                   >
                     <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
-                        rows={requisition_rows?.map((row, index) => ({
+                        rows={ruleList?.map((row, index) => ({
                           ...row,
                           sl: index + 1,
                         }))}
-                        columns={requisition_columns}
+                        columns={approval_rules_columns}
                         initialState={{
                           pagination: {
                             paginationModel: { page: 0, pageSize: 5 },
                           },
                         }}
-                        pageSizeOptions={[5, 10]}
+                        pageSizeOptions={[5, 10, 50, 100]}
                       />
                     </div>
                   </Grid>
@@ -319,17 +268,17 @@ const ApprovalRules = () => {
                   >
                     <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
-                        rows={transfer_order_rows?.map((row, index) => ({
+                        rows={ruleList?.map((row, index) => ({
                           ...row,
                           sl: index + 1,
                         }))}
-                        columns={transfer_order_columns}
+                        columns={approval_rules_columns}
                         initialState={{
                           pagination: {
                             paginationModel: { page: 0, pageSize: 5 },
                           },
                         }}
-                        pageSizeOptions={[5, 10]}
+                        pageSizeOptions={[5, 10, 50, 100]}
                       />
                     </div>
                   </Grid>
@@ -384,17 +333,17 @@ const ApprovalRules = () => {
                   >
                     <div style={{ height: "auto", width: "100%", background: "#fff" }}>
                       <DataGrid
-                        rows={emi_rows?.map((row, index) => ({
+                        rows={ruleList?.map((row, index) => ({
                           ...row,
                           sl: index + 1,
                         }))}
-                        columns={emi_columns}
+                        columns={approval_rules_columns}
                         initialState={{
                           pagination: {
                             paginationModel: { page: 0, pageSize: 5 },
                           },
                         }}
-                        pageSizeOptions={[5, 10]}
+                        pageSizeOptions={[5, 10, 50, 100]}
                       />
                     </div>
                   </Grid>
@@ -404,6 +353,23 @@ const ApprovalRules = () => {
           </Grid>
         </Grid>
       </Box>
+      {showAddModal &&
+        <AddApprovalRuleDialog
+          open={showAddModal}
+          handleClose={() => {
+            setShowAddModal(false);
+            setRuleId('');
+          }}
+          ruleId={ruleId}
+        />
+      }
+      {showViewRule &&
+        <ViewApprovalRule
+          open={ViewApprovalRule}
+          handleClose={() => setShowViewRule(false)}
+          ruleId={ruleId}
+        />
+      }
     </>
   );
 };
