@@ -318,7 +318,7 @@ const AddLineItem = ({
                   alignItems: "center",
                   backgroundColor: "#0288d1",
                   paddingY: "24px",
-                  color: "#eee"
+                  color: "#eee",
                 }}
               >
                 <Grid item>
@@ -343,7 +343,9 @@ const AddLineItem = ({
                   />
                 </Grid>
                 <Grid item xs={3}>
-                  {userDetails?.roleName === "Administrator" ? (
+                  {userDetails?.roleName === "Administrator" ||
+                  userDetails?.roleName === "Regional Manager" ||
+                  userDetails?.roleName === "General Manager" ? (
                     <Autocomplete
                       disablePortal
                       options={subInventory?.map((item) => ({
@@ -367,7 +369,9 @@ const AddLineItem = ({
                   )}
                 </Grid>
                 <Grid item xs={3}>
-                  {userDetails?.roleName === "Administrator" ? (
+                  {userDetails?.roleName === "Administrator" ||
+                  userDetails?.roleName === "Regional Manager" ||
+                  userDetails?.roleName === "General Manager" ? (
                     <Autocomplete
                       disablePortal
                       options={locator?.map((item) => ({

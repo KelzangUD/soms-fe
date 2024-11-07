@@ -255,7 +255,7 @@ const PaymentReceipt = () => {
       remarks: e?.target?.value,
     }));
   };
-  const token = localStorage.getItem("access_token");
+  // const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
     e.preventDefault();
     console.log(paymentReceiptDetails?.mobileNo?.length);
@@ -557,11 +557,11 @@ const PaymentReceipt = () => {
                         container
                         padding={2}
                         sx={{
-                          backgroundColor: "#EEEDEB",
+                          backgroundColor: "#1976d2",
                         }}
                       >
                         <Grid item>
-                          <Typography variant="subtitle1">
+                          <Typography variant="subtitle1" color="#fff">
                             Customer Details
                           </Typography>
                         </Grid>

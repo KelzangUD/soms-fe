@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Grid,
+  InputBase,
+  IconButton,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,7 +29,9 @@ const TransferOrders = () => {
   const [edit, setEdit] = useState(false);
   const [view, setView] = useState(false);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
-  const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
+  const [userDetails, setUserDetails] = useState(
+    JSON.parse(localStorage.getItem("userDetails"))
+  );
 
   const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
     const res = await Route(
@@ -81,10 +90,10 @@ const TransferOrders = () => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "edit");
   };
   const viewHandle = (params) => {
-    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view"); 
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view");
   };
   const shipHandle = (params) => {
-    updateTransferOrderShipment(params?.row?.transfer_order_no)
+    updateTransferOrderShipment(params?.row?.transfer_order_no);
   };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
@@ -111,7 +120,7 @@ const TransferOrders = () => {
             aria-label="edit"
             size="small"
             onClick={() => editHandle(params)}
-            color="primary"
+            color="success"
           >
             <EditIcon fontSize="inherit" />
           </IconButton>
@@ -127,7 +136,7 @@ const TransferOrders = () => {
             aria-label="ship"
             size="small"
             onClick={() => shipHandle(params)}
-            color="primary"
+            color="secondary"
           >
             <LocalShippingIcon fontSize="inherit" />
           </IconButton>
@@ -178,7 +187,7 @@ const TransferOrders = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
-                  <Grid item  sx={{ px: 2 }}>
+                  <Grid item sx={{ px: 2 }}>
                     <Button
                       variant="contained"
                       color="primary"

@@ -90,7 +90,6 @@ const Recharge = () => {
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200) {
       setBankAccounts(res?.data);
     }
@@ -195,7 +194,7 @@ const Recharge = () => {
       setFile(e?.target?.files[0]);
     }
   };
-  const token = localStorage.getItem("access_token");
+  // const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
     // console.log(rechargeDetails);
     e.preventDefault();

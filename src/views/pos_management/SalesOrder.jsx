@@ -23,6 +23,8 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import Notification from "../../ui/Notification";
+import LoaderDialog from "../../ui/LoaderDialog";
+import ItemsNotFoundDialog from "../../ui/ItemsNotFoundDialog";
 import AddLineItem from "./AddLineItem";
 import EditLineItem from "./EditLineItem";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -33,6 +35,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ImageIcon from "@mui/icons-material/Image";
+import BulkUploader from "../../assets/files/BulkUploader.xlsx";
 import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import { dateFormatter } from "../../util/CommonUtil";
@@ -52,9 +55,11 @@ const VisuallyHiddenInput = styled("input")({
 
 const SalesOrder = () => {
   const user = localStorage.getItem("username");
+  const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
+  const [isLoading, setIsLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editLineItemIndex, setEditLineItemIndex] = useState(null);
@@ -77,7 +82,7 @@ const SalesOrder = () => {
     advanceNo: "",
     advanceAmt: 0,
     adjType: "",
-    storeName: "",
+    storeName: userDetails?.region_NAME,
   });
   const [paymentType, setPaymentType] = useState([]);
   const [paymentLines, setPaymentLines] = useState([]);
@@ -94,13 +99,13 @@ const SalesOrder = () => {
   });
   const [bulkUpload, setBulkUpload] = useState(false);
   const [lineItems, setLineItems] = useState([]);
+  const [itemsNotFound, setItemsNotFound] = useState([]);
+  const [openItemsNotFoundDialog, setOpenItemsNotFoundDialog] = useState(false);
   const [fileName, setFileName] = useState("Upload File");
   const [file, setFile] = useState(null);
   const [banks, setbanks] = useState([]);
+  const [netPayment, setNetPayment] = useState("");
   const [responseData, setResponseData] = useState({});
-  const [userDetails, setUserDetails] = useState(
-    JSON.parse(localStorage?.getItem("userDetails"))
-  );
   const fetchSalesType = async () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
     if (res?.status === 200) {
@@ -144,21 +149,6 @@ const SalesOrder = () => {
       }));
     }
   };
-  const fetchUserDetails = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/fetchUserDtls?userId=${user}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setSalesOrderDetails((prev) => ({
-        ...prev,
-        storeName: res?.data?.region_NAME,
-      }));
-    }
-  };
   const fetchPaymentType = async () => {
     const res = await Route("GET", "/Common/PaymentType", null, null, null);
     if (res?.status === 200) {
@@ -177,11 +167,73 @@ const SalesOrder = () => {
       setbanks(res?.data);
     }
   };
+  const fetchProductDetailsBasedOnItemList = async (file) => {
+    setIsLoading(true);
+    try {
+      let data = new FormData();
+      data.append("storeName", userDetails?.region_NAME);
+      data.append("File", file);
+      const res = await Route(
+        "POST",
+        `/SalesOrder/Product_Details`,
+        null,
+        data,
+        null,
+        "multipart/form-data"
+      );
+      if (res?.status === 200) {
+        if (res?.data) {
+          const foundItems = [];
+          const notFoundItems = [];
+          res.data.forEach((item) => {
+            if (item?.remarks !== "Not-Available") {
+              foundItems.push({
+                priceLocator: item?.priceLocator,
+                mrp: item?.mrp,
+                discPercentage: item?.discPercentage,
+                tdsAmount: parseInt(item?.tdsAmount),
+                discountedAmount: item?.discountAmt,
+                sellingPrice: item?.sellingPrice,
+                taxPercentage: parseInt(item?.taxPercentage),
+                additionalDiscount: parseInt(item?.additionalDiscount),
+                amountExclTax: item?.amountExclTax,
+                advanceTaxAmount: item?.advanceTaxAmount,
+                volumeDiscount: item?.volumeDiscount,
+                itemTotalAddedQty: item?.itemTotlaAddedQty,
+                lineItemAmt: item?.sellingPrice,
+                available: item?.available,
+                serialNoStatus: item?.serialNoStatus,
+                taxAmt: item?.taxAmount,
+                priceLocatorDTOs: item?.priceLocatorDTOs,
+                description: item?.description,
+                itemNo: item?.itemNo,
+                qty: 1,
+              });
+            } else {
+              notFoundItems.push({
+                serialNo: item?.serialNo,
+              });
+            }
+          });
+          setLineItems(foundItems);
+          setItemsNotFound(notFoundItems);
+          if (notFoundItems.length > 0) {
+            setOpenItemsNotFoundDialog(true);
+          }
+        }
+      }
+    } catch (error) {
+      setNotificationMsg("Error", error);
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
     fetchSalesType();
     fetchProductsType();
     fetchPaymentType();
-    fetchUserDetails();
   }, []);
   useEffect(() => {
     fetchCustomersList();
@@ -198,7 +250,6 @@ const SalesOrder = () => {
     e?.target?.value === "2" ? setBulkUpload(true) : setBulkUpload(false);
   };
   const productsTypeHandle = (e) => {
-    console.log(e?.target?.value);
     setSalesOrderDetails((prev) => ({
       ...prev,
       productType: parseInt(e.target.value),
@@ -216,6 +267,19 @@ const SalesOrder = () => {
       ...prev,
       serviceRemarks: e?.target?.value,
     }));
+  };
+  const downloadSampleHandle = () => {
+    const fileUrl = BulkUploader;
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = "BulkUploader.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  const uploadCSVFileHandle = (e) => {
+    setFile(e?.target?.files[0]);
+    fetchProductDetailsBasedOnItemList(e?.target?.files[0]);
   };
   const addButtonHandle = () => {
     if (
@@ -289,9 +353,16 @@ const SalesOrder = () => {
       prev.filter((_, index) => index !== indexToRemove)
     );
   };
-  const editPaymentItemHandle = (item) => {
-    console.log(item);
-  };
+  useEffect(() => {
+    setNetPayment(
+      lineItems?.length > 0 &&
+        lineItems?.reduce(
+          (accumulator, currentObject) =>
+            accumulator + currentObject?.sellingPrice,
+          0
+        )
+    );
+  }, [lineItems]);
   const postHandle = async () => {
     let formData = new FormData();
     if (paymentLines && paymentLines.length > 0) {
@@ -622,12 +693,27 @@ const SalesOrder = () => {
                 </Grid>
                 <Grid item>
                   {bulkUpload && (
-                    <IconButton aria-label="upload" onClick={addButtonHandle}>
+                    <IconButton
+                      component="label"
+                      role={undefined}
+                      tabIndex={-1}
+                      fullWidth
+                      variant="outlined"
+                      style={{ border: "0 solid #B4B4B8", color: "#686D76" }}
+                    >
                       <FileUploadIcon sx={{ color: "#eee" }} />
+                      <VisuallyHiddenInput
+                        type="file"
+                        onChange={uploadCSVFileHandle}
+                        multiple
+                      />
                     </IconButton>
                   )}
                   {bulkUpload && (
-                    <IconButton aria-label="download" onClick={addButtonHandle}>
+                    <IconButton
+                      aria-label="download"
+                      onClick={downloadSampleHandle}
+                    >
                       <FileDownloadIcon sx={{ color: "#eee" }} />
                     </IconButton>
                   )}
@@ -860,8 +946,7 @@ const SalesOrder = () => {
                       <Select
                         labelId="payment-type-select-label"
                         id="payment-type-select"
-                        // value={age}
-                        label="Paymen Type"
+                        label="Payment Type"
                         onChange={paymentHandle}
                       >
                         {paymentType?.map((item) => (
@@ -880,7 +965,6 @@ const SalesOrder = () => {
                       <Select
                         labelId="bank-ac-name-select-label"
                         id="bank-ac-name-select"
-                        // value={age}
                         label="Bank A/C Name"
                         onChange={bankHandle}
                       >
@@ -926,7 +1010,7 @@ const SalesOrder = () => {
                     </Grid>
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
-                    <Grid item sx={2} display="flex">
+                    <Grid item sx={3} display="flex">
                       <Button
                         component="label"
                         role={undefined}
@@ -953,7 +1037,6 @@ const SalesOrder = () => {
                     container
                     xs={1}
                     display="flex"
-                    // justifyContent="space-between"
                     alignItems="center"
                   >
                     {/* <Grid item sx={11}>
@@ -1030,12 +1113,6 @@ const SalesOrder = () => {
                               >
                                 <DeleteIcon />
                               </IconButton>
-                              <IconButton
-                                aria-label="edit"
-                                onClick={(item) => editPaymentItemHandle(item)}
-                              >
-                                <EditIcon />
-                              </IconButton>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -1049,7 +1126,15 @@ const SalesOrder = () => {
             <Button variant="contained" onClick={postHandle}>
               Post
             </Button>
-            <Button variant="outlined" sx={{ ml: 2 }} onClick={cancelHandle}>
+            <Button
+              variant="outlined"
+              sx={{ ml: 2 }}
+              onClick={cancelHandle}
+              color="error"
+              style={{
+                background: "#fff",
+              }}
+            >
               Cancel
             </Button>
           </Grid>
@@ -1086,6 +1171,14 @@ const SalesOrder = () => {
           editDetails={editDetails}
           lineItems={lineItems}
           editLineItemIndex={editLineItemIndex}
+        />
+      )}
+      {isLoading && <LoaderDialog open={isLoading} />}
+      {openItemsNotFoundDialog && (
+        <ItemsNotFoundDialog
+          open={openItemsNotFoundDialog}
+          setOpen={setOpenItemsNotFoundDialog}
+          itemsNoFound={itemsNotFound}
         />
       )}
     </>

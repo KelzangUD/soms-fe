@@ -26,7 +26,6 @@ import Notification from "../ui/Notification";
 import Route from "../routes/Route";
 import { jwtDecode } from "jwt-decode";
 
-
 const SignIn = () => {
   const navigagte = useNavigate();
   const [formData, setFormData] = useState({
@@ -101,7 +100,7 @@ const SignIn = () => {
 
   return (
     <>
-      <Container style={{ backgroundImage: `url(${bg_img})`}}>
+      <Container>
         <Header />
         <Box
           sx={{
@@ -112,6 +111,7 @@ const SignIn = () => {
             justifyContent: "center",
             minHeight: "80vh",
           }}
+          style={{ backgroundImage: `url(${bg_img})` }}
         >
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12}>

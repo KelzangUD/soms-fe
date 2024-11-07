@@ -34,10 +34,10 @@ const StatusCard = ({ index, title, qty }) => {
               <Avatar sx={{ width: 60, height: 60, bgcolor: `${color_array[index]}` }}>{icon_array[index]}</Avatar>
             </Grid>
             <Grid item textAlign="right">
-              <Typography variant="h5" fontWeight="bold">
+              <Typography variant="h5" color={`${color_array[index]}`}>
                 {qty}
               </Typography>
-              <Typography color={`${color_array[index]}`}>{title}</Typography>
+              <Typography fontWeight="bold">{title}</Typography>
             </Grid>
           </Grid>
         </Paper>

@@ -176,7 +176,7 @@ export const MenuItems = [
   },
   {
     module: "Reports",
-    icon: <AssessmentIcon  />,
+    icon: <AssessmentIcon />,
     // itemNumber: 7,
     nestedItems: [
       {
