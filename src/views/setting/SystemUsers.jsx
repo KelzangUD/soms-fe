@@ -161,8 +161,22 @@ const SystemUsers = () => {
           </Grid>
         </Grid>
       </Box>
-      {showAddModal && <AddSystemUserDialog open={showAddModal} handleClose={handleCloseAddModal} fetchSystemUser={fetchSystemUsers}/>}
-      {showViewModal && <ViewEditSystemUserModal open={showViewModal} handleClose={handleCloseViewModal} fetchSystemUser={fetchSystemUsers} data={userDtls} actionType={actionType}/>}
+      {showAddModal && 
+        <AddSystemUserDialog
+          open={showAddModal}
+          handleClose={handleCloseAddModal}
+          fetchSystemUser={fetchSystemUsers}
+        />
+      }
+      {showViewModal &&
+        <ViewEditSystemUserModal
+          open={showViewModal}
+          handleClose={handleCloseViewModal}
+          fetchSystemUser={fetchSystemUsers}
+          data={userDtls}
+          actionType={actionType}
+        />
+      }
     </>
   );
 };

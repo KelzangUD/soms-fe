@@ -365,7 +365,7 @@ const SalesOrder = () => {
   }, [lineItems]);
   const postHandle = async () => {
     let formData = new FormData();
-    if (paymentLines && paymentLines.length > 0) {
+    if (paymentLines && parseInt(paymentLinesItem.paymentType) === 2) {
       for (let i = 0; i < paymentLines?.length; i++) {
         formData.append("cheque", paymentLines[i].chequeCopy);
       }
@@ -467,7 +467,7 @@ const SalesOrder = () => {
       setBulkUpload(false);
       setLineItems([]);
     } else {
-      setNotificationMsg(res?.response?.data?.message);
+      setNotificationMsg("Failed to create the sales order. Try again!");
       setSeverity("error");
       setShowNofication(true);
     }
