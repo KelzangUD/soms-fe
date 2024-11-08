@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -28,8 +28,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Notification from "../../ui/Notification";
 import dayjs from "dayjs";
 import Route from "../../routes/Route";
-import BulkRechargeFormat from "../../assets/files/BulkRechargeFormat.csv";
-import { dateFormatter } from "../../util/CommonUtil";
+import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -169,15 +168,6 @@ const Recharge = () => {
     setChequeCopy(e?.target?.files[0]);
   };
 
-  const sampleFileDownload = () => {
-    const fileUrl = BulkRechargeFormat;
-    const link = document.createElement("a");
-    link.href = fileUrl;
-    link.download = "BulkRechargeFormat.csv"; // Name of the downloaded file
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link); // Clean up the link element
-  };
   const uploadCSVFileHandle = (e) => {
     if (
       rechargeDetails?.paymentType === null ||
@@ -256,9 +246,13 @@ const Recharge = () => {
       setShowNofication(true);
     }
   };
-  const openInNewTab = () =>{
+  const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
-    const newWindow = window.open(`/recharge-receipt?${queryParams}`, '_blank', 'noopener,noreferrer');
+    const newWindow = window.open(
+      `/recharge-receipt?${queryParams}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
     if (newWindow) newWindow.opener = null;
   };
   return (
@@ -324,9 +318,6 @@ const Recharge = () => {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <IconButton onClick={sampleFileDownload}>
-                    <DownloadIcon sx={{ color: "#eee" }} />
-                  </IconButton>
                   <IconButton
                     component="label"
                     role={undefined}
@@ -346,6 +337,11 @@ const Recharge = () => {
                         />
                       </>
                     )}
+                  </IconButton>
+                  <IconButton
+                    onClick={() => downloadSampleHandle("BulkRechargeFormat")}
+                  >
+                    <DownloadIcon sx={{ color: "#eee" }} />
                   </IconButton>
                 </Grid>
               </Grid>
@@ -451,16 +447,13 @@ const Recharge = () => {
             </Paper>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
-            {/* <Button variant="outlined" disabled style={{ background: "#fff" }}>
-              Print
-            </Button> */}
             <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
               Create & Post
             </Button>
           </Grid>
         </Grid>
       </Box>
-      {showNotification && severity=== "error" && (
+      {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}

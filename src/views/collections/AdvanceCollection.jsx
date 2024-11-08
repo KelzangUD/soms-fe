@@ -21,14 +21,12 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import SubHeader from "../../common/SubHeader";
 
 const AdvanceCollection = () => {
   return (
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          {/* <SubHeader text="Advance Collection" /> */}
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid

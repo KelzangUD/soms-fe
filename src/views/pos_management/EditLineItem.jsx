@@ -5,16 +5,12 @@ import {
   Grid,
   Button,
   Dialog,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
 import Route from "../../routes/Route";
-import Notification from "../../ui/Notification";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Notification } from "../../ui/index";
+import { Transition } from "../../component/common/index";
 
 const EditLineItem = ({
   open,
@@ -25,8 +21,7 @@ const EditLineItem = ({
   setLineItems,
   userDetails,
   editDetails,
-  lineItems,
-  editLineItemIndex
+  editLineItemIndex,
 }) => {
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -298,12 +293,11 @@ const EditLineItem = ({
     setPricingID(value?.id);
   };
   const submitHandle = () => {
-    // setLineItems((prev) => [...prev, lineItemDetail]);
-    setLineItems((prev) => 
-        prev.map((item, index) => 
-          index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
-        )
-      );
+    setLineItems((prev) =>
+      prev.map((item, index) =>
+        index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
+      )
+    );
     setOpen(false);
   };
   return (
@@ -625,7 +619,11 @@ const EditLineItem = ({
                 >
                   Update
                 </Button>
-                <Button variant="outlined" onClick={() => setOpen(false)}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setOpen(false)}
+                  color="error"
+                >
                   Close
                 </Button>
               </Grid>

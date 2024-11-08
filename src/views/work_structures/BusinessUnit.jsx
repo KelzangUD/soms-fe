@@ -14,14 +14,12 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import SubHeader from "../../common/SubHeader";
 
 const BusinessUnit = () => {
   return (
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          {/* <SubHeader text="Business Unit" /> */}
           <Grid item xs={12}>
             <Paper elevation={1} sx={{ p: 2 }}>
               <Grid container spacing={2} sx={{ my: 1 }}>
