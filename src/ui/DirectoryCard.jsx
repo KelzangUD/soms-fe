@@ -12,6 +12,7 @@ const DirectoryCard = ({ name, empID, designation }) => {
         avatar={<AccountCircleIcon sx={{ fontSize: 40 }}  />}
         title={`${name} (${empID})`}
         subheader={designation}
+        subheaderTypographyProps={{ sx: { fontSize: 12 } }}
       />
     </Card>
   );

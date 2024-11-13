@@ -24,7 +24,7 @@ const LineItemsTable = ({
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "350px" }}>Description</TableCell>
+              <TableCell sx={{ width: "30%" }}>Description</TableCell>
               <TableCell align="right">Quantity</TableCell>
               <TableCell align="right">Selling Price</TableCell>
               <TableCell align="right">Tax Amount</TableCell>

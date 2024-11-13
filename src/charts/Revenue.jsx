@@ -52,7 +52,7 @@ const Revenue = () => {
   return (
     <Paper>
       <LineChart
-        width={500}
+        width={425}
         height={300}
         data={data}
         margin={{

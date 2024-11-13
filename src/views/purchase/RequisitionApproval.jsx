@@ -148,7 +148,7 @@ const RequisitionApproval = () => {
                     </Paper>
                   </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
+                <Grid item container alignItems="center" xs={12}>
                   <div
                     style={{
                       height: "auto",

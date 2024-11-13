@@ -22,13 +22,14 @@ const RechargeReceipt = () => {
   const customerNo = query.get("customerNo");
   const description = query.get("description");
   const rechargeDate = query.get("rechargeDate");
+  const receiptType = query.get("receiptType");
   return (
     <>
       <div style={{ width: "400px", padding: "8px", lineHeight: "1.5" }}>
         <div style={{ textAlign: "center" }}>
           <h3>{companyName}</h3>
           <p>{customerName}</p>
-          <h4>Cash Receipt</h4>
+          <h4>{receiptType}</h4>
         </div>
         <hr />
         <div>

@@ -16,7 +16,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CreateTransferOrder from "./CreateTransferOrder";
 import ViewTransferOrder from "./ViewTransferOrder";
 import UpdateTransferOrder from "./UpdateTransferOrder";
-import Notification from "../../ui/Notification";
+import {Notification, RenderStatus} from "../../ui/index";
 import Route from "../../routes/Route";
 
 const TransferOrders = () => {
@@ -97,18 +97,19 @@ const TransferOrders = () => {
   };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", width: 250 },
+    { field: "transfer_order_no", headerName: "Transfer Order No", width: 150 },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
-      width: 250,
+      width: 240,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 250 },
-    { field: "posted_date", headerName: "Posted Date", width: 150 },
+    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 200 },
+    // { field: "posted_date", headerName: "Posted Date", width: 150 },
     {
       field: "status",
       headerName: "Status",
-      width: 150,
+      width: 130,
+      renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
@@ -187,7 +188,7 @@ const TransferOrders = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
-                  <Grid item sx={{ px: 2 }}>
+                  <Grid item >
                     <Button
                       variant="contained"
                       color="primary"
@@ -198,7 +199,7 @@ const TransferOrders = () => {
                     </Button>
                   </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
+                <Grid item container alignItems="center" xs={12}>
                   <div
                     style={{
                       height: "auto",

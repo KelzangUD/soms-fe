@@ -31,12 +31,10 @@ import Route from "../../routes/Route";
 
 const Requisitions = () => {
   const empId = localStorage.getItem("username");
+  const userDetails = JSON.parse(localStorage?.getItem("userDetails"))
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [userDetails, setUserDetails] = useState(
-    JSON?.parse(localStorage.getItem("userDetails"))
-  );
   const [requisitionType, setRquisitionType] = useState([]);
   const [requisitionItems, setRequisitionItems] = useState([]);
   const [isETop, setIsETop] = useState(false);
@@ -52,13 +50,18 @@ const Requisitions = () => {
     item_Number: "",
     uom: "",
     amount: "",
-    qty: "",
   });
   const fetchRequisitionType = async () => {
-    const res = await Route("GET", "/Common/RequisitionType", null, null, null);
+    const res = await Route(
+      "GET",
+      `/Common/RequisitionType?type=1`,
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setRquisitionType(res?.data);
-    }
+    };
   };
   const fetchRequisitionItem = async () => {
     const res = await Route("GET", "/Common/RequisitionItem", null, null, null);
@@ -97,12 +100,6 @@ const Requisitions = () => {
       uom: value?.uom,
     }));
   };
-  const itemDTOListqtyHandle = (e) => {
-    setItemDTOList((prev) => ({
-      ...prev,
-      qty: e?.target?.value,
-    }));
-  };
   const itemDTOListAmountHandle = (e) => {
     setItemDTOList((prev) => ({
       ...prev,
@@ -119,7 +116,6 @@ const Requisitions = () => {
       item_Description: null,
       item_Number: "",
       uom: "",
-      qty: "",
       amount: "",
     }));
   };
@@ -298,31 +294,17 @@ const Requisitions = () => {
                         />
                       </Grid>
                       <Grid item xs={3} display="flex">
-                        {isETop ? (
-                          <Grid>
-                            <TextField
-                              label="Amount"
-                              variant="outlined"
-                              fullWidth
-                              name="amount"
-                              type="number"
-                              onChange={itemDTOListAmountHandle}
-                              value={itemDTOList?.amount}
-                            />
-                          </Grid>
-                        ) : (
-                          <Grid>
-                            <TextField
-                              label="Required Quantity"
-                              variant="outlined"
-                              fullWidth
-                              name="qty"
-                              type="number"
-                              onChange={itemDTOListqtyHandle}
-                              value={itemDTOList?.qty}
-                            />
-                          </Grid>
-                        )}
+                        <Grid>
+                          <TextField
+                            label={isETop ? "Amount" : "Required Quantity"}
+                            variant="outlined"
+                            fullWidth
+                            name="amount"
+                            type="number"
+                            onChange={itemDTOListAmountHandle}
+                            value={itemDTOList?.amount}
+                          />
+                        </Grid>
                         <Grid>
                           <IconButton
                             aria-label="add"

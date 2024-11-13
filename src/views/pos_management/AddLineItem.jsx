@@ -619,7 +619,7 @@ const AddLineItem = ({
                 >
                   Submit
                 </Button>
-                <Button variant="outlined" onClick={() => setOpen(false)}>
+                <Button variant="outlined" onClick={() => setOpen(false)} color="error">
                   Close
                 </Button>
               </Grid>

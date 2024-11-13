@@ -176,33 +176,8 @@ const OnHandReport = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Grid item sx={{ mr: 2 }}>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      endIcon={<PictureAsPdfIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      endIcon={<FileDownloadIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      endIcon={<PrintIcon />}
-                    >
-                      Print
-                    </Button>
-                  </Grid>
                 </Grid>
-                <Grid item container spacing={2} sx={{ px: 2, pt: 2 }}>
+                <Grid item container spacing={2} sx={{ pt: 2 }}>
                   <Grid item xs={2}>
                     <TextField
                       label="As On Date"
@@ -290,7 +265,21 @@ const OnHandReport = () => {
                     </Button>
                   </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
+                <Grid
+                  container
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <IconButton aria-label="pdf" color="error">
+                    <PictureAsPdfIcon />
+                  </IconButton>
+                  <IconButton aria-label="excel" color="success">
+                    <FileDownloadIcon />
+                  </IconButton>
+                  <IconButton aria-label="excel" color="primary">
+                    <PrintIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item container alignItems="center" xs={12}>
                   <div
                     style={{
                       height: "auto",

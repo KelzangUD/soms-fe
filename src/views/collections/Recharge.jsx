@@ -186,7 +186,6 @@ const Recharge = () => {
   };
   // const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
-    // console.log(rechargeDetails);
     e.preventDefault();
     let formData = new FormData();
     if (chequeCopy && chequeCopy.length > 0) {
@@ -196,10 +195,10 @@ const Recharge = () => {
       formData.append("cheque", placeholderFile);
     }
     if (file && file.length > 0) {
-      formData.append("file", file);
+      formData.append("rechargeFile ", file);
     } else {
       const placeholderFile = new File([""], "file.csv");
-      formData.append("file", placeholderFile);
+      formData.append("rechargeFile ", placeholderFile);
     }
     const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
       type: "application/json",
@@ -482,12 +481,13 @@ const Recharge = () => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={openInNewTab} variant="outlined">
+              <Button onClick={openInNewTab} variant="contained">
                 View Receipt
               </Button>
               <Button
                 onClick={() => setShowNofication(false)}
-                variant="contained"
+                variant="outlined"
+                color="error"
               >
                 Close
               </Button>

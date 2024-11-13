@@ -369,6 +369,7 @@ const SalesOrder = () => {
   }, [lineItems]);
 
   const postHandle = async () => {
+    console.log(paymentLinesItem)
     if (paymentLinesItem?.length === 0) {
       setNotificationMsg("Total Payment is Not equal to Net Payment");
       setSeverity("info");
@@ -756,7 +757,6 @@ const SalesOrder = () => {
                       name="payment_amount"
                       required
                       onChange={paymentAmountHandle}
-                      value={paymentLinesItem?.paymentAmount}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -769,7 +769,6 @@ const SalesOrder = () => {
                         id="payment-type-select"
                         label="Payment Type"
                         onChange={paymentHandle}
-                        value={paymentLinesItem?.paymentTypeName}
                       >
                         {paymentType?.map((item) => (
                           <MenuItem value={item} key={item?.id}>
@@ -789,7 +788,6 @@ const SalesOrder = () => {
                         id="bank-ac-name-select"
                         label="Bank A/C Name"
                         onChange={bankHandle}
-                        value={paymentLinesItem?.bankAccountNumber}
                       >
                         {banks?.map((item) => (
                           <MenuItem value={item} key={item?.id}>
@@ -806,7 +804,6 @@ const SalesOrder = () => {
                         variant="outlined"
                         name="card_no"
                         onChange={cardNoHandle}
-                        value={paymentLinesItem?.cardNumber}
                       />
                     </Grid>
                   )}
@@ -818,7 +815,6 @@ const SalesOrder = () => {
                           variant="outlined"
                           name="cheque_no"
                           onChange={chequeNoHandle}
-                          value={paymentLinesItem?.chequeNumber}
                         />
                       </Grid>
                       <Grid item sx={1}>
@@ -826,7 +822,6 @@ const SalesOrder = () => {
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                               label="Cheque Date"
-                              value={dayjs(paymentLinesItem?.chequeNumber)}
                               onChange={chequeDateHandle}
                             />
                           </LocalizationProvider>

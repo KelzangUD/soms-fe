@@ -23,7 +23,7 @@ const StatusCard = ({ index, title, qty }) => {
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              padding: "16px 32px",
+              padding: "8px 16px",
             }}
           >
             <Grid
@@ -31,10 +31,10 @@ const StatusCard = ({ index, title, qty }) => {
               alignItems="center"
               sx={{ display: "flex", justifyContent: "center" }}
             >
-              <Avatar sx={{ width: 60, height: 60, bgcolor: `${color_array[index]}` }}>{icon_array[index]}</Avatar>
+              <Avatar sx={{ width: 50, height: 50, bgcolor: `${color_array[index]}` }}>{icon_array[index]}</Avatar>
             </Grid>
             <Grid item textAlign="right">
-              <Typography variant="h5" color={`${color_array[index]}`}>
+              <Typography variant="h6" color={`${color_array[index]}`}>
                 {qty}
               </Typography>
               <Typography fontWeight="bold">{title}</Typography>

@@ -126,7 +126,7 @@ export default function SideNav() {
                   {item.nestedItems.map((nestedItem, nestedIndex) => (
                     <ListItemButton
                       key={nestedIndex}
-                      sx={{ pl: 4 }}
+                      sx={{ pl: 2 }}
                       onClick={() => routeHandle(nestedItem?.route)}
                     >
                       <ListItemIcon>

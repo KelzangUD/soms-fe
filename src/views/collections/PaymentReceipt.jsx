@@ -290,6 +290,7 @@ const PaymentReceipt = () => {
       console.log(paymentReceiptDetails);
       console.log(res);
       if (res?.status === 200) {
+        console.log(res?.data);
         setResponseData(res?.data);
         setNotificationMsg(
           `Successfully Paid and your Application No is ${res?.data?.applicationNo}`
@@ -549,10 +550,7 @@ const PaymentReceipt = () => {
                 </Grid>
                 <Grid item xs={3} container>
                   <Paper>
-                    <Grid
-                      item
-                      xs={12}
-                    >
+                    <Grid item xs={12}>
                       <Grid
                         container
                         padding={2}
@@ -649,10 +647,14 @@ const PaymentReceipt = () => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={openInNewTab} variant="outlined">
+              <Button onClick={openInNewTab} variant="contained">
                 View Receipt
               </Button>
-              <Button onClick={() => setShowDialog(false)} variant="contained">
+              <Button
+                onClick={() => setShowDialog(false)}
+                variant="outlined"
+                color="error"
+              >
                 Close
               </Button>
             </DialogActions>

@@ -28,10 +28,10 @@ const Home = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <SideNav />
           </Grid>
-          <Grid item xs={10} >
+          <Grid item xs={9} >
             <Nav />
             <Grid item xs={12}>
               <Item style={{ backgroundImage: `url(${bg})`}}>

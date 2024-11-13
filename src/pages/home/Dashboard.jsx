@@ -25,7 +25,7 @@ const Dashboard = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} spacing={1}>
           {status?.map((item, index) => (
             <Grid item xs={3} key={item?.title}>
               <StatusCard

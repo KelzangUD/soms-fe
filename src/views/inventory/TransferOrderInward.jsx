@@ -29,7 +29,6 @@ const TransferOrderInward = () => {
   const [view, setView] = useState(false);
   const [edit, setEdit] = useState(false);
 
-
   const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
     const res = await Route(
       "GET",
@@ -41,13 +40,13 @@ const TransferOrderInward = () => {
     if (res?.status === 200) {
       setTransferOrderDetails(res?.data);
       type === "view" ? setView(true) : setEdit(true);
-    };
+    }
   };
   const editHandle = (params) => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "edit");
   };
   const viewHandle = (params) => {
-    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view")
+    fetchViewTransferOrderDetails(params?.row?.transfer_order_no, "view");
   };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
@@ -70,10 +69,18 @@ const TransferOrderInward = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="edit" size="small" onClick={() => editHandle(params)}>
+          <IconButton
+            aria-label="edit"
+            size="small"
+            onClick={() => editHandle(params)}
+          >
             <EditIcon fontSize="inherit" />
           </IconButton>
-          <IconButton aria-label="view" size="small" onClick={() => viewHandle(params)}>
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => viewHandle(params)}
+          >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
@@ -82,29 +89,36 @@ const TransferOrderInward = () => {
   ];
 
   //   const token = localStorage.getItem("token");
-    const fetchInwardTrasnferOrderList = async () => {
-      const res = await Route("GET", `/transferOrder/viewInwardTransferOrderList/${empID}`, null, null, null);
-      if (res?.status === 200) {
-        setInwardTransferOrderList(res?.data?.map((item, index) => ({
+  const fetchInwardTrasnferOrderList = async () => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewInwardTransferOrderList/${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setInwardTransferOrderList(
+        res?.data?.map((item, index) => ({
           id: item?.transfer_Order_Id,
-          sl: index+1,
+          sl: index + 1,
           transfer_order_no: item?.transfer_Order_Number,
           transfer_from_code: item?.transfer_From_Name,
           transfer_to_code: item?.transfer_To_Name,
           posted_date: item?.stringTransferDate,
-          status: item?.status
-        })));
-      }
-    };
-    useEffect(() => {
-      fetchInwardTrasnferOrderList();
-    }, []);
+          status: item?.status,
+        }))
+      );
+    }
+  };
+  useEffect(() => {
+    fetchInwardTrasnferOrderList();
+  }, []);
 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Transfer Order Inward" /> */}
           <Grid
             item
             xs={12}
@@ -112,84 +126,71 @@ const TransferOrderInward = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid
-                  item
-                  xs={12}
-                  spacing={2}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Grid item container xs={8} direction="column-reverse" spacing={2}>
-                    <Grid item container spacing={1} alignItems="center">
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label="From*" />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label="To*" />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Button variant="contained">Search</Button>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Paper
-                        sx={{
-                          p: "2px 0",
-                          display: "flex",
-                          alignItems: "center",
-                          maxWidth: 400,
-                        }}
-                      >
-                        <InputBase
-                          sx={{ ml: 1, flex: 1 }}
-                          placeholder="Search"
-                          inputProps={{ "aria-label": "search" }}
-                        />
-                        <IconButton
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </Paper>
-                    </Grid>
+                <Grid item>
+                  <Paper
+                    sx={{
+                      p: "2px 0",
+                      display: "flex",
+                      alignItems: "center",
+                      maxWidth: 400,
+                    }}
+                  >
+                    <InputBase
+                      sx={{ ml: 1, flex: 1 }}
+                      placeholder="Search"
+                      inputProps={{ "aria-label": "search" }}
+                    />
+                    <IconButton
+                      type="button"
+                      sx={{ p: "10px" }}
+                      aria-label="search"
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </Paper>
+                </Grid>
+                <Grid item container spacing={1} alignItems="center">
+                  <Grid item xs={2}>
+                    <FormControl fullWidth style={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker label="From*" />
+                      </LocalizationProvider>
+                    </FormControl>
                   </Grid>
-                  <Grid item xs={4}>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      endIcon={<PictureAsPdfIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      endIcon={<FileDownloadIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      endIcon={<PrintIcon />}
-                    >
-                      Print
-                    </Button>
+                  <Grid item xs={2}>
+                    <FormControl fullWidth style={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker label="To*" />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Button variant="contained">Search</Button>
                   </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                <Grid
+                  item
+                  container
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <IconButton aria-label="pdf" color="error">
+                    <PictureAsPdfIcon fontSize="inherit" />
+                  </IconButton>
+                  <IconButton aria-label="excel" color="success">
+                    <FileDownloadIcon fontSize="inherit" />
+                  </IconButton>
+                  <IconButton aria-label="print" color="primary">
+                    <PrintIcon fontSize="inherit" />
+                  </IconButton>
+                </Grid>
+                <Grid item container alignItems="center" xs={12}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
                       rows={inwardTransferOrderList}
                       columns={transfer_order_columns}

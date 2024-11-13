@@ -16,13 +16,12 @@ import {
   Avatar,
   Link,
 } from "@mui/material";
-// import dashboard_img from "../assets/svgs/dashboard_1.svg";
 import bg_img from "../assets/images/bg.png";
 import LoginIcon from "@mui/icons-material/Login";
 import LockIcon from "@mui/icons-material/Lock";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
-import Notification from "../ui/Notification";
+import { Notification, ResetPassword } from "../ui/index";
 import Route from "../routes/Route";
 import { jwtDecode } from "jwt-decode";
 
@@ -148,7 +147,7 @@ const SignIn = () => {
                       fullWidth
                       type="text"
                       name="username"
-                      value={formData.username}
+                      value={formData?.username}
                       onChange={handleChange}
                       required
                     />
@@ -158,7 +157,7 @@ const SignIn = () => {
                       fullWidth
                       type="password"
                       name="password"
-                      value={formData.password}
+                      value={formData?.password}
                       onChange={handleChange}
                       required
                     />
@@ -184,60 +183,16 @@ const SignIn = () => {
                 </Paper>
               </Container>
             </Grid>
-            {/* <Grid item xs={6}>
-              <img
-                src={dashboard_img}
-                alt="dashboard"
-                style={{ width: "100%", height: "auto" }}
-              />
-            </Grid> */}
           </Grid>
         </Box>
         <Footer />
       </Container>
       {open && <Notification open={open} setOpen={setOpen} message={message} />}
       {openForgotPasswordDialog && (
-        <Dialog
-          open={openForgotPasswordDialog}
-          onClose={() => setOpenForgotPasswordDialog(false)}
-          aria-labelledby="title"
-          aria-describedby="description"
-        >
-          <DialogTitle id="title">Reset Password</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="description">
-              <Typography mb={1} variant="subtitle1">
-                Enter your account's email address, and we will send you a link
-                to reset your password.
-              </Typography>
-              <TextField
-                label="Email"
-                variant="outlined"
-                fullWidth
-                type="email"
-                name="email"
-                required
-                size="small"
-              />
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions style={{ marginBottom: "16px" }}>
-            <Button
-              onClick={() => setOpenForgotPasswordDialog(false)}
-              variant="contained"
-            >
-              Submit
-            </Button>
-            <Button
-              onClick={() => setOpenForgotPasswordDialog(false)}
-              variant="outlined"
-              color="error"
-              style={{ marginRight: "16px" }}
-            >
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <ResetPassword
+          openForgotPasswordDialog={openForgotPasswordDialog}
+          setOpenForgotPasswordDialog={setOpenForgotPasswordDialog}
+        />
       )}
     </>
   );
