@@ -59,9 +59,9 @@ const Recharge = () => {
     mobileNo: "",
     amount: "",
     paymentType: null,
-    payment: {},
+    payment: "",
     bankId: null,
-    bank: {},
+    bank: "",
     cardOrChequeNo: "",
     userId: userID,
     type: "S",
@@ -117,7 +117,7 @@ const Recharge = () => {
   const paymentTypeHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
-      paymentType: e?.target?.value?.id,
+      paymentType: e?.target?.value,
       payment: e?.target?.value,
     }));
     fetchBankAccount(e?.target?.value?.id);
@@ -147,7 +147,7 @@ const Recharge = () => {
   const bankAccHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
-      bankId: e?.target?.value?.id,
+      bankId: e?.target?.value,
       bank: e?.target?.value,
     }));
   };
@@ -224,9 +224,9 @@ const Recharge = () => {
         mobileNo: "",
         amount: "",
         paymentType: null,
-        payment: {},
+        payment: "",
         bankId: null,
-        bank: {},
+        bank: "",
         cardOrChequeNo: "",
         userId: userID,
         type: "",
@@ -244,6 +244,29 @@ const Recharge = () => {
       setSeverity("error");
       setShowNofication(true);
     }
+  };
+  const cancelHandle = () => {
+    setRechargeDetails((prev) => ({
+      ...prev,
+      postingDate: new Date(),
+      mobileNo: "",
+      amount: "",
+      paymentType: null,
+      payment: "",
+      bankId: null,
+      bank: "",
+      cardOrChequeNo: "",
+      userId: userID,
+      type: "",
+      chequeDate: new Date(),
+    }));
+    setDisabledFields((prev) => ({
+      ...prev,
+      cardOrChequeNo: true,
+      chequeDate: true,
+      chequeCopy: true,
+    }));
+    setFileName("Upload File");
   };
   const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
@@ -371,7 +394,7 @@ const Recharge = () => {
                         value={rechargeDetails?.payment}
                       >
                         {paymentType?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
+                          <MenuItem value={item?.id} key={item?.id}>
                             {item?.type}
                           </MenuItem>
                         ))}
@@ -388,10 +411,10 @@ const Recharge = () => {
                         id="bank-ac-name-select"
                         label="Bank A/C Name*"
                         onChange={bankAccHandle}
-                        value={rechargeDetails?.bank}
+                        value={rechargeDetails}
                       >
                         {bankAccounts?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
+                          <MenuItem value={item?.id} key={item?.id}>
                             {item.bankName}
                           </MenuItem>
                         ))}
@@ -446,8 +469,20 @@ const Recharge = () => {
             </Paper>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
-            <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 2 }}
+              onClick={createHandle}
+            >
               Create & Post
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={cancelHandle}
+              style={{ background: "#fff" }}
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>

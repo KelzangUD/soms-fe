@@ -331,6 +331,35 @@ const PaymentReceipt = () => {
       }
     }
   };
+  const cancelHandle = () => {
+    setPaymentReceiptDetails((prev) => ({
+      ...prev,
+      serviceType: "",
+      mobileNo: "",
+      postingDate: new Date().toString(),
+      paymentType: "",
+      accountCode: "",
+      bankId: null,
+      userId: userId,
+      name: "",
+      amount: "",
+      accountId: "",
+      acctKey: "",
+      billAmount: "",
+      chequeNo: "",
+      chequeDate: new Date().toString(),
+      remarks: "",
+      payment: "",
+      outstandingBalance: "",
+    }));
+    setDisabledFields((prev) => ({
+      ...prev,
+      chequeNoField: true,
+      chequeDateField: true,
+      chequeCopyField: true,
+    }));
+    setFileName("Upload File");
+  };
   const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
     const newWindow = window.open(
@@ -611,9 +640,16 @@ const PaymentReceipt = () => {
             </Paper>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={4}>
-            {/* <Button variant="outlined">Print</Button> */}
-            <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
+            <Button variant="contained" sx={{ mr: 2 }} onClick={createHandle}>
               Create & Post
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={cancelHandle}
+              style={{ background: "#fff" }}
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>
