@@ -18,6 +18,7 @@ import Route from '../../routes/Route';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Notification from '../../ui/Notification';
+import PermissionAccess from '../../component/roles_and_permission/PermissionAccess';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -36,6 +37,7 @@ const ViewEditSystemUserModal = ({ open, handleClose, fetchSystemUser, data, act
     data: PropTypes.object.isRequired,
     actionType: PropTypes.object.isRequired
   };
+
   const ref = useRef(null);
   const [roleList, setRoleList] = useState([]);
   const [location, setLocation] = useState([]);
@@ -45,6 +47,9 @@ const ViewEditSystemUserModal = ({ open, handleClose, fetchSystemUser, data, act
   const [showNotification, setShowNofication] = useState(false);
   const [severity, setSeverity] = useState('');
   const user = localStorage.getItem('username');
+  const [userPrivileges, setUserPrivileges] = useState([]);
+  const [moduleAccess, setModuleAccess] = useState([]);
+  const [newPermission, setNewPermission] = useState([]);
 
   const fetchRole = async () => {
     const res = await Route("GET", "/Common/FetchRole", null, null, null);
@@ -74,6 +79,20 @@ const ViewEditSystemUserModal = ({ open, handleClose, fetchSystemUser, data, act
     }
   };
 
+  const fetchUserPriviledges = async (roleId, userId) => {
+    const res = await Route("GET", `/Common/fetchUserPermission?roleId=${roleId}&userId=${userId}`, null, null, null);
+    if (res?.status === 200) {
+      setUserPrivileges(res?.data);
+    }
+  };
+
+  const fetchModuleAccess = async ( id ) => {
+    const res = await Route("GET", `/Common/fetchModuleAccess?roleId=${id}`, null, null, null);
+    if (res?.status === 200) {
+      setModuleAccess(res?.data);
+    }
+  };
+
   useEffect(() => {
     fetchRole();
     fetchWorkLocation();
@@ -81,6 +100,8 @@ const ViewEditSystemUserModal = ({ open, handleClose, fetchSystemUser, data, act
     if (data?.subInventoryId !== '') {
       fetchLocator(data?.subInventoryId);
     }
+    fetchUserPriviledges(data.roleId, data.user_code);
+    fetchModuleAccess(data.roleId);
   }, []);
 
   return (
@@ -238,6 +259,9 @@ const ViewEditSystemUserModal = ({ open, handleClose, fetchSystemUser, data, act
                   />
                 </Grid>
               </Grid>
+              <Grid item xs={12} sx={{ my: 1 }} style={{ marginTop: '5%'}}>
+                <PermissionAccess permission={userPrivileges} moduleAccess={moduleAccess} setNewPermission={setNewPermission} type='view'/>
+              </Grid>
               <DialogActions sx={{ justifyContent: 'center' }}>
                 <Button
                   onClick={handleClose}
@@ -289,7 +313,8 @@ const ViewEditSystemUserModal = ({ open, handleClose, fetchSystemUser, data, act
                       'locatorId': values.locatorId,
                       'updatedBy': user,
                       'status': values.status,
-                      'password': values.password
+                      'password': values.password,
+                      'roleAndPermissionDtos': newPermission,
                     };
     
                     const res = await Route("PUT", `/UserDtls/updateUser`, null, data, null);
@@ -338,7 +363,11 @@ const ViewEditSystemUserModal = ({ open, handleClose, fetchSystemUser, data, act
                           name="roleId"
                           type="text"
                           value={values.roleId}
-                          onChange={handleChange}
+                          onChange={(e) => {
+                            handleChange(e);
+                            fetchUserPriviledges(e.target.value, data?.user_code);
+                            fetchModuleAccess(e.target.value);
+                          }}
                           onBlur={handleBlur}
                           variant="outlined"
                           select
@@ -489,6 +518,9 @@ const ViewEditSystemUserModal = ({ open, handleClose, fetchSystemUser, data, act
                           </FormHelperText>
                         )}
                       </Grid>
+                    </Grid>
+                    <Grid item xs={12} sx={{ my: 1 }} style={{ marginTop: '5%'}}>
+                      <PermissionAccess permission={userPrivileges} moduleAccess={moduleAccess} setNewPermission={setNewPermission} type='edit'/>
                     </Grid>
                     <DialogActions sx={{ justifyContent: 'center' }}>
                       <Button
