@@ -15,7 +15,7 @@ const PaymentDetailsTable = ({ paymentLines, deletePaymentItemHandle}) => {
   return (
     <>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="payment detail table">
+        <Table sx={{ minWidth: 650 }} aria-label="payment detail table"  size="small">
           <TableHead>
             <TableRow>
               <TableCell>Payment Amount</TableCell>

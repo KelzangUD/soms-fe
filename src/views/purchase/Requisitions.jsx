@@ -31,7 +31,7 @@ import Route from "../../routes/Route";
 
 const Requisitions = () => {
   const empId = localStorage.getItem("username");
-  const userDetails = JSON.parse(localStorage?.getItem("userDetails"))
+  const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -61,7 +61,7 @@ const Requisitions = () => {
     );
     if (res?.status === 200) {
       setRquisitionType(res?.data);
-    };
+    }
   };
   const fetchRequisitionItem = async () => {
     const res = await Route("GET", "/Common/RequisitionItem", null, null, null);
@@ -152,6 +152,16 @@ const Requisitions = () => {
       setShowNofication(true);
     }
   };
+  const cancelHandle = () => {
+    setRequisitionData((prev) => ({
+      ...prev,
+      requisitionType: null,
+      createdBy: empId,
+      needByDate: dateFormatter(new Date().toISOString()),
+      requisitionDate: dateFormatter(new Date().toISOString()),
+      itemDTOList: [],
+    }));
+  };
   return (
     <>
       <Box sx={{ px: 2 }}>
@@ -168,10 +178,11 @@ const Requisitions = () => {
                       name="requisition_number"
                       disabled
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="requisition-type-select-label">
                         Requisition Type*
                       </InputLabel>
@@ -199,17 +210,27 @@ const Requisitions = () => {
                           value={dayjs(requisitionData?.requisitionDate)}
                           onChange={requisitionDateHandle}
                           disabled
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3} display="flex" alignItems="center">
+                  <Grid item xs={3} display="flex">
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Need By Date*"
                           value={dayjs(requisitionData?.needByDate)}
                           onChange={needByDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -225,6 +246,7 @@ const Requisitions = () => {
                       value={userDetails?.userName}
                       required
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3} display="flex">
@@ -236,13 +258,14 @@ const Requisitions = () => {
                       disabled
                       value={userDetails?.region}
                       required
+                      size="small"
                     />
                   </Grid>
                 </Grid>
                 <Grid item xs={12} marginTop={4}>
                   <Grid
                     container
-                    padding={2}
+                    padding={1}
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
@@ -269,7 +292,7 @@ const Requisitions = () => {
                           onChange={selectItemHandle}
                           value={itemDTOList?.item_Description}
                           renderInput={(params) => (
-                            <TextField {...params} label="Description" />
+                            <TextField {...params} label="Description" size="small" />
                           )}
                         />
                       </Grid>
@@ -281,6 +304,7 @@ const Requisitions = () => {
                           name="item_number"
                           disabled
                           value={itemDTOList?.item_Number}
+                          size="small" 
                         />
                       </Grid>
                       <Grid item xs={3}>
@@ -291,6 +315,7 @@ const Requisitions = () => {
                           name="uom"
                           disabled
                           value={itemDTOList?.uom}
+                          size="small" 
                         />
                       </Grid>
                       <Grid item xs={3} display="flex">
@@ -303,9 +328,10 @@ const Requisitions = () => {
                             type="number"
                             onChange={itemDTOListAmountHandle}
                             value={itemDTOList?.amount}
+                            size="small" 
                           />
                         </Grid>
-                        <Grid>
+                        <Grid alignContent="center">
                           <IconButton
                             aria-label="add"
                             onClick={addItemListButtonHandle}
@@ -322,6 +348,7 @@ const Requisitions = () => {
                     <Table
                       sx={{ minWidth: 650 }}
                       aria-label="customer detail table"
+                      size="small"
                     >
                       <TableHead>
                         <TableRow>
@@ -365,8 +392,22 @@ const Requisitions = () => {
             </Paper>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={4}>
-            <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 2 }}
+              onClick={createHandle}
+              size="small"
+            >
               Create
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{ background: "#fff" }}
+              onClick={cancelHandle}
+              size="small"
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>

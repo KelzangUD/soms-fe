@@ -128,6 +128,7 @@ const SalesOrderReport = () => {
                       required
                       disabled
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -139,6 +140,7 @@ const SalesOrderReport = () => {
                       required
                       disabled
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -150,10 +152,11 @@ const SalesOrderReport = () => {
                       required
                       disabled
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl fullWidth style={{ background: "#fff" }} size="small">
                       <InputLabel id="employee-select-label">
                         Employee
                       </InputLabel>
@@ -171,14 +174,28 @@ const SalesOrderReport = () => {
                   <Grid item xs={3}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="From Date" />
+                        <DatePicker
+                          label="From Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To Date" />
+                        <DatePicker
+                          label="To Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>

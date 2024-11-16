@@ -283,8 +283,8 @@ const Recharge = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Paper elevation={1}>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container padding={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -292,6 +292,11 @@ const Recharge = () => {
                           label="Posting Date"
                           value={dayjs(rechargeDetails?.postingDate)}
                           onChange={postingDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -305,6 +310,7 @@ const Recharge = () => {
                       defaultValue="E-Top Up"
                       required
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -316,6 +322,7 @@ const Recharge = () => {
                       onChange={prepaidNumberHandle}
                       required
                       value={rechargeDetails?.mobileNo}
+                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -326,7 +333,8 @@ const Recharge = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -367,8 +375,8 @@ const Recharge = () => {
                   </IconButton>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container padding={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <TextField
                       label="Payment Amount"
@@ -379,10 +387,11 @@ const Recharge = () => {
                       type="number"
                       value={rechargeDetails?.amount}
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="payment-type-select-label">
                         Payment Type*
                       </InputLabel>
@@ -402,7 +411,7 @@ const Recharge = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={4}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name*
                       </InputLabel>
@@ -422,7 +431,7 @@ const Recharge = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={4} display="flex" alignItems="center">
                     <TextField
                       label="Card/Cheque Number"
@@ -431,6 +440,7 @@ const Recharge = () => {
                       name="cheque_no"
                       onChange={cardOrChequeNumberHandle}
                       value={rechargeDetails?.cardOrChequeNo}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -441,6 +451,11 @@ const Recharge = () => {
                           disabled={disableFields?.chequeDate}
                           onChange={chequeDateHandle}
                           value={dayjs(rechargeDetails?.chequeDate)}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -473,6 +488,7 @@ const Recharge = () => {
               variant="contained"
               sx={{ marginRight: 2 }}
               onClick={createHandle}
+              size="small"
             >
               Create & Post
             </Button>
@@ -481,6 +497,7 @@ const Recharge = () => {
               color="error"
               onClick={cancelHandle}
               style={{ background: "#fff" }}
+              size="small"
             >
               Cancel
             </Button>

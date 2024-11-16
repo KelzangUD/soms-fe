@@ -395,7 +395,8 @@ const SalesReturn = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -409,8 +410,8 @@ const SalesReturn = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container paddingX={2} paddingY={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="POS No"
@@ -418,6 +419,7 @@ const SalesReturn = () => {
                       fullWidth
                       name="pos_no"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -428,6 +430,7 @@ const SalesReturn = () => {
                       name="posting_date"
                       defaultValue={new Date().toDateString()}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -441,6 +444,7 @@ const SalesReturn = () => {
                       value={invoiceNo}
                       required
                       helperText={emptyInvoiceNo ? "Invoice No is Empty" : null}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -450,7 +454,7 @@ const SalesReturn = () => {
                       onClick={fetchSalesInvoice}
                       disabled={loading}
                       style={{
-                        padding: "14px 0",
+                        padding: "7px 0",
                       }}
                       endIcon={<GetAppIcon />}
                     >
@@ -462,7 +466,7 @@ const SalesReturn = () => {
                     </Button>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 1 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Sales Type"
@@ -471,6 +475,7 @@ const SalesReturn = () => {
                       defaultValue="Sales Type"
                       value={salesData?.salesHeader?.sales_Type}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -481,6 +486,7 @@ const SalesReturn = () => {
                       defaultValue="Product Type"
                       value={salesData?.salesHeader?.product_Type}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -491,6 +497,7 @@ const SalesReturn = () => {
                       defaultValue="Mobile No"
                       value={salesData?.salesHeader?.mobileNo}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -501,10 +508,11 @@ const SalesReturn = () => {
                       defaultValue="Customer No"
                       value={salesData?.salesHeader?.customerNumber}
                       disabled
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ my: 1 }}>
+                <Grid container spacing={1} sx={{ my: 1 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
@@ -513,6 +521,7 @@ const SalesReturn = () => {
                       defaultValue="Customer Name"
                       value={salesData?.salesHeader?.customerName}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -523,6 +532,7 @@ const SalesReturn = () => {
                       defaultValue="Address"
                       value={salesData?.salesHeader?.address}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -533,6 +543,7 @@ const SalesReturn = () => {
                       defaultValue="Address1"
                       value={salesData?.salesHeader?.address1}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -543,6 +554,7 @@ const SalesReturn = () => {
                       defaultValue="city"
                       value={salesData?.salesHeader?.city}
                       disabled
+                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -553,7 +565,8 @@ const SalesReturn = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -568,7 +581,7 @@ const SalesReturn = () => {
                 </Grid>
               </Grid>
               <Grid container padding={2}>
-                <Grid container spacing={2} sx={{ my: 1, px: 2 }}>
+                <Grid container spacing={2} sx={{ my: 1, px: 1 }}>
                   <TableContainer component={Paper}>
                     <Table
                       sx={{ minWidth: 650 }}
@@ -702,7 +715,8 @@ const SalesReturn = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -717,7 +731,7 @@ const SalesReturn = () => {
                 </Grid>
               </Grid>
               <Grid container padding={2}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={2}>
                     <TextField
                       label="Refund Amount"
@@ -729,10 +743,11 @@ const SalesReturn = () => {
                       value={paymentLinesItem?.paymentAmount}
                       required
                       onChange={paymentAmountHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="refund-type-select-label">
                         Refund Type
                       </InputLabel>
@@ -752,7 +767,7 @@ const SalesReturn = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
                       </InputLabel>
@@ -778,6 +793,7 @@ const SalesReturn = () => {
                         variant="outlined"
                         name="card_no"
                         onChange={cardNoHandle}
+                        size="small"
                       />
                     </Grid>
                   )}
@@ -788,6 +804,7 @@ const SalesReturn = () => {
                         variant="outlined"
                         name="cheque_no"
                         onChange={chequeNoHandle}
+                        size="small"
                       />
                     </Grid>
                   )}
@@ -799,6 +816,11 @@ const SalesReturn = () => {
                             label="Cheque Date"
                             // value={dayjs(rechargeDetails?.postingDate)}
                             onChange={chequeDateHandle}
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                              },
+                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>
@@ -910,11 +932,12 @@ const SalesReturn = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
             <Button
               variant="contained"
               onClick={postSalesReturn}
               sx={{ ml: 2 }}
+              size="small"
             >
               Create & Post
             </Button>
@@ -926,6 +949,7 @@ const SalesReturn = () => {
                 background: "#fff",
               }}
               onClick={cancelHandle}
+              size="small"
             >
               Cancel
             </Button>

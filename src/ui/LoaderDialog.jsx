@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-const LoaderDialog = ({ open, message = "Loading..." }) => {
+const LoaderDialog = ({ open, message = "Processing your request" }) => {
   return (
     <Dialog
       open={open}

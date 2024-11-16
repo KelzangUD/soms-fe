@@ -22,8 +22,8 @@ const BusinessUnit = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Paper elevation={1} sx={{ p: 2 }}>
-              <Grid container spacing={2} sx={{ my: 1 }}>
-                <Grid item xs={12} sx={{ mb: 1 }}>
+              <Grid container spacing={1}>
+                <Grid item xs={12}>
                   <TextField
                     label="Company Name"
                     variant="outlined"
@@ -31,9 +31,10 @@ const BusinessUnit = () => {
                     name="company_name"
                     required
                     // onChange={oldPasswordHandle}
+                    size="small"
                   />
                 </Grid>
-                <Grid item container spacing={2} sx={{ mb: 1 }}>
+                <Grid item container spacing={1}>
                   <Grid item xs={4}>
                     <TextField
                       label="Company Short Name"
@@ -42,12 +43,20 @@ const BusinessUnit = () => {
                       name="company_short_name"
                       required
                       // onChange={newPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="Incorporation Date" />
+                        <DatePicker
+                          label="Incorporation Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
@@ -59,10 +68,11 @@ const BusinessUnit = () => {
                       name="tpn_number"
                       required
                       // onChange={confirmPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid item xs={12} sx={{ mb: 1 }}>
+                <Grid item xs={12}>
                   <TextField
                     label="Address"
                     variant="outlined"
@@ -70,11 +80,12 @@ const BusinessUnit = () => {
                     name="address"
                     required
                     // onChange={oldPasswordHandle}
+                    size="small"
                   />
                 </Grid>
-                <Grid item container spacing={2} sx={{ mb: 1 }}>
+                <Grid item container spacing={1}>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="country-select-label">Country</InputLabel>
                       <Select
                         labelId="country-select-label"
@@ -88,7 +99,7 @@ const BusinessUnit = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="region-select-label">Region</InputLabel>
                       <Select
                         labelId="region-select-label"
@@ -102,7 +113,7 @@ const BusinessUnit = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="dzongkhag-select-label">
                         Dzongkhag
                       </InputLabel>
@@ -118,7 +129,7 @@ const BusinessUnit = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="location-select-label">
                         Location
                       </InputLabel>
@@ -134,7 +145,7 @@ const BusinessUnit = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid item container spacing={2} sx={{ mb: 1 }}>
+                <Grid item container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="Postal Code"
@@ -143,6 +154,7 @@ const BusinessUnit = () => {
                       name="postal_code"
                       required
                       // onChange={newPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -153,6 +165,7 @@ const BusinessUnit = () => {
                       name="company_email"
                       required
                       // onChange={newPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -163,10 +176,11 @@ const BusinessUnit = () => {
                       name="phone_number"
                       required
                       // onChange={confirmPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid item container spacing={2} sx={{ mb: 1 }}>
+                <Grid item container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="Contact Person"
@@ -175,6 +189,7 @@ const BusinessUnit = () => {
                       name="contact_person"
                       required
                       // onChange={newPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -185,6 +200,7 @@ const BusinessUnit = () => {
                       name="contact_email"
                       required
                       // onChange={newPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -195,16 +211,22 @@ const BusinessUnit = () => {
                       name="mobile_number"
                       required
                       // onChange={confirmPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid item container spacing={2} sx={{ mb: 1 }}>
+                <Grid item container spacing={1}>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Financial Year From"
                           views={["month"]}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -215,6 +237,11 @@ const BusinessUnit = () => {
                         <DatePicker
                           label="Financial Year To"
                           views={["month"]}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -225,6 +252,11 @@ const BusinessUnit = () => {
                         <DatePicker
                           label="Calender Year From"
                           views={["month"]}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -235,12 +267,17 @@ const BusinessUnit = () => {
                         <DatePicker
                           label="Calender Year To"
                           views={["month"]}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} sx={{ mb: 1 }}>
+                <Grid item xs={12}>
                   <TextField
                     label="Website"
                     variant="outlined"
@@ -248,6 +285,7 @@ const BusinessUnit = () => {
                     name="website"
                     required
                     // onChange={oldPasswordHandle}
+                    size="small"
                   />
                 </Grid>
               </Grid>

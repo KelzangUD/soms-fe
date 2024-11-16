@@ -68,7 +68,7 @@ const Directory = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={1} alignItems="center">
                 {directory?.map((item) => (
-                  <Grid item xs={4} key={item?.id} marginBottom={2}>
+                  <Grid item xs={4} key={item?.id} marginBottom={1}>
                     <DirectoryCard
                       name={item?.name}
                       empID={item?.empID}

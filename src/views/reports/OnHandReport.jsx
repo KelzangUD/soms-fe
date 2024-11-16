@@ -177,7 +177,7 @@ const OnHandReport = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item container spacing={2} sx={{ pt: 2 }}>
+                <Grid item container spacing={1} sx={{ pt: 2 }}>
                   <Grid item xs={2}>
                     <TextField
                       label="As On Date"
@@ -188,6 +188,7 @@ const OnHandReport = () => {
                       disabled
                       value={new Date().toString()}
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -200,7 +201,7 @@ const OnHandReport = () => {
                       value={details?.storeName}
                       onChange={storeHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Region/Extension" />
+                        <TextField {...params} label="Region/Extension" size="small" />
                       )}
                       style={{ background: "#fff" }}
                     />
@@ -215,7 +216,7 @@ const OnHandReport = () => {
                       value={details?.item}
                       onChange={itemHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Item" />
+                        <TextField {...params} label="Item" size="small" />
                       )}
                       style={{ background: "#fff" }}
                     />
@@ -230,7 +231,7 @@ const OnHandReport = () => {
                       value={details?.locator_id}
                       onChange={locatorHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Locator" />
+                        <TextField {...params} label="Locator" size="small" />
                       )}
                       style={{ background: "#fff" }}
                     />
@@ -245,6 +246,7 @@ const OnHandReport = () => {
                       value={details?.serialNo}
                       onChange={serialNoHandle}
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -257,6 +259,7 @@ const OnHandReport = () => {
                       value={details?.imei_no}
                       onChange={imeiNoHandle}
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2} alignContent="center">

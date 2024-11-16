@@ -22,6 +22,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
 
 const PaymentCollection = () => {
+  const [paymentCollection, setPaymentCollection] = useState([]);
   const payment_collection_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 200 },
@@ -59,16 +60,16 @@ const PaymentCollection = () => {
     },
   ];
 
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  // const token = localStorage.getItem("token");
+  // const fetchPaymentCollection = async () => {
+  //   const res = await Route("GET", "/Report/paymentCollection", null, null, null);
+  //   if (res?.status === 200) {
+  //     setPaymentCollection(res?.data);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchPaymentCollection();
+  // }, []);
 
   return (
     <>
@@ -106,7 +107,11 @@ const PaymentCollection = () => {
                 </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>

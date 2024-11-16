@@ -42,9 +42,14 @@ export default function SideNav() {
 
   useEffect(() => {
     if (localStorage?.getItem("privileges")?.length > 0) {
-      setMenuList(menuListFilter(MenuItems, JSON.parse(localStorage?.getItem("privileges"))));
+      setMenuList(
+        menuListFilter(
+          MenuItems,
+          JSON.parse(localStorage?.getItem("privileges"))
+        )
+      );
     }
-  },[]);
+  }, []);
 
   return (
     <Paper style={containerStyle}>
@@ -86,7 +91,7 @@ export default function SideNav() {
           maxWidth: 360,
           maxHeight: "100vh",
           overflowY: "auto",
-          marginTop: "-px"
+          marginTop: "-8px",
         }}
         component="nav"
         aria-labelledby="nested-list-subheader"
@@ -102,7 +107,9 @@ export default function SideNav() {
                   }}
                 >
                   <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item?.module} />
+                  <ListItemText style={{ marginLeft: -26 }}>
+                    <Typography variant="body2">{item?.module}</Typography>
+                  </ListItemText>
                   {item.nestedItems &&
                     (openStates[index] ? <ExpandLess /> : <ExpandMore />)}
                 </ListItemButton>
@@ -115,9 +122,15 @@ export default function SideNav() {
                 }}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item?.module} />
+                <ListItemText style={{ marginLeft: -26 }}>
+                  <Typography variant="body2">{item?.module}</Typography>
+                </ListItemText>
                 {item.nestedItems &&
-                  (openStates[index] ? <ExpandLess /> : <ExpandMore />)}
+                  (openStates[index] ? (
+                    <ExpandLess fontSize="small" />
+                  ) : (
+                    <ExpandMore fontSize="small" />
+                  ))}
               </ListItemButton>
             )}
             {item.nestedItems && (
@@ -126,13 +139,17 @@ export default function SideNav() {
                   {item.nestedItems.map((nestedItem, nestedIndex) => (
                     <ListItemButton
                       key={nestedIndex}
-                      sx={{ pl: 2 }}
+                      // sx={{ pl: 1 }}
                       onClick={() => routeHandle(nestedItem?.route)}
                     >
                       <ListItemIcon>
-                        <KeyboardArrowRightIcon />
+                        <KeyboardArrowRightIcon fontSize="small" />
                       </ListItemIcon>
-                      <ListItemText primary={nestedItem?.page} />
+                      <ListItemText style={{ marginLeft: -26 }}>
+                        <Typography variant="body2">
+                          {nestedItem?.page}
+                        </Typography>
+                      </ListItemText>
                     </ListItemButton>
                   ))}
                 </List>

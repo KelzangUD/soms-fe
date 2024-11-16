@@ -48,7 +48,7 @@ const Profile = () => {
         storeId: res?.data?.storeId,
         region_NAME: res?.data?.region_NAME,
       }));
-    };
+    }
   };
   useEffect(() => {
     fetchUserDetails();
@@ -70,7 +70,10 @@ const Profile = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Avatar sx={{ width: 100, height: 100 }}>{userDetails?.userName !== "" && userDetails?.userName[0].toUpperCase()}</Avatar>
+                  <Avatar sx={{ width: 100, height: 100 }}>
+                    {userDetails?.userName !== "" &&
+                      userDetails?.userName[0].toUpperCase()}
+                  </Avatar>
                 </Grid>
                 <Grid item xs={10}>
                   <Typography
@@ -136,7 +139,7 @@ const Profile = () => {
                   Professional Information
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -145,7 +148,7 @@ const Profile = () => {
                       Role: {userDetails?.roleName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -154,7 +157,7 @@ const Profile = () => {
                       Section: SAS
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -163,7 +166,9 @@ const Profile = () => {
                       Designation: Software Developer
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -172,9 +177,7 @@ const Profile = () => {
                       Manager: Dechen Dorji
                     </Typography>
                   </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -183,7 +186,7 @@ const Profile = () => {
                       DOJ: 2-Aug-2021
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -192,7 +195,9 @@ const Profile = () => {
                       Employment: Regular
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -201,7 +206,7 @@ const Profile = () => {
                       Grade: P.12
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom

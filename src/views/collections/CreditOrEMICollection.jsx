@@ -26,11 +26,18 @@ const CreditOrEMICollection = () => {
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid container padding={2}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="Posting Date" />
+                        <DatePicker
+                          label="Posting Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
@@ -42,6 +49,7 @@ const CreditOrEMICollection = () => {
                       name="document_number"
                       disabled
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -50,6 +58,7 @@ const CreditOrEMICollection = () => {
                       variant="outlined"
                       fullWidth
                       name="customer_name"
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -58,12 +67,13 @@ const CreditOrEMICollection = () => {
                       variant="outlined"
                       fullWidth
                       name="customer_no"
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="collection-type-select-label">
                         Collection Type
                       </InputLabel>
@@ -79,7 +89,7 @@ const CreditOrEMICollection = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="referenc-no-select-label">
                         Reference No
                       </InputLabel>
@@ -100,10 +110,11 @@ const CreditOrEMICollection = () => {
                       variant="outlined"
                       fullWidth
                       name="amount"
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="payment-mode-select-label">
                         Payment Mode
                       </InputLabel>
@@ -119,9 +130,9 @@ const CreditOrEMICollection = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-acc-name-select-label">
                         Bank Account Name
                       </InputLabel>
@@ -142,26 +153,27 @@ const CreditOrEMICollection = () => {
                       variant="outlined"
                       fullWidth
                       name="remarks"
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid item xs={12} marginTop={4}>
+                <Grid item xs={12} marginTop={2}>
                   <Grid
                     container
-                    padding={2}
+                    padding={1}
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      backgroundColor: "#EEEDEB",
+                      backgroundColor: "#007dc5",
                     }}
                   >
                     <Grid item>
-                      <Typography variant="subtitle1">Order Details</Typography>
+                      <Typography variant="subtitle1" color="#eee">Order Details</Typography>
                     </Grid>
                   </Grid>
                   <Grid container paddingY={2}>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={1}>
                       <Grid item xs={3}>
                         <TextField
                           label="Reference No."
@@ -169,6 +181,7 @@ const CreditOrEMICollection = () => {
                           fullWidth
                           name="reference_no"
                           disabled
+                          size="small"
                         />
                       </Grid>
                       <Grid item xs={3}>
@@ -178,6 +191,7 @@ const CreditOrEMICollection = () => {
                           fullWidth
                           name="total_invoice_amount"
                           disabled
+                          size="small"
                         />
                       </Grid>
                       <Grid item xs={3}>
@@ -187,6 +201,7 @@ const CreditOrEMICollection = () => {
                           fullWidth
                           name="remaining_amount"
                           disabled
+                          size="small"
                         />
                       </Grid>
                       <Grid item xs={3}>
@@ -196,10 +211,11 @@ const CreditOrEMICollection = () => {
                           fullWidth
                           name="no_of_emis"
                           disabled
+                          size="small"
                         />
                       </Grid>
                     </Grid>
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid container spacing={1} sx={{ mt: 0.5 }}>
                       <Grid item xs={3}>
                         <TextField
                           label="Paid EMI's"
@@ -207,6 +223,7 @@ const CreditOrEMICollection = () => {
                           fullWidth
                           name="paid_emis"
                           disabled
+                          size="small"
                         />
                       </Grid>
                     </Grid>
@@ -215,8 +232,8 @@ const CreditOrEMICollection = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
-            <Button variant="contained">Create & Print</Button>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
+            <Button variant="contained" size="small">Create & Print</Button>
           </Grid>
         </Grid>
       </Box>

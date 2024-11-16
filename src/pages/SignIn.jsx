@@ -4,11 +4,6 @@ import {
   Grid,
   Box,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Paper,
   Typography,
   TextField,
@@ -19,6 +14,8 @@ import {
 import bg_img from "../assets/images/bg.png";
 import LoginIcon from "@mui/icons-material/Login";
 import LockIcon from "@mui/icons-material/Lock";
+import PersonIcon from "@mui/icons-material/Person";
+import KeyIcon from "@mui/icons-material/Key";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Notification, ResetPassword } from "../ui/index";
@@ -39,7 +36,6 @@ const SignIn = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const fetchUserDetails = async (username) => {
     const res = await Route(
       "GET",
@@ -150,6 +146,9 @@ const SignIn = () => {
                       value={formData?.username}
                       onChange={handleChange}
                       required
+                      InputProps={{
+                        endAdornment: <PersonIcon />,
+                      }}
                     />
                     <TextField
                       label="Password"
@@ -160,6 +159,9 @@ const SignIn = () => {
                       value={formData?.password}
                       onChange={handleChange}
                       required
+                      InputProps={{
+                        endAdornment: <KeyIcon />,
+                      }}
                     />
                     <Link
                       component="button"

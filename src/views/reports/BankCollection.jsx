@@ -113,7 +113,7 @@ const BankCollection = () => {
                 </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl fullWidth style={{ background: "#fff" }} size="small">
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>

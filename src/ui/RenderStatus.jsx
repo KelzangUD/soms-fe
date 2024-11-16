@@ -5,6 +5,7 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 import DoneIcon from "@mui/icons-material/Done";
 import CallReceivedIcon from "@mui/icons-material/CallReceived";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 
@@ -23,10 +24,14 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     border: `1px solid ${(theme.vars || theme).palette.success.main}`,
   },
   "&.Submitted": {
-    color: (theme.vars || theme).palette.success.dark,
-    border: `1px solid ${(theme.vars || theme).palette.success.main}`,
+    color: (theme.vars || theme).palette.primary.dark,
+    border: `1px solid ${(theme.vars || theme).palette.primary.main}`,
   },
   "&.PartiallyFilled": {
+    color: (theme.vars || theme).palette.warning.dark,
+    border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
+  },
+  "&.In-Progress": {
     color: (theme.vars || theme).palette.warning.dark,
     border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
   },
@@ -37,6 +42,10 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   "&.NotShipped": {
     color: (theme.vars || theme).palette.info.dark,
     border: `1px solid ${(theme.vars || theme).palette.info.main}`,
+  },
+  "&.Approved": {
+    color: (theme.vars || theme).palette.success.dark,
+    border: `1px solid ${(theme.vars || theme).palette.success.main}`,
   },
 }));
 
@@ -53,9 +62,13 @@ const Status = memo((props) => {
   } else if (status === "Received") {
     icon = <CallReceivedIcon className="icon" />;
   } else if (status === "Submitted") {
-    icon = <DoneIcon className="icon" />;
+    icon = <ArrowUpwardIcon className="icon" />;
   } else if (status === "Not Shipped") {
     icon = <NotInterestedIcon className="icon" />;
+  } else if (status === "In-Progress") {
+    icon = <AutorenewIcon className="icon" />;
+  } else if (status === "Approved") {
+    icon = <DoneIcon className="icon" />;
   }
 
   let label = status;
@@ -65,7 +78,7 @@ const Status = memo((props) => {
 
   return (
     <StyledChip
-      className={status === 'Not Shipped' ? 'NotShipped' : status}
+      className={status === "Not Shipped" ? "NotShipped" : status}
       icon={icon}
       size="small"
       label={label}

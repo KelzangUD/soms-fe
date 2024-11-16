@@ -21,7 +21,7 @@ const LineItemsTable = ({
   return (
     <>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 600 }} aria-label="simple table" size="small">
           <TableHead>
             <TableRow>
               <TableCell sx={{ width: "30%" }}>Description</TableCell>

@@ -310,14 +310,13 @@ const AddLineItem = ({
             <Grid item xs={12}>
               <Grid
                 container
-                paddingX={4}
-                paddingY={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "#0288d1",
-                  paddingY: "24px",
                   color: "#eee",
                 }}
               >
@@ -327,9 +326,9 @@ const AddLineItem = ({
               </Grid>
               <Grid
                 container
-                spacing={2}
-                paddingY={2}
-                paddingX={4}
+                spacing={1}
+                paddingY={1}
+                paddingX={2}
                 marginTop={1}
               >
                 <Grid item xs={3}>
@@ -340,6 +339,7 @@ const AddLineItem = ({
                     fullWidth
                     value={storeName}
                     disabled
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -354,7 +354,11 @@ const AddLineItem = ({
                       }))}
                       onChange={subInventoryHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Sub-Inventory" />
+                        <TextField
+                          {...params}
+                          label="Sub-Inventory"
+                          size="small"
+                        />
                       )}
                     />
                   ) : (
@@ -365,6 +369,7 @@ const AddLineItem = ({
                       fullWidth
                       value={lineItemDetail?.subInventoryId}
                       disabled
+                      size="small"
                     />
                   )}
                 </Grid>
@@ -380,7 +385,7 @@ const AddLineItem = ({
                       }))}
                       onChange={locatorHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Locator" />
+                        <TextField {...params} label="Locator" size="small" />
                       )}
                     />
                   ) : (
@@ -391,6 +396,7 @@ const AddLineItem = ({
                       fullWidth
                       value={lineItemDetail?.locatorId}
                       disabled
+                      size="small"
                     />
                   )}
                 </Grid>
@@ -404,12 +410,12 @@ const AddLineItem = ({
                       handleInputChange(inputValue)
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="Description" />
+                      <TextField {...params} label="Description" size="small" />
                     )}
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} paddingY={2} paddingX={4}>
+              <Grid container spacing={1} paddingY={1} paddingX={2}>
                 <Grid item xs={3}>
                   <TextField
                     id="outlined-basic"
@@ -417,6 +423,7 @@ const AddLineItem = ({
                     variant="outlined"
                     fullWidth
                     onChange={serialNoHandle}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -427,6 +434,7 @@ const AddLineItem = ({
                     fullWidth
                     value={lineItemDetail?.qty}
                     onChange={qtyHandle}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -444,7 +452,11 @@ const AddLineItem = ({
                       lineItemDetail?.priceLocator == "Y" ? false : true
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="Price Locator" />
+                      <TextField
+                        {...params}
+                        label="Price Locator"
+                        size="small"
+                      />
                     )}
                     onChange={priceLocatorHandle}
                   />
@@ -457,10 +469,11 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.discPercentage}
+                    size="small"
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} paddingY={2} paddingX={4}>
+              <Grid container spacing={1} paddingY={1} paddingX={2}>
                 <Grid item xs={3}>
                   <TextField
                     id="outlined-basic"
@@ -469,6 +482,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.tdsAmount}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -479,6 +493,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.itemNo}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -489,6 +504,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.mrp}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -499,10 +515,11 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.discountedAmount}
+                    size="small"
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} paddingY={2} paddingX={4}>
+              <Grid container spacing={1} paddingY={1} paddingX={2}>
                 <Grid item xs={3}>
                   <TextField
                     id="outlined-basic"
@@ -511,6 +528,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.taxPercentage}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -521,6 +539,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -531,6 +550,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.additionalDiscount}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -541,10 +561,11 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.taxAmt}
+                    size="small"
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} paddingY={2} paddingX={4}>
+              <Grid container spacing={1} paddingY={1} paddingX={2}>
                 <Grid item xs={3}>
                   <TextField
                     id="outlined-basic"
@@ -553,6 +574,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.amountExclTax}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -562,6 +584,7 @@ const AddLineItem = ({
                     variant="outlined"
                     fullWidth
                     value={lineItemDetail?.advanceTaxAmount}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -572,6 +595,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.volumeDiscount}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -582,14 +606,15 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.itemTotalAddedQty}
+                    size="small"
                   />
                 </Grid>
               </Grid>
               <Grid
                 container
-                spacing={2}
-                paddingY={2}
-                paddingX={4}
+                spacing={1}
+                paddingY={1}
+                paddingX={2}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 <Grid item xs={3}>
@@ -600,6 +625,7 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
+                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -607,19 +633,25 @@ const AddLineItem = ({
                 item
                 xs={12}
                 alignItems="right"
-                paddingY={2}
-                paddingX={4}
-                marginBottom={2}
+                paddingY={1}
+                paddingX={2}
+                marginBottom={1}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 <Button
                   variant="contained"
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
+                  size="small"
                 >
                   Submit
                 </Button>
-                <Button variant="outlined" onClick={() => setOpen(false)} color="error">
+                <Button
+                  variant="outlined"
+                  onClick={() => setOpen(false)}
+                  color="error"
+                  size="small"
+                >
                   Close
                 </Button>
               </Grid>

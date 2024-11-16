@@ -369,7 +369,7 @@ const SalesOrder = () => {
   }, [lineItems]);
 
   const postHandle = async () => {
-    console.log(paymentLinesItem)
+    // console.log(paymentLinesItem)
     if (paymentLinesItem?.length === 0) {
       setNotificationMsg("Total Payment is Not equal to Net Payment");
       setSeverity("info");
@@ -413,8 +413,8 @@ const SalesOrder = () => {
         type: "application/json",
       });
       formData.append("details", jsonDataBlob, "data.json");
-      console.log(formData);
-      console.log(data);
+      // console.log(formData);
+      // console.log(data);
       const res = await Route(
         "POST",
         `/SalesOrder/UpdateItemSales`,
@@ -511,13 +511,13 @@ const SalesOrder = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingY={1}
+                paddingX={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "#007dc5",
-                  paddingY: "24px",
                 }}
               >
                 <Grid item>
@@ -526,8 +526,8 @@ const SalesOrder = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container py={1} px={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="POS No"
@@ -535,6 +535,7 @@ const SalesOrder = () => {
                       fullWidth
                       name="pos_no"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -545,10 +546,11 @@ const SalesOrder = () => {
                       name="posting_date"
                       defaultValue={new Date().toDateString()}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="sales-type-select-label">
                         Sales Type
                       </InputLabel>
@@ -568,7 +570,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="product-type-select-label">
                         Product Type
                       </InputLabel>
@@ -588,7 +590,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} py={1}>
                   <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
@@ -599,7 +601,7 @@ const SalesOrder = () => {
                       onChange={customerNameHandle}
                       value={salesOrderDetails?.customerName}
                       renderInput={(params) => (
-                        <TextField {...params} label="Customer Name" />
+                        <TextField {...params} label="Customer Name" size="small" />
                       )}
                     />
                   </Grid>
@@ -612,6 +614,7 @@ const SalesOrder = () => {
                       required
                       value={salesOrderDetails?.mobileNo}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -623,6 +626,7 @@ const SalesOrder = () => {
                       required
                       value={salesOrderDetails?.customerNumber}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -633,10 +637,11 @@ const SalesOrder = () => {
                       name="address"
                       value={salesOrderDetails?.address}
                       disabled
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ my: 1 }}>
+                <Grid container spacing={1} >
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
@@ -645,6 +650,7 @@ const SalesOrder = () => {
                       name="address 1"
                       value={salesOrderDetails?.address1}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -655,6 +661,7 @@ const SalesOrder = () => {
                       name="city"
                       value={salesOrderDetails?.city}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -665,6 +672,7 @@ const SalesOrder = () => {
                       name="remarks"
                       onChange={remarksHandle}
                       value={salesOrderDetails?.serviceRemarks}
+                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -675,7 +683,8 @@ const SalesOrder = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                px={2}
+                py={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -718,7 +727,7 @@ const SalesOrder = () => {
                 </Grid>
               </Grid>
               <Grid container padding={2}>
-                <Grid container spacing={2} sx={{ my: 1, px: 2 }}>
+                <Grid container spacing={2} sx={{ my: 1 }}>
                   <LineItemsTable
                     lineItems={lineItems}
                     deleteLineItemHandle={deleteLineItemHandle}
@@ -733,7 +742,8 @@ const SalesOrder = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingY={1}
+                paddingX={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -747,8 +757,8 @@ const SalesOrder = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container px={2} py={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={2}>
                     <TextField
                       label="Payment Amount"
@@ -757,10 +767,11 @@ const SalesOrder = () => {
                       name="payment_amount"
                       required
                       onChange={paymentAmountHandle}
+                      size="small"
                     />
                   </Grid>
-                  <Grid item xs={2}>
-                    <FormControl fullWidth>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="payment-type-select-label">
                         Payment Type
                       </InputLabel>
@@ -778,8 +789,8 @@ const SalesOrder = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
-                    <FormControl fullWidth>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
                       </InputLabel>
@@ -804,6 +815,7 @@ const SalesOrder = () => {
                         variant="outlined"
                         name="card_no"
                         onChange={cardNoHandle}
+                        size="small"
                       />
                     </Grid>
                   )}
@@ -815,6 +827,7 @@ const SalesOrder = () => {
                           variant="outlined"
                           name="cheque_no"
                           onChange={chequeNoHandle}
+                          size="small"
                         />
                       </Grid>
                       <Grid item sx={1}>
@@ -823,6 +836,11 @@ const SalesOrder = () => {
                             <DatePicker
                               label="Cheque Date"
                               onChange={chequeDateHandle}
+                              slotProps={{
+                                textField: {
+                                  size: "small",
+                                },
+                              }}
                             />
                           </LocalizationProvider>
                         </FormControl>
@@ -870,7 +888,7 @@ const SalesOrder = () => {
             </Paper>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={4}>
-            <Button variant="contained" onClick={postHandle}>
+            <Button variant="contained" onClick={postHandle} size="small">
               Post
             </Button>
             <Button
@@ -881,6 +899,7 @@ const SalesOrder = () => {
               style={{
                 background: "#fff",
               }}
+              size="small"
             >
               Cancel
             </Button>
