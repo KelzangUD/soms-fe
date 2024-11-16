@@ -26,7 +26,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Notification from "../../ui/Notification";
 import dayjs from "dayjs";
-import { dateFormatter } from "../../util/CommonUtil";
+import { dateFormatter, dateFormatterTwo } from "../../util/CommonUtil";
 import Route from "../../routes/Route";
 
 const Requisitions = () => {
@@ -77,19 +77,19 @@ const Requisitions = () => {
     setIsETop(e?.target?.value === "3" ? true : false);
     setRequisitionData((prev) => ({
       ...prev,
-      requisitionType: e?.target?.value,
+      requisitionType: parseInt(e?.target?.value),
     }));
   };
   const requisitionDateHandle = (e) => {
     setRequisitionData((prev) => ({
       ...prev,
-      requisitionDate: e.$d,
+      requisitionDate: dateFormatterTwo(e.$d),
     }));
   };
   const needByDateHandle = (e) => {
     setRequisitionData((prev) => ({
       ...prev,
-      needByDate: e.$d,
+      needByDate: dateFormatterTwo(e.$d),
     }));
   };
   const selectItemHandle = (e, value) => {
@@ -134,6 +134,8 @@ const Requisitions = () => {
       requisitionData,
       null
     );
+    // console.log(requisitionData);
+    // console.log(res);
     if (res?.status === 201) {
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
@@ -142,12 +144,12 @@ const Requisitions = () => {
         ...prev,
         requisitionType: null,
         createdBy: empId,
-        needByDate: dateFormatter(new Date().toISOString()),
-        requisitionDate: dateFormatter(new Date().toISOString()),
+        needByDate: dateFormatterTwo(new Date().toISOString()),
+        requisitionDate: dateFormatterTwo(new Date().toISOString()),
         itemDTOList: [],
       }));
     } else {
-      setNotificationMsg(res?.response?.data?.message);
+      setNotificationMsg(res?.response?.data?.detail);
       setSeverity("error");
       setShowNofication(true);
     }
@@ -157,8 +159,8 @@ const Requisitions = () => {
       ...prev,
       requisitionType: null,
       createdBy: empId,
-      needByDate: dateFormatter(new Date().toISOString()),
-      requisitionDate: dateFormatter(new Date().toISOString()),
+      needByDate: dateFormatterTwo(new Date().toISOString()),
+      requisitionDate: dateFormatterTwo(new Date().toISOString()),
       itemDTOList: [],
     }));
   };
@@ -371,7 +373,7 @@ const Requisitions = () => {
                               <TableCell>{item?.item_Number}</TableCell>
                               <TableCell>{item?.uom}</TableCell>
                               <TableCell>
-                                {isETop ? item?.amount : item?.qty}
+                                {item?.amount}
                               </TableCell>
                               <TableCell>
                                 <IconButton

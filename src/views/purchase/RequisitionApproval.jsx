@@ -3,11 +3,15 @@ import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from "@mui/icons-material/Done";
+import ClearIcon from "@mui/icons-material/Clear";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
 import Notification from "../../ui/Notification";
+import { RenderStatus } from "../../ui";
 import UpdateRequisition from "./UpdateRequisition";
 import ApproveRequisition from "./ApproveRequisition";
+import { render } from "react-thermal-printer";
 
 const RequisitionApproval = () => {
   const empID = localStorage.getItem("username");
@@ -18,6 +22,7 @@ const RequisitionApproval = () => {
   const [itemDetails, setItemDetails] = useState([]);
   const [showViewDetails, setShowViewDetails] = useState(false);
   const [showApproveDetails, setShowApproveDetails] = useState(false);
+  const [selectedRows, setSelectedRows] = React.useState([]);
 
   const updateHandle = async (params) => {
     const res = await Route(
@@ -66,6 +71,9 @@ const RequisitionApproval = () => {
       field: "approvalStatus",
       headerName: "Approval Status",
       width: 150,
+      renderCell: (params) => (
+        <RenderStatus status={params?.row?.approvalStatus} />
+      ),
     },
     {
       field: "action",
@@ -77,6 +85,7 @@ const RequisitionApproval = () => {
             aria-label="edit"
             size="small"
             onClick={() => updateHandle(params)}
+            color="success"
           >
             <EditIcon fontSize="inherit" />
           </IconButton>
@@ -84,6 +93,7 @@ const RequisitionApproval = () => {
             aria-label="approve"
             size="small"
             onClick={() => viewDetailsHandle(params)}
+            color="primary"
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
@@ -107,6 +117,57 @@ const RequisitionApproval = () => {
   useEffect(() => {
     fetchRequisitionListByApprover();
   }, []);
+  const handleRowSelection = (selectionModel) => {
+    const selectedRowParams = requisitionList.filter((row) =>
+      selectionModel.includes(row.id)
+    );
+    setSelectedRows(selectedRowParams);
+  };
+  const approveHandle = async () => {
+    const data = selectedRows?.map((item) => ({
+      requisitionNo: item?.requisitionNo,
+    }));
+    console.log(data);
+    const res = await Route(
+      "PUT",
+      `/requisition/bulkApproveRequisitionDetails?empID=${empID}`,
+      null,
+      data,
+      null
+    );
+    if (res?.status === 200) {
+      setNotificationMsg(res?.data?.responseText);
+      setSeverity("success");
+      setShowNofication(true);
+      fetchRequisitionListByApprover();
+    } else {
+      setNotificationMsg(res?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
+  };
+  const rejectHandle = async () => {
+    const data = selectedRows?.map((item) => ({
+      requisitionNo: item?.requisitionNo,
+    }));
+    const res = await Route(
+      "PUT",
+      `/requisition/bulkRejectRequisitionDetails?empID=${empID}`,
+      null,
+      data,
+      null
+    );
+    if (res?.status === 200) {
+      setNotificationMsg(res?.data?.responseText);
+      setSeverity("success");
+      setShowNofication(true);
+      fetchRequisitionListByApprover();
+    } else {
+      setNotificationMsg(res?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
+  };
 
   return (
     <>
@@ -147,6 +208,27 @@ const RequisitionApproval = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
+                  <Grid item alignContent="center">
+                    <Button
+                      variant="contained"
+                      sx={{ mr: 2 }}
+                      onClick={approveHandle}
+                      endIcon={<DoneIcon />}
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={rejectHandle}
+                      endIcon={<ClearIcon />}
+                      style={{
+                        background: "#fff"
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  </Grid>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
                   <div
@@ -168,6 +250,8 @@ const RequisitionApproval = () => {
                         },
                       }}
                       pageSizeOptions={[5, 10]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleRowSelection}
                     />
                   </div>
                 </Grid>
