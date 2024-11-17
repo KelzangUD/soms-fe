@@ -19,63 +19,77 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { RenderStatus } from "../../ui/index";
 import Route from "../../routes/Route";
 
 const BankCollection = () => {
+  const [bankCollection, setBankCollection] = useState([]);
   const bank_collection_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 200 },
+    { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 170 },
     {
-      field: "payment_type",
+      field: "type",
       headerName: "Payment Type",
-      width: 150,
+      width: 120,
     },
-    { field: "ref_no", headerName: "Reference Number", width: 200 },
-    { field: "bank_name", headerName: "Bank Name", width: 300 },
-    { field: "cheque_no", headerName: "Cheque No", width: 200 },
-    { field: "cheque_date", headerName: "Cheque Date", width: 150 },
-    { field: "created_date", headerName: "Created Date", width: 150 },
-    { field: "created_user", headerName: "Created User", width: 450 },
-    { field: "status", headerName: "Status", width: 100 },
+    { field: "payment_ref_number", headerName: "Reference Number", width: 150 },
+    { field: "bank_name", headerName: "Bank Name", width: 200 },
+    { field: "cheque", headerName: "Cheque No", width: 100 },
+    { field: "cheque_date", headerName: "Cheque Date", width: 100 },
+    { field: "created_date", headerName: "Created Date", width: 100 },
+    { field: "created_by", headerName: "Created User", width: 180 },
+    {
+      field: "result_code",
+      headerName: "Status",
+      width: 110,
+      renderCell: (params) => (
+        <RenderStatus status={params?.row?.result_code} />
+      ),
+    },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 90,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small">
+          <IconButton aria-label="view" size="small" color="primary">
             <PrintIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const bank_collection_rows = [
-    {
-      id: 1,
-      payment_amount: "300",
-      payment_type: "Postpaid",
-      ref_no: "77194264",
-      bank_name: "Gelephu BOBL Revenue Account",
-      cheque_no: "012542",
-      cheque_date: "7-07-2023",
-      created_date: "7-07-2023",
-      created_user: "Dorji Youden (454)",
-      status: "Success",
-      old_print: "",
-    },
-  ];
 
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  // const token = localStorage.getItem("token");
+  const fetchBankCollection = async () => {
+    const res = await Route(
+      "GET",
+      `/Report/bankCollection?extension=19&fromDate=2024-08-01&toDate=2024-10-31`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setBankCollection(
+        res?.data?.map((item, index) => ({
+          id: index,
+          payment_amount: item?.payment_amount,
+          type: item?.type,
+          result_code: item?.result_code,
+          created_date: item?.created_date,
+          payment_ref_number: item?.payment_ref_number,
+          created_by: item?.created_by,
+          cheque: item?.cheque,
+          cheque_date: item?.cheque_date,
+          bank_name: item?.bank_name,
+          filePath: item?.filePath,
+        }))
+      );
+    }
+  };
+  useEffect(() => {
+    fetchBankCollection();
+  }, []);
 
   return (
     <>
@@ -113,7 +127,11 @@ const BankCollection = () => {
                 </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }} size="small">
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>
@@ -159,7 +177,7 @@ const BankCollection = () => {
                     }}
                   >
                     <DataGrid
-                      rows={bank_collection_rows?.map((row, index) => ({
+                      rows={bankCollection?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
                       }))}

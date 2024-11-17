@@ -6,6 +6,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import CallReceivedIcon from "@mui/icons-material/CallReceived";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import CloseIcon from '@mui/icons-material/Close';
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 
@@ -39,11 +40,19 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     color: (theme.vars || theme).palette.error.dark,
     border: `1px solid ${(theme.vars || theme).palette.error.main}`,
   },
+  "&.Failed": {
+    color: (theme.vars || theme).palette.error.dark,
+    border: `1px solid ${(theme.vars || theme).palette.error.main}`,
+  },
   "&.NotShipped": {
     color: (theme.vars || theme).palette.info.dark,
     border: `1px solid ${(theme.vars || theme).palette.info.main}`,
   },
   "&.Approved": {
+    color: (theme.vars || theme).palette.success.dark,
+    border: `1px solid ${(theme.vars || theme).palette.success.main}`,
+  },
+  "&.Success": {
     color: (theme.vars || theme).palette.success.dark,
     border: `1px solid ${(theme.vars || theme).palette.success.main}`,
   },
@@ -69,6 +78,10 @@ const Status = memo((props) => {
     icon = <AutorenewIcon className="icon" />;
   } else if (status === "Approved") {
     icon = <DoneIcon className="icon" />;
+  }else if (status === "Success") {
+    icon = <DoneIcon className="icon" />;
+  } else if (status === "Failed") {
+    icon = <CloseIcon className="icon" />;
   }
 
   let label = status;
