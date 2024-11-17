@@ -227,6 +227,14 @@ export const MenuItems = [
         page: "Transfer Order Report",
         route: "reports/transfer-order-report",
       },
+      {
+        page: "Samsung Warranty Report",
+        route: "report/samsungwarrantyreport",
+      },
+      {
+        page: "Service Log Report",
+        route: "report/ebsservicelog",
+      },
     ],
   },
   {
