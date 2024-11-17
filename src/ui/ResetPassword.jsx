@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -10,11 +10,34 @@ import {
   Button,
 } from "@mui/material";
 import { Transition } from "../component/common/index";
+import { Notification } from "../ui/index";
+import Route from "../routes/Route";
 
 const ResetPassword = ({
   openForgotPasswordDialog,
   setOpenForgotPasswordDialog,
 }) => {
+  const [email, setEmail] = useState([]);
+  const [openNotification, setOpenNotification] = useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const resetPasswordHandle = async () => {
+    const res = await Route(
+      "POST",
+      `/Reset/Link?email=${email}`,
+      null,
+      null,
+      null,
+      null
+    );
+    console.log(res);
+    if (res?.status === 200) {
+    } else {
+      setMessage(res?.response?.data);
+      setSeverity("error");
+      setOpenNotification(true);
+    }
+  };
   return (
     <>
       <Dialog
@@ -39,14 +62,12 @@ const ResetPassword = ({
               name="email"
               required
               size="small"
+              onChange={(e) => setEmail(e?.target?.value)}
             />
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{ marginBottom: "16px" }}>
-          <Button
-            onClick={() => setOpenForgotPasswordDialog(false)}
-            variant="contained"
-          >
+          <Button onClick={resetPasswordHandle} variant="contained">
             Submit
           </Button>
           <Button
@@ -59,6 +80,14 @@ const ResetPassword = ({
           </Button>
         </DialogActions>
       </Dialog>
+      {openNotification && (
+        <Notification
+          open={openNotification}
+          setOpen={setOpenNotification}
+          message={message}
+          severity={severity}
+        />
+      )}
     </>
   );
 };
