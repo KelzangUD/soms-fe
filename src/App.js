@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import SSOLogin from "./pages/SSOLogin";
 import RechargeReceipt from "./ui/RechargeReceipt";
 import BankReceipt from "./ui/BankReceipt";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="home/*" element={<Home />} />
         <Route path="/recharge-receipt/*" element={<RechargeReceipt />} />
         <Route path="/bank-receipt/*" element={<BankReceipt />} />
+        <Route path="/reset_password" element={<ResetPasswordPage />} />
       </Routes>
     </Router>
   );

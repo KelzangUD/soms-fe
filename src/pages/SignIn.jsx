@@ -23,13 +23,14 @@ import Route from "../routes/Route";
 import { jwtDecode } from "jwt-decode";
 
 const SignIn = () => {
-  const navigagte = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
+  const [severity, setSeverity] = useState("info");
   const [openForgotPasswordDialog, setOpenForgotPasswordDialog] =
     useState(false);
 
@@ -78,11 +79,12 @@ const SignIn = () => {
             localStorage.setItem("access_token", res?.data?.access_token);
             localStorage.setItem("refresh_token", res?.data?.refresh_token);
             localStorage.setItem("privileges", JSON.stringify(response?.data));
-            navigagte("/home/dashboard");
+            navigate("/home/dashboard");
           } else {
             setMessage(res?.data?.message);
+            setSeverity("error");
             setOpen(true);
-          }
+          };
         }
       } else {
       }
@@ -105,30 +107,27 @@ const SignIn = () => {
             alignItems: "center",
             justifyContent: "center",
             minHeight: "80vh",
+            backgroundImage: `url(${bg_img})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundBlendMode: "overlay",
           }}
-          style={{ backgroundImage: `url(${bg_img})` }}
         >
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12}>
               <Container maxWidth="xs" sx={{ py: 2 }}>
-                <Paper>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      paddingTop: "34px",
-                    }}
-                    pb={1}
-                  >
-                    <Avatar
-                      sx={{ bgcolor: "#0F67B1", width: "50px", height: "50px" }}
-                    >
-                      <LockIcon sx={{ width: "30px", height: "30px" }} />
+                <Paper sx={{ py: 4 }}>
+                  <Box sx={{ textAlign: "center", mb: 3 }}>
+                    <Avatar sx={{ m: "auto", bgcolor: "primary.main", mb: 1 }}>
+                      <LockIcon />
                     </Avatar>
+                    <Typography variant="h5" fontWeight="bold">
+                      Welcome Back!
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      Sign in to continue.
+                    </Typography>
                   </Box>
-                  <Typography variant="h4" align="center" sx={{ mb: 4 }}>
-                    Sign In
-                  </Typography>
                   <Box
                     sx={{
                       display: "grid",
@@ -189,7 +188,14 @@ const SignIn = () => {
         </Box>
         <Footer />
       </Container>
-      {open && <Notification open={open} setOpen={setOpen} message={message} />}
+      {open && (
+        <Notification
+          open={open}
+          setOpen={setOpen}
+          message={message}
+          severity={severity}
+        />
+      )}
       {openForgotPasswordDialog && (
         <ResetPassword
           openForgotPasswordDialog={openForgotPasswordDialog}
