@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Paper,
-  Grid,
-  Button,
-  InputBase,
-  IconButton,
-} from "@mui/material";
-import SubHeader from "../../common/SubHeader";
+import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
-import PrintIcon from '@mui/icons-material/Print';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import PrintIcon from "@mui/icons-material/Print";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Route from "../../routes/Route";
 
 const EMIHistory = () => {
   const emi_history_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "emi_no", headerName: "EMI No", width: 200 },
+    { field: "sl", headerName: "Sl. No", width: 30 },
+    { field: "emi_no", headerName: "EMI No", width: 170 },
     { field: "emi_date", headerName: "EMI Date", width: 100 },
     { field: "customer_name", headerName: "Customer Name", width: 200 },
     { field: "emi_amount", headerName: "EMI Amount", width: 100 },
-    { field: "monthly_emi_amount", headerName: "Monthly EMI Amount", width: 150 },
+    {
+      field: "monthly_emi_amount",
+      headerName: "Monthly EMI Amount",
+      width: 150,
+    },
     { field: "no_of_emi", headerName: "No. Of EMI", width: 100 },
     { field: "item_name", headerName: "Item Name", width: 550 },
     {
@@ -41,7 +37,7 @@ const EMIHistory = () => {
       monthly_emi_amount: 791.67,
       no_of_emi: 12,
       item_name: "Samsung Galaxy A04 4GB RAM 64GB, Copper (SM-A045FZCGINS)",
-      status: "Submitted"
+      status: "Submitted",
     },
   ];
 
@@ -55,12 +51,11 @@ const EMIHistory = () => {
   //   useEffect(() => {
   //     fetchResults();
   //   }, []);
-  
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="EMI History" /> */}
           <Grid
             item
             xs={12}
@@ -97,33 +92,33 @@ const EMIHistory = () => {
                     </Paper>
                   </Grid>
                   <Grid item>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        endIcon={<PictureAsPdfIcon />}
-                        sx={{ mr: 2 }}
-                      >
-                        Export
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        endIcon={<FileDownloadIcon />}
-                        sx={{ mr: 2 }}
-                      >
-                        Export
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        endIcon={<PrintIcon />}
-                      >
-                        Print
-                      </Button>
-                    </Grid>
+                    <IconButton type="button" aria-label="export" color="error">
+                      <PictureAsPdfIcon />
+                    </IconButton>
+                    <IconButton
+                      type="button"
+                      aria-label="excel"
+                      color="success"
+                    >
+                      <FileDownloadIcon />
+                    </IconButton>
+                    <IconButton
+                      type="button"
+                      aria-label="print"
+                      color="primary"
+                    >
+                      <PrintIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                <Grid item container alignItems="center" sx={{ px: 1 }} xs={12}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
                       rows={emi_history__rows?.map((row, index) => ({
                         ...row,

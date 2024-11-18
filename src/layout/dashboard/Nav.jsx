@@ -34,9 +34,29 @@ const Nav = () => {
   useEffect(() => {
     setCurrentLocation(location?.pathname?.split("/").pop());
   }, [location]);
+  // useEffect(() => {
+  //   setPaddingY(window.innerWidth > 1536 ? "36px" : (window.innerWidth > 1200) ? "36px" : "30px");
+  // }, [window.innerWidth]);
   useEffect(() => {
-    setPaddingY(window.innerWidth > 1536 ? "36px" : "30px");
-  }, [window.innerWidth]);
+    function handleResize() {
+      setPaddingY(
+        window.innerWidth > 1536
+          ? "36px"
+          : window.innerWidth > 1200
+          ? "35px"
+          : "30px"
+      );
+    }
+
+    // Set padding on initial load
+    handleResize();
+
+    // Add event listener for resize
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);

@@ -21,19 +21,18 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import SubHeader from "../../common/SubHeader";
 
 const AdvanceRefund = () => {
   return (
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          {/* <SubHeader text="Advance Refund" /> */}
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -47,12 +46,19 @@ const AdvanceRefund = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container paddingX={2} paddingY={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="Invoice Date" />
+                        <DatePicker
+                          label="Invoice Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
@@ -64,6 +70,7 @@ const AdvanceRefund = () => {
                       name="advance_refund_number"
                       disabled
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -74,10 +81,11 @@ const AdvanceRefund = () => {
                       name="advance_number"
                       disabled
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="advance-type-select-label">
                         Advance Type
                       </InputLabel>
@@ -94,7 +102,7 @@ const AdvanceRefund = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Type"
@@ -102,6 +110,7 @@ const AdvanceRefund = () => {
                       fullWidth
                       name="customer_type"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -111,6 +120,7 @@ const AdvanceRefund = () => {
                       fullWidth
                       name="customer_name"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -120,6 +130,7 @@ const AdvanceRefund = () => {
                       fullWidth
                       name="customer_number"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -129,10 +140,11 @@ const AdvanceRefund = () => {
                       fullWidth
                       name="mobile_number"
                       disabled
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Advance Amount"
@@ -140,6 +152,7 @@ const AdvanceRefund = () => {
                       fullWidth
                       name="advance_amount"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -148,6 +161,7 @@ const AdvanceRefund = () => {
                       variant="outlined"
                       fullWidth
                       name="refund_amount"
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -156,6 +170,7 @@ const AdvanceRefund = () => {
                       variant="outlined"
                       fullWidth
                       name="remarks"
+                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -166,7 +181,8 @@ const AdvanceRefund = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                py={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -180,8 +196,8 @@ const AdvanceRefund = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container px={2} py={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="Payment Amount"
@@ -190,10 +206,11 @@ const AdvanceRefund = () => {
                       name="payment_amount"
                       disabled
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="payment-type-select-label">
                         Payment Type
                       </InputLabel>
@@ -210,7 +227,7 @@ const AdvanceRefund = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
                       </InputLabel>
@@ -234,27 +251,35 @@ const AdvanceRefund = () => {
                       name="card_number"
                       disabled
                       required
+                      size="small"
                     />
                     <IconButton>
                       <AddBoxIcon />
                     </IconButton>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="Cheque Date" />
+                        <DatePicker
+                          label="Cheque Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3} display="flex">
-                    <Typography>Cheque Copy: </Typography>
                     <TextField
                       variant="outlined"
                       fullWidth
                       name="file"
                       type="file"
+                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -262,7 +287,8 @@ const AdvanceRefund = () => {
                   <TableContainer component={Paper}>
                     <Table
                       sx={{ minWidth: 650 }}
-                      aria-label="customer detail table"
+                      aria-label="payment detail table"
+                      size="small"
                     >
                       <TableHead>
                         <TableRow>
@@ -284,9 +310,12 @@ const AdvanceRefund = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={6}>
-            <Button variant="contained" sx={{ ml: 2 }}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
+            <Button variant="contained" sx={{ mr: 2 }} size="small">
               Create & Post
+            </Button>
+            <Button variant="outlined" size="small" color="error">
+              Cancel
             </Button>
           </Grid>
         </Grid>

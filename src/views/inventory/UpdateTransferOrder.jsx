@@ -57,7 +57,7 @@ const UpdateTransferOrder = ({
     transfer_Type: "",
     transfer_From_Name: "",
     transfer_From: "",
-    transfer_From_SubInventory:"",
+    transfer_From_SubInventory: "",
     transfer_From_Locator: "",
     transfer_To_Name: "",
     transfer_To: "",
@@ -70,27 +70,30 @@ const UpdateTransferOrder = ({
     last_Updated_By: "",
   });
   useEffect(() => {
-    setParameters(prev => ({
-        ...prev,
-        transfer_Order_Number: transferOrderDetails?.transfer_Order_Number,
-        transfer_Date: dateFormatterTwo(transferOrderDetails?.transfer_Date),
-        transfer_Type: transferOrderDetails?.transfer_Type,
-        transfer_From_Name: transferOrderDetails?.transfer_From_Name,
-        transfer_From: "",
-        transfer_From_SubInventory:
-          transferOrderDetails?.transfer_From_SubInventory,
-        transfer_From_Locator: transferOrderDetails?.transfer_From_Locator,
-        transfer_To_Name: transferOrderDetails?.transfer_To_Name,
-        transfer_To: "",
-        transfer_To_SubInventory: transferOrderDetails?.transfer_To_SubInventory,
-        transfer_To_Locator: transferOrderDetails?.transfer_To_Locator,
-        transfer_Mode: transferOrderDetails?.transfer_Mode,
-        vehicle_Number: transferOrderDetails?.vehicle_Number,
-        remarks: transferOrderDetails?.remarks,
-        transferOrderItemDTOList: transferOrderDetails?.transferOrderItemDTOList,
-        last_Updated_By: empID,
-      }));
-  },[transferOrderDetails]);
+    setParameters((prev) => ({
+      ...prev,
+      transfer_Order_Number: transferOrderDetails?.transfer_Order_Number,
+      transfer_Date:
+        transferOrderDetails?.transfer_Date !== null
+          ? dateFormatterTwo(transferOrderDetails?.transfer_Date)
+          : null,
+      transfer_Type: transferOrderDetails?.transfer_Type,
+      transfer_From_Name: transferOrderDetails?.transfer_From_Name,
+      transfer_From: "",
+      transfer_From_SubInventory:
+        transferOrderDetails?.transfer_From_SubInventory,
+      transfer_From_Locator: transferOrderDetails?.transfer_From_Locator,
+      transfer_To_Name: transferOrderDetails?.transfer_To_Name,
+      transfer_To: "",
+      transfer_To_SubInventory: transferOrderDetails?.transfer_To_SubInventory,
+      transfer_To_Locator: transferOrderDetails?.transfer_To_Locator,
+      transfer_Mode: transferOrderDetails?.transfer_Mode,
+      vehicle_Number: transferOrderDetails?.vehicle_Number,
+      remarks: transferOrderDetails?.remarks,
+      transferOrderItemDTOList: transferOrderDetails?.transferOrderItemDTOList,
+      last_Updated_By: empID,
+    }));
+  }, [transferOrderDetails]);
   const [transferOrderItemDTOList, setTransferOrderDTOList] = useState({
     id: "",
     item_Description: "",
@@ -352,7 +355,7 @@ const UpdateTransferOrder = ({
       `/transferOrder/updateTransferOrderDetails`,
       null,
       parameters,
-      null,
+      null
     );
     if (res?.status === 200 && res?.data?.success === true) {
       setSeverity("success");
@@ -690,7 +693,11 @@ const UpdateTransferOrder = ({
               <Button variant="contained" onClick={updateHandle}>
                 Update
               </Button>
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+              >
                 Close
               </Button>
             </Grid>

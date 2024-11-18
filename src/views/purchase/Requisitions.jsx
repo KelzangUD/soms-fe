@@ -20,23 +20,24 @@ import {
   Typography,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import ClearIcon from "@mui/icons-material/Clear";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Notification from "../../ui/Notification";
 import dayjs from "dayjs";
-import { dateFormatter } from "../../util/CommonUtil";
+import { dateFormatter, dateFormatterTwo } from "../../util/CommonUtil";
 import Route from "../../routes/Route";
 
 const Requisitions = () => {
   const empId = localStorage.getItem("username");
+  const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [userDetails, setUserDetails] = useState(JSON?.parse(localStorage.getItem("userDetails")));
   const [requisitionType, setRquisitionType] = useState([]);
   const [requisitionItems, setRequisitionItems] = useState([]);
+  const [isETop, setIsETop] = useState(false);
   const [requisitionData, setRequisitionData] = useState({
     requisitionType: null,
     createdBy: empId,
@@ -49,11 +50,15 @@ const Requisitions = () => {
     item_Number: "",
     uom: "",
     amount: "",
-    qty: "",
   });
   const fetchRequisitionType = async () => {
-    const res = await Route("GET", "/Common/RequisitionType", null, null, null);
-    console.log(res);
+    const res = await Route(
+      "GET",
+      `/Common/RequisitionType?type=1`,
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setRquisitionType(res?.data);
     }
@@ -69,21 +74,22 @@ const Requisitions = () => {
     fetchRequisitionItem();
   }, []);
   const requisitionTypeHandle = (e) => {
+    setIsETop(e?.target?.value === "3" ? true : false);
     setRequisitionData((prev) => ({
       ...prev,
-      requisitionType: e?.target?.value,
+      requisitionType: parseInt(e?.target?.value),
     }));
   };
   const requisitionDateHandle = (e) => {
     setRequisitionData((prev) => ({
       ...prev,
-      requisitionDate: e.$d,
+      requisitionDate: dateFormatterTwo(e.$d),
     }));
   };
   const needByDateHandle = (e) => {
     setRequisitionData((prev) => ({
       ...prev,
-      needByDate: e.$d,
+      needByDate: dateFormatterTwo(e.$d),
     }));
   };
   const selectItemHandle = (e, value) => {
@@ -94,10 +100,10 @@ const Requisitions = () => {
       uom: value?.uom,
     }));
   };
-  const itemDTOListqtyHandle = (e) => {
+  const itemDTOListAmountHandle = (e) => {
     setItemDTOList((prev) => ({
       ...prev,
-      qty: e?.target?.value,
+      amount: e?.target?.value,
     }));
   };
   const addItemListButtonHandle = () => {
@@ -110,7 +116,7 @@ const Requisitions = () => {
       item_Description: null,
       item_Number: "",
       uom: "",
-      qty: "",
+      amount: "",
     }));
   };
   const removeItemHandle = (index) => {
@@ -128,6 +134,8 @@ const Requisitions = () => {
       requisitionData,
       null
     );
+    // console.log(requisitionData);
+    // console.log(res);
     if (res?.status === 201) {
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
@@ -136,15 +144,25 @@ const Requisitions = () => {
         ...prev,
         requisitionType: null,
         createdBy: empId,
-        needByDate: dateFormatter(new Date().toISOString()),
-        requisitionDate: dateFormatter(new Date().toISOString()),
+        needByDate: dateFormatterTwo(new Date().toISOString()),
+        requisitionDate: dateFormatterTwo(new Date().toISOString()),
         itemDTOList: [],
       }));
     } else {
-      setNotificationMsg(res?.response?.data?.message);
+      setNotificationMsg(res?.response?.data?.detail);
       setSeverity("error");
       setShowNofication(true);
     }
+  };
+  const cancelHandle = () => {
+    setRequisitionData((prev) => ({
+      ...prev,
+      requisitionType: null,
+      createdBy: empId,
+      needByDate: dateFormatterTwo(new Date().toISOString()),
+      requisitionDate: dateFormatterTwo(new Date().toISOString()),
+      itemDTOList: [],
+    }));
   };
   return (
     <>
@@ -162,10 +180,11 @@ const Requisitions = () => {
                       name="requisition_number"
                       disabled
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="requisition-type-select-label">
                         Requisition Type*
                       </InputLabel>
@@ -192,17 +211,28 @@ const Requisitions = () => {
                           label="Requisition Date*"
                           value={dayjs(requisitionData?.requisitionDate)}
                           onChange={requisitionDateHandle}
+                          disabled
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3} display="flex" alignItems="center">
+                  <Grid item xs={3} display="flex">
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Need By Date*"
                           value={dayjs(requisitionData?.needByDate)}
                           onChange={needByDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -218,6 +248,7 @@ const Requisitions = () => {
                       value={userDetails?.userName}
                       required
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3} display="flex">
@@ -229,18 +260,20 @@ const Requisitions = () => {
                       disabled
                       value={userDetails?.region}
                       required
+                      size="small"
                     />
                   </Grid>
                 </Grid>
                 <Grid item xs={12} marginTop={4}>
                   <Grid
                     container
-                    padding={2}
+                    padding={1}
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      backgroundColor: "#EEEDEB",
+                      backgroundColor: "#1976d2",
+                      color: "#eee",
                     }}
                   >
                     <Grid item>
@@ -261,7 +294,7 @@ const Requisitions = () => {
                           onChange={selectItemHandle}
                           value={itemDTOList?.item_Description}
                           renderInput={(params) => (
-                            <TextField {...params} label="Description" />
+                            <TextField {...params} label="Description" size="small" />
                           )}
                         />
                       </Grid>
@@ -272,7 +305,8 @@ const Requisitions = () => {
                           fullWidth
                           name="item_number"
                           disabled
-                          value={itemDTOList?.item_number}
+                          value={itemDTOList?.item_Number}
+                          size="small" 
                         />
                       </Grid>
                       <Grid item xs={3}>
@@ -283,21 +317,23 @@ const Requisitions = () => {
                           name="uom"
                           disabled
                           value={itemDTOList?.uom}
+                          size="small" 
                         />
                       </Grid>
                       <Grid item xs={3} display="flex">
                         <Grid>
                           <TextField
-                            label="Required Quantity"
+                            label={isETop ? "Amount" : "Required Quantity"}
                             variant="outlined"
                             fullWidth
-                            name="qty"
+                            name="amount"
                             type="number"
-                            onChange={itemDTOListqtyHandle}
-                            value={itemDTOList?.qty}
+                            onChange={itemDTOListAmountHandle}
+                            value={itemDTOList?.amount}
+                            size="small" 
                           />
                         </Grid>
-                        <Grid>
+                        <Grid alignContent="center">
                           <IconButton
                             aria-label="add"
                             onClick={addItemListButtonHandle}
@@ -309,19 +345,22 @@ const Requisitions = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }} padding={2}>
+                <Grid container spacing={2} sx={{ mt: 1 }} paddingLeft={2}>
                   <TableContainer component={Paper}>
                     <Table
                       sx={{ minWidth: 650 }}
                       aria-label="customer detail table"
+                      size="small"
                     >
                       <TableHead>
                         <TableRow>
                           <TableCell>Description</TableCell>
                           <TableCell>Item No</TableCell>
                           <TableCell>UOM</TableCell>
-                          <TableCell>Required Qty</TableCell>
-                          <TableCell alignItems="right"></TableCell>
+                          <TableCell>
+                            {isETop ? "Amount" : "Required Qty"}
+                          </TableCell>
+                          <TableCell alignItems="right">Action</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -333,13 +372,16 @@ const Requisitions = () => {
                               </TableCell>
                               <TableCell>{item?.item_Number}</TableCell>
                               <TableCell>{item?.uom}</TableCell>
-                              <TableCell>{item?.qty}</TableCell>
-                              <TableCell align="right">
+                              <TableCell>
+                                {item?.amount}
+                              </TableCell>
+                              <TableCell>
                                 <IconButton
                                   aria-label="remove"
                                   onClick={() => removeItemHandle(index)}
+                                  color="error"
                                 >
-                                  <ClearIcon />
+                                  <DeleteIcon />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -351,9 +393,23 @@ const Requisitions = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={6}>
-            <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 2 }}
+              onClick={createHandle}
+              size="small"
+            >
               Create
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{ background: "#fff" }}
+              onClick={cancelHandle}
+              size="small"
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>

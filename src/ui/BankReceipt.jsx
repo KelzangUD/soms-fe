@@ -13,13 +13,14 @@ const BankReceipt = () => {
   const customerNo = query.get("customerNo");
   const description = query.get("description");
   const paymentDate = query.get("paymentDate");
+  const receiptType = query.get("receiptType");
   return (
     <>
       <div style={{ width: "400px", padding: "8px", lineHeight: "1.5" }}>
         <div style={{ textAlign: "center" }}>
           <h3>{companyName}</h3>
           <p>{JSON.parse(localStorage.getItem("userDetails"))?.region_NAME}</p>
-          <h4>Bank Receipt</h4>
+          <h4>{receiptType}</h4>
         </div>
         <hr />
         <div>

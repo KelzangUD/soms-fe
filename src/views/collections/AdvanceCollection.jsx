@@ -21,19 +21,18 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import SubHeader from "../../common/SubHeader";
 
 const AdvanceCollection = () => {
   return (
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          {/* <SubHeader text="Advance Collection" /> */}
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingY={1}
+                paddingX={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -47,12 +46,19 @@ const AdvanceCollection = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container paddingX={2} paddingY={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="Invoice Date" />
+                        <DatePicker
+                          label="Invoice Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
@@ -64,10 +70,11 @@ const AdvanceCollection = () => {
                       name="advance_number"
                       disabled
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="advance-type-select-label">
                         Advance Type
                       </InputLabel>
@@ -89,10 +96,11 @@ const AdvanceCollection = () => {
                       variant="outlined"
                       fullWidth
                       name="customer_type"
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
@@ -100,6 +108,7 @@ const AdvanceCollection = () => {
                       fullWidth
                       name="customer_name"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -109,6 +118,7 @@ const AdvanceCollection = () => {
                       fullWidth
                       name="customer_number"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -117,23 +127,25 @@ const AdvanceCollection = () => {
                       variant="outlined"
                       fullWidth
                       name="mobile_number"
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3} display="flex">
-                    <Typography>File Attachement: </Typography>
                     <TextField
                       variant="outlined"
                       fullWidth
                       name="file"
                       type="file"
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }} padding={2}>
+                <Grid container spacing={1} sx={{ mt: 1 }} paddingLeft={1}>
                   <TableContainer component={Paper}>
                     <Table
                       sx={{ minWidth: 650 }}
                       aria-label="customer detail table"
+                      size="small"
                     >
                       <TableHead>
                         <TableRow>
@@ -156,7 +168,8 @@ const AdvanceCollection = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingY={1}
+                paddingX={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -170,8 +183,8 @@ const AdvanceCollection = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container paddingY={1} paddingX={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="Payment Amount"
@@ -180,10 +193,11 @@ const AdvanceCollection = () => {
                       name="payment_amount"
                       disabled
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="payment-type-select-label">
                         Payment Type
                       </InputLabel>
@@ -200,7 +214,7 @@ const AdvanceCollection = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
                       </InputLabel>
@@ -224,35 +238,44 @@ const AdvanceCollection = () => {
                       name="card_number"
                       disabled
                       required
+                      size="small"
                     />
                     <IconButton>
                       <AddBoxIcon />
                     </IconButton>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="Cheque Date" />
+                        <DatePicker
+                          label="Cheque Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3} display="flex">
-                    <Typography>Cheque Copy: </Typography>
                     <TextField
                       variant="outlined"
                       fullWidth
                       name="file"
                       type="file"
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }} padding={2}>
+                <Grid container spacing={2} sx={{ mt: 0.5 }} padding={2}>
                   <TableContainer component={Paper}>
                     <Table
                       sx={{ minWidth: 650 }}
                       aria-label="customer detail table"
+                      size="small"
                     >
                       <TableHead>
                         <TableRow>
@@ -274,9 +297,12 @@ const AdvanceCollection = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={6}>
-            <Button variant="contained" sx={{ ml: 2 }}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
+            <Button variant="contained" sx={{ mr: 2 }} size="small">
               Create & Post
+            </Button>
+            <Button variant="outlined" color="error" size="small">
+              Cancel
             </Button>
           </Grid>
         </Grid>

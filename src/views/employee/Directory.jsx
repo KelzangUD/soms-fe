@@ -9,7 +9,6 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import DirectoryCard from "../../ui/DirectoryCard";
 import Route from "../../routes/Route";
 
@@ -60,17 +59,16 @@ const Directory = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Employee List" /> */}
+        <Grid container spacing={4} alignItems="center" sx={{ px: 1 }}>
           <Grid
             item
             xs={12}
             sx={{ display: "flex", justifyContent: "space-between" }}
           >
             <Box sx={{ width: "100%" }}>
-              <Grid container spacing={2} alignItems="center">
+              <Grid container spacing={1} alignItems="center">
                 {directory?.map((item) => (
-                  <Grid item xs={3} key={item?.id} marginBottom={2}>
+                  <Grid item xs={4} key={item?.id} marginBottom={1}>
                     <DirectoryCard
                       name={item?.name}
                       empID={item?.empID}

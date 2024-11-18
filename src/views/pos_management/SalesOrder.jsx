@@ -12,49 +12,41 @@ import {
   IconButton,
   Select,
   Typography,
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableCell,
 } from "@mui/material";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import Notification from "../../ui/Notification";
-import AddLineItem from "./AddLineItem";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import Route from "../../routes/Route";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import AddLineItem from "./AddLineItem";
+import EditLineItem from "./EditLineItem";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import ImageIcon from "@mui/icons-material/Image";
-import { styled } from "@mui/material/styles";
+import {
+  Notification,
+  LoaderDialog,
+  ItemsNotFoundDialog,
+  VisuallyHiddentInputComponent,
+} from "../../ui/index";
+import {
+  LineItemsTable,
+  PaymentDetailsTable,
+} from "../../component/pos_management/index";
+import Route from "../../routes/Route";
 import dayjs from "dayjs";
-import { dateFormatter } from "../../util/CommonUtil";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-  outlineColor: "#fff",
-});
+import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
 
 const SalesOrder = () => {
   const user = localStorage.getItem("username");
+  const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
+  const [isLoading, setIsLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [editLineItemIndex, setEditLineItemIndex] = useState(null);
+  const [editDetails, setEditDetails] = useState({});
   const [salesType, setSalesType] = useState([]);
   const [productsType, setProductsType] = useState([]);
   const [customersList, setCustomersList] = useState([]);
@@ -73,7 +65,7 @@ const SalesOrder = () => {
     advanceNo: "",
     advanceAmt: 0,
     adjType: "",
-    storeName: "",
+    storeName: userDetails?.region_NAME,
   });
   const [paymentType, setPaymentType] = useState([]);
   const [paymentLines, setPaymentLines] = useState([]);
@@ -90,10 +82,19 @@ const SalesOrder = () => {
   });
   const [bulkUpload, setBulkUpload] = useState(false);
   const [lineItems, setLineItems] = useState([]);
+  const [itemsNotFound, setItemsNotFound] = useState([]);
+  const [openItemsNotFoundDialog, setOpenItemsNotFoundDialog] = useState(false);
   const [fileName, setFileName] = useState("Upload File");
   const [banks, setbanks] = useState([]);
+  const [linesAmount, setLinesAmount] = useState({
+    grossTotal: 0,
+    taxAmt: 0,
+    discountedAmount: 0,
+    advanceTaxAmount: 0,
+    tdsAmount: 0,
+    netAmount: 0,
+  });
   const [responseData, setResponseData] = useState({});
-  const [userDetails, setUserDetails] = useState(JSON.parse(localStorage?.getItem("userDetails")));
   const fetchSalesType = async () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
     if (res?.status === 200) {
@@ -104,6 +105,12 @@ const SalesOrder = () => {
     const res = await Route("GET", "/Common/FetchProductType", null, null, 1);
     if (res?.status === 200) {
       setProductsType(res?.data);
+    }
+  };
+  const fetchPaymentType = async () => {
+    const res = await Route("GET", "/Common/PaymentType", null, null, null);
+    if (res?.status === 200) {
+      setPaymentType(res?.data);
     }
   };
   const fetchCustomersList = async () => {
@@ -137,21 +144,6 @@ const SalesOrder = () => {
       }));
     }
   };
-  const fetchUserDetails = async () => {
-    const res = await Route("GET", `/Common/fetchUserDtls?userId=${user}`, null, null, null);
-    if (res?.status === 200) {
-      setSalesOrderDetails((prev) => ({
-        ...prev,
-        storeName: res?.data?.region_NAME
-      }));
-    }
-  };
-  const fetchPaymentType = async () => {
-    const res = await Route("GET", "/Common/PaymentType", null, null, null);
-    if (res?.status === 200) {
-      setPaymentType(res?.data);
-    }
-  };
   const fetchBankBasedOnPaymentType = async () => {
     const res = await Route(
       "GET",
@@ -164,14 +156,74 @@ const SalesOrder = () => {
       setbanks(res?.data);
     }
   };
+  const fetchProductDetailsBasedOnItemList = async (file) => {
+    setIsLoading(true);
+    try {
+      let data = new FormData();
+      data.append("storeName", userDetails?.region_NAME);
+      data.append("File", file);
+      const res = await Route(
+        "POST",
+        `/SalesOrder/Product_Details`,
+        null,
+        data,
+        null,
+        "multipart/form-data"
+      );
+      if (res?.status === 200) {
+        const foundItems = [];
+        const notFoundItems = [];
+        res.data.forEach((item) => {
+          if (item?.remarks !== "Not-Available") {
+            foundItems.push({
+              priceLocator: item?.priceLocator,
+              mrp: item?.mrp,
+              discPercentage: item?.discPercentage,
+              tdsAmount: parseInt(item?.tdsAmount),
+              discountedAmount: item?.discountAmt,
+              sellingPrice: item?.sellingPrice,
+              taxPercentage: parseInt(item?.taxPercentage),
+              additionalDiscount: parseInt(item?.additionalDiscount),
+              amountExclTax: item?.amountExclTax,
+              advanceTaxAmount: item?.advanceTaxAmount,
+              volumeDiscount: item?.volumeDiscount,
+              itemTotalAddedQty: item?.itemTotlaAddedQty,
+              lineItemAmt: item?.sellingPrice,
+              available: item?.available,
+              serialNoStatus: item?.serialNoStatus,
+              taxAmt: item?.taxAmount,
+              priceLocatorDTOs: item?.priceLocatorDTOs,
+              description: item?.description,
+              itemNo: item?.itemNo,
+              qty: 1,
+            });
+          } else {
+            notFoundItems.push({
+              serialNo: item?.serialNo,
+            });
+          }
+        });
+        setLineItems(foundItems);
+        if (notFoundItems.length > 0) {
+          setItemsNotFound(notFoundItems);
+          setOpenItemsNotFoundDialog(true);
+        }
+      }
+    } catch (error) {
+      setNotificationMsg("Error", error);
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
     fetchSalesType();
     fetchProductsType();
     fetchPaymentType();
-    fetchUserDetails();
   }, []);
   useEffect(() => {
-    fetchCustomersList();
+    salesOrderDetails?.salesType !== "" && fetchCustomersList();
   }, [salesOrderDetails?.salesType, user]);
   useEffect(() => {
     fetchBankBasedOnPaymentType();
@@ -185,7 +237,6 @@ const SalesOrder = () => {
     e?.target?.value === "2" ? setBulkUpload(true) : setBulkUpload(false);
   };
   const productsTypeHandle = (e) => {
-    console.log(e?.target?.value);
     setSalesOrderDetails((prev) => ({
       ...prev,
       productType: parseInt(e.target.value),
@@ -204,6 +255,9 @@ const SalesOrder = () => {
       serviceRemarks: e?.target?.value,
     }));
   };
+  const uploadCSVFileHandle = (e) => {
+    fetchProductDetailsBasedOnItemList(e?.target?.files[0]);
+  };
   const addButtonHandle = () => {
     if (
       salesOrderDetails?.salesType === "" ||
@@ -217,8 +271,10 @@ const SalesOrder = () => {
       setOpenDialog(true);
     }
   };
-  const editLineItemHandle = (item) => {
-    console.log(item);
+  const editLineItemHandle = (e, item, index) => {
+    setEditLineItemIndex(index);
+    setEditDetails(item);
+    setEdit(true);
   };
   const deleteLineItemHandle = (e, indexToRemove) => {
     setLineItems((prev) => prev.filter((_, index) => index !== indexToRemove));
@@ -261,6 +317,7 @@ const SalesOrder = () => {
     }));
   };
   const chequeCopyHandle = (e) => {
+    setFileName(e?.target?.files[0]?.name);
     setPaymentLinesItem((prev) => ({
       ...prev,
       chequeCopy: e?.target?.files[0],
@@ -268,121 +325,183 @@ const SalesOrder = () => {
   };
   const addPaymentItemHandle = () => {
     setPaymentLines((prev) => [...prev, paymentLinesItem]);
+    setPaymentLinesItem({
+      paymentAmount: "",
+      paymentType: "",
+      paymentTypeName: "",
+      bankAccountNumber: "",
+      chequeNumber: "",
+      chequeDate: "",
+      cardNumber: "",
+      emiRefrenceNo: "",
+      chequeCopy: "",
+    });
   };
   const deletePaymentItemHandle = (e, indexToRemove) => {
     setPaymentLines((prev) =>
       prev.filter((_, index) => index !== indexToRemove)
     );
   };
-  const editPaymentItemHandle = (item) => {
-    console.log(item);
-  };
+  useEffect(() => {
+    const totals = lineItems?.reduce(
+      (accumulator, currentObject) => {
+        accumulator.grossTotal += currentObject?.sellingPrice || 0;
+        accumulator.taxAmt += currentObject?.taxAmt || 0;
+        accumulator.discountedAmount += currentObject?.discountedAmount || 0;
+        accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
+        accumulator.tdsAmount += currentObject?.tdsAmount || 0;
+        accumulator.netAmount += currentObject?.sellingPrice || 0;
+        return accumulator;
+      },
+      {
+        grossTotal: 0,
+        taxAmt: 0,
+        discountedAmount: 0,
+        advanceTaxAmount: 0,
+        tdsAmount: 0,
+        netAmount: 0,
+      }
+    );
+    setLinesAmount((prev) => ({
+      ...prev,
+      ...totals,
+    }));
+  }, [lineItems]);
+
   const postHandle = async () => {
-    let formData = new FormData();
-    if (paymentLines && parseInt(paymentLinesItem.paymentType) === 2) {
-      for (let i = 0; i < paymentLines?.length; i++) {
-        formData.append("cheque", paymentLines[i].chequeCopy);
+    // console.log(paymentLinesItem)
+    if (paymentLinesItem?.length === 0) {
+      setNotificationMsg("Total Payment is Not equal to Net Payment");
+      setSeverity("info");
+      setShowNofication(true);
+    }
+    if (
+      parseInt(linesAmount?.netAmount) ===
+      (paymentLinesItem?.length > 0 &&
+        paymentLinesItem?.reduce(
+          (accumulator, currentObject) =>
+            accumulator + parseInt(currentObject?.paymentAmount),
+          0
+        ))
+    ) {
+      let formData = new FormData();
+      if (paymentLines && parseInt(paymentLinesItem.paymentType) === 2) {
+        for (let i = 0; i < paymentLines?.length; i++) {
+          formData.append("cheque", paymentLines[i].chequeCopy);
+        }
+      } else {
+        const placeholderFile = new File([""], "cheque.png");
+        formData.append("cheque", placeholderFile);
+      }
+      formData?.append("storeName", salesOrderDetails?.customerName);
+      const data = {
+        itemLines: lineItems,
+        paymentLines,
+        salesHeader: salesOrderDetails,
+        linesAmount: {
+          grossTotal: linesAmount?.grossTotal,
+          taxAmount: linesAmount?.taxAmt,
+          discountAmount: linesAmount?.discountedAmount,
+          additionalDiscount: 0,
+          lotOfSaleDiscount: 0,
+          tdsAmount: linesAmount?.tdsAmount,
+          netAmount: linesAmount?.netAmount,
+        },
+        userId: user,
+      };
+      const jsonDataBlob = new Blob([JSON.stringify(data)], {
+        type: "application/json",
+      });
+      formData.append("details", jsonDataBlob, "data.json");
+      // console.log(formData);
+      // console.log(data);
+      const res = await Route(
+        "POST",
+        `/SalesOrder/UpdateItemSales`,
+        null,
+        formData,
+        null,
+        "multipart/form-data"
+      );
+      if (res?.status === 201) {
+        setResponseData(res?.data);
+        setSeverity("success");
+        setNotificationMsg("Successfully Created");
+        setShowNofication(true);
+        setSalesOrderDetails((prev) => ({
+          ...prev,
+          postingDate: dateFormatter(dayjs(new Date())),
+          salesType: "",
+          productType: "",
+          mobileNo: "",
+          customerNumber: "",
+          customerName: "",
+          address: "",
+          address1: "",
+          city: "",
+          serviceRemarks: "",
+          advanceNo: "",
+          advanceAmt: 0,
+          adjType: "",
+        }));
+        setPaymentType([]);
+        setPaymentLines([]);
+        setPaymentLines((prev) => ({
+          ...prev,
+          paymentAmount: "",
+          paymentType: "",
+          paymentTypeName: "",
+          bankAccountNumber: "",
+          chequeNumber: "",
+          chequeDate: "",
+          cardNumber: "",
+          emiRefrenceNo: "",
+          chequeCopy: "",
+        }));
+        setBulkUpload(false);
+        setLineItems([]);
+      } else {
+        setNotificationMsg("Failed to create the sales order. Try again!");
+        setSeverity("error");
+        setShowNofication(true);
       }
     } else {
-      const placeholderFile = new File([""], "cheque.png");
-      formData.append("cheque", placeholderFile);
-    }
-    formData?.append("storeName", salesOrderDetails?.customerName);
-    const data = {
-      itemLines: lineItems,
-      paymentLines,
-      salesHeader: salesOrderDetails,
-      linesAmount : {
-        grossTotal: lineItems?.length > 0 &&
-        lineItems?.reduce(
-          (accumulator, currentObject) =>
-            accumulator + currentObject?.sellingPrice,
-          0
-        ),
-        taxAmount: 0,
-        discountAmount: 0,
-        additionalDiscount: 0,
-        lotOfSaleDiscount: 0,
-        tdsAmount: lineItems?.length > 0 &&
-        lineItems?.reduce(
-          (accumulator, currentObject) =>
-            accumulator + currentObject?.tdsAmount,
-          0
-        ),
-        netAmount: lineItems?.length > 0 &&
-        lineItems?.reduce(
-          (accumulator, currentObject) =>
-            accumulator + currentObject?.sellingPrice,
-          0
-        ),
-      },
-      userId : user
-    };
-    // if (file && file.length > 0) {
-    //   formData.append("file", file);
-    // } else {
-    //   const placeholderFile = new File([""], "file.csv");
-    //   formData.append("file", placeholderFile);
-    // }
-    const jsonDataBlob = new Blob([JSON.stringify(data)], {
-      type: "application/json",
-    });
-
-    formData.append("details", jsonDataBlob, "data.json");
-    console.log(formData);
-    console.log(data)
-    const res = await Route(
-      "POST",
-      `/SalesOrder/UpdateItemSales`,
-      null,
-      formData,
-      null,
-      "multipart/form-data"
-    );
-
-    console.log(res);
-    if (res?.status === 201) {
-      setResponseData(res?.data);
-      setSeverity("success");
-      setNotificationMsg("Successfully Created");
-      setShowNofication(true);
-      setSalesOrderDetails((prev) => ({
-        ...prev,
-        postingDate: dateFormatter(dayjs(new Date())),
-        salesType: "",
-        productType: "",
-        mobileNo: "",
-        customerNumber: "",
-        customerName: "",
-        address: "",
-        address1: "",
-        city: "",
-        serviceRemarks: "",
-        advanceNo: "",
-        advanceAmt: 0,
-        adjType: "",
-      }));
-      setPaymentType([]);
-      setPaymentLines([]);
-      setPaymentLines((prev) => ({
-        ...prev,
-        paymentAmount: "",
-        paymentType: "",
-        paymentTypeName: "",
-        bankAccountNumber: "",
-        chequeNumber: "",
-        chequeDate: "",
-        cardNumber: "",
-        emiRefrenceNo: "",
-        chequeCopy: "",
-      }))
-      setBulkUpload(false);
-      setLineItems([]);
-    } else {
-      setNotificationMsg("Failed to create the sales order. Try again!");
-      setSeverity("error");
+      setNotificationMsg("Total Payment is Not equal to Net Payment");
+      setSeverity("info");
       setShowNofication(true);
     }
+  };
+  const cancelHandle = () => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      postingDate: dateFormatter(dayjs(new Date())),
+      salesType: "",
+      productType: "",
+      mobileNo: "",
+      customerNumber: "",
+      customerName: "",
+      address: "",
+      address1: "",
+      city: "",
+      serviceRemarks: "",
+      advanceNo: "",
+      advanceAmt: 0,
+      adjType: "",
+    }));
+    setPaymentLines((prev) => ({
+      ...prev,
+      paymentAmount: "",
+      paymentType: "",
+      paymentTypeName: "",
+      bankAccountNumber: "",
+      chequeNumber: "",
+      chequeDate: "",
+      cardNumber: "",
+      emiRefrenceNo: "",
+      chequeCopy: "",
+    }));
+    setBulkUpload(false);
+    setLineItems([]);
   };
   return (
     <>
@@ -392,7 +511,8 @@ const SalesOrder = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingY={1}
+                paddingX={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -406,8 +526,8 @@ const SalesOrder = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container py={1} px={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="POS No"
@@ -415,6 +535,7 @@ const SalesOrder = () => {
                       fullWidth
                       name="pos_no"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -425,10 +546,11 @@ const SalesOrder = () => {
                       name="posting_date"
                       defaultValue={new Date().toDateString()}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="sales-type-select-label">
                         Sales Type
                       </InputLabel>
@@ -448,7 +570,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="product-type-select-label">
                         Product Type
                       </InputLabel>
@@ -468,7 +590,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} py={1}>
                   <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
@@ -479,7 +601,7 @@ const SalesOrder = () => {
                       onChange={customerNameHandle}
                       value={salesOrderDetails?.customerName}
                       renderInput={(params) => (
-                        <TextField {...params} label="Customer Name" />
+                        <TextField {...params} label="Customer Name" size="small" />
                       )}
                     />
                   </Grid>
@@ -492,6 +614,7 @@ const SalesOrder = () => {
                       required
                       value={salesOrderDetails?.mobileNo}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -503,6 +626,7 @@ const SalesOrder = () => {
                       required
                       value={salesOrderDetails?.customerNumber}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -513,10 +637,11 @@ const SalesOrder = () => {
                       name="address"
                       value={salesOrderDetails?.address}
                       disabled
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ my: 1 }}>
+                <Grid container spacing={1} >
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
@@ -525,6 +650,7 @@ const SalesOrder = () => {
                       name="address 1"
                       value={salesOrderDetails?.address1}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -535,6 +661,7 @@ const SalesOrder = () => {
                       name="city"
                       value={salesOrderDetails?.city}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -545,6 +672,7 @@ const SalesOrder = () => {
                       name="remarks"
                       onChange={remarksHandle}
                       value={salesOrderDetails?.serviceRemarks}
+                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -555,7 +683,8 @@ const SalesOrder = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                px={2}
+                py={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -570,12 +699,25 @@ const SalesOrder = () => {
                 </Grid>
                 <Grid item>
                   {bulkUpload && (
-                    <IconButton aria-label="upload" onClick={addButtonHandle}>
+                    <IconButton
+                      component="label"
+                      role={undefined}
+                      tabIndex={-1}
+                      fullWidth
+                      variant="outlined"
+                      style={{ border: "0 solid #B4B4B8", color: "#686D76" }}
+                    >
                       <FileUploadIcon sx={{ color: "#eee" }} />
+                      <VisuallyHiddentInputComponent
+                        onChange={uploadCSVFileHandle}
+                      />
                     </IconButton>
                   )}
                   {bulkUpload && (
-                    <IconButton aria-label="download" onClick={addButtonHandle}>
+                    <IconButton
+                      aria-label="download"
+                      onClick={() => downloadSampleHandle("BulkUploader")}
+                    >
                       <FileDownloadIcon sx={{ color: "#eee" }} />
                     </IconButton>
                   )}
@@ -585,185 +727,13 @@ const SalesOrder = () => {
                 </Grid>
               </Grid>
               <Grid container padding={2}>
-                <Grid container spacing={2} sx={{ my: 1, px: 2 }}>
-                  <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell sx={{ width: "350px" }}>
-                            Description
-                          </TableCell>
-                          <TableCell align="right">Quantity</TableCell>
-                          <TableCell align="right">Selling Price</TableCell>
-                          <TableCell align="right">Tax Amount</TableCell>
-                          <TableCell align="right">Disc/Comm Amount</TableCell>
-                          <TableCell align="right">
-                            Additional Discount
-                          </TableCell>
-                          <TableCell align="right">TDS Amount</TableCell>
-                          <TableCell align="right">
-                            Advance Tax Amount
-                          </TableCell>
-                          <TableCell align="right">Discounted Amount</TableCell>
-                          <TableCell align="right">Line Item Amount</TableCell>
-                          <TableCell align="right">Action</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {lineItems?.length > 0 &&
-                          lineItems?.map((item, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{item?.description}</TableCell>
-                              <TableCell align="right">{item?.qty}</TableCell>
-                              <TableCell align="right">
-                                {item?.sellingPrice}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.taxAmt}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.discountedAmount}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.additionalDiscount}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.tdsAmount}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.advanceTaxAmount}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.discountedAmount}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.lineItemAmt}
-                              </TableCell>
-                              <TableCell
-                                align="right"
-                                sx={{ display: "flex", alignContent: "center" }}
-                              >
-                                <IconButton
-                                  aria-label="delete"
-                                  onClick={(e) =>
-                                    deleteLineItemHandle(e, index)
-                                  }
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                                <IconButton
-                                  aria-label="edit"
-                                  onClick={(item) => editLineItemHandle(item)}
-                                >
-                                  <EditIcon />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>Gross Total</TableCell>
-                          <TableCell align="right">
-                            {lineItems?.length > 0 &&
-                              lineItems?.reduce(
-                                (accumulator, currentObject) =>
-                                  accumulator + currentObject?.sellingPrice,
-                                0
-                              )}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>Tax Amount</TableCell>
-                          <TableCell align="right">
-                            {lineItems?.length > 0 &&
-                              lineItems?.reduce(
-                                (accumulator, currentObject) =>
-                                  accumulator + currentObject?.taxAmt,
-                                0
-                              )}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>Disc/Comm Amount</TableCell>
-                          <TableCell align="right">
-                            {lineItems?.length > 0 &&
-                              lineItems?.reduce(
-                                (accumulator, currentObject) =>
-                                  accumulator + currentObject?.discountedAmount,
-                                0
-                              )}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>
-                            Discretional Discount
-                          </TableCell>
-                          <TableCell align="right">0</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>
-                            Lots of Sales Discount
-                          </TableCell>
-                          <TableCell align="right">0</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>TDS Amount</TableCell>
-                          <TableCell align="right">
-                            {lineItems?.length > 0 &&
-                              lineItems?.reduce(
-                                (accumulator, currentObject) =>
-                                  accumulator + currentObject?.tdsAmount,
-                                0
-                              )}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>Advance Amount</TableCell>
-                          <TableCell align="right">0</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>Down Payment Amount</TableCell>
-                          <TableCell align="right">0</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>Advance Tax Amount</TableCell>
-                          <TableCell align="right">
-                            {lineItems?.length > 0 &&
-                              lineItems?.reduce(
-                                (accumulator, currentObject) =>
-                                  accumulator + currentObject?.advanceTaxAmount,
-                                0
-                              )}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>Interest Amount</TableCell>
-                          <TableCell align="right">0</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={9} />
-                          <TableCell colSpan={1}>Net Total (Nu)</TableCell>
-                          <TableCell align="right">
-                            {lineItems?.length > 0 &&
-                              lineItems?.reduce(
-                                (accumulator, currentObject) =>
-                                  accumulator + currentObject?.sellingPrice,
-                                0
-                              )}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                <Grid container spacing={2} sx={{ my: 1 }}>
+                  <LineItemsTable
+                    lineItems={lineItems}
+                    deleteLineItemHandle={deleteLineItemHandle}
+                    editLineItemHandle={editLineItemHandle}
+                    linesAmount={linesAmount}
+                  />
                 </Grid>
               </Grid>
             </Paper>
@@ -772,7 +742,8 @@ const SalesOrder = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingY={1}
+                paddingX={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -786,8 +757,8 @@ const SalesOrder = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container px={2} py={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={2}>
                     <TextField
                       label="Payment Amount"
@@ -796,18 +767,18 @@ const SalesOrder = () => {
                       name="payment_amount"
                       required
                       onChange={paymentAmountHandle}
+                      size="small"
                     />
                   </Grid>
-                  <Grid item xs={2}>
-                    <FormControl fullWidth>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="payment-type-select-label">
                         Payment Type
                       </InputLabel>
                       <Select
                         labelId="payment-type-select-label"
                         id="payment-type-select"
-                        // value={age}
-                        label="Paymen Type"
+                        label="Payment Type"
                         onChange={paymentHandle}
                       >
                         {paymentType?.map((item) => (
@@ -818,15 +789,14 @@ const SalesOrder = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
-                    <FormControl fullWidth>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
                       </InputLabel>
                       <Select
                         labelId="bank-ac-name-select-label"
                         id="bank-ac-name-select"
-                        // value={age}
                         label="Bank A/C Name"
                         onChange={bankHandle}
                       >
@@ -845,158 +815,93 @@ const SalesOrder = () => {
                         variant="outlined"
                         name="card_no"
                         onChange={cardNoHandle}
+                        size="small"
                       />
                     </Grid>
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
-                    <Grid item sx={2}>
-                      <TextField
-                        label="Cheque No"
-                        variant="outlined"
-                        name="cheque_no"
-                        onChange={chequeNoHandle}
-                      />
-                    </Grid>
-                  )}
-                  {paymentLinesItem?.paymentType === "2" && (
-                    <Grid item sx={1}>
-                      <FormControl fullWidth>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            label="Cheque Date"
-                            // value={dayjs(rechargeDetails?.postingDate)}
-                            onChange={chequeDateHandle}
-                          />
-                        </LocalizationProvider>
-                      </FormControl>
-                    </Grid>
-                  )}
-                  {paymentLinesItem?.paymentType === "2" && (
-                    <Grid item sx={2} display="flex">
-                      <Button
-                        component="label"
-                        role={undefined}
-                        tabIndex={-1}
-                        startIcon={<CloudUploadIcon />}
-                        fullWidth
-                        variant="outlined"
-                        style={{
-                          border: "1px solid #B4B4B8",
-                          color: "#686D76",
-                        }}
-                      >
-                        {fileName}
-                        <VisuallyHiddenInput
-                          type="file"
-                          onChange={chequeCopyHandle}
-                          multiple
+                    <>
+                      <Grid item sx={2}>
+                        <TextField
+                          label="Cheque No"
+                          variant="outlined"
+                          name="cheque_no"
+                          onChange={chequeNoHandle}
+                          size="small"
                         />
-                      </Button>
-                    </Grid>
+                      </Grid>
+                      <Grid item sx={1}>
+                        <FormControl fullWidth>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              label="Cheque Date"
+                              onChange={chequeDateHandle}
+                              slotProps={{
+                                textField: {
+                                  size: "small",
+                                },
+                              }}
+                            />
+                          </LocalizationProvider>
+                        </FormControl>
+                      </Grid>
+                      <Grid item sx={3} display="flex">
+                        <Button
+                          component="label"
+                          role={undefined}
+                          tabIndex={-1}
+                          startIcon={<CloudUploadIcon />}
+                          fullWidth
+                          variant="outlined"
+                          style={{
+                            border: "1px solid #B4B4B8",
+                            color: "#686D76",
+                          }}
+                        >
+                          {fileName}
+                          <VisuallyHiddentInputComponent
+                            onChange={chequeCopyHandle}
+                          />
+                        </Button>
+                      </Grid>
+                    </>
                   )}
                   <Grid
                     item
                     container
                     xs={1}
                     display="flex"
-                    // justifyContent="space-between"
                     alignItems="center"
                   >
-                    {/* <Grid item sx={11}>
-                      <TextField
-                        label="Remaining Amount"
-                        variant="outlined"
-                        name="remaining_amount"
-                        disabled
-                      />
-                    </Grid> */}
-                    <Grid item sx={1}>
-                      <IconButton
-                        aria-label="add"
-                        onClick={addPaymentItemHandle}
-                      >
-                        <AddBoxIcon />
-                      </IconButton>
-                    </Grid>
+                    <IconButton aria-label="add" onClick={addPaymentItemHandle}>
+                      <AddBoxIcon />
+                    </IconButton>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid container padding={2}>
-                <TableContainer component={Paper}>
-                  <Table
-                    sx={{ minWidth: 650 }}
-                    aria-label="payment detail table"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Payment Amount</TableCell>
-                        <TableCell align="right">Payment Type</TableCell>
-                        <TableCell align="right">Bank A/C Name</TableCell>
-                        <TableCell align="right">Cheque Number</TableCell>
-                        <TableCell align="right">Cheque Date</TableCell>
-                        <TableCell align="right">Cheque Copy</TableCell>
-                        <TableCell align="right">Card Number</TableCell>
-                        <TableCell align="right">Action</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {paymentLines?.length > 0 &&
-                        paymentLines?.map((item, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{item?.paymentAmount}</TableCell>
-                            <TableCell align="right">
-                              {item?.paymentTypeName}
-                            </TableCell>
-                            <TableCell align="right">
-                              {item?.bankAccountNumber}
-                            </TableCell>
-                            <TableCell align="right">
-                              {item?.chequeNumber}
-                            </TableCell>
-                            <TableCell align="right">
-                              {item?.chequeDate}
-                            </TableCell>
-                            <TableCell align="right">
-                              {item?.paymentType === "2" && (
-                                <IconButton aria-label="image">
-                                  <ImageIcon />
-                                </IconButton>
-                              )}
-                            </TableCell>
-                            <TableCell align="right">
-                              {item?.cardNumber}
-                            </TableCell>
-                            <TableCell align="right">
-                              {" "}
-                              <IconButton
-                                aria-label="delete"
-                                onClick={(e) =>
-                                  deletePaymentItemHandle(e, index)
-                                }
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                              <IconButton
-                                aria-label="edit"
-                                onClick={(item) => editPaymentItemHandle(item)}
-                              >
-                                <EditIcon />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                <PaymentDetailsTable
+                  paymentLines={paymentLines}
+                  deletePaymentItemHandle={deletePaymentItemHandle}
+                />
               </Grid>
             </Paper>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={4}>
-            <Button variant="contained" onClick={postHandle}>
+            <Button variant="contained" onClick={postHandle} size="small">
               Post
             </Button>
-            <Button variant="outlined" sx={{ ml: 2 }}>
-              Close
+            <Button
+              variant="outlined"
+              sx={{ ml: 2 }}
+              onClick={cancelHandle}
+              color="error"
+              style={{
+                background: "#fff",
+              }}
+              size="small"
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>
@@ -1018,6 +923,28 @@ const SalesOrder = () => {
           salesType={salesOrderDetails?.salesType}
           setLineItems={setLineItems}
           userDetails={userDetails}
+        />
+      )}
+      {edit && (
+        <EditLineItem
+          open={edit}
+          setOpen={setEdit}
+          storeName={salesOrderDetails?.storeName}
+          user={user}
+          salesType={salesOrderDetails?.salesType}
+          setLineItems={setLineItems}
+          userDetails={userDetails}
+          editDetails={editDetails}
+          lineItems={lineItems}
+          editLineItemIndex={editLineItemIndex}
+        />
+      )}
+      {isLoading && <LoaderDialog open={isLoading} />}
+      {openItemsNotFoundDialog && (
+        <ItemsNotFoundDialog
+          open={openItemsNotFoundDialog}
+          setOpen={setOpenItemsNotFoundDialog}
+          itemsNoFound={itemsNotFound}
         />
       )}
     </>

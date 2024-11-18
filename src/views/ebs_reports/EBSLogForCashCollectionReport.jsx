@@ -13,7 +13,6 @@ import {
   TextField,
   MenuList,
 } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -94,7 +93,6 @@ const EBSLogForCashCollectionReport = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="EBS Log for Cash Collection Report" /> */}
           <Grid
             item
             xs={12}

@@ -16,7 +16,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TableCell
+  TableCell,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Route from "../../routes/Route";
@@ -28,7 +28,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ImageIcon from "@mui/icons-material/Image";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
+import GetAppIcon from "@mui/icons-material/GetApp";
 import dayjs from "dayjs";
 import Notification from "../../ui/Notification";
 import AddLineItem from "./AddLineItem";
@@ -47,24 +48,25 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const SalesReturn = () => {
-  const user = localStorage.getItem('username');
+  const user = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [responseData, setResponseData] = useState({});
-  const [invoiceNo, setInoiceNo] = useState('');
+  const [invoiceNo, setInoiceNo] = useState("");
+  const [emptyInvoiceNo, setEmptyInvoiceNo] = useState(false);
   const [salesData, setSalesData] = useState(null);
   const [paymentType, setPaymentType] = useState([]);
   const [banks, setBanks] = useState([]);
   const [fileName, setFileName] = useState("Upload File");
   const [paymentLines, setPaymentLines] = useState([]);
-  const [grossTotal, setGrossTotal] = useState('');
-  const [taxAmount, setTaxAmount] = useState('');
-  const [discountAmt, setDiscountAmt] = useState('');
-  const [additionalDisAmt, setAdditionalDisAmt] = useState('');
-  const [lotOfSaleDiscount, setLotOfSaleDiscount] = useState('');
-  const [tdsAmount, setTdsAmount] = useState('');
-  const [netTotal, setNetTotal] = useState('');
+  const [grossTotal, setGrossTotal] = useState("");
+  const [taxAmount, setTaxAmount] = useState("");
+  const [discountAmt, setDiscountAmt] = useState("");
+  const [additionalDisAmt, setAdditionalDisAmt] = useState("");
+  const [lotOfSaleDiscount, setLotOfSaleDiscount] = useState("");
+  const [tdsAmount, setTdsAmount] = useState("");
+  const [netTotal, setNetTotal] = useState("");
   const [salesLines, setSalesLines] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -81,7 +83,8 @@ const SalesReturn = () => {
   });
 
   const setSalesInvoice = (e) => {
-    setInoiceNo(e.target.value);
+    setEmptyInvoiceNo(false);
+    setInoiceNo(e?.target?.value);
   };
 
   const fetchPaymentType = async () => {
@@ -160,46 +163,56 @@ const SalesReturn = () => {
       if (parseInt(paymentLinesItem.paymentType) === 1) {
         if (paymentLinesItem.bankAccountNumber !== "") {
           setPaymentLines((prev) => [...prev, paymentLinesItem]);
+        } else {
+          setNotificationMsg("Bank A/C can't be empty");
+          setSeverity("info");
+          setShowNofication(true);
         }
-        else {
-          alert("Bank A/C can't be empty");
-        }
-      }
-      else if (parseInt(paymentLinesItem.paymentType) === 2) {
+      } else if (parseInt(paymentLinesItem.paymentType) === 2) {
         if (paymentLinesItem.bankAccountNumber !== "") {
           if (paymentLinesItem.chequeNumber !== "") {
             if (paymentLinesItem.chequeDate !== "") {
               if (paymentLinesItem.chequeCopy !== "") {
                 setPaymentLines((prev) => [...prev, paymentLinesItem]);
               } else {
-                alert("Cheque copy can't be empty");
+                setNotificationMsg("Cheque copy can't be empty");
+                setSeverity("info");
+                setShowNofication(true);
               }
             } else {
-              alert("Cheque date can't be empty");
+              setNotificationMsg("Cheque date can't be empty");
+              setSeverity("info");
+              setShowNofication(true);
             }
           } else {
-            alert("Cheque number can't be empty");
+            setNotificationMsg("Cheque number can't be empty");
+            setSeverity("info");
+            setShowNofication(true);
           }
+        } else {
+          setNotificationMsg("Bank A/C can't be empty");
+          setSeverity("info");
+          setShowNofication(true);
         }
-        else {
-          alert("Bank A/C can't be empty");
-        }
-      }
-      else {
+      } else {
         if (paymentLinesItem.bankAccountNumber !== "") {
           if (paymentLinesItem.cardNumber !== "") {
             setPaymentLines((prev) => [...prev, paymentLinesItem]);
           } else {
-            alert("Card No. can't be empty");
+            setNotificationMsg("Card No. can't be empty");
+            setSeverity("info");
+            setShowNofication(true);
           }
-        }
-        else {
-          alert("Bank A/C can't be empty");
+        } else {
+          setNotificationMsg("Bank A/C can't be empty");
+          setSeverity("info");
+          setShowNofication(true);
         }
       }
-    }
-    else {
-      alert("Refund amount and refund type can't be empty");
+    } else {
+      setNotificationMsg("Refund amount and refund type can't be empty");
+      setSeverity("info");
+      setShowNofication(true);
     }
   };
 
@@ -212,12 +225,16 @@ const SalesReturn = () => {
   const fetchSalesInvoice = async () => {
     if (invoiceNo !== "") {
       setLoading(true);
-
       try {
-        const res = await Route("GET",
-          `/SalesOrder/GetInvoiceList?salesId=${invoiceNo}&userId=${user}`, null, null, null);
+        const res = await Route(
+          "GET",
+          `/SalesOrder/GetInvoiceList?salesId=${invoiceNo}&userId=${user}`,
+          null,
+          null,
+          null
+        );
         if (res?.status === 200) {
-          if(res?.data?.status === 'Y') {
+          if (res?.data?.status === "Y") {
             setSalesData(res?.data);
             setGrossTotal(res?.data?.linesAmount?.gross_Total);
             setTaxAmount(res?.data?.linesAmount?.tax_Amount);
@@ -226,38 +243,86 @@ const SalesReturn = () => {
             setLotOfSaleDiscount(res?.data?.linesAmount?.lotOfSale_Discount);
             setTdsAmount(res?.data?.linesAmount?.tds_Amount);
             setNetTotal(res?.data?.linesAmount?.net_Amount);
-    
             setSalesLines(res?.data?.itemLines);
-          }
-          else {
-            alert("This POS_No is already return. Check the POS_No");
+          } else {
+            setNotificationMsg(
+              "This POS_No is already return. Check the POS_No"
+            );
+            setSeverity("info");
+            setShowNofication(true);
           }
         }
       } catch (error) {
-        console.error("Error fetching invoice:", error);
+        setNotificationMsg("Error fetching invoice:", error);
+        setSeverity("error");
+        setShowNofication(true);
       } finally {
         setLoading(false);
       }
-    }
-    else {
-      alert("Enter the Invoice no.");
+    } else {
+      setEmptyInvoiceNo(true);
     }
   };
 
+  const cancelHandle = () => {
+    setInoiceNo("");
+    setSalesData(null);
+    setPaymentLines([]);
+    setGrossTotal("");
+    setTaxAmount("");
+    setDiscountAmt("");
+    setAdditionalDisAmt("");
+    setLotOfSaleDiscount("");
+    setTdsAmount("");
+    setNetTotal("");
+    setSalesLines([]);
+    setPaymentLinesItem((prev) => ({
+      ...prev,
+      paymentAmount: "",
+      paymentType: "",
+      paymentTypeName: "",
+      bankAccountNumber: "",
+      chequeNumber: "",
+      chequeDate: "",
+      cardNumber: "",
+      emiRefrenceNo: "",
+      chequeCopy: "",
+    }));
+  };
+
   const deleteLineItemHandle = (e, salesIdToRemove) => {
-    const itemToDelete = salesLines.find(item => item.salesId === salesIdToRemove);
-
+    const itemToDelete = salesLines.find(
+      (item) => item.salesId === salesIdToRemove
+    );
     if (itemToDelete) {
-      setGrossTotal((prevGrossTotal) => prevGrossTotal - parseFloat(itemToDelete.line_ItmAmt));
-      setTaxAmount((prevTaxAmount) => prevTaxAmount - parseFloat(itemToDelete.tax_Amt));
-      setDiscountAmt((prevDiscountAmt) => prevDiscountAmt - parseFloat(itemToDelete.discounted_Amount));
-      setAdditionalDisAmt((prevAdditionalDisAmt) => prevAdditionalDisAmt - parseFloat(itemToDelete.additional_Discount));
-      setLotOfSaleDiscount((prevLotOfSaleDiscount) => prevLotOfSaleDiscount - parseFloat(itemToDelete.lineDiscountAmt));
-      setTdsAmount((prevTdsAmount) => prevTdsAmount - parseFloat(itemToDelete.tds_Amount));
-      setNetTotal((prevNetTotal) => prevNetTotal - parseFloat(itemToDelete.line_ItmAmt));
-
-      // setSalesIds(prevSalesIds => prevSalesIds.filter(salesId => salesId !== salesIdToRemove));
-      setSalesLines((prev) => prev.filter(item => item.salesId !== salesIdToRemove));
+      setGrossTotal(
+        (prevGrossTotal) =>
+          prevGrossTotal - parseFloat(itemToDelete.line_ItmAmt)
+      );
+      setTaxAmount(
+        (prevTaxAmount) => prevTaxAmount - parseFloat(itemToDelete.tax_Amt)
+      );
+      setDiscountAmt(
+        (prevDiscountAmt) =>
+          prevDiscountAmt - parseFloat(itemToDelete.discounted_Amount)
+      );
+      setAdditionalDisAmt(
+        (prevAdditionalDisAmt) =>
+          prevAdditionalDisAmt - parseFloat(itemToDelete.additional_Discount)
+      );
+      setLotOfSaleDiscount(
+        (prevLotOfSaleDiscount) =>
+          prevLotOfSaleDiscount - parseFloat(itemToDelete.lineDiscountAmt)
+      );
+      setTdsAmount(
+        (prevTdsAmount) => prevTdsAmount - parseFloat(itemToDelete.tds_Amount)
+      );
+      setNetTotal(
+        (prevNetTotal) => prevNetTotal - parseFloat(itemToDelete.line_ItmAmt)
+      );
+      setSalesLines((prev) =>
+        prev.filter((item) => item.salesId !== salesIdToRemove)
+      );
     }
   };
 
@@ -277,24 +342,24 @@ const SalesReturn = () => {
         itemLines: salesLines,
         paymentLines,
         salesHeader: {
-          invoiceNo: invoiceNo
+          invoiceNo: invoiceNo,
         },
-        linesAmount : {
+        linesAmount: {
           grossTotal: Number(grossTotal),
           taxAmount: Number(taxAmount),
           discountAmount: Number(discountAmt),
           additionalDiscount: Number(additionalDisAmt),
           lotOfSaleDiscount: Number(lotOfSaleDiscount),
           tdsAmount: Number(tdsAmount),
-          netAmount: Number(netTotal)
+          netAmount: Number(netTotal),
         },
-        userId : user
+        userId: user,
       };
 
       const jsonDataBlob = new Blob([JSON.stringify(data)], {
         type: "application/json",
       });
-  
+
       formData.append("details", jsonDataBlob, "data.json");
       const res = await Route(
         "POST",
@@ -316,7 +381,9 @@ const SalesReturn = () => {
         setShowNofication(true);
       }
     } catch (error) {
-      console.error("Error posting the:", error);
+      setNotificationMsg("Error posting the:", error);
+      setSeverity("error");
+      setShowNofication(true);
     }
   };
 
@@ -324,12 +391,12 @@ const SalesReturn = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
-          {/* <SubHeader text="Sales Return" /> */}
           <Grid item xs={12}>
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -343,8 +410,8 @@ const SalesReturn = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container paddingX={2} paddingY={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="POS No"
@@ -352,6 +419,7 @@ const SalesReturn = () => {
                       fullWidth
                       name="pos_no"
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -362,17 +430,21 @@ const SalesReturn = () => {
                       name="posting_date"
                       defaultValue={new Date().toDateString()}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
+                      error={emptyInvoiceNo}
                       label="Invoice No"
                       variant="outlined"
                       fullWidth
                       name="invoice_no"
-                      onChange={(e) => setSalesInvoice(e)}
+                      onChange={setSalesInvoice}
                       value={invoiceNo}
                       required
+                      helperText={emptyInvoiceNo ? "Invoice No is Empty" : null}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -381,20 +453,29 @@ const SalesReturn = () => {
                       fullWidth
                       onClick={fetchSalesInvoice}
                       disabled={loading}
+                      style={{
+                        padding: "7px 0",
+                      }}
+                      endIcon={<GetAppIcon />}
                     >
-                      {loading ? <CircularProgress size={24} /> : "Fetch Details"}
+                      {loading ? (
+                        <CircularProgress size={24} />
+                      ) : (
+                        "Fetch Details"
+                      )}
                     </Button>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 1 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Sales Type"
                       variant="outlined"
                       fullWidth
-                      defaultValue='Sales Type'
+                      defaultValue="Sales Type"
                       value={salesData?.salesHeader?.sales_Type}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -405,6 +486,7 @@ const SalesReturn = () => {
                       defaultValue="Product Type"
                       value={salesData?.salesHeader?.product_Type}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -415,6 +497,7 @@ const SalesReturn = () => {
                       defaultValue="Mobile No"
                       value={salesData?.salesHeader?.mobileNo}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -425,10 +508,11 @@ const SalesReturn = () => {
                       defaultValue="Customer No"
                       value={salesData?.salesHeader?.customerNumber}
                       disabled
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ my: 1 }}>
+                <Grid container spacing={1} sx={{ my: 1 }}>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
@@ -437,6 +521,7 @@ const SalesReturn = () => {
                       defaultValue="Customer Name"
                       value={salesData?.salesHeader?.customerName}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -447,6 +532,7 @@ const SalesReturn = () => {
                       defaultValue="Address"
                       value={salesData?.salesHeader?.address}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -457,6 +543,7 @@ const SalesReturn = () => {
                       defaultValue="Address1"
                       value={salesData?.salesHeader?.address1}
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -467,6 +554,7 @@ const SalesReturn = () => {
                       defaultValue="city"
                       value={salesData?.salesHeader?.city}
                       disabled
+                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -477,7 +565,8 @@ const SalesReturn = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -492,9 +581,13 @@ const SalesReturn = () => {
                 </Grid>
               </Grid>
               <Grid container padding={2}>
-                <Grid container spacing={2} sx={{ my: 1, px: 2 }}>
+                <Grid container spacing={2} sx={{ my: 1, px: 1 }}>
                   <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table
+                      sx={{ minWidth: 650 }}
+                      aria-label="simple table"
+                      size="small"
+                    >
                       <TableHead>
                         <TableRow>
                           <TableCell>Description</TableCell>
@@ -515,7 +608,9 @@ const SalesReturn = () => {
                           salesLines?.map((item, index) => (
                             <TableRow key={index}>
                               <TableCell>{item?.description}</TableCell>
-                              <TableCell align="right">{item?.quantity}</TableCell>
+                              <TableCell align="right">
+                                {item?.quantity}
+                              </TableCell>
                               <TableCell align="right">
                                 {item?.selling_Price}
                               </TableCell>
@@ -537,7 +632,9 @@ const SalesReturn = () => {
                               <TableCell align="right">
                                 <IconButton
                                   aria-label="delete"
-                                 onClick={(e) => deleteLineItemHandle(e, item?.salesId)}
+                                  onClick={(e) =>
+                                    deleteLineItemHandle(e, item?.salesId)
+                                  }
                                 >
                                   <DeleteIcon />
                                 </IconButton>
@@ -545,52 +642,66 @@ const SalesReturn = () => {
                             </TableRow>
                           ))}
                         <TableRow>
-                          <TableCell colSpan={5} />
-                          <TableCell colSpan={2} align="right">Gross Total</TableCell>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={2} align="right">
+                            Gross Total
+                          </TableCell>
                           <TableCell align="right" colSpan={2}>
-                            <TextField value={grossTotal} disabled/>
+                            {grossTotal}
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell colSpan={5} />
-                          <TableCell colSpan={2} align="right">Tax Amount</TableCell>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={2} align="right">
+                            Tax Amount
+                          </TableCell>
                           <TableCell align="right" colSpan={2}>
-                            <TextField value={taxAmount} disabled/>
+                            {taxAmount}
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell colSpan={5} />
-                          <TableCell colSpan={2} align="right">Disc/Comm Amount</TableCell>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={2} align="right">
+                            Disc/Comm Amount
+                          </TableCell>
                           <TableCell align="right" colSpan={2}>
-                            <TextField value={discountAmt} disabled/>
+                            {discountAmt}
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell colSpan={5} />
-                          <TableCell colSpan={2} align="right">Additional Discount</TableCell>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={2} align="right">
+                            Additional Discount
+                          </TableCell>
                           <TableCell align="right" colSpan={2}>
-                            <TextField value={additionalDisAmt} disabled/>
+                            {additionalDisAmt}
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell colSpan={5} />
-                          <TableCell colSpan={2} align="right">Lots of Sales Discount</TableCell>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={2} align="right">
+                            Lots of Sales Discount
+                          </TableCell>
                           <TableCell align="right" colSpan={2}>
-                            <TextField value={lotOfSaleDiscount} disabled/>
+                            {lotOfSaleDiscount}
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell colSpan={5} />
-                          <TableCell colSpan={2} align="right">TDS Amount</TableCell>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={2} align="right">
+                            TDS Amount
+                          </TableCell>
                           <TableCell align="right" colSpan={2}>
-                            <TextField value={tdsAmount} disabled/>
+                            {tdsAmount}
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell colSpan={5} />
-                          <TableCell colSpan={2} align="right">Net Total (Nu)</TableCell>
+                          <TableCell colSpan={6} />
+                          <TableCell colSpan={2} align="right">
+                            Net Total (Nu)
+                          </TableCell>
                           <TableCell align="right" colSpan={2}>
-                            <TextField value={netTotal} disabled/>
+                            {netTotal}
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -604,7 +715,8 @@ const SalesReturn = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -619,7 +731,7 @@ const SalesReturn = () => {
                 </Grid>
               </Grid>
               <Grid container padding={2}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={2}>
                     <TextField
                       label="Refund Amount"
@@ -627,14 +739,15 @@ const SalesReturn = () => {
                       fullWidth
                       type="number"
                       name="refund_amount"
-                      defaultValue='refund_amount'
+                      defaultValue="refund_amount"
                       value={paymentLinesItem?.paymentAmount}
                       required
                       onChange={paymentAmountHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="refund-type-select-label">
                         Refund Type
                       </InputLabel>
@@ -654,7 +767,7 @@ const SalesReturn = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
                       </InputLabel>
@@ -680,6 +793,7 @@ const SalesReturn = () => {
                         variant="outlined"
                         name="card_no"
                         onChange={cardNoHandle}
+                        size="small"
                       />
                     </Grid>
                   )}
@@ -690,6 +804,7 @@ const SalesReturn = () => {
                         variant="outlined"
                         name="cheque_no"
                         onChange={chequeNoHandle}
+                        size="small"
                       />
                     </Grid>
                   )}
@@ -701,6 +816,11 @@ const SalesReturn = () => {
                             label="Cheque Date"
                             // value={dayjs(rechargeDetails?.postingDate)}
                             onChange={chequeDateHandle}
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                              },
+                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>
@@ -752,6 +872,7 @@ const SalesReturn = () => {
                   <Table
                     sx={{ minWidth: 650 }}
                     aria-label="refund detail table"
+                    size="small"
                   >
                     <TableHead>
                       <TableRow>
@@ -811,12 +932,26 @@ const SalesReturn = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
-            <Button variant="outlined" onClick={postSalesReturn} sx={{ ml: 2 }}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
+            <Button
+              variant="contained"
+              onClick={postSalesReturn}
+              sx={{ ml: 2 }}
+              size="small"
+            >
               Create & Post
             </Button>
-            <Button variant="outlined" color="error" sx={{ ml: 2 }}>
-              Close
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{ ml: 2 }}
+              style={{
+                background: "#fff",
+              }}
+              onClick={cancelHandle}
+              size="small"
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>

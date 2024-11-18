@@ -255,7 +255,7 @@ const PaymentReceipt = () => {
       remarks: e?.target?.value,
     }));
   };
-  const token = localStorage.getItem("access_token");
+  // const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
     e.preventDefault();
     console.log(paymentReceiptDetails?.mobileNo?.length);
@@ -290,6 +290,7 @@ const PaymentReceipt = () => {
       console.log(paymentReceiptDetails);
       console.log(res);
       if (res?.status === 200) {
+        console.log(res?.data);
         setResponseData(res?.data);
         setNotificationMsg(
           `Successfully Paid and your Application No is ${res?.data?.applicationNo}`
@@ -330,6 +331,35 @@ const PaymentReceipt = () => {
       }
     }
   };
+  const cancelHandle = () => {
+    setPaymentReceiptDetails((prev) => ({
+      ...prev,
+      serviceType: "",
+      mobileNo: "",
+      postingDate: new Date().toString(),
+      paymentType: "",
+      accountCode: "",
+      bankId: null,
+      userId: userId,
+      name: "",
+      amount: "",
+      accountId: "",
+      acctKey: "",
+      billAmount: "",
+      chequeNo: "",
+      chequeDate: new Date().toString(),
+      remarks: "",
+      payment: "",
+      outstandingBalance: "",
+    }));
+    setDisabledFields((prev) => ({
+      ...prev,
+      chequeNoField: true,
+      chequeDateField: true,
+      chequeCopyField: true,
+    }));
+    setFileName("Upload File");
+  };
   const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
     const newWindow = window.open(
@@ -345,11 +375,11 @@ const PaymentReceipt = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Paper elevation={1}>
-              <Grid container padding={2} spacing={2}>
+              <Grid container paddingX={2} paddingY={1} spacing={1}>
                 <Grid item xs={9} container>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={1}>
                     <Grid item xs={3}>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth size="small">
                         <InputLabel id="service-type-select-label">
                           Service Type*
                         </InputLabel>
@@ -369,7 +399,7 @@ const PaymentReceipt = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={3}>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth size="small">
                         <InputLabel id="payment-select-label">
                           Payment
                         </InputLabel>
@@ -400,10 +430,11 @@ const PaymentReceipt = () => {
                         onChange={mobileNoHandle}
                         value={paymentReceiptDetails?.mobileNo}
                         helperText={incorrectFormant && "Incorrect Entry"}
+                        size="small"
                       />
                     </Grid>
                   </Grid>
-                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                  <Grid container spacing={1}>
                     <Grid item xs={3}>
                       <FormControl fullWidth>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -411,12 +442,17 @@ const PaymentReceipt = () => {
                             label="Posting Date"
                             value={dayjs(paymentReceiptDetails?.postingDate)}
                             onChange={postingDateHandle}
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                              },
+                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>
                     </Grid>
                     <Grid item xs={3}>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth size="small">
                         <InputLabel id="payment-method-select-label">
                           Payment Method
                         </InputLabel>
@@ -444,18 +480,19 @@ const PaymentReceipt = () => {
                         required
                         onChange={amountHandle}
                         value={paymentReceiptDetails?.amount}
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={3}>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth size="small">
                         <InputLabel id="bank-acc-select-label">
-                          Bank Account Name
+                          Bank Account
                         </InputLabel>
                         <Select
                           labelId="bank-acc-select-label"
                           id="bank-acc-select"
                           value={paymentReceiptDetails?.bankId}
-                          label="Bank Account Name"
+                          label="Bank Account"
                           onChange={bankHandle}
                         >
                           {bankAccountNames?.map((item) => (
@@ -467,7 +504,7 @@ const PaymentReceipt = () => {
                       </FormControl>
                     </Grid>
                   </Grid>
-                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                  <Grid container spacing={1}>
                     <Grid item xs={3}>
                       <TextField
                         label="Cheque No"
@@ -477,6 +514,7 @@ const PaymentReceipt = () => {
                         onChange={chequeNoHandle}
                         disabled={disableFields?.chequeNoField}
                         value={paymentReceiptDetails?.chequeNo}
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={3}>
@@ -487,15 +525,21 @@ const PaymentReceipt = () => {
                             value={dayjs(paymentReceiptDetails?.chequeDate)}
                             onChange={chequeDateHandle}
                             disabled={disableFields?.chequeDateField}
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                              },
+                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={3} display="flex">
+                    <Grid item xs={3}>
                       <Button
                         component="label"
                         role={undefined}
                         tabIndex={-1}
+                        size="small"
                         // endIcon={<CloudUploadIcon />}
                         fullWidth
                         variant="outlined"
@@ -505,7 +549,7 @@ const PaymentReceipt = () => {
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "flex-start",
-                          padding: "8px",
+                          padding: "7px",
                           textOverflow: "ellipsis",
                           overflow: "hidden",
                           whiteSpace: "nowrap",
@@ -531,7 +575,7 @@ const PaymentReceipt = () => {
                       </Button>
                     </Grid>
                   </Grid>
-                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                  <Grid container spacing={1}>
                     <Grid item xs={12}>
                       <TextField
                         label="Remarks"
@@ -543,25 +587,24 @@ const PaymentReceipt = () => {
                         value={paymentReceiptDetails?.remarks}
                         multiline
                         maxRows={3}
+                        size="small"
                       />
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={3} container>
                   <Paper>
-                    <Grid
-                      item
-                      xs={12}
-                    >
+                    <Grid item xs={12}>
                       <Grid
                         container
-                        padding={2}
+                        paddingX={2}
+                        paddingY={1}
                         sx={{
-                          backgroundColor: "#EEEDEB",
+                          backgroundColor: "#1976d2",
                         }}
                       >
                         <Grid item>
-                          <Typography variant="subtitle1">
+                          <Typography variant="subtitle1" color="#fff">
                             Customer Details
                           </Typography>
                         </Grid>
@@ -569,13 +612,13 @@ const PaymentReceipt = () => {
                       <Grid
                         container
                         paddingY={2}
-                        spacing={2}
+                        spacing={1}
                         sx={{
                           display: "flex",
                           flexFlow: "column",
                         }}
                       >
-                        <Grid item marginX={2}>
+                        <Grid item marginX={1}>
                           <TextField
                             label="Customer Name"
                             variant="outlined"
@@ -583,9 +626,10 @@ const PaymentReceipt = () => {
                             name="customer_name"
                             disabled
                             value={paymentReceiptDetails?.name}
+                            size="small"
                           />
                         </Grid>
-                        <Grid item marginX={2}>
+                        <Grid item marginX={1}>
                           <TextField
                             label="Account Id"
                             variant="outlined"
@@ -593,9 +637,10 @@ const PaymentReceipt = () => {
                             name="account_id"
                             disabled
                             value={paymentReceiptDetails?.accountId}
+                            size="small"
                           />
                         </Grid>
-                        <Grid item marginX={2}>
+                        <Grid item marginX={1}>
                           <TextField
                             label="Outstanding Balance"
                             variant="outlined"
@@ -603,6 +648,7 @@ const PaymentReceipt = () => {
                             name="outstanding_balance"
                             disabled
                             value={paymentReceiptDetails?.outstandingBalance}
+                            size="small"
                           />
                         </Grid>
                       </Grid>
@@ -612,10 +658,23 @@ const PaymentReceipt = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
-            {/* <Button variant="outlined">Print</Button> */}
-            <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
+            <Button
+              variant="contained"
+              sx={{ mr: 2 }}
+              onClick={createHandle}
+              size="small"
+            >
               Create & Post
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={cancelHandle}
+              style={{ background: "#fff" }}
+              size="small"
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>
@@ -649,10 +708,14 @@ const PaymentReceipt = () => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={openInNewTab} variant="outlined">
+              <Button onClick={openInNewTab} variant="contained">
                 View Receipt
               </Button>
-              <Button onClick={() => setShowDialog(false)} variant="contained">
+              <Button
+                onClick={() => setShowDialog(false)}
+                variant="outlined"
+                color="error"
+              >
                 Close
               </Button>
             </DialogActions>

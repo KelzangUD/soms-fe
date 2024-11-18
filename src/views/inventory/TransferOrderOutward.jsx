@@ -8,7 +8,6 @@ import {
   IconButton,
   FormControl,
 } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -40,7 +39,7 @@ const TransferOrderOutward = () => {
     if (res?.status === 200) {
       setTransferOrderDetails(res?.data);
       setView(true);
-    };
+    }
   };
   const viewHandle = (params) => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no);
@@ -108,7 +107,6 @@ const TransferOrderOutward = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Transfer Order Outward" /> */}
           <Grid
             item
             xs={12}
@@ -116,89 +114,86 @@ const TransferOrderOutward = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
+                <Grid item>
+                  <Paper
+                    sx={{
+                      p: "2px 0",
+                      display: "flex",
+                      alignItems: "center",
+                      maxWidth: 400,
+                    }}
+                  >
+                    <InputBase
+                      sx={{ ml: 1, flex: 1 }}
+                      placeholder="Search"
+                      inputProps={{ "aria-label": "search" }}
+                    />
+                    <IconButton
+                      type="button"
+                      sx={{ p: "10px" }}
+                      aria-label="search"
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </Paper>
+                </Grid>
                 <Grid
                   item
                   xs={12}
                   spacing={2}
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <Grid
-                    item
-                    container
-                    xs={8}
-                    direction="column-reverse"
-                    spacing={2}
-                  >
-                    <Grid item container spacing={1} alignItems="center">
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff" }}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label="From*" />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff" }}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label="To*" />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Button variant="contained">Search</Button>
-                      </Grid>
+                  <Grid item container spacing={1} alignItems="center">
+                    <Grid item xs={2}>
+                      <FormControl fullWidth style={{ background: "#fff" }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="From*"
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                              },
+                            }}
+                          />
+                        </LocalizationProvider>
+                      </FormControl>
                     </Grid>
-                    <Grid item>
-                      <Paper
-                        sx={{
-                          p: "2px 0",
-                          display: "flex",
-                          alignItems: "center",
-                          maxWidth: 400,
-                        }}
-                      >
-                        <InputBase
-                          sx={{ ml: 1, flex: 1 }}
-                          placeholder="Search"
-                          inputProps={{ "aria-label": "search" }}
-                        />
-                        <IconButton
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </Paper>
+                    <Grid item xs={2}>
+                      <FormControl fullWidth style={{ background: "#fff" }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="To*"
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                              },
+                            }}
+                          />
+                        </LocalizationProvider>
+                      </FormControl>
                     </Grid>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      endIcon={<PictureAsPdfIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      endIcon={<FileDownloadIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      endIcon={<PrintIcon />}
-                    >
-                      Print
-                    </Button>
+                    <Grid item xs={2}>
+                      <Button variant="contained">Search</Button>
+                    </Grid>
                   </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
+                <Grid
+                  item
+                  xs={12}
+                  spacing={1}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <IconButton aria-label="pdf" color="error">
+                    <PictureAsPdfIcon />
+                  </IconButton>
+                  <IconButton aria-label="excel" color="success">
+                    <FileDownloadIcon />
+                  </IconButton>
+                  <IconButton aria-label="excel" color="primary">
+                    <PrintIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item container alignItems="center" xs={12}>
                   <div
                     style={{
                       height: "auto",

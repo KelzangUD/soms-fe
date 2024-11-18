@@ -13,7 +13,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function DialogUi({title, message, open, cancelHandle, submitHandle}) {
 
-
   return (
     <React.Fragment>
       <Dialog

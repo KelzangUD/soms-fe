@@ -9,15 +9,14 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import PrintIcon from '@mui/icons-material/Print';
+import PrintIcon from "@mui/icons-material/Print";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Route from "../../routes/Route";
 
 const EmployeeList = () => {
@@ -34,17 +33,17 @@ const EmployeeList = () => {
       width: 150,
     },
     {
-        field: "action",
-        headerName: "Action",
-        width: 150,
-        renderCell: (params) => (
-          <>
-            <IconButton aria-label="view" size="small">
-              <VisibilityIcon fontSize="inherit" />
-            </IconButton>
-          </>
-        ),
-      },
+      field: "action",
+      headerName: "Action",
+      width: 150,
+      renderCell: (params) => (
+        <>
+          <IconButton aria-label="view" size="small">
+            <VisibilityIcon fontSize="inherit" />
+          </IconButton>
+        </>
+      ),
+    },
   ];
   const employee_list_rows = [
     {
@@ -54,7 +53,7 @@ const EmployeeList = () => {
       department: "Human Resource & Administration",
       region: "Thimphu",
       email: "md@tashicell.com",
-      status: "Active"
+      status: "Active",
     },
   ];
 
@@ -68,12 +67,11 @@ const EmployeeList = () => {
   //   useEffect(() => {
   //     fetchResults();
   //   }, []);
-  
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Employee List" /> */}
           <Grid
             item
             xs={12}
@@ -109,34 +107,26 @@ const EmployeeList = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
-                  <Grid item>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        endIcon={<PictureAsPdfIcon />}
-                        sx={{ mr: 2 }}
-                      >
-                        Export
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        endIcon={<FileDownloadIcon />}
-                        sx={{ mr: 2 }}
-                      >
-                        Export
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        endIcon={<PrintIcon />}
-                      >
-                        Print
-                      </Button>
-                    </Grid>
+                  <Grid item alignContent="center">
+                    <IconButton aria-label="pdf" color="error">
+                      <PictureAsPdfIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="excel" color="success">
+                      <FileDownloadIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="print" color="primary">
+                      <PrintIcon fontSize="inherit" />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                <Grid item container alignItems="center" xs={12}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
                       rows={employee_list_rows?.map((row, index) => ({
                         ...row,

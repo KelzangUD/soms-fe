@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Paper,
-  Grid,
-  Button,
-  InputBase,
-  IconButton,
-} from "@mui/material";
+import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -15,7 +8,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 // import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
-import Notification from "../../ui/Notification";
+import { Notification, RenderStatus } from "../../ui/index";
 import ViewRequisitionItemDetails from "./ViewRequisitionItemDetails";
 
 const RequisitionList = () => {
@@ -60,20 +53,19 @@ const RequisitionList = () => {
       field: "approvalStatus",
       headerName: "Approval Status",
       width: 150,
+      renderCell: (params) => <RenderStatus status={params?.row?.approvalStatus} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 70,
       renderCell: (params) => (
         <>
-          {/* <IconButton aria-label="edit" size="small">
-            <EditIcon fontSize="inherit" />
-          </IconButton> */}
           <IconButton
             aria-label="view"
             size="small"
             onClick={() => viewDetailsHandle(params)}
+            color="primary"
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
@@ -90,7 +82,7 @@ const RequisitionList = () => {
       null,
       null
     );
-    console.log(res);
+    // console.log(res);
     if (res?.status === 200) {
       setRequisitionList(res?.data);
     }
@@ -103,7 +95,6 @@ const RequisitionList = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Requisition List" /> */}
           <Grid
             item
             xs={12}
@@ -116,56 +107,43 @@ const RequisitionList = () => {
                   xs={12}
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <Grid item>
-                    <Paper
-                      sx={{
-                        p: "2px 0",
-                        display: "flex",
-                        alignItems: "center",
-                        width: 400,
-                      }}
+                  <Paper
+                    sx={{
+                      p: "2px 0",
+                      display: "flex",
+                      alignItems: "center",
+                      width: 400,
+                    }}
+                  >
+                    <InputBase
+                      sx={{ ml: 1, flex: 1 }}
+                      placeholder="Search"
+                      inputProps={{ "aria-label": "search" }}
+                    />
+                    <IconButton
+                      type="button"
+                      sx={{ p: "10px" }}
+                      aria-label="search"
                     >
-                      <InputBase
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search"
-                        inputProps={{ "aria-label": "search" }}
-                      />
-                      <IconButton
-                        type="button"
-                        sx={{ p: "10px" }}
-                        aria-label="search"
-                      >
-                        <SearchIcon />
-                      </IconButton>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      endIcon={<PictureAsPdfIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      endIcon={<FileDownloadIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      endIcon={<PrintIcon />}
-                    >
-                      Print
-                    </Button>
-                  </Grid>
+                      <SearchIcon />
+                    </IconButton>
+                  </Paper>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
+                <Grid
+                  container
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <IconButton aria-label="pdf" color="error">
+                    <PictureAsPdfIcon />
+                  </IconButton>
+                  <IconButton aria-label="excel" color="success">
+                    <FileDownloadIcon />
+                  </IconButton>
+                  <IconButton aria-label="print" color="primary">
+                    <PrintIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item container alignItems="center" xs={12}>
                   <div
                     style={{
                       height: "auto",

@@ -12,7 +12,6 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -83,7 +82,6 @@ const TransferOrderReport = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Transfer Order Report" /> */}
           <Grid
             item
             xs={12}
@@ -91,164 +89,146 @@ const TransferOrderReport = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid
-                  item
-                  xs={12}
-                  spacing={2}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Grid
-                    item
-                    container
-                    xs={8}
-                    direction="column-reverse"
-                    spacing={2}
+                <Grid item>
+                  <Paper
+                    sx={{
+                      p: "2px 0",
+                      display: "flex",
+                      alignItems: "center",
+                      maxWidth: 400,
+                    }}
                   >
-                    <Grid item container spacing={1} alignItems="center">
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
-                          <InputLabel id="transfer-type-select-label">
-                            Transfer Type
-                          </InputLabel>
-                          <Select
-                            labelId="transfer-type-select-label"
-                            id="transfer-type-select"
-                            // value={age}
-                            label="Transfer Type"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>Store to Store</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label="From Date" />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2} style={{ background: "#fff"}}>
-                        <FormControl fullWidth>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label="To Date" />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
-                          <InputLabel id="from-select-label">
-                            From Store
-                          </InputLabel>
-                          <Select
-                            labelId="from-select-label"
-                            id="from-select"
-                            // value={age}
-                            label="From Store"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>ALL</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
-                          <InputLabel id="to-select-label">To Store</InputLabel>
-                          <Select
-                            labelId="to-select-label"
-                            id="to-select"
-                            // value={age}
-                            label="To Store"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>ALL</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <TextField
-                          label="Item Description"
-                          variant="outlined"
-                          fullWidth
-                          name="item_description"
-                          required
-                          style={{ background: "#fff"}}
-                          // onChange={oldPasswordHandle}
-                        />
-                      </Grid>
-                      <Grid item xs={4}>
-                        <FormControl fullWidth style={{ background: "#fff"}}>
-                          <InputLabel id="transaction-status-select-label">
-                            Transaction Status
-                          </InputLabel>
-                          <Select
-                            labelId="transaction-status--select-label"
-                            id="transaction-status-select"
-                            // value={age}
-                            label="Transaction Status"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>ALL</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item xs={2}>
-                        <Button variant="contained">Search</Button>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Paper
-                        sx={{
-                          p: "2px 0",
-                          display: "flex",
-                          alignItems: "center",
-                          maxWidth: 400,
-                        }}
+                    <InputBase
+                      sx={{ ml: 1, flex: 1 }}
+                      placeholder="Search"
+                      inputProps={{ "aria-label": "search" }}
+                    />
+                    <IconButton
+                      type="button"
+                      sx={{ p: "10px" }}
+                      aria-label="search"
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </Paper>
+                </Grid>
+                <Grid item container spacing={1} alignItems="center">
+                  <Grid item xs={2}>
+                    <FormControl fullWidth style={{ background: "#fff" }}>
+                      <InputLabel id="transfer-type-select-label">
+                        Transfer Type
+                      </InputLabel>
+                      <Select
+                        labelId="transfer-type-select-label"
+                        id="transfer-type-select"
+                        // value={age}
+                        label="Transfer Type"
+                        // onChange={handleChange}
                       >
-                        <InputBase
-                          sx={{ ml: 1, flex: 1 }}
-                          placeholder="Search"
-                          inputProps={{ "aria-label": "search" }}
-                        />
-                        <IconButton
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </Paper>
-                    </Grid>
+                        <MenuItem value={1}>Store to Store</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormControl fullWidth style={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker label="From Date" />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={2} style={{ background: "#fff" }}>
+                    <FormControl fullWidth>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker label="To Date" />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth style={{ background: "#fff" }}>
+                      <InputLabel id="from-select-label">From Store</InputLabel>
+                      <Select
+                        labelId="from-select-label"
+                        id="from-select"
+                        // value={age}
+                        label="From Store"
+                        // onChange={handleChange}
+                      >
+                        <MenuItem value={1}>ALL</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth style={{ background: "#fff" }}>
+                      <InputLabel id="to-select-label">To Store</InputLabel>
+                      <Select
+                        labelId="to-select-label"
+                        id="to-select"
+                        // value={age}
+                        label="To Store"
+                        // onChange={handleChange}
+                      >
+                        <MenuItem value={1}>ALL</MenuItem>
+                      </Select>
+                    </FormControl>
                   </Grid>
                   <Grid item xs={4}>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      endIcon={<PictureAsPdfIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      endIcon={<FileDownloadIcon />}
-                      sx={{ mr: 2 }}
-                    >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      endIcon={<PrintIcon />}
-                    >
-                      Print
-                    </Button>
+                    <TextField
+                      label="Item Description"
+                      variant="outlined"
+                      fullWidth
+                      name="item_description"
+                      required
+                      style={{ background: "#fff" }}
+                      // onChange={oldPasswordHandle}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl fullWidth style={{ background: "#fff" }}>
+                      <InputLabel id="transaction-status-select-label">
+                        Transaction Status
+                      </InputLabel>
+                      <Select
+                        labelId="transaction-status--select-label"
+                        id="transaction-status-select"
+                        // value={age}
+                        label="Transaction Status"
+                        // onChange={handleChange}
+                      >
+                        <MenuItem value={1}>ALL</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={2}>
+                    <Button variant="contained">Search</Button>
                   </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                <Grid
+                  item
+                  container
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <IconButton aria-label="pdf" color="error">
+                    <PictureAsPdfIcon fontSize="inherit" />
+                  </IconButton>
+                  <IconButton aria-label="excel" color="success">
+                    <FileDownloadIcon fontSize="inherit" />
+                  </IconButton>
+                  <IconButton aria-label="print" color="primary">
+                    <PrintIcon fontSize="inherit" />
+                  </IconButton>
+                </Grid>
+                <Grid item container alignItems="center" xs={12}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
                       rows={transfer_order_report_rows?.map((row, index) => ({
                         ...row,

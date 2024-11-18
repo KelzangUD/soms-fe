@@ -5,18 +5,14 @@ import {
   Grid,
   Button,
   Dialog,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
 import Route from "../../routes/Route";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
+import { Transition } from "../../component/common/index";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const AddLineItem = ({
+const EditLineItem = ({
   open,
   setOpen,
   storeName,
@@ -24,6 +20,8 @@ const AddLineItem = ({
   salesType,
   setLineItems,
   userDetails,
+  editDetails,
+  editLineItemIndex,
 }) => {
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -37,34 +35,37 @@ const AddLineItem = ({
     storeName: storeName,
     subInventoryId: userDetails?.subInventory,
     locatorId: userDetails?.locator,
-    description: "",
-    serialNo: "",
-    imeiNo: "",
-    qty: "",
-    priceLocator: "N",
-    discPercentage: "",
-    tdsAmount: "",
-    itemNo: "",
-    mrp: "",
-    discountedAmount: "",
-    sellingPrice: "",
-    taxPercentage: "",
-    additionalDiscount: "",
-    amountExclTax: "",
-    advanceTaxAmount: "",
-    itemTotalAddedQty: "",
-    lineItemAmt: "",
-    available: "N",
-    serialNoStatus: false,
-    taxAmt: "",
-    taxBasedAmt: "",
-    discountValue: "",
-    dineDiscountAmt: "",
-    tdsPercent: "",
-    base_amount_tds: "",
-    pricedIdForVarientCode: "",
-    volumeDiscount: "",
-    priceLocatorDTOs: [],
+    description: editDetails?.description,
+    serialNo: editDetails?.serialNo,
+    imeiNo: editDetails?.imeiNo,
+    qty: editDetails?.qty,
+    priceLocator: editDetails?.priceLocator,
+    discPercentage: editDetails?.discPercentage,
+    tdsAmount: editDetails?.tdsAmount,
+    itemNo: editDetails?.itemNo,
+    mrp: editDetails?.mrp,
+    discountedAmount: editDetails?.discountedAmount,
+    sellingPrice: editDetails?.sellingPrice,
+    taxPercentage: editDetails?.taxPercentage,
+    additionalDiscount: editDetails?.additionalDiscount,
+    amountExclTax: editDetails?.amountExclTax,
+    advanceTaxAmount: editDetails?.advanceTaxAmount,
+    itemTotalAddedQty: editDetails?.itemTotalAddedQty,
+    lineItemAmt: editDetails?.lineItemAmt,
+    available: editDetails?.available,
+    serialNoStatus: editDetails?.serialNoStatus,
+    taxAmt: editDetails?.taxAmt,
+    taxBasedAmt: editDetails?.taxBasedAmt,
+    discountValue: editDetails?.discountValue,
+    dineDiscountAmt: editDetails?.dineDiscountAmt,
+    tdsPercent: editDetails?.tdsPercent,
+    base_amount_tds: editDetails?.base_amount_tds,
+    pricedIdForVarientCode: editDetails?.pricedIdForVarientCode,
+    volumeDiscount: editDetails?.volumeDiscount,
+    priceLocatorDTOs:
+      editDetails?.priceLocatorDTOs !== null
+        ? editDetails?.priceLocatorDTOs
+        : [],
   });
   const fetchSubInventory = async () => {
     const res = await Route(
@@ -116,7 +117,6 @@ const AddLineItem = ({
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200 && res?.data?.available === "Y") {
       setLineItemDetail((prev) => ({
         ...prev,
@@ -293,7 +293,11 @@ const AddLineItem = ({
     setPricingID(value?.id);
   };
   const submitHandle = () => {
-    setLineItems((prev) => [...prev, lineItemDetail]);
+    setLineItems((prev) =>
+      prev.map((item, index) =>
+        index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
+      )
+    );
     setOpen(false);
   };
   return (
@@ -310,25 +314,26 @@ const AddLineItem = ({
             <Grid item xs={12}>
               <Grid
                 container
-                paddingX={2}
-                paddingY={1}
+                paddingX={4}
+                paddingY={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "#0288d1",
+                  paddingY: "24px",
                   color: "#eee",
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1">Add Line Item</Typography>
+                  <Typography variant="subtitle1">Edit Line Item</Typography>
                 </Grid>
               </Grid>
               <Grid
                 container
-                spacing={1}
-                paddingY={1}
-                paddingX={2}
+                spacing={2}
+                paddingY={2}
+                paddingX={4}
                 marginTop={1}
               >
                 <Grid item xs={3}>
@@ -339,13 +344,10 @@ const AddLineItem = ({
                     fullWidth
                     value={storeName}
                     disabled
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
-                  {userDetails?.roleName === "Administrator" ||
-                  userDetails?.roleName === "Regional Manager" ||
-                  userDetails?.roleName === "General Manager" ? (
+                  {userDetails?.roleName === "Administrator" ? (
                     <Autocomplete
                       disablePortal
                       options={subInventory?.map((item) => ({
@@ -354,11 +356,7 @@ const AddLineItem = ({
                       }))}
                       onChange={subInventoryHandle}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Sub-Inventory"
-                          size="small"
-                        />
+                        <TextField {...params} label="Sub-Inventory" />
                       )}
                     />
                   ) : (
@@ -369,14 +367,11 @@ const AddLineItem = ({
                       fullWidth
                       value={lineItemDetail?.subInventoryId}
                       disabled
-                      size="small"
                     />
                   )}
                 </Grid>
                 <Grid item xs={3}>
-                  {userDetails?.roleName === "Administrator" ||
-                  userDetails?.roleName === "Regional Manager" ||
-                  userDetails?.roleName === "General Manager" ? (
+                  {userDetails?.roleName === "Administrator" ? (
                     <Autocomplete
                       disablePortal
                       options={locator?.map((item) => ({
@@ -385,7 +380,7 @@ const AddLineItem = ({
                       }))}
                       onChange={locatorHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Locator" size="small" />
+                        <TextField {...params} label="Locator" />
                       )}
                     />
                   ) : (
@@ -396,7 +391,6 @@ const AddLineItem = ({
                       fullWidth
                       value={lineItemDetail?.locatorId}
                       disabled
-                      size="small"
                     />
                   )}
                 </Grid>
@@ -410,12 +404,12 @@ const AddLineItem = ({
                       handleInputChange(inputValue)
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="Description" size="small" />
+                      <TextField {...params} label="Description" />
                     )}
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
+              <Grid container spacing={2} paddingY={2} paddingX={4}>
                 <Grid item xs={3}>
                   <TextField
                     id="outlined-basic"
@@ -423,7 +417,6 @@ const AddLineItem = ({
                     variant="outlined"
                     fullWidth
                     onChange={serialNoHandle}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -434,7 +427,6 @@ const AddLineItem = ({
                     fullWidth
                     value={lineItemDetail?.qty}
                     onChange={qtyHandle}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -452,11 +444,7 @@ const AddLineItem = ({
                       lineItemDetail?.priceLocator == "Y" ? false : true
                     }
                     renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Price Locator"
-                        size="small"
-                      />
+                      <TextField {...params} label="Price Locator" />
                     )}
                     onChange={priceLocatorHandle}
                   />
@@ -469,11 +457,10 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.discPercentage}
-                    size="small"
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
+              <Grid container spacing={2} paddingY={2} paddingX={4}>
                 <Grid item xs={3}>
                   <TextField
                     id="outlined-basic"
@@ -482,7 +469,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.tdsAmount}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -493,7 +479,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.itemNo}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -504,7 +489,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.mrp}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -515,11 +499,10 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.discountedAmount}
-                    size="small"
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
+              <Grid container spacing={2} paddingY={2} paddingX={4}>
                 <Grid item xs={3}>
                   <TextField
                     id="outlined-basic"
@@ -528,7 +511,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.taxPercentage}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -539,7 +521,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -550,7 +531,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.additionalDiscount}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -561,11 +541,10 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.taxAmt}
-                    size="small"
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
+              <Grid container spacing={2} paddingY={2} paddingX={4}>
                 <Grid item xs={3}>
                   <TextField
                     id="outlined-basic"
@@ -574,7 +553,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.amountExclTax}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -584,7 +562,6 @@ const AddLineItem = ({
                     variant="outlined"
                     fullWidth
                     value={lineItemDetail?.advanceTaxAmount}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -595,7 +572,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.volumeDiscount}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -606,15 +582,14 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.itemTotalAddedQty}
-                    size="small"
                   />
                 </Grid>
               </Grid>
               <Grid
                 container
-                spacing={1}
-                paddingY={1}
-                paddingX={2}
+                spacing={2}
+                paddingY={2}
+                paddingX={4}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 <Grid item xs={3}>
@@ -625,7 +600,6 @@ const AddLineItem = ({
                     fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
-                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -633,24 +607,22 @@ const AddLineItem = ({
                 item
                 xs={12}
                 alignItems="right"
-                paddingY={1}
-                paddingX={2}
-                marginBottom={1}
+                paddingY={2}
+                paddingX={4}
+                marginBottom={2}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 <Button
                   variant="contained"
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
-                  size="small"
                 >
-                  Submit
+                  Update
                 </Button>
                 <Button
                   variant="outlined"
                   onClick={() => setOpen(false)}
                   color="error"
-                  size="small"
                 >
                   Close
                 </Button>
@@ -671,4 +643,4 @@ const AddLineItem = ({
   );
 };
 
-export default AddLineItem;
+export default EditLineItem;

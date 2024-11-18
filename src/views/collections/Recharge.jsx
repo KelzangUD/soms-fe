@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -28,8 +28,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Notification from "../../ui/Notification";
 import dayjs from "dayjs";
 import Route from "../../routes/Route";
-import BulkRechargeFormat from "../../assets/files/BulkRechargeFormat.csv";
-import { dateFormatter } from "../../util/CommonUtil";
+import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -60,9 +59,9 @@ const Recharge = () => {
     mobileNo: "",
     amount: "",
     paymentType: null,
-    payment: {},
+    payment: "",
     bankId: null,
-    bank: {},
+    bank: "",
     cardOrChequeNo: "",
     userId: userID,
     type: "S",
@@ -90,7 +89,6 @@ const Recharge = () => {
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200) {
       setBankAccounts(res?.data);
     }
@@ -119,7 +117,7 @@ const Recharge = () => {
   const paymentTypeHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
-      paymentType: e?.target?.value?.id,
+      paymentType: e?.target?.value,
       payment: e?.target?.value,
     }));
     fetchBankAccount(e?.target?.value?.id);
@@ -149,7 +147,7 @@ const Recharge = () => {
   const bankAccHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
-      bankId: e?.target?.value?.id,
+      bankId: e?.target?.value,
       bank: e?.target?.value,
     }));
   };
@@ -170,15 +168,6 @@ const Recharge = () => {
     setChequeCopy(e?.target?.files[0]);
   };
 
-  const sampleFileDownload = () => {
-    const fileUrl = BulkRechargeFormat;
-    const link = document.createElement("a");
-    link.href = fileUrl;
-    link.download = "BulkRechargeFormat.csv"; // Name of the downloaded file
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link); // Clean up the link element
-  };
   const uploadCSVFileHandle = (e) => {
     if (
       rechargeDetails?.paymentType === null ||
@@ -195,9 +184,8 @@ const Recharge = () => {
       setFile(e?.target?.files[0]);
     }
   };
-  const token = localStorage.getItem("access_token");
+  // const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
-    // console.log(rechargeDetails);
     e.preventDefault();
     let formData = new FormData();
     if (chequeCopy && chequeCopy.length > 0) {
@@ -207,10 +195,10 @@ const Recharge = () => {
       formData.append("cheque", placeholderFile);
     }
     if (file && file.length > 0) {
-      formData.append("file", file);
+      formData.append("rechargeFile ", file);
     } else {
       const placeholderFile = new File([""], "file.csv");
-      formData.append("file", placeholderFile);
+      formData.append("rechargeFile ", placeholderFile);
     }
     const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
       type: "application/json",
@@ -236,9 +224,9 @@ const Recharge = () => {
         mobileNo: "",
         amount: "",
         paymentType: null,
-        payment: {},
+        payment: "",
         bankId: null,
-        bank: {},
+        bank: "",
         cardOrChequeNo: "",
         userId: userID,
         type: "",
@@ -257,9 +245,36 @@ const Recharge = () => {
       setShowNofication(true);
     }
   };
-  const openInNewTab = () =>{
+  const cancelHandle = () => {
+    setRechargeDetails((prev) => ({
+      ...prev,
+      postingDate: new Date(),
+      mobileNo: "",
+      amount: "",
+      paymentType: null,
+      payment: "",
+      bankId: null,
+      bank: "",
+      cardOrChequeNo: "",
+      userId: userID,
+      type: "",
+      chequeDate: new Date(),
+    }));
+    setDisabledFields((prev) => ({
+      ...prev,
+      cardOrChequeNo: true,
+      chequeDate: true,
+      chequeCopy: true,
+    }));
+    setFileName("Upload File");
+  };
+  const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
-    const newWindow = window.open(`/recharge-receipt?${queryParams}`, '_blank', 'noopener,noreferrer');
+    const newWindow = window.open(
+      `/recharge-receipt?${queryParams}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
     if (newWindow) newWindow.opener = null;
   };
   return (
@@ -268,8 +283,8 @@ const Recharge = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Paper elevation={1}>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container padding={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -277,6 +292,11 @@ const Recharge = () => {
                           label="Posting Date"
                           value={dayjs(rechargeDetails?.postingDate)}
                           onChange={postingDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -290,6 +310,7 @@ const Recharge = () => {
                       defaultValue="E-Top Up"
                       required
                       disabled
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -301,6 +322,7 @@ const Recharge = () => {
                       onChange={prepaidNumberHandle}
                       required
                       value={rechargeDetails?.mobileNo}
+                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -311,7 +333,8 @@ const Recharge = () => {
             <Paper elevation={1}>
               <Grid
                 container
-                padding={2}
+                paddingX={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -325,9 +348,6 @@ const Recharge = () => {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <IconButton onClick={sampleFileDownload}>
-                    <DownloadIcon sx={{ color: "#eee" }} />
-                  </IconButton>
                   <IconButton
                     component="label"
                     role={undefined}
@@ -348,10 +368,15 @@ const Recharge = () => {
                       </>
                     )}
                   </IconButton>
+                  <IconButton
+                    onClick={() => downloadSampleHandle("BulkRechargeFormat")}
+                  >
+                    <DownloadIcon sx={{ color: "#eee" }} />
+                  </IconButton>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
+              <Grid container padding={1}>
+                <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <TextField
                       label="Payment Amount"
@@ -362,10 +387,11 @@ const Recharge = () => {
                       type="number"
                       value={rechargeDetails?.amount}
                       required
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="payment-type-select-label">
                         Payment Type*
                       </InputLabel>
@@ -377,7 +403,7 @@ const Recharge = () => {
                         value={rechargeDetails?.payment}
                       >
                         {paymentType?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
+                          <MenuItem value={item?.id} key={item?.id}>
                             {item?.type}
                           </MenuItem>
                         ))}
@@ -385,7 +411,7 @@ const Recharge = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={4}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name*
                       </InputLabel>
@@ -394,10 +420,10 @@ const Recharge = () => {
                         id="bank-ac-name-select"
                         label="Bank A/C Name*"
                         onChange={bankAccHandle}
-                        value={rechargeDetails?.bank}
+                        value={rechargeDetails}
                       >
                         {bankAccounts?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
+                          <MenuItem value={item?.id} key={item?.id}>
                             {item.bankName}
                           </MenuItem>
                         ))}
@@ -405,7 +431,7 @@ const Recharge = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid container spacing={1} sx={{ mt: 0.5 }}>
                   <Grid item xs={4} display="flex" alignItems="center">
                     <TextField
                       label="Card/Cheque Number"
@@ -414,6 +440,7 @@ const Recharge = () => {
                       name="cheque_no"
                       onChange={cardOrChequeNumberHandle}
                       value={rechargeDetails?.cardOrChequeNo}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -424,6 +451,11 @@ const Recharge = () => {
                           disabled={disableFields?.chequeDate}
                           onChange={chequeDateHandle}
                           value={dayjs(rechargeDetails?.chequeDate)}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -452,16 +484,27 @@ const Recharge = () => {
             </Paper>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
-            {/* <Button variant="outlined" disabled style={{ background: "#fff" }}>
-              Print
-            </Button> */}
-            <Button variant="contained" sx={{ ml: 2 }} onClick={createHandle}>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 2 }}
+              onClick={createHandle}
+              size="small"
+            >
               Create & Post
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={cancelHandle}
+              style={{ background: "#fff" }}
+              size="small"
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>
       </Box>
-      {showNotification && severity=== "error" && (
+      {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}
@@ -490,12 +533,13 @@ const Recharge = () => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={openInNewTab} variant="outlined">
+              <Button onClick={openInNewTab} variant="contained">
                 View Receipt
               </Button>
               <Button
                 onClick={() => setShowNofication(false)}
-                variant="contained"
+                variant="outlined"
+                color="error"
               >
                 Close
               </Button>

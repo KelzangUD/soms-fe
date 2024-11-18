@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import SubHeader from "../../common/SubHeader";
 import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -101,33 +100,36 @@ const AdvanceCollectionHistory = () => {
                     </Paper>
                   </Grid>
                   <Grid item>
-                    <Button
-                      variant="contained"
+                    <IconButton
+                      aria-label="pdf"
                       color="error"
-                      endIcon={<PictureAsPdfIcon />}
-                      sx={{ mr: 2 }}
+                      // sx={{ mr: 2 }}
                     >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
+                      <PictureAsPdfIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton
+                      aria-label="excel"
                       color="success"
-                      endIcon={<FileDownloadIcon />}
-                      sx={{ mr: 2 }}
+                      // sx={{ mr: 2 }}
                     >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
+                      <FileDownloadIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton
+                      aria-label="print"
                       color="primary"
-                      endIcon={<PrintIcon />}
                     >
-                      Print
-                    </Button>
+                      <PrintIcon fontSize="inherit" />
+                    </IconButton>
                   </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
+                <Grid item container alignItems="center" xs={12}>
+                  <div
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      background: "#fff",
+                    }}
+                  >
                     <DataGrid
                       rows={advance_collection_history_rows?.map(
                         (row, index) => ({

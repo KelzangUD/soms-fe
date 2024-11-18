@@ -35,7 +35,10 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
     },
     { field: "uom", headerName: "UOM", width: 150 },
     { field: "qty", headerName: "Quantity", width: 150 },
-  ]; 
+  ];
+  React.useEffect(() => {
+    console.log(transferOrderDetails);
+  })
   return (
     <>
       <Dialog
@@ -212,13 +215,17 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                 }}
               >
                 <DataGrid
-                  rows={transferOrderDetails?.transferOrderItemDTOList !== null ? transferOrderDetails?.transferOrderItemDTOList?.map(
-                    (row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                      id: index,
-                    })
-                  ) : []}
+                  rows={
+                    transferOrderDetails?.transferOrderItemDTOList !== null
+                      ? transferOrderDetails?.transferOrderItemDTOList?.map(
+                          (row, index) => ({
+                            ...row,
+                            sl: index + 1,
+                            id: index,
+                          })
+                        )
+                      : []
+                  }
                   columns={item_columns}
                   initialState={{
                     pagination: {
@@ -236,7 +243,11 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
               paddingX={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+              >
                 Close
               </Button>
             </Grid>

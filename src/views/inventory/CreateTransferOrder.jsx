@@ -54,10 +54,10 @@ const CreateTransferOrder = ({
   const [parameters, setParameters] = useState({
     transfer_Date: dateFormatterTwo(new Date()),
     transfer_Type: "",
-    transfer_From: "",
-    transfer_From_SubInventory: "",
-    region_NAME: "",
-    transfer_From_Locator: "",
+    transfer_From: userDetails?.storeId,
+    transfer_From_SubInventory: userDetails?.subInventory,
+    region_NAME: userDetails?.region_NAME,
+    transfer_From_Locator: userDetails?.locator,
     transfer_To: "",
     transfer_To_SubInventory: "",
     transfer_To_Locator: "",
@@ -76,23 +76,6 @@ const CreateTransferOrder = ({
     qty: "",
   });
   const [serialInputDisabled, setSerialInputDisabled] = useState(true);
-
-  const fetchUserDetails = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/fetchUserDtls?userId=${empID}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setParameters((prev) => ({
-        ...prev,
-        transfer_From: res?.data?.storeId,
-        region_NAME: res?.data?.region_NAME,
-      }));
-    }
-  };
 
   const fetchTransferType = async () => {
     const res = await Route(
@@ -167,14 +150,20 @@ const CreateTransferOrder = ({
     }
   };
   const fetchAllItems = async () => {
-    const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/Common/FetchOnHandsTransferOrderItems?StoreName=${userDetails?.region_NAME}&SubInventoryID=${userDetails?.subInventory}&LocatorID=${userDetails?.locator}`,
+      null,
+      null,
+      null
+    );
+    console.log(res);
     if (res?.status === 200) {
       setItemList(res?.data);
     }
   };
 
   useEffect(() => {
-    fetchUserDetails();
     fetchTransferType();
     fetchModeOfTransport();
     fetchFromSubInventory();
@@ -428,7 +417,9 @@ const CreateTransferOrder = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#1976d2",
+                  color: "#eee",
+                  paddingY: "24px"
                 }}
               >
                 <Grid item paddingX={2}>
@@ -494,7 +485,7 @@ const CreateTransferOrder = ({
             </Grid>
             <Grid item container xs={12} paddingTop={2}>
               <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth>
+                {/* <FormControl fullWidth>
                   <InputLabel id="from-sub-inventory-select-label">
                     From Sub-inventoy
                   </InputLabel>
@@ -511,10 +502,19 @@ const CreateTransferOrder = ({
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
+                <TextField
+                  id="outlined-basic"
+                  label="From Sub-Inventory"
+                  variant="outlined"
+                  required
+                  disabled
+                  fullWidth
+                  value={parameters?.transfer_From_SubInventory}
+                />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth>
+                {/* <FormControl fullWidth>
                   <InputLabel id="from-locator-select-label">
                     From Locator
                   </InputLabel>
@@ -531,7 +531,16 @@ const CreateTransferOrder = ({
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
+                <TextField
+                  id="outlined-basic"
+                  label="From Locator"
+                  variant="outlined"
+                  required
+                  disabled
+                  fullWidth
+                  value={parameters?.transfer_From_Locator}
+                />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
                 <FormControl fullWidth>
@@ -643,7 +652,8 @@ const CreateTransferOrder = ({
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#1976d2",
+                  color: "#eee",
                 }}
               >
                 <Grid
@@ -655,6 +665,9 @@ const CreateTransferOrder = ({
                   <IconButton
                     aria-label="download"
                     onClick={fileDownloadHandle}
+                    style={{
+                      color: "#fff"
+                    }}
                   >
                     <DownloadIcon />
                   </IconButton>
@@ -677,12 +690,12 @@ const CreateTransferOrder = ({
                 <Autocomplete
                   disablePortal
                   options={itemList?.map((item, index) => ({
-                    label: item?.description,
-                    value: item?.description,
-                    item_Number: item?.item_number,
+                    label: item?.item_Description,
+                    value: item?.item_Description,
+                    item_Number: item?.item,
                     serial_controlled: item?.serial_controlled,
                     uom: item?.uom,
-                    id: index,
+                    id: item?.id,
                   }))}
                   value={transferOrderItemDTOList?.item_Description}
                   onChange={descriptionHandle}
@@ -773,7 +786,6 @@ const CreateTransferOrder = ({
               item
               xs={12}
               alignItems="right"
-              paddingX={2}
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
