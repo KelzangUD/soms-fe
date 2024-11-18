@@ -79,8 +79,8 @@ const UpdateRequisition = ({
     }));
   };
   useEffect(() => {
-    console.log(details)
-  },[]);
+    console.log(details);
+  }, []);
   const requisiton_item_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "item_Number", headerName: "Item Number", width: 200 },
@@ -268,7 +268,11 @@ const UpdateRequisition = ({
               <Button variant="contained" onClick={updateHandle}>
                 Update
               </Button>
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+              >
                 Close
               </Button>
             </Grid>

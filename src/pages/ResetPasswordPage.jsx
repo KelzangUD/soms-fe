@@ -57,9 +57,8 @@ const ResetPasswordPage = () => {
         null,
         null
       );
-      console.log(res);
       if (res?.status === 200) {
-        setMessage(res?.data?.message);
+        setMessage(res?.data);
         setSeverity("success");
         setShowNotification(true);
         setNewPassword("");

@@ -106,7 +106,6 @@ const ApproveRequisition = ({
       setSeverity("success");
       setShowNofication(true);
       fetchRequisitionListByApprover();
-      // setOpen(false);
     } else {
       setNotificationMsg(res?.data?.message);
       setSeverity("error");

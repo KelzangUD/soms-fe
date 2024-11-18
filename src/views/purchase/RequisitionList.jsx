@@ -19,6 +19,7 @@ const RequisitionList = () => {
   const [requisitionList, setRequisitionList] = useState([]);
   const [itemDetails, setItemDetails] = useState([]);
   const [showViewDetails, setShowViewDetails] = useState(false);
+  const [approvalStatus, setApprovalStatus] = useState("Submitted");
 
   const viewDetailsHandle = async (params) => {
     // console.log(params?.row);
@@ -30,7 +31,7 @@ const RequisitionList = () => {
       null
     );
     if (res?.status === 200) {
-      // console?.log(res);
+      setApprovalStatus(params?.row?.approvalStatus);
       setItemDetails(res?.data);
       setShowViewDetails(true);
     } else {
@@ -184,6 +185,7 @@ const RequisitionList = () => {
           open={showViewDetails}
           setOpen={setShowViewDetails}
           details={itemDetails}
+          approvalStatus={approvalStatus}
         />
       )}
     </>
