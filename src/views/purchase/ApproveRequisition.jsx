@@ -214,7 +214,11 @@ const ApproveRequisition = ({
               <Button variant="contained" onClick={updateHandle}>
                 Approve
               </Button>
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+              >
                 Close
               </Button>
             </Grid>
@@ -224,9 +228,9 @@ const ApproveRequisition = ({
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={() => { 
+          setOpen={() => {
             setShowNofication(false);
-            setOpen(false); 
+            setOpen(false);
           }}
           message={notificationMsg}
           severity={severity}

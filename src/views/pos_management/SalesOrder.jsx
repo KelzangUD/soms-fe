@@ -370,11 +370,11 @@ const SalesOrder = () => {
 
   const postHandle = async () => {
     // console.log(paymentLinesItem)
-    if (paymentLinesItem?.length === 0) {
-      setNotificationMsg("Total Payment is Not equal to Net Payment");
-      setSeverity("info");
-      setShowNofication(true);
-    }
+    // if (paymentLinesItem?.length === 0) {
+    //   setNotificationMsg("Total Payment is Not equal to Net Payment");
+    //   setSeverity("info");
+    //   setShowNofication(true);
+    // }
     if (
       parseInt(linesAmount?.netAmount) ===
       (paymentLinesItem?.length > 0 &&
