@@ -81,10 +81,10 @@ const Recharge = () => {
       setPaymentType(res?.data);
     }
   };
-  const fetchBankAccount = async (type) => {
+  const fetchBankAccount = async () => {
     const res = await Route(
       "GET",
-      `/Common/FetchBankDetails?userId=${userID}&paymentType=${type}`,
+      `/Common/FetchBankDetails?userId=${userID}&paymentType=1`,
       null,
       null,
       null
@@ -95,6 +95,7 @@ const Recharge = () => {
   };
   useEffect(() => {
     fetchPaymentType();
+    fetchBankAccount();
   }, []);
   const postingDateHandle = (e) => {
     setRechargeDetails((prev) => ({
@@ -120,7 +121,7 @@ const Recharge = () => {
       paymentType: e?.target?.value,
       payment: e?.target?.value,
     }));
-    fetchBankAccount(e?.target?.value?.id);
+    // fetchBankAccount(e?.target?.value?.id);
     if (e?.target?.value?.id === "1") {
       setDisabledFields((prev) => ({
         ...prev,
@@ -420,7 +421,7 @@ const Recharge = () => {
                         id="bank-ac-name-select"
                         label="Bank A/C Name*"
                         onChange={bankAccHandle}
-                        value={rechargeDetails}
+                        value={rechargeDetails?.bankId}
                       >
                         {bankAccounts?.map((item) => (
                           <MenuItem value={item?.id} key={item?.id}>

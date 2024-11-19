@@ -149,7 +149,9 @@ const PaymentReceipt = () => {
       (paymentReceiptDetails?.serviceType == "1" &&
         paymentReceiptDetails?.mobileNo?.startsWith("77")) ||
       (paymentReceiptDetails?.serviceType == "2" &&
-        paymentReceiptDetails?.mobileNo?.length == 9)
+        paymentReceiptDetails?.mobileNo?.length == 9) ||
+      (paymentReceiptDetails?.serviceType == "3" &&
+        paymentReceiptDetails?.mobileNo?.length == 5)
     ) {
       const res = await Route(
         "GET",
@@ -287,10 +289,10 @@ const PaymentReceipt = () => {
         null,
         "multipart/form-data"
       );
-      console.log(paymentReceiptDetails);
-      console.log(res);
+      // console.log(paymentReceiptDetails);
+      // console.log(res);
       if (res?.status === 200) {
-        console.log(res?.data);
+        // console.log(res?.data);
         setResponseData(res?.data);
         setNotificationMsg(
           `Successfully Paid and your Application No is ${res?.data?.applicationNo}`
