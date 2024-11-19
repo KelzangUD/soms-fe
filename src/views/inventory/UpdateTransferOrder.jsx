@@ -312,25 +312,26 @@ const UpdateTransferOrder = ({
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      width: 300,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 400,
+      width: 250,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
+    { field: "uom", headerName: "UOM", width: 100 },
+    { field: "qty", headerName: "Quantity", width: 100 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <>
           <IconButton
             aria-label="edit"
             size="small"
             onClick={() => deleteHandle(params)}
+            color="error"
           >
             <DeleteIcon fontSize="inherit" />
           </IconButton>
@@ -389,7 +390,8 @@ const UpdateTransferOrder = ({
   return (
     <>
       <Dialog
-        fullScreen
+        fullWidth
+        maxWidth="lg"
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -404,7 +406,8 @@ const UpdateTransferOrder = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#2196f3",
+                  color: "#fff",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -426,6 +429,7 @@ const UpdateTransferOrder = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_Order_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -435,6 +439,11 @@ const UpdateTransferOrder = ({
                       label="Transfer Order Create Date"
                       value={dayjs(parameters?.transfer_Date)}
                       onChange={transferOrderDateHandle}
+                      slotProps={{
+                        textField: {
+                          size: "small",
+                        },
+                      }}
                     />
                   </LocalizationProvider>
                 </FormControl>
@@ -448,6 +457,7 @@ const UpdateTransferOrder = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_Type}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -459,6 +469,7 @@ const UpdateTransferOrder = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_From_Name}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -472,6 +483,7 @@ const UpdateTransferOrder = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_From_SubInventory}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -483,6 +495,7 @@ const UpdateTransferOrder = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_From_Locator}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -494,6 +507,7 @@ const UpdateTransferOrder = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_To_Name}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -505,6 +519,7 @@ const UpdateTransferOrder = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_To_SubInventory}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -518,10 +533,11 @@ const UpdateTransferOrder = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_To_Locator}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth>
+                <FormControl fullWidth size="small">
                   <InputLabel id="mode-of-transport-select-label">
                     Mode Of Transport
                   </InputLabel>
@@ -549,6 +565,7 @@ const UpdateTransferOrder = ({
                   fullWidth
                   onChange={vehicleNoHandle}
                   value={parameters?.vehicle_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -559,28 +576,38 @@ const UpdateTransferOrder = ({
                   fullWidth
                   onChange={remarksHandle}
                   value={parameters?.remarks}
+                  size="small"
                 />
               </Grid>
             </Grid>
             <Grid item xs={12}>
               <Grid
                 container
-                padding={2}
+                paddingY={1}
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#2196f3",
+                  color: "#fff",
                 }}
               >
                 <Grid item paddingX={2}>
                   <IconButton
                     aria-label="download"
                     onClick={fileDownloadHandle}
+                    sx={{
+                      color: "#fff",
+                    }}
                   >
                     <DownloadIcon />
                   </IconButton>
-                  <IconButton aria-label="upload">
+                  <IconButton
+                    aria-label="upload"
+                    sx={{
+                      color: "#fff",
+                    }}
+                  >
                     <UploadIcon />
                   </IconButton>
                 </Grid>
@@ -601,7 +628,7 @@ const UpdateTransferOrder = ({
                   value={transferOrderItemDTOList?.item_Description}
                   onChange={descriptionHandle}
                   renderInput={(params) => (
-                    <TextField {...params} label="Description" />
+                    <TextField {...params} label="Description" size="small" />
                   )}
                 />
               </Grid>
@@ -614,6 +641,7 @@ const UpdateTransferOrder = ({
                   fullWidth
                   disabled
                   value={transferOrderItemDTOList?.item_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -625,6 +653,7 @@ const UpdateTransferOrder = ({
                   fullWidth
                   onChange={serialNumberHandle}
                   disabled={serialInputDisabled}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={2} paddingRight={1}>
@@ -636,10 +665,11 @@ const UpdateTransferOrder = ({
                   fullWidth
                   disabled
                   value={transferOrderItemDTOList?.uom}
+                  size="small"
                 />
               </Grid>
-              <Grid item container xs={2} paddingRight={1} alignItems="center">
-                <Grid item>
+              <Grid item container xs={2} paddingRight={2} alignItems="center">
+                <Grid item xs={11}>
                   <TextField
                     id="outlined-basic"
                     label="Quantity"
@@ -648,9 +678,10 @@ const UpdateTransferOrder = ({
                     fullWidth
                     value={transferOrderItemDTOList?.qty}
                     onChange={qtyHandle}
+                    size="small"
                   />
                 </Grid>
-                <Grid>
+                <Grid item xs={1}>
                   <IconButton aria-label="add" onClick={addHandle}>
                     <AddBoxIcon />
                   </IconButton>
@@ -687,16 +718,17 @@ const UpdateTransferOrder = ({
               item
               xs={12}
               alignItems="right"
-              paddingX={2}
+              marginBottom={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
-              <Button variant="contained" onClick={updateHandle}>
+              <Button variant="contained" onClick={updateHandle} size="small">
                 Update
               </Button>
               <Button
                 variant="outlined"
                 onClick={() => setOpen(false)}
                 color="error"
+                size="small"
               >
                 Close
               </Button>

@@ -20,6 +20,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewTransferOrder from "./ViewTransferOrder";
+import { RenderStatus } from "../../ui/index";
 import Route from "../../routes/Route";
 
 const TransferOrderOutward = () => {
@@ -46,29 +47,31 @@ const TransferOrderOutward = () => {
   };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", width: 250 },
+    { field: "transfer_order_no", headerName: "Transfer Order No", width: 160 },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
       width: 250,
     },
     { field: "transfer_to_code", headerName: "Tansfer To Code", width: 250 },
-    { field: "posted_date", headerName: "Posted Date", width: 150 },
+    { field: "posted_date", headerName: "Posted Date", width: 100 },
     {
       field: "status",
       headerName: "Status",
-      width: 150,
+      width: 120,
+      renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <>
           <IconButton
             aria-label="view"
             size="small"
             onClick={() => viewHandle(params)}
+            color="primary"
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>

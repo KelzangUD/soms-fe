@@ -97,14 +97,14 @@ const TransferOrders = () => {
   };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", width: 150 },
+    { field: "transfer_order_no", headerName: "Transfer Order No", width: 200 },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
       width: 240,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 200 },
-    // { field: "posted_date", headerName: "Posted Date", width: 150 },
+    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 240 },
+    { field: "posted_date", headerName: "Posted Date", width: 150 },
     {
       field: "status",
       headerName: "Status",
