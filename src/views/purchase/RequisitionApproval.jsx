@@ -97,6 +97,14 @@ const RequisitionApproval = () => {
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
+          <IconButton
+            aria-label="reject"
+            size="small"
+            onClick={() => rejectRequisitionHandle(params)}
+            color="error"
+          >
+            <ClearIcon fontSize="inherit" />
+          </IconButton>
         </>
       ),
     },
@@ -117,6 +125,26 @@ const RequisitionApproval = () => {
   useEffect(() => {
     fetchRequisitionListByApprover();
   }, []);
+  const rejectRequisitionHandle = async (params) => {
+    // console.log(params);
+    const res = await Route(
+      "PUT",
+      `/requisition/rejectRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setNotificationMsg(res?.data?.responseText);
+      setSeverity("success");
+      setShowNofication(true);
+      fetchRequisitionListByApprover();
+    } else {
+      setNotificationMsg(res?.data?.message);
+      setSeverity("error");
+      setShowNofication(true);
+    }
+  };
   const handleRowSelection = (selectionModel) => {
     const selectedRowParams = requisitionList.filter((row) =>
       selectionModel.includes(row.id)
@@ -127,7 +155,6 @@ const RequisitionApproval = () => {
     const data = selectedRows?.map((item) => ({
       requisitionNo: item?.requisitionNo,
     }));
-    console.log(data);
     const res = await Route(
       "PUT",
       `/requisition/bulkApproveRequisitionDetails?empID=${empID}`,

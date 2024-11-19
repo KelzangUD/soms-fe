@@ -369,16 +369,10 @@ const SalesOrder = () => {
   }, [lineItems]);
 
   const postHandle = async () => {
-    // console.log(paymentLinesItem)
-    if (paymentLinesItem?.length === 0) {
-      setNotificationMsg("Total Payment is Not equal to Net Payment");
-      setSeverity("info");
-      setShowNofication(true);
-    }
     if (
       parseInt(linesAmount?.netAmount) ===
-      (paymentLinesItem?.length > 0 &&
-        paymentLinesItem?.reduce(
+      (paymentLines?.length > 0 &&
+        paymentLines?.reduce(
           (accumulator, currentObject) =>
             accumulator + parseInt(currentObject?.paymentAmount),
           0
@@ -413,7 +407,7 @@ const SalesOrder = () => {
         type: "application/json",
       });
       formData.append("details", jsonDataBlob, "data.json");
-      // console.log(formData);
+      console.log(formData);
       // console.log(data);
       const res = await Route(
         "POST",
@@ -423,6 +417,7 @@ const SalesOrder = () => {
         null,
         "multipart/form-data"
       );
+      // console.log(res);
       if (res?.status === 201) {
         setResponseData(res?.data);
         setSeverity("success");

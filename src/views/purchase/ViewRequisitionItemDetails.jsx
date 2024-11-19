@@ -5,10 +5,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
+const ViewRequisitionItemDetails = ({
+  open,
+  setOpen,
+  details,
+  approvalStatus,
+}) => {
   const [itemDTOlist, setItemDTOList] = useState([]);
 
   useEffect(() => {
+    // console.log(approvalStatus);
+    // console.log(details);
     setItemDTOList(
       details?.itemDTOList?.map((item) => ({
         id: item?.req_Item_No,
@@ -16,7 +23,12 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
         item_Description: item?.item_Description,
         uom: item?.uom,
         qty: item?.qty,
-        level1_Qty: item?.level1_Qty,
+        level1_Qty:
+          approvalStatus === "Submitted" || approvalStatus === "Rejected"
+            ? 0
+            : approvalStatus === "In-Progress"
+            ? item?.level1_Qty
+            : item?.level2_Qty,
       }))
     );
   }, [details]);
@@ -28,12 +40,12 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
       headerName: "Description",
       width: 500,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
+    { field: "uom", headerName: "UOM", width: 80 },
+    { field: "qty", headerName: "Quantity", width: 70 },
     {
       field: "level1_Qty",
       headerName: "Approve Quantity",
-      width: 150,
+      width: 130,
     },
     {
       field: "received_Remark",
@@ -44,8 +56,8 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
   return (
     <>
       <Dialog
-         maxWidth="xl"
-         fullWidth
+        maxWidth="xl"
+        fullWidth
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -60,7 +72,8 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "rgb(25, 118, 210)",
+                  color: "#fff",
                 }}
               >
                 <Grid item>
@@ -69,42 +82,38 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Typography variant="subtitle1">
-                      Requisition Number: {details?.requisitionNo}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Employee Name: {details?.employeeName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Employee Code: {details?.employeeCode}
-                    </Typography>
-                  </Grid>
+              <Grid container spacing={1} paddingX={2} paddingY={1}>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Requisition Number: {details?.requisitionNo}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Employee Name: {details?.employeeName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Employee Code: {details?.employeeCode}
+                  </Typography>
                 </Grid>
               </Grid>
-              <Grid container paddingX={2}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Store Name: {details?.requisitionStoreName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4} display="flex">
-                    <Typography variant="body1">
-                      Region Name: {details?.regionName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4} display="flex">
-                    <Typography variant="body1">
-                      Requisition Date: {details?.requisition_Date}
-                    </Typography>
-                  </Grid>
+              <Grid container spacing={1} paddingX={2}>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Store Name: {details?.requisitionStoreName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4} display="flex">
+                  <Typography variant="body1">
+                    Region Name: {details?.regionName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4} display="flex">
+                  <Typography variant="body1">
+                    Requisition Date: {details?.requisition_Date}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -141,7 +150,11 @@ const ViewRequisitionItemDetails = ({ open, setOpen, details }) => {
               marginX={2}
               sx={{ display: "flex", justifyContent: "flex-end" }}
             >
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+              >
                 Close
               </Button>
             </Grid>

@@ -27,7 +27,7 @@ const PaymentCollection = () => {
   const [rechargeCollection, setRechargeCollection] = useState([]);
   const recharge_collection_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 170 },
+    { field: "payment_amount", headerName: "Payment Amount", width: 130 },
     {
       field: "recharge_type",
       headerName: "Payment Type",
@@ -74,7 +74,7 @@ const PaymentCollection = () => {
   const fetchRechargeCollection = async () => {
     const res = await Route(
       "GET",
-      `/Report/rechargeCollection?extension=19&fromDate=2024-08-01&toDate=2024-10-31`,
+      `/Report/rechargeCollection?extension=${userDetails?.storeId}&fromDate=2024-08-01&toDate=2024-10-31`,
       null,
       null,
       null

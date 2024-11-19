@@ -30,8 +30,10 @@ const ResetPassword = ({
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200) {
+      setMessage(res?.data);
+      setSeverity("success");
+      setOpenNotification(true);
     } else {
       setMessage(res?.response?.data);
       setSeverity("error");
@@ -83,7 +85,10 @@ const ResetPassword = ({
       {openNotification && (
         <Notification
           open={openNotification}
-          setOpen={setOpenNotification}
+          setOpen={() => {
+            setOpenNotification(false);
+            setOpenForgotPasswordDialog(false);
+          }}
           message={message}
           severity={severity}
         />

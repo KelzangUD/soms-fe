@@ -79,27 +79,26 @@ const UpdateRequisition = ({
     }));
   };
   useEffect(() => {
-    console.log(details)
-  },[]);
+    console.log(details);
+  }, []);
   const requisiton_item_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     { field: "item_Number", headerName: "Item Number", width: 200 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      width: 350,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    // { field: "qty", headerName: "Quantity", width: 150 },
+    { field: "uom", headerName: "UOM", width: 90 },
     {
       field: "qty",
       headerName: "Actual Quantity",
-      width: 150,
+      width: 110,
     },
     {
       field: "approve_quantity",
       headerName: "Approve Quantity",
-      width: 150,
+      width: 130,
       renderCell: (params) => (
         <>
           <TextField
@@ -123,11 +122,16 @@ const UpdateRequisition = ({
       renderCell: (params) => (
         <>
           <TextField
+            fullWidth
             id="outlined-basic"
             variant="outlined"
             size="small"
-            defaultValue={params?.row?.received_Remark}
+            value={params?.row?.received_Remark}
             onChange={(e) => remarksHandle(e, params)}
+            multiline
+            InputProps={{
+              inputProps: { style: { whiteSpace: "normal" } }, // Ensure multiline handling if needed
+            }}
           />
         </>
       ),
@@ -186,6 +190,8 @@ const UpdateRequisition = ({
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "#EEEDEB",
+                  backgroundColor: "rgb(25, 118, 210)",
+                  color: "#fff",
                 }}
               >
                 <Grid item>
@@ -194,42 +200,38 @@ const UpdateRequisition = ({
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Typography variant="subtitle1">
-                      Requisition Number: {details?.requisitionNo}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Employee Name: {details?.employeeName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Employee Code: {details?.employeeCode}
-                    </Typography>
-                  </Grid>
+              <Grid container spacing={1} paddingY={1} paddingX={2}>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Requisition Number: {details?.requisitionNo}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Employee Name: {details?.employeeName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Employee Code: {details?.employeeCode}
+                  </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Store Name: {details?.requisitionStoreName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4} display="flex">
-                    <Typography variant="body1">
-                      Region Name: {details?.regionName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4} display="flex">
-                    <Typography variant="body1">
-                      Requisition Date: {details?.requisition_Date}
-                    </Typography>
-                  </Grid>
+              <Grid container spacing={1} paddingX={2}>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Store Name: {details?.requisitionStoreName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4} display="flex">
+                  <Typography variant="body1">
+                    Region Name: {details?.regionName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4} display="flex">
+                  <Typography variant="body1">
+                    Requisition Date: {details?.requisition_Date}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -268,7 +270,11 @@ const UpdateRequisition = ({
               <Button variant="contained" onClick={updateHandle}>
                 Update
               </Button>
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+              >
                 Close
               </Button>
             </Grid>
