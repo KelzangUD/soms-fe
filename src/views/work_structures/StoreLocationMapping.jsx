@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Box,
   Paper,
@@ -6,16 +6,12 @@ import {
   Button,
   InputBase,
   IconButton,
-  Tabs,
-  Tab,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Route from "../../routes/Route";
 
 const StoreLocationMapping = () => {
   const grade_columns = [
