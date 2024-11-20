@@ -61,7 +61,7 @@ const TransferOrders = () => {
           transfer_order_no: item?.transfer_Order_Number,
           transfer_from_code: item?.transfer_From_Name,
           transfer_to_code: item?.transfer_To_Name,
-          posted_date: item?.creation_Date,
+          posted_date: item?.stringTransferDate,
           status: item?.status,
         }))
       );

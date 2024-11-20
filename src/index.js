@@ -17,7 +17,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 // });
 const theme = createTheme({
   typography: {
-    fontSize: 10,
+    fontSize: 12,
   },
 });
 
