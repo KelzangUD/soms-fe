@@ -46,9 +46,9 @@ const CreateTransferOrder = ({
   const [fromSubInventory, setFromSubInventory] = useState([]);
   const [fromLocator, setFromLocator] = useState([]);
   const [toStore, setToStore] = useState([]);
-  const [toSubInventory, setToSubInventory] = useState([]);
   const [toLocator, setToLocator] = useState([]);
   const [faToLocator, setFaToLocator] = useState([]);
+  const [withinStoreLocator, setWithinStoreLocator] = useState([]);
   const [enableToLocator, setEnableToLocator] = useState(false);
   const [modeOfTransport, setModeOfTransport] = useState([]);
   const [itemList, setItemList] = useState([]);
@@ -60,6 +60,7 @@ const CreateTransferOrder = ({
     transfer_From_SubInventory: "",
     region_NAME: userDetails?.region_NAME,
     transfer_From_Locator: "",
+    selectedStore: "",
     transfer_To: "",
     transfer_To_Store: "",
     transfer_To_SubInventory: "",
@@ -79,6 +80,7 @@ const CreateTransferOrder = ({
     qty: "",
   });
   const [serialInputDisabled, setSerialInputDisabled] = useState(true);
+  const [disabledToSubInv, setDisabledToSubInv] = useState(true);
 
   const fetchTransferType = async () => {
     const res = await Route(
@@ -136,6 +138,7 @@ const CreateTransferOrder = ({
       null,
       null
     );
+    // console.log(res);
     if (res?.status === 200) {
       setToLocator(res?.data);
     }
@@ -148,6 +151,7 @@ const CreateTransferOrder = ({
       null,
       null
     );
+    // console.log(res);
     if (res?.status === 200) {
       setFaToLocator(res?.data);
     }
@@ -196,6 +200,15 @@ const CreateTransferOrder = ({
       ...prev,
       transfer_Type: e?.target?.value,
     }));
+    e?.target?.value === "With In Store" &&
+      setParameters((prev) => ({
+        ...prev,
+        transfer_To: userDetails?.storeId,
+        transfer_To_Store: userDetails?.region_NAME,
+      }));
+    e?.target?.value === "With In Store"
+      ? setDisabledToSubInv(false)
+      : setDisabledToSubInv(true);
   };
   const fromSubInventoryHandle = (e) => {
     fetchFromLocator(e?.target?.value);
@@ -205,29 +218,35 @@ const CreateTransferOrder = ({
       transfer_From_SubInventory: e?.target?.value,
       transfer_To_SubInventory: e?.target?.value,
     }));
-    e?.target?.value === "WAREH" || e?.target?.value === "SIM"
+    e?.target?.value !== "FA" && parameters?.transfer_Type !== "With In Store"
       ? setEnableToLocator(false)
       : setEnableToLocator(true);
   };
   const fromLocatorHandle = (e) => {
+    console.log(e?.target?.value);
     setParameters((prev) => ({
       ...prev,
       transfer_From_Locator: e?.target?.value,
     }));
-    (parameters?.transfer_From_SubInventory === "WAREH" ||
-      parameters?.transfer_From_SubInventory === "SIM") &&
+    parameters?.transfer_From_SubInventory !== "FA" &&
+      parameters?.transfer_Type !== "With In Store" &&
       setParameters((prev) => ({
         ...prev,
         transfer_To_Locator: e?.target?.value,
       }));
+    setWithinStoreLocator(
+      toLocator?.filter((item) => item?.name !== e?.target?.value)
+    );
   };
-  const toStoreHandle = (e) => {
+  const toStoreHandle = (value) => {
+    const { toStoreId, toStoreName } = value;
     setParameters((prev) => ({
       ...prev,
-      transfer_To: parseInt(e?.target?.value?.toStoreId),
-      transfer_To_Store: e?.target?.value,
+      selectedStore: value,
+      transfer_To: parseInt(toStoreId),
+      transfer_To_Store: toStoreName,
     }));
-    fetchLocatorBasedOExtension(e?.target?.value?.toStoreName);
+    fetchLocatorBasedOExtension(toStoreName);
   };
   const transferToSubInvHandle = (e) => {
     fetchToLocator(e?.target?.value);
@@ -282,6 +301,7 @@ const CreateTransferOrder = ({
     setTransferOrderDTOList((prev) => ({
       ...prev,
       item_Serial_Number: e?.target?.value,
+      qty: 1,
     }));
   };
   const qtyHandle = (e) => {
@@ -333,10 +353,10 @@ const CreateTransferOrder = ({
     const fileUrl = TransferBulkUploader;
     const link = document.createElement("a");
     link.href = fileUrl;
-    link.download = "TransferBulkUploader.csv"; // Name of the downloaded file
+    link.download = "TransferBulkUploader.csv";
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link); // Clean up the link element
+    document.body.removeChild(link);
   };
   const handleFileUpload = async (e) => {
     let formData = new FormData();
@@ -350,12 +370,12 @@ const CreateTransferOrder = ({
       null,
       "multipart/form-data"
     );
-    console.log(res);
+    // console.log(res);
     if (res?.status === 200) {
       setParameters((prev) => ({
         ...prev,
         transferOrderItemDTOList: [
-          ...(prev.transferOrderItemDTOList || []), // Spread existing list or initialize if empty
+          ...(prev.transferOrderItemDTOList || []),
           ...res?.data?.map((item) => ({
             item_Description: item?.item_Description,
             item_Number: item?.item_Number,
@@ -394,7 +414,6 @@ const CreateTransferOrder = ({
       null,
       "multipart/form-data"
     );
-    console.log(res);
     if (res?.status === 200 && res?.data?.success === true) {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
@@ -407,7 +426,9 @@ const CreateTransferOrder = ({
         transfer_From: "",
         transfer_From_SubInventory: "",
         transfer_From_Locator: "",
+        selectedStore: "",
         transfer_To: "",
+        transfer_To_Store: "",
         transfer_To_SubInventory: "",
         transfer_To_Locator: "",
         transfer_Mode: "",
@@ -427,7 +448,6 @@ const CreateTransferOrder = ({
   return (
     <>
       <Dialog
-        // fullScreen
         fullWidth
         maxWidth="lg"
         open={open}
@@ -537,16 +557,6 @@ const CreateTransferOrder = ({
                     ))}
                   </Select>
                 </FormControl>
-                {/* <TextField
-                  id="outlined-basic"
-                  label="From Sub-Inventory"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={parameters?.transfer_From_SubInventory}
-                  size="small"
-                /> */}
               </Grid>
               <Grid item xs={3} paddingRight={1}>
                 <FormControl fullWidth size="small">
@@ -567,34 +577,37 @@ const CreateTransferOrder = ({
                     ))}
                   </Select>
                 </FormControl>
-                {/* <TextField
-                  id="outlined-basic"
-                  label="From Locator"
-                  variant="outlined"
-                  required
-                  disabled
-                  fullWidth
-                  value={parameters?.transfer_From_Locator}
-                  size="small"
-                /> */}
               </Grid>
               <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth size="small">
-                  <InputLabel id="to-store-select-label">To Store</InputLabel>
-                  <Select
-                    labelId="to-store-select-label"
-                    id="to-store-select"
+                {parameters?.transfer_Type === "With In Store" ? (
+                  <TextField
+                    id="outlined-basic"
                     label="To Store"
-                    onChange={toStoreHandle}
+                    variant="outlined"
+                    required
+                    fullWidth
                     value={parameters?.transfer_To_Store}
-                  >
-                    {toStore?.map((item) => (
-                      <MenuItem value={item} key={item?.id}>
-                        {item?.toStoreName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    size="small"
+                    disabled
+                  />
+                ) : (
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="to-store-select-label">To Store</InputLabel>
+                    <Select
+                      labelId="to-store-select-label"
+                      id="to-store-select"
+                      label="To Store"
+                      onChange={(event) => toStoreHandle(event.target.value)}
+                      value={parameters?.selectedStore}
+                    >
+                      {toStore?.map((item) => (
+                        <MenuItem value={item} key={item?.id}>
+                          {item?.toStoreName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
               </Grid>
               <Grid item xs={3}>
                 <FormControl fullWidth size="small">
@@ -607,7 +620,7 @@ const CreateTransferOrder = ({
                     label="To Sub-Inventory"
                     onChange={transferToSubInvHandle}
                     value={parameters?.transfer_To_SubInventory}
-                    disabled
+                    disabled={disabledToSubInv}
                   >
                     {fromSubInventory?.map((item) => (
                       <MenuItem value={item?.id} key={item?.id}>
@@ -624,27 +637,50 @@ const CreateTransferOrder = ({
                   <InputLabel id="to-locator-select-label">
                     To Locator
                   </InputLabel>
-                  <Select
-                    labelId="to-locator-select-label"
-                    id="to-locator-select"
-                    label="To Locator"
-                    onChange={toLocatorHandle}
-                    value={parameters?.transfer_To_Locator}
-                    disabled={!enableToLocator}
-                  >
-                    {parameters?.transfer_From_SubInventory === "WAREH" ||
-                    parameters?.transfer_From_SubInventory === "SIM"
-                      ? toLocator?.map((item) => (
-                          <MenuItem value={item?.name} key={item?.id}>
-                            {item?.name}
-                          </MenuItem>
-                        ))
-                      : faToLocator?.map((item) => (
-                          <MenuItem value={item?.locator} key={item?.id}>
-                            {item?.locator}
-                          </MenuItem>
-                        ))}
-                  </Select>
+                  {parameters?.transfer_Type === "With In Store" ? (
+                    <Select
+                      labelId="to-locator-select-label"
+                      id="to-locator-select"
+                      label="To Locator"
+                      onChange={toLocatorHandle}
+                      value={parameters?.transfer_To_Locator}
+                      disabled={!enableToLocator}
+                    >
+                      {parameters?.transfer_From_SubInventory ===
+                      parameters?.transfer_To_SubInventory
+                        ? withinStoreLocator?.map((item) => (
+                            <MenuItem value={item?.name} key={item?.id}>
+                              {item?.name}
+                            </MenuItem>
+                          ))
+                        : toLocator?.map((item) => (
+                            <MenuItem value={item?.name} key={item?.id}>
+                              {item?.name}
+                            </MenuItem>
+                          ))}
+                    </Select>
+                  ) : (
+                    <Select
+                      labelId="to-locator-select-label"
+                      id="to-locator-select"
+                      label="To Locator"
+                      onChange={toLocatorHandle}
+                      value={parameters?.transfer_To_Locator}
+                      disabled={!enableToLocator}
+                    >
+                      {parameters?.transfer_From_SubInventory !== "FA"
+                        ? toLocator?.map((item) => (
+                            <MenuItem value={item?.name} key={item?.id}>
+                              {item?.name}
+                            </MenuItem>
+                          ))
+                        : faToLocator?.map((item) => (
+                            <MenuItem value={item?.locator} key={item?.id}>
+                              {item?.locator}
+                            </MenuItem>
+                          ))}
+                    </Select>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item xs={3} paddingRight={1}>
