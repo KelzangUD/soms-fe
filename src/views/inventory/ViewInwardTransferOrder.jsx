@@ -39,7 +39,8 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
   return (
     <>
       <Dialog
-        fullScreen
+        fullWidth
+        maxWidth="lg"
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -54,7 +55,8 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#2196f3",
+                  color: "#fff",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -76,6 +78,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Order_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -85,6 +88,11 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                       label="Transfer Order Create Date"
                       value={dayjs(transferOrderDetails?.transfer_Date)}
                       disabled
+                      slotProps={{
+                        textField: {
+                          size: "small",
+                        },
+                      }}
                     />
                   </LocalizationProvider>
                 </FormControl>
@@ -98,6 +106,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Type}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -109,6 +118,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Mode}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -123,6 +133,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   fullWidth
                   disabled
                   value={transferOrderDetails?.vehicle_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -133,6 +144,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   fullWidth
                   disabled
                   value={transferOrderDetails?.remarks}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -170,10 +182,14 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
               item
               xs={12}
               alignItems="right"
-              paddingX={2}
+              marginBottom={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+              >
                 Close
               </Button>
             </Grid>

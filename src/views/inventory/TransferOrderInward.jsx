@@ -20,6 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewInwardTransferOrder from "./ViewInwardTransferOrder";
 import UpdateTransferOrderInward from "./UpdateTransferOrderInward";
+import { RenderStatus } from "../../ui/index";
 import Route from "../../routes/Route";
 
 const TransferOrderInward = () => {
@@ -57,22 +58,24 @@ const TransferOrderInward = () => {
       width: 250,
     },
     { field: "transfer_to_code", headerName: "Tansfer To Code", width: 250 },
-    { field: "posted_date", headerName: "Posted Date", width: 150 },
+    { field: "posted_date", headerName: "Posted Date", width: 120 },
     {
       field: "status",
       headerName: "Status",
-      width: 150,
+      width: 130,
+      renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <>
           <IconButton
             aria-label="edit"
             size="small"
             onClick={() => editHandle(params)}
+            color="secondary"
           >
             <EditIcon fontSize="inherit" />
           </IconButton>
@@ -80,6 +83,7 @@ const TransferOrderInward = () => {
             aria-label="view"
             size="small"
             onClick={() => viewHandle(params)}
+            color="primary"
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>

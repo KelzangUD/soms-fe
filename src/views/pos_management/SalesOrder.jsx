@@ -596,7 +596,11 @@ const SalesOrder = () => {
                       onChange={customerNameHandle}
                       value={salesOrderDetails?.customerName}
                       renderInput={(params) => (
-                        <TextField {...params} label="Customer Name" size="small" />
+                        <TextField
+                          {...params}
+                          label="Customer Name"
+                          size="small"
+                        />
                       )}
                     />
                   </Grid>
@@ -636,7 +640,7 @@ const SalesOrder = () => {
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={1} >
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
@@ -679,12 +683,12 @@ const SalesOrder = () => {
               <Grid
                 container
                 px={2}
-                py={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "#007dc5",
+                  paddingY: "3px"
                 }}
               >
                 <Grid item>
@@ -721,15 +725,13 @@ const SalesOrder = () => {
                   </IconButton>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2} sx={{ my: 1 }}>
-                  <LineItemsTable
-                    lineItems={lineItems}
-                    deleteLineItemHandle={deleteLineItemHandle}
-                    editLineItemHandle={editLineItemHandle}
-                    linesAmount={linesAmount}
-                  />
-                </Grid>
+              <Grid container>
+                <LineItemsTable
+                  lineItems={lineItems}
+                  deleteLineItemHandle={deleteLineItemHandle}
+                  editLineItemHandle={editLineItemHandle}
+                  linesAmount={linesAmount}
+                />
               </Grid>
             </Paper>
           </Grid>

@@ -43,7 +43,7 @@ const Nav = () => {
         window.innerWidth > 1536
           ? "36px"
           : window.innerWidth > 1200
-          ? "35px"
+          ? "24px"
           : "30px"
       );
     }

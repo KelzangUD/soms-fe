@@ -20,14 +20,14 @@ const LineItemsTable = ({
 }) => {
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 600 }} aria-label="simple table" size="small">
+      <TableContainer>
+        <Table sx={{ minWidth: 500 }} aria-label="simple table" size="small">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "30%" }}>Description</TableCell>
+              <TableCell sx={{ width: "20%" }}>Description</TableCell>
               <TableCell align="right">Quantity</TableCell>
-              <TableCell align="right">Selling Price</TableCell>
-              <TableCell align="right">Tax Amount</TableCell>
+              <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>Selling Price</TableCell>
+              <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>Tax Amount</TableCell>
               <TableCell align="right">Disc/Comm Amount</TableCell>
               <TableCell align="right">Additional Discount</TableCell>
               <TableCell align="right">TDS Amount</TableCell>
@@ -79,56 +79,56 @@ const LineItemsTable = ({
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Tax Amount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Tax Amount</TableCell>
               <TableCell align="right">{linesAmount?.taxAmt}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Disc/Comm Amount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Disc/Comm Amount</TableCell>
               <TableCell align="right">
                 {linesAmount?.discountedAmount}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Discretional Discount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Discretional Discount</TableCell>
               <TableCell align="right">0</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Lots of Sales Discount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Lots of Sales Discount</TableCell>
               <TableCell align="right">0</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>TDS Amount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>TDS Amount</TableCell>
               <TableCell align="right">{linesAmount?.tdsAmount}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Advance Amount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Advance Amount</TableCell>
               <TableCell align="right">0</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Down Payment Amount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Down Payment Amount</TableCell>
               <TableCell align="right">0</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Advance Tax Amount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Advance Tax Amount</TableCell>
               <TableCell align="right">
                 {linesAmount?.advanceTaxAmount}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Interest Amount</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Interest Amount</TableCell>
               <TableCell align="right">0</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Net Total (Nu)</TableCell>
+              <TableCell colSpan={1} style={{ whiteSpace: 'nowrap' }}>Net Total (Nu)</TableCell>
               <TableCell align="right">{linesAmount?.netAmount}</TableCell>
             </TableRow>
           </TableBody>

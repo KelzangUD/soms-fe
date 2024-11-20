@@ -189,7 +189,8 @@ const UpdateTransferOrderInward = ({
   return (
     <>
       <Dialog
-        fullScreen
+        fullWidth
+        maxWidth="lg"
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -204,7 +205,8 @@ const UpdateTransferOrderInward = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#2196f3",
+                  color: "#fff",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -226,6 +228,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_Order_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -237,6 +240,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_Date}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -248,6 +252,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_Type}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -259,6 +264,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_From_Name}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -272,6 +278,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_From_SubInventory}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -283,6 +290,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_From_Locator}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -294,6 +302,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_To_Name}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -305,6 +314,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_To_SubInventory}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -318,6 +328,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_To_Locator}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -329,6 +340,7 @@ const UpdateTransferOrderInward = ({
                   disabled
                   fullWidth
                   value={parameters?.transfer_Mode}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -340,6 +352,7 @@ const UpdateTransferOrderInward = ({
                   fullWidth
                   disabled
                   value={parameters?.vehicle_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -350,6 +363,7 @@ const UpdateTransferOrderInward = ({
                   fullWidth
                   disabled
                   value={parameters?.remarks}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -383,13 +397,18 @@ const UpdateTransferOrderInward = ({
               item
               xs={12}
               alignItems="right"
-              paddingX={2}
+              marginBottom={2}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
-              <Button variant="contained" onClick={updateHandle}>
+              <Button variant="contained" onClick={updateHandle} size="small">
                 Update
               </Button>
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+                size="small"
+              >
                 Close
               </Button>
             </Grid>
