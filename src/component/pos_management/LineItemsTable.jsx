@@ -26,8 +26,8 @@ const LineItemsTable = ({
             <TableRow>
               <TableCell sx={{ width: "20%" }}>Description</TableCell>
               <TableCell align="right">Quantity</TableCell>
-              <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>Selling Price</TableCell>
-              <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>Tax Amount</TableCell>
+              <TableCell align="right">Selling Price</TableCell>
+              <TableCell align="right">Tax Amount</TableCell>
               <TableCell align="right">Disc/Comm Amount</TableCell>
               <TableCell align="right">Additional Discount</TableCell>
               <TableCell align="right">TDS Amount</TableCell>

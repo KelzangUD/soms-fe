@@ -64,12 +64,13 @@ const SignIn = () => {
         null
       );
       if (res?.status === 200) {
+        console.log(res);
         const decoded = jwtDecode(res?.data?.access_token);
         if (decoded) {
           const response = await Route(
             "GET",
             `/UserDtls/Module?role=${decoded?.roles[1]}&userId=${formData?.username}`,
-            null,
+            res?.data?.access_token,
             null,
             null
           );

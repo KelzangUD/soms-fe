@@ -146,7 +146,7 @@ const CompanySetting = () => {
                 <Grid item xs={12}>
                   <Paper elevation={1} sx={{ px: 2 }}>
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sx={{ my: 1 }}>
+                      <Grid item xs={12}>
                         <TextField
                           label="Company Name"
                           variant="outlined"
@@ -155,6 +155,7 @@ const CompanySetting = () => {
                           onChange={handleChange}
                           value={values.companyName}
                           onBlur={handleBlur}
+                          size="small"
                         />
                         {touched.companyName && errors.companyName && (
                           <FormHelperText error id="standard-weight-helper-text--register">
@@ -162,7 +163,7 @@ const CompanySetting = () => {
                           </FormHelperText>
                         )}
                       </Grid>
-                      <Grid item container spacing={2} sx={{ mb: 1 }}>
+                      <Grid item container spacing={1}>
                         <Grid item xs={4}>
                           <TextField
                             label="Company Short Name"
@@ -173,6 +174,7 @@ const CompanySetting = () => {
                             value={values.shortName}
                             onBlur={handleBlur}
                             defaultValue='shortName'
+                            size="small"
                           />
                           {touched.shortName && errors.shortName && (
                             <FormHelperText error id="standard-weight-helper-text--register">
@@ -189,6 +191,7 @@ const CompanySetting = () => {
                             value={values.incorporateDate}
                             defaultValue='shortName'
                             disabled='true'
+                            size="small"
                           />
                         </Grid>
                         <Grid item xs={4}>
@@ -201,6 +204,7 @@ const CompanySetting = () => {
                             value={values.tpn}
                             onBlur={handleBlur}
                             defaultValue='tpn'
+                            size="small"
                           />
                           {touched.tpn && errors.tpn && (
                             <FormHelperText error id="standard-weight-helper-text--register">
@@ -209,7 +213,7 @@ const CompanySetting = () => {
                           )}
                         </Grid>
                       </Grid>
-                      <Grid item xs={12} sx={{ mb: 1 }}>
+                      <Grid item container>
                         <TextField
                           label="Address"
                           variant="outlined"
@@ -219,6 +223,7 @@ const CompanySetting = () => {
                           value={values.companyAddress}
                           onBlur={handleBlur}
                           defaultValue='companyAddress'
+                          size="small"
                         />
                         {touched.companyAddress && errors.companyAddress && (
                           <FormHelperText error id="standard-weight-helper-text--register">
@@ -226,7 +231,7 @@ const CompanySetting = () => {
                           </FormHelperText>
                         )}
                       </Grid>
-                      <Grid item container spacing={2} sx={{ mb: 1 }}>
+                      <Grid item container spacing={1} sx={{ mt: -3 }}>
                         <Grid item xs={3}>
                           <TextField
                             fullWidth
@@ -239,6 +244,7 @@ const CompanySetting = () => {
                             onBlur={handleBlur}
                             variant="outlined"
                             select
+                            size="small"
                           >
                             {country.map((item) => (
                               <MenuItem key={item.country_id} value={item.country_id}>
@@ -264,6 +270,7 @@ const CompanySetting = () => {
                             onBlur={handleBlur}
                             variant="outlined"
                             select
+                            size="small"
                           >
                             {region.map((item) => (
                               <MenuItem key={item.region_id} value={item.region_id}>
@@ -289,6 +296,7 @@ const CompanySetting = () => {
                             onBlur={handleBlur}
                             variant="outlined"
                             select
+                            size="small"
                           >
                             {dzongkhag.map((item) => (
                               <MenuItem key={item.state_id} value={item.state_id}>
@@ -314,6 +322,7 @@ const CompanySetting = () => {
                             onBlur={handleBlur}
                             variant="outlined"
                             select
+                            size="small"
                           >
                             {location.map((item) => (
                               <MenuItem key={item.locationId} value={item.locationId}>
@@ -328,7 +337,7 @@ const CompanySetting = () => {
                           )}
                         </Grid>
                       </Grid>
-                      <Grid item container spacing={2} sx={{ mb: 1 }}>
+                      <Grid item container spacing={1} sx={{ mt: -2 }}>
                         <Grid item xs={3}>
                           <TextField
                             label="Postal Code"
@@ -339,6 +348,7 @@ const CompanySetting = () => {
                             value={values.postalCode}
                             onBlur={handleBlur}
                             defaultValue='postalCode'
+                            size="small"
                           />
                           {touched.postalCode && errors.postalCode && (
                             <FormHelperText error id="standard-weight-helper-text--register">
@@ -356,6 +366,7 @@ const CompanySetting = () => {
                             value={values.companyEmail}
                             onBlur={handleBlur}
                             defaultValue='companyEmail'
+                            size="small"
                           />
                         </Grid>
                         <Grid item xs={3}>
@@ -368,6 +379,7 @@ const CompanySetting = () => {
                             value={values.companyPhoneNo}
                             onBlur={handleBlur}
                             defaultValue='companyPhoneNo'
+                            size="small"
                           />
                           {touched.companyPhoneNo && errors.companyPhoneNo && (
                             <FormHelperText error id="standard-weight-helper-text--register">
@@ -376,7 +388,7 @@ const CompanySetting = () => {
                           )}
                         </Grid>
                       </Grid>
-                      <Grid item container spacing={2} sx={{ mb: 1 }}>
+                      <Grid item container spacing={1}>
                         <Grid item xs={3}>
                           <TextField
                             label="Contact Person"
@@ -387,6 +399,7 @@ const CompanySetting = () => {
                             value={values.contactPerson}
                             onBlur={handleBlur}
                             defaultValue='contactPerson'
+                            size="small"
                           />
                           {touched.contactPerson && errors.contactPerson && (
                             <FormHelperText error id="standard-weight-helper-text--register">
@@ -404,6 +417,7 @@ const CompanySetting = () => {
                             value={values.contactEmail}
                             onBlur={handleBlur}
                             defaultValue='contactEmail'
+                            size="small"
                           />
                           {touched.contactEmail && errors.contactEmail && (
                             <FormHelperText error id="standard-weight-helper-text--register">
@@ -421,6 +435,7 @@ const CompanySetting = () => {
                             value={values.mobileNo}
                             onBlur={handleBlur}
                             defaultValue='mobileNo'
+                            size="small"
                           />
                           {touched.mobileNo && errors.mobileNo && (
                             <FormHelperText error id="standard-weight-helper-text--register">
@@ -429,7 +444,7 @@ const CompanySetting = () => {
                           )}
                         </Grid>
                       </Grid>
-                      <Grid item xs={12} sx={{ mb: 1 }}>
+                      <Grid item xs={12}>
                         <TextField
                           label="Website"
                           variant="outlined"
@@ -439,6 +454,7 @@ const CompanySetting = () => {
                           value={values.website}
                           onBlur={handleBlur}
                           defaultValue='website'
+                          size="small"
                         />
                         {touched.website && errors.website && (
                           <FormHelperText error id="standard-weight-helper-text--register">
@@ -449,26 +465,26 @@ const CompanySetting = () => {
                       <Grid
                         container
                         spacing={2}
-                        sx={{ my: 2, display: "flex", justifyContent: "center" }}
+                        sx={{ mt: 0.5, mb: 2, display: "flex", justifyContent: "flex-end" }}
                       >
                         <Grid item>
                           <Button
                             autoFocus
                             disableElevation
                             disabled={isSubmitting}
-                            size="large"
                             type="submit"
                             variant="contained"
                             color="primary"
+                            size="small"
                           >
                             Save & Update
                           </Button>
                           <Button
                             variant="outlined"
                             color="error"
-                            size="large"
                             onClick={resetForm}
                             style={{ marginLeft: '10px'}}
+                            size="small"
                           >
                             Reset
                           </Button>
