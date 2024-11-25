@@ -64,7 +64,6 @@ const SignIn = () => {
         null
       );
       if (res?.status === 200) {
-        console.log(res);
         const decoded = jwtDecode(res?.data?.access_token);
         if (decoded) {
           const response = await Route(
