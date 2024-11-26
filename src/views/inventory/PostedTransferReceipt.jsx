@@ -18,6 +18,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewPostedTransferOrderReceipt from "./ViewPostedTransferReceipt";
+import { RenderStatus } from "../../ui/index";
 import Route from "../../routes/Route";
 
 const PostedTransferReceipt = () => {
@@ -59,6 +60,7 @@ const PostedTransferReceipt = () => {
       field: "status",
       headerName: "Status",
       width: 150,
+      renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",

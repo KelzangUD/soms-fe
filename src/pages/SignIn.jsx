@@ -69,7 +69,7 @@ const SignIn = () => {
           const response = await Route(
             "GET",
             `/UserDtls/Module?role=${decoded?.roles[1]}&userId=${formData?.username}`,
-            null,
+            res?.data?.access_token,
             null,
             null
           );
@@ -81,7 +81,7 @@ const SignIn = () => {
             localStorage.setItem("privileges", JSON.stringify(response?.data));
             navigate("/home/dashboard");
           } else {
-            setMessage(res?.data?.message);
+            setMessage(response?.response?.data?.message);
             setSeverity("error");
             setOpen(true);
           };

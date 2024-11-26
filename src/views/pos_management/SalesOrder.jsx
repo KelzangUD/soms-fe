@@ -39,6 +39,7 @@ import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
 const SalesOrder = () => {
   const user = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -67,12 +68,22 @@ const SalesOrder = () => {
     adjType: "",
     storeName: userDetails?.region_NAME,
   });
+  const [linesAmount, setLinesAmount] = useState({
+    grossTotal: 0,
+    taxAmt: 0,
+    discountedAmount: 0,
+    advanceTaxAmount: 0,
+    tdsAmount: 0,
+    netAmount: 0,
+  });
   const [paymentType, setPaymentType] = useState([]);
   const [paymentLines, setPaymentLines] = useState([]);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
     paymentAmount: "",
+    paymentTypeItem: "",
     paymentType: "",
     paymentTypeName: "",
+    bankItem: "",
     bankAccountNumber: "",
     chequeNumber: "",
     chequeDate: "",
@@ -86,14 +97,6 @@ const SalesOrder = () => {
   const [openItemsNotFoundDialog, setOpenItemsNotFoundDialog] = useState(false);
   const [fileName, setFileName] = useState("Upload File");
   const [banks, setbanks] = useState([]);
-  const [linesAmount, setLinesAmount] = useState({
-    grossTotal: 0,
-    taxAmt: 0,
-    discountedAmount: 0,
-    advanceTaxAmount: 0,
-    tdsAmount: 0,
-    netAmount: 0,
-  });
   const [responseData, setResponseData] = useState({});
   const fetchSalesType = async () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
@@ -117,19 +120,19 @@ const SalesOrder = () => {
     const res = await Route(
       "GET",
       `/Customer/Common/Fetch_All_Customers?salesType=${salesOrderDetails?.salesType}&userId=${user}`,
-      null,
+      access_token,
       null,
       null
     );
     if (res?.status === 200) {
       setCustomersList(res?.data);
-    }
+    };
   };
   const fetchCustomersDetails = async (customerID) => {
     const res = await Route(
       "GET",
       `/Customer/Common/Fetch_Customer_Dtls?customerId=${customerID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -228,6 +231,12 @@ const SalesOrder = () => {
   useEffect(() => {
     fetchBankBasedOnPaymentType();
   }, [paymentLinesItem?.paymentType, user]);
+  useEffect(() => {
+    setPaymentLinesItem((prev) => ({
+      ...prev,
+      paymentAmount: linesAmount?.netAmount,
+    }))
+  },[linesAmount?.netAmount]);
 
   const salesTypeHandle = (e) => {
     setSalesOrderDetails((prev) => ({
@@ -288,6 +297,7 @@ const SalesOrder = () => {
   const paymentHandle = (e) => {
     setPaymentLinesItem((prev) => ({
       ...prev,
+      paymentTypeItem: e?.target?.value,
       paymentType: e?.target?.value?.id,
       paymentTypeName: e?.target?.value?.type,
     }));
@@ -295,6 +305,7 @@ const SalesOrder = () => {
   const bankHandle = (e) => {
     setPaymentLinesItem((prev) => ({
       ...prev,
+      bankItem: e?.target.value,
       bankAccountNumber: e?.target?.value?.bankName,
     }));
   };
@@ -327,8 +338,10 @@ const SalesOrder = () => {
     setPaymentLines((prev) => [...prev, paymentLinesItem]);
     setPaymentLinesItem({
       paymentAmount: "",
+      paymentTypeItem: "",
       paymentType: "",
       paymentTypeName: "",
+      bankItem: "",
       bankAccountNumber: "",
       chequeNumber: "",
       chequeDate: "",
@@ -369,6 +382,12 @@ const SalesOrder = () => {
   }, [lineItems]);
 
   const postHandle = async () => {
+    console.log(parseInt(linesAmount?.netAmount), (paymentLines?.length > 0 &&
+      paymentLines?.reduce(
+        (accumulator, currentObject) =>
+          accumulator + parseInt(currentObject?.paymentAmount),
+        0
+      )))
     if (
       parseInt(linesAmount?.netAmount) ===
       (paymentLines?.length > 0 &&
@@ -408,16 +427,16 @@ const SalesOrder = () => {
       });
       formData.append("details", jsonDataBlob, "data.json");
       console.log(formData);
-      // console.log(data);
+      console.log(data);
       const res = await Route(
         "POST",
         `/SalesOrder/UpdateItemSales`,
-        null,
+        access_token,
         formData,
         null,
         "multipart/form-data"
       );
-      // console.log(res);
+      console.log(res);
       if (res?.status === 201) {
         setResponseData(res?.data);
         setSeverity("success");
@@ -596,7 +615,11 @@ const SalesOrder = () => {
                       onChange={customerNameHandle}
                       value={salesOrderDetails?.customerName}
                       renderInput={(params) => (
-                        <TextField {...params} label="Customer Name" size="small" />
+                        <TextField
+                          {...params}
+                          label="Customer Name"
+                          size="small"
+                        />
                       )}
                     />
                   </Grid>
@@ -636,7 +659,7 @@ const SalesOrder = () => {
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={1} >
+                <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
@@ -679,12 +702,12 @@ const SalesOrder = () => {
               <Grid
                 container
                 px={2}
-                py={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "#007dc5",
+                  paddingY: "3px"
                 }}
               >
                 <Grid item>
@@ -721,15 +744,13 @@ const SalesOrder = () => {
                   </IconButton>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2} sx={{ my: 1 }}>
-                  <LineItemsTable
-                    lineItems={lineItems}
-                    deleteLineItemHandle={deleteLineItemHandle}
-                    editLineItemHandle={editLineItemHandle}
-                    linesAmount={linesAmount}
-                  />
-                </Grid>
+              <Grid container>
+                <LineItemsTable
+                  lineItems={lineItems}
+                  deleteLineItemHandle={deleteLineItemHandle}
+                  editLineItemHandle={editLineItemHandle}
+                  linesAmount={linesAmount}
+                />
               </Grid>
             </Paper>
           </Grid>
@@ -763,6 +784,7 @@ const SalesOrder = () => {
                       required
                       onChange={paymentAmountHandle}
                       size="small"
+                      value={paymentLinesItem?.paymentAmount}
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -775,6 +797,7 @@ const SalesOrder = () => {
                         id="payment-type-select"
                         label="Payment Type"
                         onChange={paymentHandle}
+                        value={paymentLinesItem?.paymentTypeItem}
                       >
                         {paymentType?.map((item) => (
                           <MenuItem value={item} key={item?.id}>
@@ -794,6 +817,7 @@ const SalesOrder = () => {
                         id="bank-ac-name-select"
                         label="Bank A/C Name"
                         onChange={bankHandle}
+                        value={paymentLinesItem?.bankItem}
                       >
                         {banks?.map((item) => (
                           <MenuItem value={item} key={item?.id}>

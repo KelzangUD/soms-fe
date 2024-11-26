@@ -61,7 +61,7 @@ const TransferOrders = () => {
           transfer_order_no: item?.transfer_Order_Number,
           transfer_from_code: item?.transfer_From_Name,
           transfer_to_code: item?.transfer_To_Name,
-          posted_date: item?.creation_Date,
+          posted_date: item?.stringTransferDate,
           status: item?.status,
         }))
       );
@@ -97,14 +97,14 @@ const TransferOrders = () => {
   };
   const transfer_order_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", width: 150 },
+    { field: "transfer_order_no", headerName: "Transfer Order No", width: 200 },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
       width: 240,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 200 },
-    // { field: "posted_date", headerName: "Posted Date", width: 150 },
+    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 240 },
+    { field: "posted_date", headerName: "Posted Date", width: 150 },
     {
       field: "status",
       headerName: "Status",

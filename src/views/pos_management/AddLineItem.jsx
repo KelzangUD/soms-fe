@@ -25,6 +25,7 @@ const AddLineItem = ({
   setLineItems,
   userDetails,
 }) => {
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -94,7 +95,7 @@ const AddLineItem = ({
     const res = await Route(
       "GET",
       `/OnHand/FetchItemByDesc?storeName=${storeName}&desc=${desc}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -112,7 +113,7 @@ const AddLineItem = ({
     const res = await Route(
       "GET",
       `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo=${lineItemDetail?.serialNo}&qty=${lineItemDetail?.qty}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -156,10 +157,11 @@ const AddLineItem = ({
     const res = await Route(
       "GET",
       `/SalesOrder/FetchByDescription?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo&qty=${lineItemDetail?.qty}`,
-      null,
+      access_token,
       null,
       null
     );
+    console.log(res);
     if (res?.status === 200 && res?.data?.serialControlled != "Y") {
       setLineItemDetail((prev) => ({
         ...prev,
@@ -189,7 +191,7 @@ const AddLineItem = ({
     const res = await Route(
       "GET",
       `/SalesOrder/FetchPriceLocatorDtls?pricingId=${pricingID}&qty=${lineItemDetail?.qty}&salesType=${salesType}`,
-      null,
+      access_token,
       null,
       null
     );

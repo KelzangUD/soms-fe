@@ -6,7 +6,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import CallReceivedIcon from "@mui/icons-material/CallReceived";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 
@@ -16,11 +16,11 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   "& .icon": {
     color: "inherit",
   },
-  "&.Open": {
+  "&.Open, &.NotShipped": {
     color: (theme.vars || theme).palette.info.dark,
     border: `1px solid ${(theme.vars || theme).palette.info.main}`,
   },
-  "&.Received": {
+  "&.Received, &.Success, &.Approved, &.Active": {
     color: (theme.vars || theme).palette.success.dark,
     border: `1px solid ${(theme.vars || theme).palette.success.main}`,
   },
@@ -28,33 +28,13 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     color: (theme.vars || theme).palette.primary.dark,
     border: `1px solid ${(theme.vars || theme).palette.primary.main}`,
   },
-  "&.PartiallyFilled": {
+  "&.PartiallyFilled, &.In-Progress, &.In-Transit": {
     color: (theme.vars || theme).palette.warning.dark,
     border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
   },
-  "&.In-Progress": {
-    color: (theme.vars || theme).palette.warning.dark,
-    border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
-  },
-  "&.Rejected": {
+  "&.Rejected, &.Failed, &.In_Active": {
     color: (theme.vars || theme).palette.error.dark,
     border: `1px solid ${(theme.vars || theme).palette.error.main}`,
-  },
-  "&.Failed": {
-    color: (theme.vars || theme).palette.error.dark,
-    border: `1px solid ${(theme.vars || theme).palette.error.main}`,
-  },
-  "&.NotShipped": {
-    color: (theme.vars || theme).palette.info.dark,
-    border: `1px solid ${(theme.vars || theme).palette.info.main}`,
-  },
-  "&.Approved": {
-    color: (theme.vars || theme).palette.success.dark,
-    border: `1px solid ${(theme.vars || theme).palette.success.main}`,
-  },
-  "&.Success": {
-    color: (theme.vars || theme).palette.success.dark,
-    border: `1px solid ${(theme.vars || theme).palette.success.main}`,
   },
 }));
 
@@ -66,7 +46,11 @@ const Status = memo((props) => {
     icon = <ReportProblemIcon className="icon" />;
   } else if (status === "Open") {
     icon = <InfoIcon className="icon" />;
-  } else if (status === "PartiallyFilled") {
+  } else if (
+    status === "PartiallyFilled" ||
+    status === "In-Progress" ||
+    status === "In-Transit"
+  ) {
     icon = <AutorenewIcon className="icon" />;
   } else if (status === "Received") {
     icon = <CallReceivedIcon className="icon" />;
@@ -74,13 +58,13 @@ const Status = memo((props) => {
     icon = <ArrowUpwardIcon className="icon" />;
   } else if (status === "Not Shipped") {
     icon = <NotInterestedIcon className="icon" />;
-  } else if (status === "In-Progress") {
-    icon = <AutorenewIcon className="icon" />;
-  } else if (status === "Approved") {
+  } else if (
+    status === "Approved" ||
+    status === "Success" ||
+    status === "Active"
+  ) {
     icon = <DoneIcon className="icon" />;
-  }else if (status === "Success") {
-    icon = <DoneIcon className="icon" />;
-  } else if (status === "Failed") {
+  } else if (status === "Failed" || status === "In_Active") {
     icon = <CloseIcon className="icon" />;
   }
 
@@ -88,7 +72,9 @@ const Status = memo((props) => {
   if (status === "PartiallyFilled") {
     label = "Partially Filled";
   }
-
+  if (status === "In_Active") {
+    label = "In Active";
+  }
   return (
     <StyledChip
       className={status === "Not Shipped" ? "NotShipped" : status}

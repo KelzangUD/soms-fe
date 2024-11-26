@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Paper,
+  ButtonGroup,
   IconButton,
   Table,
   TableBody,
@@ -20,11 +21,11 @@ const LineItemsTable = ({
 }) => {
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 600 }} aria-label="simple table" size="small">
+      <TableContainer>
+        <Table sx={{ minWidth: 500 }} aria-label="simple table" size="small">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "30%" }}>Description</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell align="right">Quantity</TableCell>
               <TableCell align="right">Selling Price</TableCell>
               <TableCell align="right">Tax Amount</TableCell>
@@ -40,8 +41,15 @@ const LineItemsTable = ({
           <TableBody>
             {lineItems?.length > 0 &&
               lineItems?.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>{item?.description}</TableCell>
+                <TableRow
+                  key={index}
+                  sx={{
+                    height: "auto",
+                  }}
+                >
+                  <TableCell sx={{ minWidth: 100 }}>
+                    {item?.description}
+                  </TableCell>
                   <TableCell align="right">{item?.qty}</TableCell>
                   <TableCell align="right">{item?.sellingPrice}</TableCell>
                   <TableCell align="right">{item?.taxAmt}</TableCell>
@@ -53,22 +61,26 @@ const LineItemsTable = ({
                   <TableCell align="right">{item?.advanceTaxAmount}</TableCell>
                   <TableCell align="right">{item?.discountedAmount}</TableCell>
                   <TableCell align="right">{item?.lineItemAmt}</TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{ display: "flex", alignContent: "center" }}
-                  >
-                    <IconButton
-                      aria-label="delete"
-                      onClick={(e) => deleteLineItemHandle(e, index)}
+                  <TableCell align="right">
+                    <ButtonGroup
+                      variant="text"
+                      aria-label="Basic button group"
                     >
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="edit"
-                      onClick={(e) => editLineItemHandle(e, item, index)}
-                    >
-                      <EditIcon />
-                    </IconButton>
+                      <IconButton
+                        aria-label="edit"
+                        onClick={(e) => editLineItemHandle(e, item, index)}
+                        color="primary"
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        onClick={(e) => deleteLineItemHandle(e, index)}
+                        color="error"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </ButtonGroup>
                   </TableCell>
                 </TableRow>
               ))}

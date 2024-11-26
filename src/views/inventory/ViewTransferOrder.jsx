@@ -26,23 +26,21 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      width: 350,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 400,
+      width: 250,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
+    { field: "uom", headerName: "UOM", width: 100 },
+    { field: "qty", headerName: "Quantity", width: 100 },
   ];
-  React.useEffect(() => {
-    console.log(transferOrderDetails);
-  })
   return (
     <>
       <Dialog
-        fullScreen
+        fullWidth
+        maxWidth="lg"
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -57,7 +55,8 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#2196f3",
+                  color: "#fff",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -79,6 +78,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Order_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -88,6 +88,11 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                       label="Transfer Order Create Date"
                       value={dayjs(transferOrderDetails?.transfer_Date)}
                       disabled
+                      slotProps={{
+                        textField: {
+                          size: "small",
+                        },
+                      }}
                     />
                   </LocalizationProvider>
                 </FormControl>
@@ -101,6 +106,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Type}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -112,6 +118,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_From_Name}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -125,6 +132,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_From_SubInventory}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -136,6 +144,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_From_Locator}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -147,6 +156,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_To_Name}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -158,6 +168,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_To_SubInventory}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -171,6 +182,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_To_Locator}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -182,6 +194,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Mode}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -193,6 +206,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   fullWidth
                   disabled
                   value={transferOrderDetails?.vehicle_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -203,6 +217,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   fullWidth
                   disabled
                   value={transferOrderDetails?.remarks}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -240,13 +255,15 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
               item
               xs={12}
               alignItems="right"
-              paddingX={2}
-              sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
+              paddingY={1}
+              marginBottom={1}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Button
                 variant="outlined"
                 onClick={() => setOpen(false)}
                 color="error"
+                size="small"
               >
                 Close
               </Button>
