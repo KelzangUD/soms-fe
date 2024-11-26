@@ -50,6 +50,7 @@ const PaymentDetailsTable = ({ paymentLines, deletePaymentItemHandle}) => {
                     <IconButton
                       aria-label="delete"
                       onClick={(e) => deletePaymentItemHandle(e, index)}
+                      color="error"
                     >
                       <DeleteIcon />
                     </IconButton>

@@ -49,6 +49,7 @@ const VisuallyHiddenInput = styled("input")({
 
 const SalesReturn = () => {
   const user = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -229,10 +230,11 @@ const SalesReturn = () => {
         const res = await Route(
           "GET",
           `/SalesOrder/GetInvoiceList?salesId=${invoiceNo}&userId=${user}`,
-          null,
+          access_token,
           null,
           null
         );
+        console.log(res);
         if (res?.status === 200) {
           if (res?.data?.status === "Y") {
             setSalesData(res?.data);
@@ -251,6 +253,10 @@ const SalesReturn = () => {
             setSeverity("info");
             setShowNofication(true);
           }
+        } else {
+          setNotificationMsg(res?.response?.data?.message);
+          setSeverity("error");
+          setShowNofication(true);
         }
       } catch (error) {
         setNotificationMsg("Error fetching invoice:", error);
@@ -364,7 +370,7 @@ const SalesReturn = () => {
       const res = await Route(
         "POST",
         `/SalesOrder/UpdateSalesReturn`,
-        null,
+        access_token,
         formData,
         null,
         "multipart/form-data"

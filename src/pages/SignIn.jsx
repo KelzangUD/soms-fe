@@ -81,7 +81,7 @@ const SignIn = () => {
             localStorage.setItem("privileges", JSON.stringify(response?.data));
             navigate("/home/dashboard");
           } else {
-            setMessage(res?.data?.message);
+            setMessage(response?.response?.data?.message);
             setSeverity("error");
             setOpen(true);
           };

@@ -9,17 +9,25 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
 import AddSystemUserDialog from "./AddSysteUserDialog";
 import ViewEditSystemUserModal from "./ViewEditSystemUserModal";
+import { RenderStatus } from "../../ui";
 
 const SystemUsers = () => {
+  const access_token = localStorage.getItem("access_token");
   const [systemUsers, setSystemUsers] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [actionType, setActionType] = useState('');
-  const [userDtls, setUserDtls] = useState('');
+  const [actionType, setActionType] = useState("");
+  const [userDtls, setUserDtls] = useState("");
 
   const handleAction = async (userCode, type) => {
     setActionType(type);
-    const res = await Route("GET", `/UserDtls/fetchUserDetails?userId=${userCode}`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/UserDtls/fetchUserDetails?userId=${userCode}`,
+      access_token,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setUserDtls(res?.data);
       setShowViewModal(true);
@@ -28,36 +36,39 @@ const SystemUsers = () => {
 
   const columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "full_name", headerName: "Name", width: 300 },
-    { field: "email_address", headerName: "Email", width: 300 },
-    { field: "createdDate", headerName: "Created Date", width: 150 },
+    { field: "full_name", headerName: "Name", width: 150 },
+    { field: "email_address", headerName: "Email", width: 230 },
+    { field: "createdDate", headerName: "Created Date", width: 120 },
     {
       field: "roleName",
       headerName: "Role",
-      width: 250,
+      width: 150,
     },
     {
       field: "status",
       headerName: "Status",
       width: 150,
+      renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <>
           <IconButton
             aria-label="edit"
             size="small"
-            onClick={() => handleAction(params.row.user_code, 'edit')}
+            onClick={() => handleAction(params?.row?.user_code, "edit")}
+            color="primary"
           >
             <EditIcon fontSize="inherit" />
           </IconButton>
           <IconButton
             aria-label="view"
             size="small"
-            onClick={() => handleAction(params.row.user_code, 'view')}
+            onClick={() => handleAction(params.row.user_code, "view")}
+            color="secondary"
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
@@ -67,9 +78,18 @@ const SystemUsers = () => {
   ];
 
   const fetchSystemUsers = async () => {
-    const res = await Route("GET", "/UserDtls/getAllUserList", null, null, null);
+    const res = await Route(
+      "GET",
+      "/UserDtls/getAllUserList",
+      access_token,
+      null,
+      null
+    );
     if (res?.status === 200) {
-      const rowsWithIds = (res?.data || []).map((item, index) => ({ ...item, id: index + 1 }));
+      const rowsWithIds = (res?.data || []).map((item, index) => ({
+        ...item,
+        id: index + 1,
+      }));
       setSystemUsers(rowsWithIds);
     }
   };
@@ -94,7 +114,6 @@ const SystemUsers = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="System Users" /> */}
           <Grid
             item
             xs={12}
@@ -142,7 +161,7 @@ const SystemUsers = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
+          <Grid item container alignItems="center" xs={12}>
             <div style={{ height: "auto", width: "100%", background: "#fff" }}>
               <DataGrid
                 rows={systemUsers?.map((row, index) => ({
@@ -161,14 +180,14 @@ const SystemUsers = () => {
           </Grid>
         </Grid>
       </Box>
-      {showAddModal && 
+      {showAddModal && (
         <AddSystemUserDialog
           open={showAddModal}
           handleClose={handleCloseAddModal}
           fetchSystemUser={fetchSystemUsers}
         />
-      }
-      {showViewModal &&
+      )}
+      {showViewModal && (
         <ViewEditSystemUserModal
           open={showViewModal}
           handleClose={handleCloseViewModal}
@@ -176,7 +195,7 @@ const SystemUsers = () => {
           data={userDtls}
           actionType={actionType}
         />
-      }
+      )}
     </>
   );
 };

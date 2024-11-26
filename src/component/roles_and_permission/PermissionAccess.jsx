@@ -112,10 +112,10 @@ const PermissionAccess = ({ permission, moduleAccess, setNewPermission, type }) 
 
   return (
     <>
-      <Box sx={{ px: 2 }}>
+      <Box>
         <Grid container spacing={4} alignItems="center">
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: "800" }}>
