@@ -16,6 +16,7 @@ import {
   InputLabel,
   Select,
   Typography,
+  Card,
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -282,8 +283,25 @@ const Recharge = () => {
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
-            <Paper elevation={1}>
-              <Grid container padding={1}>
+            <Card>
+              <Grid
+                container
+                paddingX={2}
+                paddingY={2}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: "#1976d2",
+                }}
+              >
+                <Grid item>
+                  <Typography variant="subtitle1" color="#eee">
+                    Recharge Details
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container padding={1} py={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <FormControl fullWidth>
@@ -327,10 +345,10 @@ const Recharge = () => {
                   </Grid>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 paddingX={2}
@@ -339,7 +357,7 @@ const Recharge = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -375,7 +393,7 @@ const Recharge = () => {
                   </IconButton>
                 </Grid>
               </Grid>
-              <Grid container padding={1}>
+              <Grid container padding={1} py={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <TextField
@@ -465,23 +483,43 @@ const Recharge = () => {
                       component="label"
                       role={undefined}
                       tabIndex={-1}
-                      startIcon={<CloudUploadIcon />}
+                      size="small"
                       fullWidth
                       variant="outlined"
-                      disabled={disableFields?.chequeCopy}
-                      style={{ border: "1px solid #B4B4B8", color: "#686D76" }}
+                      style={{
+                        border: "1px solid #B4B4B8",
+                        color: "#686D76",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        padding: "7px 12px",
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                      }}
                     >
-                      {fileName}
+                      <span
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          flexGrow: 1,
+                        }}
+                      >
+                        {fileName}
+                      </span>
+                      <CloudUploadIcon />
                       <VisuallyHiddenInput
                         type="file"
                         onChange={chequeCopyHandle}
                         multiple
+                        disabled={disableFields?.chequeCopy}
                       />
                     </Button>
                   </Grid>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
             <Button

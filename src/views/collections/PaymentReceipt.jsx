@@ -559,7 +559,6 @@ const PaymentReceipt = () => {
                           role={undefined}
                           tabIndex={-1}
                           size="small"
-                          // endIcon={<CloudUploadIcon />}
                           fullWidth
                           variant="outlined"
                           style={{
