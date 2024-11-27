@@ -377,17 +377,19 @@ const PaymentReceipt = () => {
           <Grid item xs={12}>
             <>
               <Grid container spacing={2}>
-                <Grid item container xs={9} >
-                  <Card sx={{ width: "100%"}}>
+                <Grid item container xs={9}>
+                  <Card sx={{ width: "100%" }}>
                     <Grid
-                      paddingX={2}
-                      mt={1}
+                      padding={2}
+                      sx={{
+                        background: "#1976d2",
+                      }}
                     >
-                      <Typography variant="h6" color="#1B262C">
+                      <Typography variant="h6" color="#eee">
                         Service Details
                       </Typography>
                     </Grid>
-                    <Grid container spacing={1} my={0.5} paddingX={2}>
+                    <Grid container spacing={1} mt={1} mb={2} paddingX={2}>
                       <Grid item xs={3}>
                         <FormControl fullWidth size="small">
                           <InputLabel id="service-type-select-label">
@@ -444,12 +446,16 @@ const PaymentReceipt = () => {
                         />
                       </Grid>
                     </Grid>
+                  </Card>
+                  <Card sx={{ width: "100%", marginTop: 2 }}>
                     <Grid
                       container
-                      paddingX={2}
-                      mt={1}
+                      padding={2}
+                      sx={{
+                        background: "#1976d2",
+                      }}
                     >
-                      <Typography variant="h6" color="#1B262C">
+                      <Typography variant="h6" color="#eee">
                         Payment Details
                       </Typography>
                     </Grid>
@@ -593,7 +599,7 @@ const PaymentReceipt = () => {
                         </Button>
                       </Grid>
                     </Grid>
-                    <Grid item xs={12} marginY={1} paddingX={2}>
+                    <Grid item xs={12} marginY={2} paddingX={2}>
                       <TextField
                         label="Remarks"
                         variant="outlined"
@@ -613,20 +619,19 @@ const PaymentReceipt = () => {
                     <Grid xs={12}>
                       <Grid
                         container
-                        paddingX={2}
-                        paddingY={1}
+                        padding={2}
                         sx={{
                           background: "#1976d2",
                         }}
                       >
-                        <Typography variant="subtitle1" color="#fff">
+                        <Typography variant="subtitle1" color="#eee">
                           Customer Details
                         </Typography>
                       </Grid>
                       <Grid
                         container
                         paddingY={2}
-                        spacing={2}
+                        spacing={3.5}
                         sx={{
                           display: "flex",
                           flexFlow: "column",

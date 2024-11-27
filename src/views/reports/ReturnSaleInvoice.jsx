@@ -110,7 +110,11 @@ const ReturnSaleInvoice = () => {
                 </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>
@@ -128,14 +132,28 @@ const ReturnSaleInvoice = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="From*" />
+                        <DatePicker
+                          label="From*"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To*" />
+                        <DatePicker
+                          label="To*"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
@@ -148,6 +166,7 @@ const ReturnSaleInvoice = () => {
                       required
                       // onChange={oldPasswordHandle}
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -159,6 +178,7 @@ const ReturnSaleInvoice = () => {
                       required
                       // onChange={oldPasswordHandle}
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>

@@ -114,7 +114,11 @@ const TransferOrderReport = () => {
                 </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={2}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="transfer-type-select-label">
                         Transfer Type
                       </InputLabel>
@@ -132,19 +136,37 @@ const TransferOrderReport = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="From Date" />
+                        <DatePicker
+                          label="From Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2} style={{ background: "#fff" }}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To Date" />
+                        <DatePicker
+                          label="To Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="from-select-label">From Store</InputLabel>
                       <Select
                         labelId="from-select-label"
@@ -158,7 +180,11 @@ const TransferOrderReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="to-select-label">To Store</InputLabel>
                       <Select
                         labelId="to-select-label"
@@ -180,10 +206,15 @@ const TransferOrderReport = () => {
                       required
                       style={{ background: "#fff" }}
                       // onChange={oldPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="transaction-status-select-label">
                         Transaction Status
                       </InputLabel>

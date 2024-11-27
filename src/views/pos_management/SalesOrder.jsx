@@ -3,6 +3,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  Card,
   Paper,
   Grid,
   TextField,
@@ -520,18 +521,18 @@ const SalesOrder = () => {
   return (
     <>
       <Box sx={{ px: 2 }}>
-        <Grid container spacing={4} alignItems="center">
+        <Grid container spacing={2} alignItems="center">
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
-                paddingY={1}
+                paddingY={2}
                 paddingX={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -540,7 +541,7 @@ const SalesOrder = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container py={1} px={2}>
+              <Grid container p={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
@@ -695,19 +696,19 @@ const SalesOrder = () => {
                   </Grid>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 px={2}
+                py={1.5}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
-                  paddingY: "3px"
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -752,19 +753,18 @@ const SalesOrder = () => {
                   linesAmount={linesAmount}
                 />
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
-                paddingY={1}
-                paddingX={2}
+                padding={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -773,7 +773,7 @@ const SalesOrder = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container px={2} py={1}>
+              <Grid container p={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={2}>
                     <TextField
@@ -869,7 +869,7 @@ const SalesOrder = () => {
                           component="label"
                           role={undefined}
                           tabIndex={-1}
-                          startIcon={<CloudUploadIcon />}
+                          endIcon={<CloudUploadIcon />}
                           fullWidth
                           variant="outlined"
                           style={{
@@ -904,9 +904,9 @@ const SalesOrder = () => {
                   deletePaymentItemHandle={deletePaymentItemHandle}
                 />
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
             <Button variant="contained" onClick={postHandle} size="small">
               Post
             </Button>

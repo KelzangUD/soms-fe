@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Card,
   Paper,
   Grid,
   TextField,
@@ -398,16 +399,16 @@ const SalesReturn = () => {
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 paddingX={2}
-                paddingY={1}
+                paddingY={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -416,7 +417,7 @@ const SalesReturn = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container paddingX={2} paddingY={1}>
+              <Grid container paddingX={2} paddingTop={2} paddingBottom={1.5}>
                 <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
@@ -565,19 +566,19 @@ const SalesReturn = () => {
                   </Grid>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 paddingX={2}
-                paddingY={1}
+                paddingY={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -586,9 +587,9 @@ const SalesReturn = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2} sx={{ my: 1, px: 1 }}>
-                  <TableContainer component={Paper}>
+              <Grid container>
+                <Grid container>
+                  <TableContainer>
                     <Table
                       sx={{ minWidth: 650 }}
                       aria-label="simple table"
@@ -596,17 +597,17 @@ const SalesReturn = () => {
                     >
                       <TableHead>
                         <TableRow>
-                          <TableCell>Description</TableCell>
-                          <TableCell align="right">Quantity</TableCell>
-                          <TableCell align="right">Selling Price</TableCell>
-                          <TableCell align="right">Tax Amount</TableCell>
-                          <TableCell align="right">Disc/Comm Amount</TableCell>
-                          <TableCell align="right">
+                          <TableCell sx={{ fontSize: "13px" }}>Description</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>Quantity</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>Selling Price</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>Tax Amount</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>Disc/Comm Amount</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
                             Additional Discount
                           </TableCell>
-                          <TableCell align="right">TDS Amount</TableCell>
-                          <TableCell align="right">Line Item Amount</TableCell>
-                          <TableCell align="right">Action</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>TDS Amount</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>Line Item Amount</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>Action</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -715,19 +716,19 @@ const SalesReturn = () => {
                   </TableContainer>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 paddingX={2}
-                paddingY={1}
+                paddingY={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -838,7 +839,7 @@ const SalesReturn = () => {
                         component="label"
                         role={undefined}
                         tabIndex={-1}
-                        startIcon={<CloudUploadIcon />}
+                        endIcon={<CloudUploadIcon />}
                         fullWidth
                         variant="outlined"
                         style={{
@@ -936,7 +937,7 @@ const SalesReturn = () => {
                   </Table>
                 </TableContainer>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
             <Button
