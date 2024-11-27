@@ -15,7 +15,6 @@ import {
   IconButton,
   InputLabel,
   Select,
-  Slide,
   Typography,
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
@@ -26,6 +25,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Notification from "../../ui/Notification";
+import { Transition } from "../../component/common/index";
 import dayjs from "dayjs";
 import Route from "../../routes/Route";
 import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
@@ -42,12 +42,10 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
   outlineColor: "#fff",
 });
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const Recharge = () => {
   const userID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [responseData, setResponseData] = useState({});
@@ -209,11 +207,12 @@ const Recharge = () => {
     const res = await Route(
       "POST",
       `/Recharge/eTop_Up`,
-      null,
+      access_token,
       formData,
       null,
       "multipart/form-data"
     );
+    console.log(res);
     if (res?.status === 201) {
       setResponseData(res?.data);
       setSeverity("success");

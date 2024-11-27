@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
+  Button,
   Divider,
   Toolbar,
   IconButton,
@@ -18,11 +19,12 @@ import Logout from "@mui/icons-material/Logout";
 import Notification from "../../ui/Notification";
 import Route from "../../routes/Route";
 import { useNavigate, useLocation } from "react-router-dom";
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Nav = () => {
   const location = useLocation();
   const navigation = useNavigate();
-  const [paddingY, setPaddingY] = useState("30px");
+  const [paddingY, setPaddingY] = useState("16px");
   const [message, setMessage] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
   const [open, setOpen] = useState(false);
@@ -34,27 +36,18 @@ const Nav = () => {
   useEffect(() => {
     setCurrentLocation(location?.pathname?.split("/").pop());
   }, [location]);
-  // useEffect(() => {
-  //   setPaddingY(window.innerWidth > 1536 ? "36px" : (window.innerWidth > 1200) ? "36px" : "30px");
-  // }, [window.innerWidth]);
   useEffect(() => {
     function handleResize() {
       setPaddingY(
-        window.innerWidth > 1536
-          ? "36px"
-          : window.innerWidth > 1200
+        window.innerWidth > 1286
           ? "24px"
-          : "30px"
+          : window.innerWidth < 1286 && window.innerWidth > 1230
+          ? "18px"
+          : "16px"
       );
     }
-
-    // Set padding on initial load
     handleResize();
-
-    // Add event listener for resize
     window.addEventListener("resize", handleResize);
-
-    // Clean up the event listener on unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -174,21 +167,20 @@ const Nav = () => {
         <AppBar
           position="static"
           sx={{
-            background: "#F5F7F8",
-            color: "#393E46",
             boxShadow: "none",
-            height: "auto",
             paddingY: paddingY,
           }}
         >
-          <Toolbar sx={{ justifyContent: "space-between", alignItems: "cen" }}>
+          <Toolbar
+            sx={{ justifyContent: "space-between" }}
+          >
             <Typography
               variant="h6"
               noWrap
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontWeight: 300,
+                fontWeight: 400,
                 color: "inherit",
                 textDecoration: "none",
               }}
@@ -197,7 +189,7 @@ const Nav = () => {
             </Typography>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton
-                size="large"
+                size="small"
                 edge="end"
                 aria-label="account of current user"
                 aria-controls={menuId}
@@ -205,12 +197,12 @@ const Nav = () => {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle sx={{ width: 40, height: 40 }} />
+                <AccountCircle sx={{ height: 35, width: "auto" }} />
               </IconButton>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
               <IconButton
-                size="large"
+                size="small"
                 aria-label="show more"
                 aria-controls={mobileMenuId}
                 aria-haspopup="true"

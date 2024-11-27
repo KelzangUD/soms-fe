@@ -14,7 +14,6 @@ import {
   FormControl,
   InputLabel,
   Select,
-  Slide,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -24,6 +23,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Notification from "../../ui/Notification";
+import { Transition } from "../../component/common/index"
 import Route from "../../routes/Route";
 
 const VisuallyHiddenInput = styled("input")({
@@ -38,12 +38,10 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
   outlineColor: "#fff",
 });
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const PaymentReceipt = () => {
   const userId = localStorage?.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [responseData, setResponseData] = useState({});
   const [showNotification, setShowNofication] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
@@ -156,7 +154,7 @@ const PaymentReceipt = () => {
       const res = await Route(
         "GET",
         `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
-        null,
+        access_token,
         null,
         null
       );

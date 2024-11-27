@@ -31,10 +31,12 @@ const Home = () => {
           <Grid item xs={2}>
             <SideNav />
           </Grid>
-          <Grid item xs={10} >
-            <Nav />
+          <Grid item container xs={10}>
             <Grid item xs={12}>
-              <Item style={{ backgroundImage: `url(${bg})`}}>
+              <Nav />
+            </Grid>
+            <Grid item xs={12} marginTop="32px">
+              <Item style={{ backgroundImage: `url(${bg})` }}>
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/profile" element={<Profile />} />

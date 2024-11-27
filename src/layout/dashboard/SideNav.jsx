@@ -27,7 +27,8 @@ export default function SideNav() {
     display: "flex",
     flexDirection: "column",
     borderRadius: 0,
-    backgroundColor: "#F5F7F8",
+    backgroundColor: "#0F67B1",
+    color: "#fff"
   };
   const routeHandle = (route) => {
     navigation(route);
@@ -73,11 +74,11 @@ export default function SideNav() {
               <img
                 src={Logo}
                 alt="Logo"
-                style={{ width: "18%", height: "auto" }}
+                style={{ width: "30%", height: "auto" }}
               />
             </Button>
           </Grid>
-          <Grid item xs={12} marginBottom={2}>
+          <Grid item xs={12} marginBottom={1}>
             <Typography variant="body2" align="center">
               Sales & Order Management System
             </Typography>
@@ -143,7 +144,7 @@ export default function SideNav() {
                       onClick={() => routeHandle(nestedItem?.route)}
                     >
                       <ListItemIcon>
-                        <KeyboardArrowRightIcon fontSize="small" />
+                        <KeyboardArrowRightIcon fontSize="small" sx={{ color: "#fff" }} />
                       </ListItemIcon>
                       <ListItemText style={{ marginLeft: -26 }}>
                         <Typography variant="body2">

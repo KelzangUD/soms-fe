@@ -27,7 +27,7 @@ const Dashboard = () => {
       <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
         <Grid item container xs={12} spacing={1}>
           {status?.map((item, index) => (
-            <Grid item xs={3} key={item?.title}>
+            <Grid item xs={3} key={item?.title} sx={{ mt: -2 }}>
               <StatusCard
                 index={index}
                 // icon={item?.icon}
@@ -37,7 +37,7 @@ const Dashboard = () => {
             </Grid>
           ))}
         </Grid>
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} spacing={1} sx={{ mt: -3 }}>
           <Grid item xs={6}>
             <Revenue />
           </Grid>
@@ -45,7 +45,7 @@ const Dashboard = () => {
             <Revenue />
           </Grid>
         </Grid>
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} spacing={1} sx={{ mt: -3 }}>
           <Grid item xs={6}>
             <Revenue />
           </Grid>
@@ -53,7 +53,7 @@ const Dashboard = () => {
             <Revenue />
           </Grid>
         </Grid>
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} spacing={1} sx={{ mt: -3 }}>
           <Grid item xs={6}>
             <Revenue />
           </Grid>
@@ -61,7 +61,7 @@ const Dashboard = () => {
             <Revenue />
           </Grid>
         </Grid>
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} spacing={1} sx={{ mt: -3 }}>
           <Grid item xs={6}>
             <Revenue />
           </Grid>
