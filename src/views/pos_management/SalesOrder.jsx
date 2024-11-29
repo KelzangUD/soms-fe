@@ -542,7 +542,7 @@ const SalesOrder = () => {
                 </Grid>
               </Grid>
               <Grid container p={2}>
-                <Grid container spacing={1}>
+                <Grid container spacing={1} mb={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="POS No"
@@ -605,7 +605,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={1} py={1}>
+                <Grid container spacing={1} py={1} mb={1}>
                   <Grid item xs={3}>
                     <Autocomplete
                       disablePortal

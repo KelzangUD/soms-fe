@@ -301,7 +301,7 @@ const Recharge = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={1} py={2}>
+              <Grid container padding={2} py={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <FormControl fullWidth>
@@ -393,7 +393,7 @@ const Recharge = () => {
                   </IconButton>
                 </Grid>
               </Grid>
-              <Grid container padding={1} py={2}>
+              <Grid container padding={2} py={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <TextField

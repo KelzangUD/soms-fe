@@ -212,11 +212,11 @@ export const MenuItems = [
         route: "reports/sales-order-report",
       },
       {
-        page: "Sales & Stock Report",
+        page: "Sales and Stock Report",
         route: "reports/sales-and-stock-report",
       },
       {
-        page: "Sales Report-All",
+        page: "Sales Report - All",
         route: "reports/sales-report-all",
       },
       {
