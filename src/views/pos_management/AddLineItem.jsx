@@ -117,7 +117,6 @@ const AddLineItem = ({
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200 && res?.data?.available === "Y") {
       setLineItemDetail((prev) => ({
         ...prev,
@@ -161,7 +160,6 @@ const AddLineItem = ({
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200 && res?.data?.serialControlled != "Y") {
       setLineItemDetail((prev) => ({
         ...prev,
@@ -312,19 +310,14 @@ const AddLineItem = ({
             <Grid item xs={12}>
               <Grid
                 container
-                paddingX={2}
-                paddingY={1}
+                padding={2}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#0288d1",
+                  backgroundColor: "#1976d2",
                   color: "#eee",
                 }}
               >
-                <Grid item>
-                  <Typography variant="subtitle1">Add Line Item</Typography>
-                </Grid>
+                <Typography variant="subtitle1">Add Line Item</Typography>
               </Grid>
               <Grid
                 container

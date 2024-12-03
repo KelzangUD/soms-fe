@@ -6,6 +6,7 @@ export { default as ItemsNotFoundDialog } from "./ItemsNotFoundDialog";
 export { default as LoaderDialog } from "./LoaderDialog";
 export { default as Notification } from "./Notification";
 export { default as RechargeReceipt } from "./RechargeReceipt";
+export { default as SalesReceipt } from "./SalesReceipt";
 export { default as StatusCard } from "./StatusCard";
 export { default as VisuallyHiddentInputComponent } from "./VisuallyHiddenInputComponent";
 export { default as ResetPassword } from "./ResetPassword";

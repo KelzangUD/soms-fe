@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-const RechargeReceipt = () => {
+const SalesReceipt = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const applicationNo = query.get("applicationNo");
@@ -11,9 +11,19 @@ const RechargeReceipt = () => {
   const billing = query.get("billing");
   const createdBy = query.get("createdBy");
   const customerNo = query.get("customerNo");
-  const description = query.get("description");
+  const grossTotal = query.get("grossTotal");
+  const tax = query?.get("tax");
+  const disc = query?.get("discount");
+  const advance = query?.get("advance");
+  const downPayment = query.get("downPayment");
+  const totalPayment = query.get("totalPayment");
   const rechargeDate = query.get("rechargeDate");
   const receiptType = query.get("receiptType");
+  const itemDetails = query.get("itemDetails");
+  React.useEffect(() => {
+    
+    console.log(itemDetails);
+  },[])
   return (
     <>
       <div style={{ width: "400px", padding: "8px", lineHeight: "1.5" }}>
@@ -32,20 +42,35 @@ const RechargeReceipt = () => {
           <p>Phone:</p>
         </div>
         <hr />
+        {itemDetails?.map((item) => (
+            <>
+              <div>
+                <p>Description: {item?.description}</p>
+                <p>Quantity: {item?.qty}</p>
+                <p>Unit Rate: </p>
+                <p align="right">Amount(Nu): {amount}</p>
+              </div>
+              <hr />
+            </>
+          ))}
         <div>
-          <p>Description: {description}</p>
+          <p>Gross Total (Nu): {grossTotal}</p>
+        </div>
+        <div>
+          <p>Tax: {tax}</p>
+        </div>
+        <div>
+          <p>Discount/Commission: {disc}</p>
+        </div>
+        <div>
+          <p>Advance Amount: {advance}</p>
+        </div>
+        <div>
+          <p>Downpayment: {downPayment}</p>
         </div>
         <hr />
         <div>
-          <p align="right">Amount(Nu): {amount}</p>
-        </div>
-        <hr />
-        <div>
-          <p>Cash: {amount}</p>
-        </div>
-        <hr />
-        <div>
-          <p>Total Payment: {amount}</p>
+          <p>Total Payment: {totalPayment}</p>
         </div>
         <hr />
         <div>
@@ -53,9 +78,7 @@ const RechargeReceipt = () => {
         </div>
         <hr />
         <div>
-          <p align="center">
-            Address: P.O.Box No#1502, Norzin Lam, Thimphu
-          </p>
+          <p align="center">Address: P.O.Box No#1502, Norzin Lam, Thimphu</p>
           <p align="center">Phone: +975-77889977 www.tashicell.com</p>
         </div>
       </div>
@@ -63,4 +86,4 @@ const RechargeReceipt = () => {
   );
 };
 
-export default RechargeReceipt;
+export default SalesReceipt;

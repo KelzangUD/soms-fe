@@ -12,17 +12,15 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const SalesOrderList = () => {
@@ -54,17 +52,17 @@ const SalesOrderList = () => {
     },
   ];
   const sales_order_list_rows = [
-    {
-      id: 1,
-      pos_no: "EM/DP1/2024/00001",
-      pos_date: "20-Aug-2024",
-      customer_name: "TIPL",
-      mobile_no: "77007700",
-      ac_to_payment: "",
-      payment_term: "",
-      payment_amount: "",
-      created_user: "",
-    },
+    // {
+    //   id: 1,
+    //   pos_no: "EM/DP1/2024/00001",
+    //   pos_date: "20-Aug-2024",
+    //   customer_name: "TIPL",
+    //   mobile_no: "77007700",
+    //   ac_to_payment: "",
+    //   payment_term: "",
+    //   payment_amount: "",
+    //   created_user: "",
+    // },
   ];
 
   //   const token = localStorage.getItem("token");
@@ -114,7 +112,11 @@ const SalesOrderList = () => {
                 </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }} size="small">
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>
@@ -157,7 +159,7 @@ const SalesOrderList = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     <TextField
                       label="Customer Name"
                       variant="outlined"
@@ -181,7 +183,7 @@ const SalesOrderList = () => {
                       size="small"
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <Button variant="contained">Search</Button>
                   </Grid>
                 </Grid>
@@ -204,27 +206,10 @@ const SalesOrderList = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={sales_order_list_rows?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={sales_order_list_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={sales_order_list_rows}
+                    cols={sales_order_list_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

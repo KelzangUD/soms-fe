@@ -616,7 +616,7 @@ const PaymentReceipt = () => {
                 </Grid>
                 <Grid item xs={3} container>
                   <Card sx={{ width: "100%" }}>
-                    <Grid xs={12}>
+                    <Grid item xs={12}>
                       <Grid
                         container
                         padding={2}

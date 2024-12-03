@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
   Card,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  DialogActions,
   Paper,
   Grid,
   TextField,
@@ -20,6 +26,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import CheckIcon from "@mui/icons-material/Check";
 import AddLineItem from "./AddLineItem";
 import EditLineItem from "./EditLineItem";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -33,6 +40,7 @@ import {
   LineItemsTable,
   PaymentDetailsTable,
 } from "../../component/pos_management/index";
+import { Transition } from "../../component/common/index";
 import Route from "../../routes/Route";
 import dayjs from "dayjs";
 import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
@@ -67,7 +75,7 @@ const SalesOrder = () => {
     advanceNo: "",
     advanceAmt: 0,
     adjType: "",
-    storeName: userDetails?.region_NAME,
+    storeName: userDetails?.regionName,
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0,
@@ -127,7 +135,7 @@ const SalesOrder = () => {
     );
     if (res?.status === 200) {
       setCustomersList(res?.data);
-    };
+    }
   };
   const fetchCustomersDetails = async (customerID) => {
     const res = await Route(
@@ -164,7 +172,7 @@ const SalesOrder = () => {
     setIsLoading(true);
     try {
       let data = new FormData();
-      data.append("storeName", userDetails?.region_NAME);
+      data.append("storeName", userDetails?.regionName);
       data.append("File", file);
       const res = await Route(
         "POST",
@@ -236,8 +244,8 @@ const SalesOrder = () => {
     setPaymentLinesItem((prev) => ({
       ...prev,
       paymentAmount: linesAmount?.netAmount,
-    }))
-  },[linesAmount?.netAmount]);
+    }));
+  }, [linesAmount?.netAmount]);
 
   const salesTypeHandle = (e) => {
     setSalesOrderDetails((prev) => ({
@@ -383,12 +391,6 @@ const SalesOrder = () => {
   }, [lineItems]);
 
   const postHandle = async () => {
-    console.log(parseInt(linesAmount?.netAmount), (paymentLines?.length > 0 &&
-      paymentLines?.reduce(
-        (accumulator, currentObject) =>
-          accumulator + parseInt(currentObject?.paymentAmount),
-        0
-      )))
     if (
       parseInt(linesAmount?.netAmount) ===
       (paymentLines?.length > 0 &&
@@ -427,8 +429,6 @@ const SalesOrder = () => {
         type: "application/json",
       });
       formData.append("details", jsonDataBlob, "data.json");
-      console.log(formData);
-      console.log(data);
       const res = await Route(
         "POST",
         `/SalesOrder/UpdateItemSales`,
@@ -437,8 +437,8 @@ const SalesOrder = () => {
         null,
         "multipart/form-data"
       );
-      console.log(res);
       if (res?.status === 201) {
+        console.log(res?.data);
         setResponseData(res?.data);
         setSeverity("success");
         setNotificationMsg("Successfully Created");
@@ -517,6 +517,36 @@ const SalesOrder = () => {
     }));
     setBulkUpload(false);
     setLineItems([]);
+  };
+  const openInNewTab = () => {
+    const queryParams = new URLSearchParams();
+    queryParams.append("advance", responseData?.advance);
+    queryParams.append("amount", responseData?.amount);
+    queryParams.append("applicationNo", responseData?.applicationNo);
+    queryParams.append("billing", responseData?.billing);
+    queryParams.append("companyName", responseData?.companyName);
+    queryParams.append("createdBy", responseData?.createdBy);
+    queryParams.append("customerName", responseData?.customerName);
+    queryParams.append("customerNo", responseData?.customerNo);
+    queryParams.append("discount", responseData?.discount);
+    queryParams.append("downPayment", responseData?.downPayment);
+    queryParams.append("grossTotal", responseData?.grossTotal);
+    queryParams.append("paymentDate", responseData?.paymentDate);
+    queryParams.append("phone", responseData?.phone);
+    queryParams.append("receiptType", responseData?.receiptType);
+    queryParams.append("rechargeDate", responseData?.rechargeDate);
+    queryParams.append("tax", responseData?.tax);
+    queryParams.append("totalAmount", responseData?.totalAmount);
+    responseData?.itemDetails.forEach((item) =>
+      queryParams.append("itemDetails", item)
+    );
+    const queryString = queryParams.toString();
+    const newWindow = window.open(
+      `/sales-order-receipt?${queryString}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+    if (newWindow) newWindow.opener = null;
   };
   return (
     <>
@@ -925,7 +955,7 @@ const SalesOrder = () => {
           </Grid>
         </Grid>
       </Box>
-      {showNotification && (
+      {showNotification && (severity === "error" || severity === "info") && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}
@@ -965,6 +995,50 @@ const SalesOrder = () => {
           setOpen={setOpenItemsNotFoundDialog}
           itemsNoFound={itemsNotFound}
         />
+      )}
+      {showNotification && severity === "success" && (
+        <>
+          <Dialog
+            open={showNotification}
+            TransitionComponent={Transition}
+            keepMounted
+            fullWidth
+            size="sm"
+            aria-describedby="alert-dialog-slide-description"
+            onClose={(event, reason) => {
+              if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
+                setShowNofication(false);
+              }
+            }}
+          >
+            <DialogTitle>{notificationMsg}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                <Alert
+                  icon={<CheckIcon fontSize="inherit" />}
+                  severity="success"
+                >
+                  The Sales Order Created Successfully
+                </Alert>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={openInNewTab} variant="contained">
+                View Receipt
+              </Button>
+              <Button
+                onClick={() => setShowNofication(false)}
+                variant="outlined"
+                color="error"
+                sx={{
+                  mr: 2,
+                }}
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
       )}
     </>
   );

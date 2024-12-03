@@ -157,7 +157,7 @@ const ReturnSaleInvoice = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     <TextField
                       label="Customer Name"
                       variant="outlined"
@@ -181,7 +181,7 @@ const ReturnSaleInvoice = () => {
                       size="small"
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <Button variant="contained">Search</Button>
                   </Grid>
                 </Grid>

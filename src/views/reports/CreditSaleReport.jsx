@@ -17,12 +17,10 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const CreditSaleReport = () => {
@@ -53,19 +51,7 @@ const CreditSaleReport = () => {
       width: 150,
     },
   ];
-  const credit_sale_report_rows = [
-    {
-      id: 1,
-      customer_name: "",
-      date: "",
-      invoice_no: "",
-      item_description: "",
-      qty: "",
-      amount: "",
-      store_name: "",
-      created_by: "",
-    },
-  ];
+  const credit_sale_report_rows = [];
 
   //   const token = localStorage.getItem("token");
   //   const fetchResults = async () => {
@@ -254,27 +240,10 @@ const CreditSaleReport = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={credit_sale_report_rows?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={credit_sale_report_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={credit_sale_report_rows}
+                    cols={credit_sale_report_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

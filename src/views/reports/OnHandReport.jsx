@@ -7,26 +7,18 @@ import {
   Button,
   InputBase,
   IconButton,
-  // FormControl,
-  // MenuItem,
-  // InputLabel,
-  // Select,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-// import AddIcon from "@mui/icons-material/Add";
-// import EditIcon from "@mui/icons-material/Edit";
-// import VisibilityIcon from "@mui/icons-material/Visibility";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
+import { on_hand_report_columns } from "../../data/static";
 import Route from "../../routes/Route";
 
 const OnHandReport = () => {
+  const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [details, setDetails] = useState({
     storeName: userDetails?.region_NAME,
@@ -36,25 +28,9 @@ const OnHandReport = () => {
     imei_no: "ALL",
   });
   const [onHandReports, setOnHandReports] = useState([]);
-  const on_hand_report_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item", headerName: "Item No", width: 200 },
-    {
-      field: "item_Description",
-      headerName: "Item Description",
-      width: 350,
-    },
-    { field: "uom", headerName: "UOM", width: 90 },
-    { field: "transaction_Quantity", headerName: "Quantity", width: 90 },
-    { field: "serial_Number", headerName: "Serial No", width: 200 },
-    { field: "imei_number", headerName: "IMEI No", width: 150 },
-    { field: "sub_inventory_id", headerName: "Sub-Inventory", width: 150 },
-    { field: "locator_id", headerName: "Locator", width: 200 },
-  ];
   const [regionOrExtension, setRegionOrExtension] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [locatorsList, setLocatorsList] = useState([]);
-  // const token = localStorage.getItem("access_token");
   const fetchRegionOrExtension = async () => {
     const res = await Route(
       "GET",
@@ -89,11 +65,12 @@ const OnHandReport = () => {
     const res = await Route(
       "GET",
       `/OnHand/Fetch_OnHand_Items?storeName=${details?.storeName}&item=${details?.item}&locator_id=${details?.locator_id}&serialNo=${details?.serialNo}&imei_no=${details?.imei_no}`,
-      null,
+      access_token,
       null,
       null
     );
     if (res?.status === 200) {
+      console.log(res?.data);
       setOnHandReports(res?.data);
     }
   };
@@ -191,7 +168,7 @@ const OnHandReport = () => {
                       size="small"
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
                       options={regionOrExtension?.map((item) => ({
@@ -201,12 +178,16 @@ const OnHandReport = () => {
                       value={details?.storeName}
                       onChange={storeHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Region/Extension" size="small" />
+                        <TextField
+                          {...params}
+                          label="Region/Extension"
+                          size="small"
+                        />
                       )}
                       style={{ background: "#fff" }}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
                       options={itemsList?.map((item) => ({
@@ -236,7 +217,7 @@ const OnHandReport = () => {
                       style={{ background: "#fff" }}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     <TextField
                       label="Serial No."
                       variant="outlined"
@@ -282,30 +263,11 @@ const OnHandReport = () => {
                     <PrintIcon />
                   </IconButton>
                 </Grid>
-                <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={onHandReports?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={on_hand_report_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                      showCellVerticalBorder
-                      showColumnVerticalBorder
-                    />
-                  </div>
+                <Grid item xs={12}>
+                  <CustomDataTable
+                    rows={onHandReports}
+                    cols={on_hand_report_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

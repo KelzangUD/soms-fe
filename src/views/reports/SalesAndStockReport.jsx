@@ -20,36 +20,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Route from "../../routes/Route";
+import { sales_and_stock_report_columns } from "../../data/static";
 
 const SalesAndStockReport = () => {
-  const sales_and_stock_report_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_code", headerName: "Item Code", width: 200 },
-    {
-      field: "item_details",
-      headerName: "Particulars (Details of Item)",
-      width: 300,
-    },
-    { field: "unit", headerName: "Unit", width: 80 },
-    {
-      field: "opening_balance",
-      headerName: "Opening Balance (Qty)",
-      width: 150,
-    },
-    { field: "stock_received", headerName: "Stock Received (Qty)", width: 150 },
-    { field: "transfer_out", headerName: "Transfer Out (Qty)", width: 120 },
-    { field: "sales_qty", headerName: "Sales Qty", width: 80 },
-    {
-      field: "amount",
-      headerName: "Amount",
-      width: 70,
-    },
-    {
-      field: "closing_balance",
-      headerName: "Closing Balance",
-      width: 100,
-    },
-  ];
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const access_token = localStorage.getItem("access_token");
   const [params, setParams] = useState({
@@ -185,7 +158,7 @@ const SalesAndStockReport = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={3}>
                     <FormControl fullWidth size="small">
                       <InputLabel id="item-select-label">Item</InputLabel>
                       <Select
@@ -199,7 +172,7 @@ const SalesAndStockReport = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <Button variant="contained">Search</Button>
                   </Grid>
                 </Grid>
@@ -220,18 +193,18 @@ const SalesAndStockReport = () => {
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
                   <DataGrid
-                      rows={salesAndStocks}
-                      columns={sales_and_stock_report_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                      sx={{
-                        background: "#fff"
-                      }}
-                    />
+                    rows={salesAndStocks}
+                    columns={sales_and_stock_report_columns}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 5 },
+                      },
+                    }}
+                    pageSizeOptions={[5, 10]}
+                    sx={{
+                      background: "#fff",
+                    }}
+                  />
                 </Grid>
               </Grid>
             </Box>

@@ -11,19 +11,17 @@ import {
   InputLabel,
   Select,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { RenderStatus } from "../../ui/index";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const PaymentCollection = () => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const access_token = localStorage.getItem("access_token");
   const [rechargeCollection, setRechargeCollection] = useState([]);
   const recharge_collection_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
@@ -70,12 +68,11 @@ const PaymentCollection = () => {
     },
   ];
 
-  // const token = localStorage.getItem("token");
   const fetchRechargeCollection = async () => {
     const res = await Route(
       "GET",
       `/Report/rechargeCollection?extension=${userDetails?.storeId}&fromDate=2024-08-01&toDate=2024-10-31`,
-      null,
+      access_token,
       null,
       null
     );
@@ -83,6 +80,7 @@ const PaymentCollection = () => {
       setRechargeCollection(
         res?.data?.map((item, index) => ({
           id: index,
+          sl: index + 1,
           type: item?.type,
           created_date: item?.created_date,
           message_seq: item?.message_seq,
@@ -180,27 +178,10 @@ const PaymentCollection = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={rechargeCollection?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={recharge_collection_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={rechargeCollection}
+                    cols={recharge_collection_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>
