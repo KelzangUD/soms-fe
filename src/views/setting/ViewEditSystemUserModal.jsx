@@ -159,7 +159,7 @@ const ViewEditSystemUserModal = ({
             position: "absolute",
             right: 8,
             top: 8,
-            color: "#fff",
+            color: "#eee",
           }}
         >
           <CloseIcon />
@@ -280,7 +280,12 @@ const ViewEditSystemUserModal = ({
                   />
                 </Grid>
               </Grid>
-              <Grid item xs={12} sx={{ my: 1, ml: 2 }} style={{ marginTop: "5%" }}>
+              <Grid
+                item
+                xs={12}
+                sx={{ my: 1, ml: 2 }}
+                style={{ marginTop: "5%" }}
+              >
                 <PermissionAccess
                   permission={userPrivileges}
                   moduleAccess={moduleAccess}
@@ -512,11 +517,22 @@ const ViewEditSystemUserModal = ({
                           select
                           size="small"
                         >
-                          {locator.map((item) => (
+                          {values?.subInventoryId === "FA" ? (
+                            <MenuItem value={data?.full_name}>
+                              {data?.full_name}
+                            </MenuItem>
+                          ) : (
+                            locator.map((item) => (
+                              <MenuItem key={item.id} value={item.id}>
+                                {item.id}
+                              </MenuItem>
+                            ))
+                          )}
+                          {/* {locator.map((item) => (
                             <MenuItem key={item.id} value={item.id}>
                               {item.id}
                             </MenuItem>
-                          ))}
+                          ))} */}
                         </TextField>
                       </Grid>
                       <Grid item xs={12} sm={4}>
@@ -592,11 +608,7 @@ const ViewEditSystemUserModal = ({
                         )}
                       </Grid>
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      sx={{ my: 1, ml: 4,  marginTop: "3%" }}
-                    >
+                    <Grid item xs={12} sx={{ my: 1, ml: 4, marginTop: "3%" }}>
                       <PermissionAccess
                         permission={userPrivileges}
                         moduleAccess={moduleAccess}

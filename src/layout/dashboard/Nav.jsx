@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
-  Button,
-  Divider,
   Toolbar,
   IconButton,
   MenuItem,
@@ -19,16 +17,14 @@ import Logout from "@mui/icons-material/Logout";
 import Notification from "../../ui/Notification";
 import Route from "../../routes/Route";
 import { useNavigate, useLocation } from "react-router-dom";
-import MenuIcon from '@mui/icons-material/Menu';
 
 const Nav = () => {
   const location = useLocation();
   const navigation = useNavigate();
-  const [paddingY, setPaddingY] = useState("16px");
   const [message, setMessage] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
   const [open, setOpen] = useState(false);
-  const [openNotification, setOpenNotification] = useState(null);
+  // const [openNotification, setOpenNotification] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -36,21 +32,7 @@ const Nav = () => {
   useEffect(() => {
     setCurrentLocation(location?.pathname?.split("/").pop());
   }, [location]);
-  useEffect(() => {
-    function handleResize() {
-      setPaddingY(
-        window.innerWidth > 1286
-          ? "24px"
-          : window.innerWidth < 1286 && window.innerWidth > 1230
-          ? "18px"
-          : "16px"
-      );
-    }
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
+ 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -159,65 +141,58 @@ const Nav = () => {
   );
   return (
     <>
-      <Box
+      <AppBar
+        position="static"
         sx={{
-          flexGrow: 1,
+          boxShadow: "none",
+          paddingY: "21px",
+          marginBottom: 4
         }}
       >
-        <AppBar
-          position="static"
-          sx={{
-            boxShadow: "none",
-            paddingY: paddingY,
-          }}
-        >
-          <Toolbar
-            sx={{ justifyContent: "space-between" }}
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Typography
+            variant="h6"
+            noWrap
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              fontWeight: 400,
+              color: "inherit",
+              textDecoration: "none",
+            }}
           >
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontWeight: 400,
-                color: "inherit",
-                textDecoration: "none",
-              }}
+            {currentLocation.toUpperCase()}
+          </Typography>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <IconButton
+              size="small"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
             >
-              {currentLocation.toUpperCase()}
-            </Typography>
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton
-                size="small"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle sx={{ height: 35, width: "auto" }} />
-              </IconButton>
-            </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="small"
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        <Divider />
-        {renderMobileMenu}
-        {renderMenu}
-      </Box>
+              <AccountCircle sx={{ height: 35, width: "auto" }} />
+            </IconButton>
+          </Box>
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="small"
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      {/* <Divider /> */}
+      {renderMobileMenu}
+      {renderMenu}
       {open && <Notification open={open} setOpen={setOpen} message={message} />}
     </>
   );

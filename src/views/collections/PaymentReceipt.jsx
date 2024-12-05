@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Paper,
   Grid,
   TextField,
   MenuItem,
@@ -116,10 +115,8 @@ const PaymentReceipt = () => {
     fetchPaymentType();
     fetchPaymentOptions();
     fetchBankAccountName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    fetchBankAccountName();
-  }, [paymentMethod]);
   const serviceTypeHandle = (e) => {
     e?.target?.value === "1"
       ? setDisablePaymentSelect(false)
@@ -143,14 +140,14 @@ const PaymentReceipt = () => {
   };
   const fetchCustomerDetailsHandle = async () => {
     if (
-      (paymentReceiptDetails?.serviceType == "1" &&
-        paymentReceiptDetails?.mobileNo?.length == 8) ||
-      (paymentReceiptDetails?.serviceType == "1" &&
+      (paymentReceiptDetails?.serviceType === "1" &&
+        paymentReceiptDetails?.mobileNo?.length === 8) ||
+      (paymentReceiptDetails?.serviceType === "1" &&
         paymentReceiptDetails?.mobileNo?.startsWith("77")) ||
-      (paymentReceiptDetails?.serviceType == "2" &&
-        paymentReceiptDetails?.mobileNo?.length == 9) ||
-      (paymentReceiptDetails?.serviceType == "3" &&
-        paymentReceiptDetails?.mobileNo?.length == 5)
+      (paymentReceiptDetails?.serviceType === "2" &&
+        paymentReceiptDetails?.mobileNo?.length === 9) ||
+      (paymentReceiptDetails?.serviceType === "3" &&
+        paymentReceiptDetails?.mobileNo?.length === 5)
     ) {
       const res = await Route(
         "GET",
@@ -184,6 +181,7 @@ const PaymentReceipt = () => {
     ) {
       fetchCustomerDetailsHandle();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     paymentReceiptDetails?.serviceType,
     paymentReceiptDetails?.mobileNo,
@@ -261,9 +259,9 @@ const PaymentReceipt = () => {
     e.preventDefault();
     console.log(paymentReceiptDetails?.mobileNo?.length);
     if (
-      (paymentReceiptDetails?.serviceType == "1" &&
+      (paymentReceiptDetails?.serviceType === "1" &&
         paymentReceiptDetails?.mobileNo?.length !== 8) ||
-      (paymentReceiptDetails?.serviceType == "2" &&
+      (paymentReceiptDetails?.serviceType === "2" &&
         paymentReceiptDetails?.mobileNo?.length !== 9)
     ) {
       setIncorrectFormat(true);
@@ -385,7 +383,7 @@ const PaymentReceipt = () => {
                         background: "#1976d2",
                       }}
                     >
-                      <Typography variant="h6" color="#eee">
+                      <Typography variant="subtitle1" color="#eee">
                         Service Details
                       </Typography>
                     </Grid>
@@ -455,7 +453,7 @@ const PaymentReceipt = () => {
                         background: "#1976d2",
                       }}
                     >
-                      <Typography variant="h6" color="#eee">
+                      <Typography variant="subtitle1" color="#eee">
                         Payment Details
                       </Typography>
                     </Grid>

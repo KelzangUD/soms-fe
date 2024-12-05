@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Paper, Grid, InputBase, IconButton } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-// import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
 import { Notification, RenderStatus } from "../../ui/index";
 import ViewRequisitionItemDetails from "./ViewRequisitionItemDetails";
+import { CustomDataTable } from "../../component/common/index";
 
 const RequisitionList = () => {
+  const access_token = localStorage.getItem("access_token");
   const empId = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -22,11 +22,10 @@ const RequisitionList = () => {
   const [approvalStatus, setApprovalStatus] = useState("Submitted");
 
   const viewDetailsHandle = async (params) => {
-    // console.log(params?.row);
     const res = await Route(
       "GET",
       `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empId}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -54,7 +53,9 @@ const RequisitionList = () => {
       field: "approvalStatus",
       headerName: "Approval Status",
       width: 150,
-      renderCell: (params) => <RenderStatus status={params?.row?.approvalStatus} />,
+      renderCell: (params) => (
+        <RenderStatus status={params?.row?.approvalStatus} />
+      ),
     },
     {
       field: "action",
@@ -74,27 +75,26 @@ const RequisitionList = () => {
       ),
     },
   ];
-  // const token = localStorage.getItem("token");
-  const fetchRequisitionList = async () => {
-    const res = await Route(
-      "GET",
-      `/requisition/viewRequisitionListByCreator/${empId}`,
-      null,
-      null,
-      null
-    );
-    // console.log(res);
-    if (res?.status === 200) {
-      setRequisitionList(res?.data);
-    }
-  };
+  
   useEffect(() => {
+    const fetchRequisitionList = async () => {
+      const res = await Route(
+        "GET",
+        `/requisition/viewRequisitionListByCreator/${empId}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setRequisitionList(res?.data);
+      }
+    };
     fetchRequisitionList();
-  }, []);
+  }, [access_token, empId]);
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
+      <>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
           <Grid
             item
@@ -145,33 +145,19 @@ const RequisitionList = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={requisitionList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={requisiton_list_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={requisitionList?.map((row, index) => ({
+                      ...row,
+                      sl: index + 1,
+                    }))}
+                    cols={requisiton_list_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>
           </Grid>
         </Grid>
-      </Box>
+      </>
       {showNotification && (
         <Notification
           open={showNotification}

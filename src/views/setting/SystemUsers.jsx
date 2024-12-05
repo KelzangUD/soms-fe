@@ -6,10 +6,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Route from "../../routes/Route";
 import AddSystemUserDialog from "./AddSysteUserDialog";
 import ViewEditSystemUserModal from "./ViewEditSystemUserModal";
+import { CustomDataTable } from "../../component/common/index";
 import { RenderStatus } from "../../ui";
+import Route from "../../routes/Route";
 
 const SystemUsers = () => {
   const access_token = localStorage.getItem("access_token");
@@ -142,41 +143,33 @@ const SystemUsers = () => {
                 </IconButton>
               </Paper>
             </Grid>
-            <Grid item>
+            <Grid item alignContent="center">
               <Button
                 variant="contained"
+                aria-label="add"
                 color="primary"
-                endIcon={<AddIcon />}
-                sx={{ mr: 2 }}
                 onClick={handleAddUser}
+                endIcon={<AddIcon />}
               >
                 Add New
               </Button>
-              <Button
-                variant="contained"
+              <IconButton
+                aria-label="add"
                 color="success"
-                endIcon={<FileDownloadIcon />}
+                // onClick={}
               >
-                Export
-              </Button>
+                <FileDownloadIcon />
+              </IconButton>
             </Grid>
           </Grid>
           <Grid item container alignItems="center" xs={12}>
-            <div style={{ height: "auto", width: "100%", background: "#fff" }}>
-              <DataGrid
-                rows={systemUsers?.map((row, index) => ({
-                  ...row,
-                  sl: index + 1,
-                }))}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 5 },
-                  },
-                }}
-                pageSizeOptions={[5, 10, 100]}
-              />
-            </div>
+            <CustomDataTable
+              rows={systemUsers?.map((row, index) => ({
+                ...row,
+                sl: index + 1,
+              }))}
+              cols={columns}
+            />
           </Grid>
         </Grid>
       </Box>

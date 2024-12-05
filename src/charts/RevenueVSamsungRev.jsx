@@ -1,76 +1,89 @@
 import React from "react";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
+  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Label
+  Label,
 } from "recharts";
 import { Paper, Typography } from "@mui/material";
 
 const data = [
   {
     name: "Jan",
-    amt: 2400,
+    rev: 2400,
+    sam: 100,
   },
   {
     name: "Feb",
-    amt: 2210,
+    rev: 2210,
+    sam: 200,
   },
   {
     name: "Mar",
-    amt: 2290,
+    rev: 2290,
+    sam: 500,
   },
   {
     name: "Apr",
-    amt: 200,
+    rev: 200,
+    sam: 200,
   },
   {
     name: "May",
-    amt: 2181,
+    rev: 2181,
+    sam: 1000,
   },
   {
     name: "Jun",
-    amt: 500,
+    rev: 500,
+    sam: 1100,
   },
   {
     name: "Jul",
-    amt: 2100,
+    rev: 2100,
+    sam: 2100,
   },
   {
     name: "Aug",
-    amt: 2290,
+    rev: 2290,
+    sam: 2000,
   },
   {
     name: "Sept",
-    amt: 2000,
+    rev: 2000,
+    sam: 300,
   },
   {
     name: "Oct",
-    amt: 1181,
+    rev: 1181,
+    sam: 700,
   },
   {
     name: "Nov",
-    amt: 2500,
+    rev: 2500,
+    sam: 1000,
   },
   {
     name: "Dec",
-    amt: 1100,
+    rev: 1100,
+    sam: 600,
   },
 ];
 
-const Revenue = () => {
+const RevenueVSamsungRev = () => {
   return (
     <Paper sx={{ width: "100%", height: 400, padding: 2 }}>
       <Typography variant="subtitle2" align="center">
-        Revenue
+        Revenue Vs Samsung Revenue
       </Typography>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart
+        <BarChart
           data={data}
           margin={{
             top: 10,
@@ -90,15 +103,19 @@ const Revenue = () => {
           </YAxis>
           <Tooltip />
           <Legend />
-          <Line
-            type="monotone"
-            dataKey="amt"
-            stroke="#4caf50"
-            activeDot={{ r: 8 }}
+          <Bar
+            dataKey="rev"
+            fill="#4caf50"
+            activeBar={<Rectangle fill="#388e3c" />}
           />
-        </LineChart>
+          <Bar
+            dataKey="sam"
+            fill="#1e88e5"
+            activeBar={<Rectangle fill="#1976d2"/>}
+          />
+        </BarChart>
       </ResponsiveContainer>
     </Paper>
   );
 };
-export default Revenue;
+export default RevenueVSamsungRev;

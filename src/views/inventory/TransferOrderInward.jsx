@@ -8,7 +8,6 @@ import {
   IconButton,
   FormControl,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
@@ -21,10 +20,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewInwardTransferOrder from "./ViewInwardTransferOrder";
 import UpdateTransferOrderInward from "./UpdateTransferOrderInward";
 import { RenderStatus } from "../../ui/index";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const TransferOrderInward = () => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [inwardTransferOrderList, setInwardTransferOrderList] = useState([]);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
   const [view, setView] = useState(false);
@@ -34,7 +35,7 @@ const TransferOrderInward = () => {
     const res = await Route(
       "GET",
       `/transferOrder/viewInTransitTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -92,12 +93,11 @@ const TransferOrderInward = () => {
     },
   ];
 
-  //   const token = localStorage.getItem("token");
   const fetchInwardTrasnferOrderList = async () => {
     const res = await Route(
       "GET",
       `/transferOrder/viewInwardTransferOrderList/${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -117,6 +117,7 @@ const TransferOrderInward = () => {
   };
   useEffect(() => {
     fetchInwardTrasnferOrderList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -202,24 +203,10 @@ const TransferOrderInward = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={inwardTransferOrderList}
-                      columns={transfer_order_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={inwardTransferOrderList}
+                    cols={transfer_order_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

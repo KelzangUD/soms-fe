@@ -17,12 +17,11 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const ReturnSaleInvoice = () => {
@@ -44,24 +43,14 @@ const ReturnSaleInvoice = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small">
+          <IconButton aria-label="view" size="small" color="primary">
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const return_posted_sales_invoice_rows = [
-    {
-      id: 1,
-      pos_credit_no: "EM/DP1/2024/00001",
-      pos_date: "20-Aug-2024",
-      customer_name: "TIPL",
-      mobile_no: "77007700",
-      payment_amount: "",
-      invoice_no: "",
-    },
-  ];
+  const return_posted_sales_invoice_rows = [];
 
   //   const token = localStorage.getItem("token");
   //   const fetchResults = async () => {
@@ -204,29 +193,10 @@ const ReturnSaleInvoice = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={return_posted_sales_invoice_rows?.map(
-                        (row, index) => ({
-                          ...row,
-                          sl: index + 1,
-                        })
-                      )}
-                      columns={return_posted_sales_invoice_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={return_posted_sales_invoice_rows}
+                    cols={return_posted_sales_invoice_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

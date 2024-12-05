@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Paper,
-  Grid,
-  InputBase,
-  IconButton,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Button, Paper, Grid, InputBase, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,11 +8,14 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CreateTransferOrder from "./CreateTransferOrder";
 import ViewTransferOrder from "./ViewTransferOrder";
 import UpdateTransferOrder from "./UpdateTransferOrder";
-import {Notification, RenderStatus} from "../../ui/index";
+import { Notification, RenderStatus } from "../../ui/index";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const TransferOrders = () => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"))
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -29,15 +24,12 @@ const TransferOrders = () => {
   const [edit, setEdit] = useState(false);
   const [view, setView] = useState(false);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
-  const [userDetails, setUserDetails] = useState(
-    JSON.parse(localStorage.getItem("userDetails"))
-  );
 
   const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
     const res = await Route(
       "GET",
       `/transferOrder/viewTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -50,7 +42,7 @@ const TransferOrders = () => {
     const res = await Route(
       "GET",
       `/transferOrder/viewTransferOrderList/${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -58,6 +50,7 @@ const TransferOrders = () => {
       setViewTransferOrderList(
         res?.data?.map((item, index) => ({
           id: index,
+          sl: index + 1,
           transfer_order_no: item?.transfer_Order_Number,
           transfer_from_code: item?.transfer_From_Name,
           transfer_to_code: item?.transfer_To_Name,
@@ -71,7 +64,7 @@ const TransferOrders = () => {
     const res = await Route(
       "PUT",
       `/transferOrder/transferOrderShipment?transferOrderNo=${transferOrderNo}&empId=${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -147,6 +140,7 @@ const TransferOrders = () => {
   ];
   useEffect(() => {
     fetchTransferOrderList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -188,7 +182,7 @@ const TransferOrders = () => {
                       </IconButton>
                     </Paper>
                   </Grid>
-                  <Grid item >
+                  <Grid item>
                     <Button
                       variant="contained"
                       color="primary"
@@ -200,27 +194,10 @@ const TransferOrders = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={viewTransferOrderList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={transfer_order_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={viewTransferOrderList}
+                    cols={transfer_order_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

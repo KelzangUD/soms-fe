@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Paper,
   Grid,
   Box,
   Typography,
@@ -15,21 +14,30 @@ import {
 import Logo from "../../assets/images/logo.ico";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { styled } from "@mui/material/styles";
+import MuiDrawer, { drawerClasses } from "@mui/material/Drawer";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { MenuItems } from "./SideBar";
 import { menuListFilter } from "../../util/CommonUtil";
 
+const drawerWidth = 240;
+
+const Drawer = styled(MuiDrawer)({
+  width: drawerWidth,
+  flexShrink: 0,
+  boxSizing: "border-box",
+  mt: 10,
+  [`& .${drawerClasses.paper}`]: {
+    width: drawerWidth,
+    boxSizing: "border-box",
+    backgroundColor: "#0F67B1",
+    color: "#fff",
+  },
+});
+
 export default function SideNav() {
   const navigation = useNavigate();
-  const containerStyle = {
-    minHeight: "100%",
-    display: "flex",
-    flexDirection: "column",
-    borderRadius: 0,
-    backgroundColor: "#0F67B1",
-    color: "#fff"
-  };
   const routeHandle = (route) => {
     navigation(route);
   };
@@ -53,7 +61,12 @@ export default function SideNav() {
   }, []);
 
   return (
-    <Paper style={containerStyle}>
+    <Drawer
+      variant="permanent"
+      sx={{
+        display: { xs: "none", md: "block" },
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -144,7 +157,10 @@ export default function SideNav() {
                       onClick={() => routeHandle(nestedItem?.route)}
                     >
                       <ListItemIcon>
-                        <KeyboardArrowRightIcon fontSize="small" sx={{ color: "#fff" }} />
+                        <KeyboardArrowRightIcon
+                          fontSize="small"
+                          sx={{ color: "#fff" }}
+                        />
                       </ListItemIcon>
                       <ListItemText style={{ marginLeft: -26 }}>
                         <Typography variant="body2">
@@ -159,6 +175,6 @@ export default function SideNav() {
           </React.Fragment>
         ))}
       </List>
-    </Paper>
+    </Drawer>
   );
 }

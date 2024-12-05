@@ -461,7 +461,7 @@ const SalesOrder = () => {
         }));
         setPaymentType([]);
         setPaymentLines([]);
-        setPaymentLines((prev) => ({
+        setPaymentLinesItem((prev) => ({
           ...prev,
           paymentAmount: "",
           paymentType: "",
@@ -503,7 +503,8 @@ const SalesOrder = () => {
       advanceAmt: 0,
       adjType: "",
     }));
-    setPaymentLines((prev) => ({
+    setPaymentLines([]);
+    setPaymentLinesItem((prev) => ({
       ...prev,
       paymentAmount: "",
       paymentType: "",
@@ -538,7 +539,7 @@ const SalesOrder = () => {
     queryParams.append("tax", responseData?.tax);
     queryParams.append("totalAmount", responseData?.totalAmount);
     responseData?.itemDetails.forEach((item) =>
-      queryParams.append("itemDetails", item)
+      queryParams.append("itemDetails", JSON.stringify(item))
     );
     const queryString = queryParams.toString();
     const newWindow = window.open(
@@ -1015,15 +1016,20 @@ const SalesOrder = () => {
             <DialogContent>
               <DialogContentText id="alert-dialog-slide-description">
                 <Alert
-                  icon={<CheckIcon fontSize="inherit" />}
                   severity="success"
                 >
-                  The Sales Order Created Successfully
+                  The Sales Order Created Successfully with application no: {responseData?.applicationNo}.
                 </Alert>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={openInNewTab} variant="contained">
+              <Button
+                onClick={openInNewTab}
+                variant="contained"
+                sx={{
+                  mb: 2,
+                }}
+              >
                 View Receipt
               </Button>
               <Button
@@ -1032,6 +1038,7 @@ const SalesOrder = () => {
                 color="error"
                 sx={{
                   mr: 2,
+                  mb: 2,
                 }}
               >
                 Close

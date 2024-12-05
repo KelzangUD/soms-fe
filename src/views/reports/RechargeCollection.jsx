@@ -20,6 +20,7 @@ import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const RechargeCollection = () => {
+  const access_token = localStorage.getItem("access_token");
   const [rechargeCollection, setRechargeCollection] = useState([]);
   const recharge_collection_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
@@ -69,13 +70,11 @@ const RechargeCollection = () => {
       ),
     },
   ];
-
-  //   const token = localStorage.getItem("token");
   const fetchRechargeCollection = async () => {
     const res = await Route(
       "GET",
       `/Report/rechargeCollection?extension=19&fromDate=2024-08-01&toDate=2024-10-31`,
-      null,
+      access_token,
       null,
       null
     );

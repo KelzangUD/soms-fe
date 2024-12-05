@@ -23,6 +23,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const TransferOrderReport = () => {
@@ -53,19 +54,7 @@ const TransferOrderReport = () => {
       width: 150,
     },
   ];
-  const transfer_order_report_rows = [
-    {
-      id: 1,
-      customer_name: "",
-      date: "",
-      invoice_no: "",
-      item_description: "",
-      qty: "",
-      amount: "",
-      store_name: "",
-      created_by: "",
-    },
-  ];
+  const transfer_order_report_rows = [];
 
   //   const token = localStorage.getItem("token");
   //   const fetchResults = async () => {
@@ -253,27 +242,10 @@ const TransferOrderReport = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={transfer_order_report_rows?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={transfer_order_report_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={transfer_order_report_rows}
+                    cols={transfer_order_report_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

@@ -11,7 +11,6 @@ import {
   InputLabel,
   Select,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
@@ -19,6 +18,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { sales_and_stock_report_columns } from "../../data/static";
 
@@ -192,18 +192,9 @@ const SalesAndStockReport = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <DataGrid
+                  <CustomDataTable
                     rows={salesAndStocks}
-                    columns={sales_and_stock_report_columns}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 5 },
-                      },
-                    }}
-                    pageSizeOptions={[5, 10]}
-                    sx={{
-                      background: "#fff",
-                    }}
+                    cols={sales_and_stock_report_columns}
                   />
                 </Grid>
               </Grid>

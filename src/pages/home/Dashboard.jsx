@@ -2,6 +2,11 @@ import React from "react";
 import { Box, Grid } from "@mui/material";
 import StatusCard from "../../ui/StatusCard";
 import Revenue from "../../charts/Revenue";
+import RevenueVSamsungRev from "../../charts/RevenueVSamsungRev";
+import SamsungStock from "../../charts/SamsungStock";
+import RCVStockVSimStock from "../../charts/RCVStockVSimStock";
+import Sales from "../../charts/Sales";
+import PostPaidVLeaseLine from "../../charts/PostPaidVLeaseLine";
 
 const Dashboard = () => {
   const status = [
@@ -24,10 +29,10 @@ const Dashboard = () => {
   ];
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
+      <Grid container spacing={2} alignItems="center" sx={{ px: 2 }}>
         <Grid item container xs={12} spacing={1}>
           {status?.map((item, index) => (
-            <Grid item xs={3} key={item?.title} sx={{ mt: -2 }}>
+            <Grid item xs={3} key={item?.title}>
               <StatusCard
                 index={index}
                 // icon={item?.icon}
@@ -37,38 +42,38 @@ const Dashboard = () => {
             </Grid>
           ))}
         </Grid>
-        <Grid item container xs={12} spacing={1} sx={{ mt: -3 }}>
+        <Grid item container xs={12} spacing={1}>
           <Grid item xs={6}>
             <Revenue />
           </Grid>
           <Grid item xs={6}>
-            <Revenue />
-          </Grid>
-        </Grid>
-        <Grid item container xs={12} spacing={1} sx={{ mt: -3 }}>
-          <Grid item xs={6}>
-            <Revenue />
-          </Grid>
-          <Grid item xs={6}>
-            <Revenue />
+            <RevenueVSamsungRev />
           </Grid>
         </Grid>
-        <Grid item container xs={12} spacing={1} sx={{ mt: -3 }}>
+        <Grid item container xs={12} spacing={1}>
           <Grid item xs={6}>
-            <Revenue />
+            <SamsungStock />
           </Grid>
           <Grid item xs={6}>
-            <Revenue />
-          </Grid>
-        </Grid>
-        <Grid item container xs={12} spacing={1} sx={{ mt: -3 }}>
-          <Grid item xs={6}>
-            <Revenue />
-          </Grid>
-          <Grid item xs={6}>
-            <Revenue />
+            <RCVStockVSimStock />
           </Grid>
         </Grid>
+        <Grid item container xs={12} spacing={1} sx={{ mb: 4 }}>
+          <Grid item xs={6}>
+            <Sales />
+          </Grid>
+          <Grid item xs={6}>
+            <PostPaidVLeaseLine />
+          </Grid>
+        </Grid>
+        {/* <Grid item container xs={12} spacing={1} sx={{ mb: 2 }}>
+          <Grid item xs={6}>
+            <Revenue />
+          </Grid>
+          <Grid item xs={6}>
+            <Revenue />
+          </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

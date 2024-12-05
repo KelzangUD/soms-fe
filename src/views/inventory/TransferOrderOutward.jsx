@@ -8,23 +8,22 @@ import {
   IconButton,
   FormControl,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewTransferOrder from "./ViewTransferOrder";
 import { RenderStatus } from "../../ui/index";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const TransferOrderOutward = () => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [transferOrderList, setTransferOrderList] = useState([]);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
   const [view, setView] = useState(false);
@@ -33,7 +32,7 @@ const TransferOrderOutward = () => {
     const res = await Route(
       "GET",
       `/transferOrder/viewInTransitTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -80,12 +79,11 @@ const TransferOrderOutward = () => {
     },
   ];
 
-  //   const token = localStorage.getItem("token");
   const fetchTransferOrderOutward = async () => {
     const res = await Route(
       "GET",
       `/transferOrder/viewTransferOrderOutwardList/${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -93,6 +91,7 @@ const TransferOrderOutward = () => {
       setTransferOrderList(
         res?.data?.map((item, index) => ({
           id: index,
+          sl: index + 1,
           transfer_order_no: item?.transfer_Order_Number,
           transfer_from_code: item?.transfer_From_Name,
           transfer_to_code: item?.transfer_To_Name,
@@ -104,6 +103,7 @@ const TransferOrderOutward = () => {
   };
   useEffect(() => {
     fetchTransferOrderOutward();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -197,27 +197,10 @@ const TransferOrderOutward = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={transferOrderList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={transfer_order_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={transferOrderList}
+                    cols={transfer_order_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

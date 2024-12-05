@@ -2,7 +2,12 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import CustomNoRowsOverlay from "./CustomNoRowsOverlay";
 
-const CustomDataTable = ({rows, cols}) => {
+const CustomDataTable = ({
+  rows,
+  cols,
+  checkboxSelection = false,
+  onRowSelectionModelChange,
+}) => {
   return (
     <>
       <DataGrid
@@ -10,6 +15,8 @@ const CustomDataTable = ({rows, cols}) => {
         autoHeight
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
         columns={cols}
+        checkboxSelection={checkboxSelection}
+        onRowSelectionModelChange={onRowSelectionModelChange}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
@@ -19,8 +26,8 @@ const CustomDataTable = ({rows, cols}) => {
         sx={{
           background: "#fff",
           "--DataGrid-overlayHeight": "300px",
-          '& .MuiDataGrid-columnHeaders': {
-            backgroundColor: '#F5F7F8',
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: "#F5F7F8",
           },
         }}
       />

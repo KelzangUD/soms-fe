@@ -54,7 +54,7 @@ const PostedSalesInvoice = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small">
+          <IconButton aria-label="view" size="small" color="primary">
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>

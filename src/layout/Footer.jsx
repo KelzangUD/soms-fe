@@ -3,7 +3,7 @@ import { Box, Container, Typography, Grid, IconButton } from "@mui/material";
 
 const Footer = () => {
   return (
-    <Box sx={{ backgroundColor: "#f4f4f4", py: 5 }}>
+    <Box sx={{ backgroundColor: "#f4f4f4", py: 5, width: "100%" }}>
       <Container maxWidth="xl">
         <Grid
           container
@@ -14,7 +14,7 @@ const Footer = () => {
         >
           <Grid item xs={6}>
             <Typography variant="body1" sx={{ color: "text.secondary", textAlign: "right" }}>
-              © 2024 Software & Application Section
+              © 2024 Software & Application Section. All Right Reserved.
             </Typography>
           </Grid>
         </Grid>
