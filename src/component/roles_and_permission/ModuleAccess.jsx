@@ -287,8 +287,7 @@ const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
             <Grid
               item
               container
-              spacing={2}
-              sx={{ justifyContent: 'center' }}
+              sx={{ justifyContent: 'flex-end' }}
             >
               <Grid item>
                 <Button

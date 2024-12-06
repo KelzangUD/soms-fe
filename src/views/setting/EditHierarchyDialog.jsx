@@ -65,6 +65,7 @@ const EditHierarchyDialog = ({
 }) => {
   const ref = useRef(null);
   const user = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [hierarchyDetails, setHierarchyDetails] = useState([]);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [showNotification, setShowNofication] = useState(false);
@@ -103,7 +104,7 @@ const EditHierarchyDialog = ({
       const res = await Route(
         "PUT",
         `/UserDtls/updateHierarchyName`,
-        null,
+        access_token,
         data,
         null
       );

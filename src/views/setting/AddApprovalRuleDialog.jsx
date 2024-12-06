@@ -240,16 +240,23 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                   frequency: condition?.frequency || "",
                   fyiEmail: condition?.fyiEmail || "",
                   fyiEmployeeId: condition?.fyiEmployeeId || "",
-                  fyiChecked: condition?.fyiChecked[0].includes("on") ? 1 : 0,
+                  // fyiChecked: condition?.fyiChecked[0].includes("on") ? 1 : 0,
+                  fyiChecked:
+                    condition?.fyiChecked?.length > 0
+                      ? condition?.fyiChecked[0].includes("on")
+                        ? 1
+                        : 0
+                      : 0,
                   approvalId: ruleDetails?.approvalId,
                   updatedBy: user || null,
                 };
+                console.log("ruleID:", ruleId);
 
-                if (ruleId === "" && ruleId === null) {
+                if (ruleId === "" || ruleId === null) {
                   const res = await Route(
                     "POST",
                     `/UserDtls/addApprovalRule`,
-                    null,
+                    access_token,
                     data,
                     null
                   );
@@ -274,7 +281,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                   const res = await Route(
                     "PUT",
                     `/UserDtls/updateApprovalRule`,
-                    null,
+                    access_token,
                     data,
                     null
                   );

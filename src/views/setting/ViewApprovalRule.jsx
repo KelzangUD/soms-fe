@@ -1,25 +1,49 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import { Box, Dialog, DialogContent, DialogTitle, FormLabel, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import Route from '../../routes/Route';
+import React, { useEffect, useRef, useState } from "react";
+import { styled } from "@mui/material/styles";
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormLabel,
+  Grid,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import Route from "../../routes/Route";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2)
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
   },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1)
-  }
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
 }));
 
 const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
   const ref = useRef(null);
-  const [ruleDetails, setRuleDetails] = useState('');
+  const access_token = localStorage.getItem("access_token");
+  const [ruleDetails, setRuleDetails] = useState("");
   const [hierarchyLevel, setHierarchylevel] = useState([]);
 
   const fetchRuleDetails = async () => {
-    const res = await Route("GET", `/UserDtls/getEditApprovalRules/${ruleId}`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/UserDtls/getEditApprovalRules/${ruleId}`,
+      access_token,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setRuleDetails(res?.data);
       setHierarchylevel(res?.data?.hierarchyLevelInterfaceList);
@@ -29,7 +53,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
   useEffect(() => {
     fetchRuleDetails();
   }, []);
-  
+
   return (
     <>
       <BootstrapDialog
@@ -39,69 +63,91 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
         id="view-approval_rule"
         open={open}
         fullWidth
-        maxWidth={'md'}
+        maxWidth={"lg"}
       >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="view_approval_rule_dialog">
+        <DialogTitle
+          sx={{ m: 0, p: 2, background: "#1976d2", color: "#eee" }}
+          id="view_approval_rule_dialog"
+        >
           View Approval Rules
         </DialogTitle>
         <IconButton
           aria-label="close"
           onClick={handleClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500]
+            color: "#eee",
           }}
         >
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
           <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
               <Grid item xs={4}>
-                For
+                <TextField
+                  fullWidth
+                  label="For"
+                  name="approvalFor"
+                  type="text"
+                  value={ruleDetails?.approvalForName}
+                  size="small"
+                  disabled
+                ></TextField>
               </Grid>
-              <Grid item xs={8}>
-                {ruleDetails?.approvalForName}
+              <Grid item xs={4}>
+                <TextField
+                  fullWidth
+                  label="Type"
+                  name="type"
+                  type="text"
+                  value={ruleDetails?.approvalTypeName}
+                  size="small"
+                  disabled
+                ></TextField>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  fullWidth
+                  label="Role"
+                  name="role"
+                  type="text"
+                  value={ruleDetails?.approvalUserRoleName}
+                  size="small"
+                  disabled
+                ></TextField>
               </Grid>
             </Grid>
-            <Grid container spacing={2} style={{ marginTop: '2px' }}>
+            <Grid container spacing={1} style={{ marginTop: "2px" }}>
               <Grid item xs={4}>
-                Type
+                <TextField
+                  fullWidth
+                  label="Rule Name"
+                  name="rule_name"
+                  type="text"
+                  value={ruleDetails?.approvalRuleName}
+                  size="small"
+                  disabled
+                ></TextField>
               </Grid>
-              <Grid item xs={8}>
-                {ruleDetails?.approvalTypeName}
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} style={{ marginTop: '2px' }}>
               <Grid item xs={4}>
-                Role
-              </Grid>
-              <Grid item xs={8}>
-                {ruleDetails?.approvalUserRoleName}
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} style={{ marginTop: '2px' }}>
-              <Grid item xs={4}>
-                Rule Name
-              </Grid>
-              <Grid item xs={8}>
-                {ruleDetails?.approvalRuleName}
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} style={{ marginTop: '2px' }}>
-              <Grid item xs={4}>
-                Status
-              </Grid>
-              <Grid item xs={8}>
-                {ruleDetails?.approvalStatus}
+                <TextField
+                  fullWidth
+                  label="Status"
+                  name="rule_name"
+                  type="text"
+                  value={ruleDetails?.approvalStatus}
+                  size="small"
+                  disabled
+                ></TextField>
               </Grid>
             </Grid>
           </Box>
-          <Box sx={{ flexGrow: 1 }} style={{ marginTop: '3%' }}>
-            <FormLabel id="condition-group-label">Conditions</FormLabel>
-            <TableContainer component={Paper}>
+          <Box sx={{ flexGrow: 1 }} style={{ marginTop: "3%" }}>
+            <Typography variant="subtitle2">Conditions</Typography>
+            <TableContainer component={Paper} sx={{ marginTop: 2 }}>
               <Table sx={{ minWidth: 650 }} aria-label="Condition View">
                 <TableHead>
                   <TableRow>
@@ -116,8 +162,12 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
                       <TableCell component="th" scope="row">
                         {row.hierarchyLevel}
                       </TableCell>
-                      <TableCell align="right">{row.is_single_user === 1 ? 'Yes' : 'No'}</TableCell>
-                      <TableCell align="right">{row.is_auto_approval === 1 ? 'Yes' : 'No'}</TableCell>
+                      <TableCell align="right">
+                        {row.is_single_user === 1 ? "Yes" : "No"}
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.is_auto_approval === 1 ? "Yes" : "No"}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -128,6 +178,6 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
       </BootstrapDialog>
     </>
   );
-}
+};
 
 export default ViewApprovalRule;

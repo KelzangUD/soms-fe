@@ -9,13 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
 import Route from "../../routes/Route";
 import { dateFormatterTwo } from "../../util/CommonUtil";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { CustomDataTable, Transition } from "../../component/common";
 
 const UpdateTransferOrderInward = ({
   open,
@@ -97,20 +94,20 @@ const UpdateTransferOrderInward = ({
     }));
   };
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", width: 30 },
+    { field: "item_Number", headerName: "Item Number", width: 180 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      width: 400,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 400,
+      width: 300,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
+    { field: "uom", headerName: "UOM", width: 100 },
+    { field: "qty", headerName: "Quantity", width: 100 },
     {
       field: "rec_qty",
       headerName: "Rec. Qty",
@@ -157,7 +154,6 @@ const UpdateTransferOrderInward = ({
       parameters,
       null
     );
-    console.log(res);
     if (res?.status === 200 && res?.data?.success === true) {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
@@ -205,7 +201,7 @@ const UpdateTransferOrderInward = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#2196f3",
+                  backgroundColor: "#1976d2",
                   color: "#fff",
                 }}
               >
@@ -368,30 +364,16 @@ const UpdateTransferOrderInward = ({
               </Grid>
             </Grid>
             <Grid item container alignItems="center" xs={12} paddingY={2}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
-                }}
-              >
-                <DataGrid
-                  rows={parameters?.transferOrderItemDTOList?.map(
-                    (row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                      id: index,
-                    })
-                  )}
-                  columns={item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
+              <CustomDataTable
+                rows={parameters?.transferOrderItemDTOList?.map(
+                  (row, index) => ({
+                    ...row,
+                    sl: index + 1,
+                    id: index,
+                  })
+                )}
+                cols={item_columns}
+              />
             </Grid>
             <Grid
               item

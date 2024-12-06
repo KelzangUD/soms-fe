@@ -65,6 +65,7 @@ const AddHierarchyDialog = ({
 }) => {
   const ref = useRef(null);
   const user = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [hierarchyDetails, setHierarchyDetails] = useState([]);
   const [hierarchyName, setHierarchyName] = useState("");
   const [isHierarchyNameDisabled, setHierarchyNameDisabled] = useState(false);
@@ -106,7 +107,7 @@ const AddHierarchyDialog = ({
       const res = await Route(
         "POST",
         `/UserDtls/addHierarchy`,
-        null,
+        access_token,
         data,
         null
       );
@@ -383,9 +384,9 @@ const AddHierarchyDialog = ({
                   </TableBody>
                 </Table>
               </TableContainer>
-              <DialogActions sx={{ justifyContent: "center" }}>
+              <DialogActions sx={{ justifyContent: "flex-end", marginRight: -1, mt: 2 }}>
                 <Button
-                  size="large"
+                  size="small"
                   type="button"
                   variant="contained"
                   color="primary"

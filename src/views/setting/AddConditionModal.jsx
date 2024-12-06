@@ -141,8 +141,7 @@ const AddConditionModal = ({
             }}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
               setSubmitting(true);
-              // Send form values to the parent component
-              setConditions([values]);
+              setConditions((prev) => [...prev, values]);
               setSubmitting(false);
               resetForm();
               handleClose();
@@ -178,7 +177,7 @@ const AddConditionModal = ({
                   row
                   aria-labelledby="approval-radio-buttons-group-label"
                   name="approvalType"
-                  value={values.approvalType}
+                  value={values?.approvalType}
                   onChange={handleChange}
                 >
                   <FormControlLabel
@@ -197,7 +196,7 @@ const AddConditionModal = ({
                     label="Auto Approval"
                   />
                 </RadioGroup>
-                {values.approvalType === "hierarchy" && (
+                {values?.approvalType === "hierarchy" && (
                   <Grid container mt={1} spacing={1}>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -210,15 +209,15 @@ const AddConditionModal = ({
                         onChange={(e) => {
                           handleChange(e);
                           const selectedItem = hierarchyList.find(
-                            (item) => item.id === e.target.value
+                            (item) => item?.id === e?.target?.value
                           );
                           if (selectedItem) {
-                            setFieldValue("hierarchyId", selectedItem.id);
+                            setFieldValue("hierarchyId", selectedItem?.id);
                             setFieldValue(
                               "hierarchyName",
-                              selectedItem.hierarchyName
+                              selectedItem?.hierarchyName
                             );
-                            fetchHierarchyLevel(selectedItem.hierarchyName);
+                            fetchHierarchyLevel(selectedItem?.hierarchyName);
                           }
                         }}
                         onBlur={handleBlur}
@@ -226,17 +225,17 @@ const AddConditionModal = ({
                         select
                       >
                         {hierarchyList.map((item) => (
-                          <MenuItem key={item.id} value={item.id}>
-                            {item.hierarchyName}
+                          <MenuItem key={item?.id} value={item?.id}>
+                            {item?.hierarchyName}
                           </MenuItem>
                         ))}
                       </TextField>
-                      {touched.hierarchyName && errors.hierarchyName && (
+                      {touched?.hierarchyName && errors?.hierarchyName && (
                         <FormHelperText
                           error
                           id="standard-weight-helper-text--register"
                         >
-                          {errors.hierarchyName}
+                          {errors?.hierarchyName}
                         </FormHelperText>
                       )}
                     </Grid>
@@ -247,7 +246,7 @@ const AddConditionModal = ({
                         size="small"
                         name="hierarchyLevel"
                         type="text"
-                        value={values.hierarchyLevel}
+                        value={values?.hierarchyLevel}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         variant="outlined"
@@ -255,25 +254,25 @@ const AddConditionModal = ({
                       >
                         {hierarchyLevelList.map((item) => (
                           <MenuItem
-                            key={item.hierarchyLevel}
-                            value={item.hierarchyLevel}
+                            key={item?.hierarchyLevel}
+                            value={item?.hierarchyLevel}
                           >
-                            {item.hierarchyLevel}
+                            {item?.hierarchyLevel}
                           </MenuItem>
                         ))}
                       </TextField>
-                      {touched.hierarchyLevel && errors.hierarchyLevel && (
+                      {touched?.hierarchyLevel && errors?.hierarchyLevel && (
                         <FormHelperText
                           error
                           id="standard-weight-helper-text--register"
                         >
-                          {errors.hierarchyLevel}
+                          {errors?.hierarchyLevel}
                         </FormHelperText>
                       )}
                     </Grid>
                   </Grid>
                 )}
-                {values.approvalType === "singleUser" && (
+                {values?.approvalType === "singleUser" && (
                   <Grid container spacing={1} mt={1}>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -282,18 +281,21 @@ const AddConditionModal = ({
                         size="small"
                         name="employeeId"
                         type="text"
-                        value={values.employeeId}
+                        value={values?.employeeId}
                         onChange={(e) => {
                           handleChange(e);
 
                           const selectedItem = systemUser.find(
-                            (item) => item.user_code === e.target.value
+                            (item) => item?.user_code === e?.target?.value
                           );
                           if (selectedItem) {
-                            setFieldValue("employeeId", selectedItem.user_code);
+                            setFieldValue(
+                              "employeeId",
+                              selectedItem?.user_code
+                            );
                             setFieldValue(
                               "employeeName",
-                              `${selectedItem.employee_code} (${selectedItem.full_name})`
+                              `${selectedItem?.employee_code} (${selectedItem?.full_name})`
                             );
                           }
                         }}
@@ -302,17 +304,20 @@ const AddConditionModal = ({
                         select
                       >
                         {systemUser.map((item) => (
-                          <MenuItem key={item.user_code} value={item.user_code}>
-                            {`${item.employee_code} (${item.full_name})`}
+                          <MenuItem
+                            key={item?.user_code}
+                            value={item?.user_code}
+                          >
+                            {`${item?.employee_code} (${item?.full_name})`}
                           </MenuItem>
                         ))}
                       </TextField>
-                      {touched.employeeId && errors.employeeId && (
+                      {touched?.employeeId && errors?.employeeId && (
                         <FormHelperText
                           error
                           id="standard-weight-helper-text--register"
                         >
-                          {errors.employeeId}
+                          {errors?.employeeId}
                         </FormHelperText>
                       )}
                     </Grid>
@@ -326,7 +331,7 @@ const AddConditionModal = ({
                     control={
                       <Checkbox
                         name="fyiChecked"
-                        checked={values.fyiChecked}
+                        checked={values?.fyiChecked}
                         onChange={handleChange}
                       />
                     }
@@ -341,24 +346,24 @@ const AddConditionModal = ({
                       size="small"
                       name="frequency"
                       type="text"
-                      value={values.frequency}
+                      value={values?.frequency}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       variant="outlined"
                       select
-                      disabled={!values.fyiChecked} // Disable when checkbox is unchecked
+                      disabled={!values?.fyiChecked} // Disable when checkbox is unchecked
                     >
                       <MenuItem value="All">All</MenuItem>
                       <MenuItem value="Level1">Level 1</MenuItem>
                       <MenuItem value="Level2">Level 2</MenuItem>
                       <MenuItem value="Level3">Level 3</MenuItem>
                     </TextField>
-                    {touched.frequency && errors.frequency && (
+                    {touched?.frequency && errors?.frequency && (
                       <FormHelperText
                         error
                         id="standard-weight-helper-text--register"
                       >
-                        {errors.frequency}
+                        {errors?.frequency}
                       </FormHelperText>
                     )}
                   </Grid>
@@ -371,7 +376,7 @@ const AddConditionModal = ({
                       value={values.fyiEmail}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      disabled={!values.fyiChecked} // Disable when checkbox is unchecked
+                      disabled={!values?.fyiChecked} // Disable when checkbox is unchecked
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -381,46 +386,48 @@ const AddConditionModal = ({
                       size="small"
                       name="fyiEmployeeId"
                       type="text"
-                      value={values.fyiEmployeeId}
+                      value={values?.fyiEmployeeId}
                       onChange={(e) => {
                         handleChange(e);
 
                         const selectedItem = systemUser.find(
-                          (item) => item.user_code === e.target.value
+                          (item) => item?.user_code === e?.target?.value
                         );
                         if (selectedItem) {
                           setFieldValue(
                             "fyiEmployeeId",
-                            selectedItem.user_code
+                            selectedItem?.user_code
                           );
                           setFieldValue(
                             "fyiEmployeeName",
-                            `${selectedItem.employee_code} (${selectedItem.full_name})`
+                            `${selectedItem?.employee_code} (${selectedItem?.full_name})`
                           );
                         }
                       }}
                       onBlur={handleBlur}
                       variant="outlined"
                       select
-                      disabled={!values.fyiChecked} // Disable when checkbox is unchecked
+                      disabled={!values?.fyiChecked} // Disable when checkbox is unchecked
                     >
                       {systemUser.map((item) => (
-                        <MenuItem key={item.user_code} value={item.user_code}>
-                          {`${item.employee_code} (${item.full_name})`}
+                        <MenuItem key={item?.user_code} value={item?.user_code}>
+                          {`${item?.employee_code} (${item?.full_name})`}
                         </MenuItem>
                       ))}
                     </TextField>
-                    {touched.fyiEmployeeId && errors.fyiEmployeeId && (
+                    {touched?.fyiEmployeeId && errors?.fyiEmployeeId && (
                       <FormHelperText
                         error
                         id="standard-weight-helper-text--register"
                       >
-                        {errors.fyiEmployeeId}
+                        {errors?.fyiEmployeeId}
                       </FormHelperText>
                     )}
                   </Grid>
                 </Grid>
-                <DialogActions sx={{ justifyContent: "flex-end", mt: 1, mr:-1 }}>
+                <DialogActions
+                  sx={{ justifyContent: "flex-end", mt: 1, mr: -1 }}
+                >
                   <Button
                     autoFocus
                     disableElevation

@@ -1,47 +1,47 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Grid,
   Button,
   Dialog,
   FormControl,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable, Transition } from "../../component/common";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails }) => {
+const ViewPostedTransferOrderReceipt = ({
+  open,
+  setOpen,
+  transferOrderDetails,
+}) => {
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", width: 30 },
+    { field: "item_Number", headerName: "Item Number", width: 180 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      width: 450,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 400,
+      width: 300,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
-    { field: "received_Qty", headerName: "Received Qty", width: 150 },
+    { field: "uom", headerName: "UOM", width: 100 },
+    { field: "qty", headerName: "Quantity", width: 80 },
+    { field: "received_Qty", headerName: "Received Qty", width: 100 },
     { field: "received_Remark", headerName: "Received Remarks", width: 150 },
   ];
   return (
     <>
       <Dialog
-        fullScreen
+        fullWidth
+        maxWidth="lg"
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -56,7 +56,8 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: "#1976d2",
+                  color: "#eee",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -78,6 +79,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Order_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -87,6 +89,11 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                       label="Transfer Order Create Date"
                       value={dayjs(transferOrderDetails?.transfer_Date)}
                       disabled
+                      slotProps={{
+                        textField: {
+                          size: "small",
+                        },
+                      }}
                     />
                   </LocalizationProvider>
                 </FormControl>
@@ -100,6 +107,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Type}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -111,6 +119,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_From_Name}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -124,6 +133,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_From_SubInventory}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -135,6 +145,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_From_Locator}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -146,6 +157,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_To_Name}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -157,6 +169,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_To_SubInventory}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -170,6 +183,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_To_Locator}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -181,6 +195,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Mode}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -192,6 +207,7 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   fullWidth
                   disabled
                   value={transferOrderDetails?.vehicle_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -202,43 +218,38 @@ const ViewPostedTransferOrderReceipt = ({ open, setOpen, transferOrderDetails })
                   fullWidth
                   disabled
                   value={transferOrderDetails?.remarks}
+                  size="small"
                 />
               </Grid>
             </Grid>
             <Grid item container alignItems="center" xs={12} paddingY={2}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
-                }}
-              >
-                <DataGrid
-                  rows={transferOrderDetails?.transferOrderItemDTOList !== null ? transferOrderDetails?.transferOrderItemDTOList?.map(
-                    (row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                      id: index,
-                    })
-                  ) : []}
-                  columns={item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
+              <CustomDataTable
+                rows={
+                  transferOrderDetails?.transferOrderItemDTOList !== null
+                    ? transferOrderDetails?.transferOrderItemDTOList?.map(
+                        (row, index) => ({
+                          ...row,
+                          sl: index + 1,
+                          id: index,
+                        })
+                      )
+                    : []
+                }
+                cols={item_columns}
+              />
             </Grid>
             <Grid
               item
               xs={12}
               alignItems="right"
-              paddingX={2}
-              sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
+              sx={{ display: "flex", justifyContent: "flex-end", marginBottom: 2 }}
             >
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+                size="small"
+              >
                 Close
               </Button>
             </Grid>

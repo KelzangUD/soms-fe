@@ -196,6 +196,7 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
         <DialogContent dividers>
           <Formik
             initialValues={{
+              empNo: "",
               employee_code: "",
               user_code: "",
               full_name: "",
@@ -219,6 +220,7 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
             ) => {
               try {
                 let data = {
+                  empNo: values?.empNo,
                   user_code: values.employee_code,
                   roleId: values.roleId,
                   storeId: values.storeId,
@@ -283,6 +285,9 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                         ) || null
                       } // Set value from Formik's values
                       onChange={(e, newValue) => {
+                        setFieldValue(
+                          "empNo", newValue ?  newValue?.empNo: ""
+                        );
                         setFieldValue(
                           "employee_code",
                           newValue ? newValue.user_code : ""
@@ -514,7 +519,7 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                     size="small"
                     type="button"
                     variant="outlined"
-                    color="primary"
+                    color="error"
                   >
                     Reset
                   </Button>

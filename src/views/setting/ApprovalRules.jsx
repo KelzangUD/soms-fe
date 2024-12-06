@@ -90,7 +90,7 @@ const ApprovalRules = () => {
           <IconButton
             aria-label="edit"
             size="small"
-            onClick={() => handleEditApprovalRule(params.row.approvalId)}
+            onClick={() => handleEditApprovalRule(params?.row?.approvalId)}
             color="primary"
           >
             <EditIcon fontSize="inherit" />
@@ -98,7 +98,7 @@ const ApprovalRules = () => {
           <IconButton
             aria-label="view"
             size="small"
-            onClick={() => handleViewApprovalRule(params.row.approvalId)}
+            onClick={() => handleViewApprovalRule(params?.row?.approvalId)}
             color="secondary"
           >
             <VisibilityIcon fontSize="inherit" />

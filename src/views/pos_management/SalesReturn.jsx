@@ -235,7 +235,6 @@ const SalesReturn = () => {
           null,
           null
         );
-        console.log(res);
         if (res?.status === 200) {
           if (res?.data?.status === "Y") {
             setSalesData(res?.data);
@@ -460,7 +459,7 @@ const SalesReturn = () => {
                       fullWidth
                       onClick={fetchSalesInvoice}
                       disabled={loading}
-                      style={{
+                      sx={{
                         padding: "7px 0",
                       }}
                       endIcon={<GetAppIcon />}
@@ -597,17 +596,33 @@ const SalesReturn = () => {
                     >
                       <TableHead>
                         <TableRow>
-                          <TableCell sx={{ fontSize: "13px" }}>Description</TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>Quantity</TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>Selling Price</TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>Tax Amount</TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>Disc/Comm Amount</TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Description
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Quantity
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Selling Price
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Tax Amount
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Disc/Comm Amount
+                          </TableCell>
                           <TableCell align="right" sx={{ fontSize: "13px" }}>
                             Additional Discount
                           </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>TDS Amount</TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>Line Item Amount</TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>Action</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            TDS Amount
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Line Item Amount
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Action
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -761,7 +776,6 @@ const SalesReturn = () => {
                       <Select
                         labelId="refund-type-select-label"
                         id="refund-type-select"
-                        // value={age}
                         label="refund Type"
                         onChange={paymentHandle}
                       >
@@ -781,7 +795,6 @@ const SalesReturn = () => {
                       <Select
                         labelId="bank-ac-name-select-label"
                         id="bank-ac-name-select"
-                        // value={age}
                         label="Bank A/C Name"
                         onChange={bankHandle}
                       >
@@ -821,7 +834,6 @@ const SalesReturn = () => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             label="Cheque Date"
-                            // value={dayjs(rechargeDetails?.postingDate)}
                             onChange={chequeDateHandle}
                             slotProps={{
                               textField: {
@@ -863,7 +875,7 @@ const SalesReturn = () => {
                     display="flex"
                     alignItems="center"
                   >
-                    <Grid item sx={1}>
+                    <Grid item xs={1}>
                       <IconButton
                         aria-label="add"
                         onClick={addPaymentItemHandle}
@@ -874,7 +886,7 @@ const SalesReturn = () => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
+              <Grid container p={2}>
                 <TableContainer component={Paper}>
                   <Table
                     sx={{ minWidth: 650 }}
@@ -927,8 +939,9 @@ const SalesReturn = () => {
                                 onClick={(e) =>
                                   deletePaymentItemHandle(e, index)
                                 }
+                                size="small"
                               >
-                                <DeleteIcon />
+                                <DeleteIcon color="error" />
                               </IconButton>
                             </TableCell>
                           </TableRow>
@@ -939,22 +952,14 @@ const SalesReturn = () => {
               </Grid>
             </Card>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
-            <Button
-              variant="contained"
-              onClick={postSalesReturn}
-              sx={{ ml: 2 }}
-              size="small"
-            >
+          <Grid container display="flex" justifyContent="flex-end" my={2}>
+            <Button variant="contained" onClick={postSalesReturn} size="small">
               Create & Post
             </Button>
             <Button
               variant="outlined"
               color="error"
-              sx={{ ml: 2 }}
-              style={{
-                background: "#fff",
-              }}
+              sx={{ background: "#fff", ml: 2 }}
               onClick={cancelHandle}
               size="small"
             >

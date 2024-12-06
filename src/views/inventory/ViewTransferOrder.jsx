@@ -5,19 +5,14 @@ import {
   Button,
   Dialog,
   FormControl,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { CustomDataTable, Transition } from "../../component/common";
 
 const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
   const item_columns = [
@@ -55,8 +50,8 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#2196f3",
-                  color: "#fff",
+                  backgroundColor: "#1976d2",
+                  color: "#eee",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -222,34 +217,20 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
               </Grid>
             </Grid>
             <Grid item container alignItems="center" xs={12} paddingY={2}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
-                }}
-              >
-                <DataGrid
-                  rows={
-                    transferOrderDetails?.transferOrderItemDTOList !== null
-                      ? transferOrderDetails?.transferOrderItemDTOList?.map(
-                          (row, index) => ({
-                            ...row,
-                            sl: index + 1,
-                            id: index,
-                          })
-                        )
-                      : []
-                  }
-                  columns={item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
+              <CustomDataTable
+                rows={
+                  transferOrderDetails?.transferOrderItemDTOList !== null
+                    ? transferOrderDetails?.transferOrderItemDTOList?.map(
+                        (row, index) => ({
+                          ...row,
+                          sl: index + 1,
+                          id: index,
+                        })
+                      )
+                    : []
+                }
+                cols={item_columns}
+              />
             </Grid>
             <Grid
               item
