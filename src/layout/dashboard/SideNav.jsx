@@ -42,7 +42,7 @@ export default function SideNav() {
     navigation(route);
   };
   const handleNestedItemClick = (index) => {
-    const newOpenStates = [...openStates];
+    const newOpenStates = [openStates];
     newOpenStates[index] = !newOpenStates[index];
     setOpenStates(newOpenStates);
   };
@@ -153,7 +153,6 @@ export default function SideNav() {
                   {item.nestedItems.map((nestedItem, nestedIndex) => (
                     <ListItemButton
                       key={nestedIndex}
-                      // sx={{ pl: 1 }}
                       onClick={() => routeHandle(nestedItem?.route)}
                     >
                       <ListItemIcon>

@@ -20,7 +20,6 @@ import {
   TextField,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { styled } from "@mui/material/styles";
 import Route from "../../routes/Route";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -29,16 +28,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ViewConditionModal from "./ViewConditionModal";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
-const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
+const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }) => {
   const ref = useRef(null);
   const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
@@ -55,7 +45,6 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
   const [showViewModal, setShowViewModal] = useState(false);
   const [editCondition, setEditCondition] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-
   const [ruleDetails, setRuleDetails] = useState("");
   const [approvalId, setAppovalId] = useState("");
 
@@ -172,7 +161,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
 
   return (
     <>
-      <BootstrapDialog
+      <Dialog
         onClose={handleClose}
         aria-labelledby="add_new_role"
         ref={ref}
@@ -182,7 +171,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
         maxWidth={"lg"}
       >
         <DialogTitle
-          sx={{ m: 0, p: 2, background: "#1976d2", color: "#eee" }}
+          sx={{ px: 3, background: "#1976d2", color: "#eee" }}
           id="add_new_role_dialog"
         >
           {ruleId ? "Edit Approval Rule" : "Add Approval Rule"}
@@ -226,16 +215,16 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
               try {
                 const condition = conditions[0] || {};
                 let data = {
+                  approvalForName: condition?.approvalType || "",
                   approvalTypeId: values?.approvalTypeId || null,
                   approvalRoleId: values?.approvalRoleId || null,
                   approvalService: values?.approvalService || null,
                   approvalRuleName: values?.approvalRuleName || null,
                   approvalStatus: values?.approvalStatus || null,
                   createdBy: user || null,
-                  hierarchyName: condition?.hierarchyName || "",
-                  hierarchyId: condition?.hierarchyId || "",
-                  maxHierarchyLevel: condition?.hierarchyLevel || "",
-                  approvalForName: condition?.approvalType || "",
+                  // hierarchyName: condition?.hierarchyName || "",
+                  // hierarchyId: condition?.hierarchyId || "",
+                  // maxHierarchyLevel: condition?.hierarchyLevel || "",
                   employeeId: condition?.employeeId || "",
                   frequency: condition?.frequency || "",
                   fyiEmail: condition?.fyiEmail || "",
@@ -249,9 +238,11 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       : 0,
                   approvalId: ruleDetails?.approvalId,
                   updatedBy: user || null,
+                  hierarchyNamesDTOList: conditions?.map((item) => ({
+                    hierarchyName: item?.hierarchyName,
+                    hierarchyLevel: item?.hierarchyLevel,
+                  })),
                 };
-                console.log("ruleID:", ruleId);
-
                 if (ruleId === "" || ruleId === null) {
                   const res = await Route(
                     "POST",
@@ -264,16 +255,14 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                     setNotificationMsg(res?.data?.responseText);
                     setSeverity("info");
                     setShowNofication(true);
-
                     setStatus({ success: true });
                     setSubmitting(false);
                     resetForm();
-                    handleClose();
+                    fetchApprovalRules();
                   } else {
                     setNotificationMsg(res?.data?.responseText);
                     setSeverity("error");
                     setShowNofication(true);
-
                     setStatus({ success: false });
                     setSubmitting(false);
                   }
@@ -298,7 +287,6 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                     setNotificationMsg(res?.data?.responseText);
                     setSeverity("error");
                     setShowNofication(true);
-
                     setStatus({ success: false });
                     setSubmitting(false);
                   }
@@ -327,21 +315,19 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       label="For"
                       name="approvalFor"
                       type="text"
-                      value={values.approvalFor}
+                      value={values?.approvalFor}
                       size="small"
                       onChange={(e) => {
                         handleChange(e);
-
                         const selectedItem = approvalFor.find(
-                          (item) => item.id === e.target.value
+                          (item) => item?.id === e?.target?.value
                         );
                         if (selectedItem) {
-                          setFieldValue("approvalFor", selectedItem.id);
-                          setFieldValue("approvalService", selectedItem.type);
-
-                          setFor(selectedItem.type);
+                          setFieldValue("approvalFor", selectedItem?.id);
+                          setFieldValue("approvalService", selectedItem?.type);
+                          setFor(selectedItem?.type);
                         }
-                        fetchApprovalType(e.target.value);
+                        fetchApprovalType(e?.target?.value);
                       }}
                       onBlur={handleBlur}
                       variant="outlined"
@@ -349,17 +335,17 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       required
                     >
                       {approvalFor.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                          {item.type}
+                        <MenuItem key={item?.id} value={item?.id}>
+                          {item?.type}
                         </MenuItem>
                       ))}
                     </TextField>
-                    {touched.approvalFor && errors.approvalFor && (
+                    {touched?.approvalFor && errors?.approvalFor && (
                       <FormHelperText
                         error
                         id="standard-weight-helper-text--register"
                       >
-                        {errors.approvalFor}
+                        {errors?.approvalFor}
                       </FormHelperText>
                     )}
                   </Grid>
@@ -370,15 +356,15 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       size="small"
                       name="approvalTypeId"
                       type="text"
-                      value={values.approvalTypeId || ""}
+                      value={values?.approvalTypeId || ""}
                       onChange={(e) => {
                         handleChange(e);
                         const selectedItem = type.find(
-                          (item) => item.id === e.target.value
+                          (item) => item?.id === e?.target?.value
                         );
                         if (selectedItem) {
-                          setFieldValue("approvalTypeId", selectedItem.id);
-                          setFieldValue("approvalTypeName", selectedItem.type);
+                          setFieldValue("approvalTypeId", selectedItem?.id);
+                          setFieldValue("approvalTypeName", selectedItem?.type);
                         }
                       }}
                       onBlur={handleBlur}
@@ -387,17 +373,17 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       required
                     >
                       {type.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                          {item.type}
+                        <MenuItem key={item?.id} value={item?.id}>
+                          {item?.type}
                         </MenuItem>
                       ))}
                     </TextField>
-                    {touched.approvalTypeId && errors.approvalTypeId && (
+                    {touched?.approvalTypeId && errors?.approvalTypeId && (
                       <FormHelperText
                         error
                         id="standard-weight-helper-text--register"
                       >
-                        {errors.approvalTypeId}
+                        {errors?.approvalTypeId}
                       </FormHelperText>
                     )}
                   </Grid>
@@ -408,7 +394,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       size="small"
                       name="approvalRoleId"
                       type="text"
-                      value={values.approvalRoleId || ""}
+                      value={values?.approvalRoleId || ""}
                       onChange={(e) => {
                         handleChange(e);
                       }}
@@ -418,17 +404,17 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       required
                     >
                       {roles.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                          {item.type}
+                        <MenuItem key={item?.id} value={item?.id}>
+                          {item?.type}
                         </MenuItem>
                       ))}
                     </TextField>
-                    {touched.approvalRoleId && errors.approvalRoleId && (
+                    {touched?.approvalRoleId && errors?.approvalRoleId && (
                       <FormHelperText
                         error
                         id="standard-weight-helper-text--register"
                       >
-                        {errors.approvalRoleId}
+                        {errors?.approvalRoleId}
                       </FormHelperText>
                     )}
                   </Grid>
@@ -440,7 +426,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       label="Rule Name"
                       size="small"
                       name="approvalRuleName"
-                      value={values.approvalRuleName}
+                      value={values?.approvalRuleName}
                       onChange={(e) => {
                         handleChange(e);
                       }}
@@ -455,7 +441,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       size="small"
                       name="approvalStatus"
                       type="text"
-                      value={values.approvalStatus}
+                      value={values?.approvalStatus}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       variant="outlined"
@@ -465,12 +451,12 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                       <MenuItem value="In_Active">In_Active</MenuItem>
                       <MenuItem value="Draft">Draft</MenuItem>
                     </TextField>
-                    {touched.approvalStatus && errors.approvalStatus && (
+                    {touched?.approvalStatus && errors?.approvalStatus && (
                       <FormHelperText
                         error
                         id="standard-weight-helper-text--register"
                       >
-                        {errors.approvalStatus}
+                        {errors?.approvalStatus}
                       </FormHelperText>
                     )}
                   </Grid>
@@ -515,6 +501,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                               <IconButton
                                 aria-label="edit"
                                 size="small"
+                                color="primary"
                                 onClick={() => handleEdit(condition)}
                               >
                                 <EditIcon fontSize="inherit" />
@@ -522,6 +509,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                               <IconButton
                                 aria-label="view"
                                 size="small"
+                                color="secondary"
                                 onClick={() => handleView(condition)}
                               >
                                 <VisibilityIcon fontSize="inherit" />
@@ -533,7 +521,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
                     </Table>
                   </TableContainer>
                 </Grid>
-                <DialogActions sx={{ justifyContent: "flex-end" }}>
+                <DialogActions sx={{ justifyContent: "flex-end", mr: -1 }}>
                   <Button
                     autoFocus
                     disableElevation
@@ -562,7 +550,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
             )}
           </Formik>
         </DialogContent>
-      </BootstrapDialog>
+      </Dialog>
       {showConditionModal && (
         <AddConditionModal
           open={showConditionModal}
@@ -575,7 +563,10 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId }) => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={() => {
+            setShowNofication(true);
+            handleClose();
+          }}
           message={notificationMsg}
           severity={severity}
         />

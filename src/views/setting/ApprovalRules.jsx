@@ -152,7 +152,6 @@ const ApprovalRules = () => {
           </Grid>
         </Grid>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Approval Rules" /> */}
           <Grid
             item
             xs={12}
@@ -323,6 +322,7 @@ const ApprovalRules = () => {
             setRuleId("");
           }}
           ruleId={ruleId}
+          fetchApprovalRules={() => fetchApprovalRules("Requisition")}
         />
       )}
       {showViewRule && (

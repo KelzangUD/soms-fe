@@ -84,11 +84,14 @@ const SignIn = () => {
             setMessage(response?.response?.data?.message);
             setSeverity("error");
             setOpen(true);
-          };
+          }
         }
       } else {
-      }
-    }
+        setMessage(res?.response?.data?.message);
+        setSeverity("error");
+        setOpen(true);
+      };
+    };
   };
 
   const forgotPasswordHandle = () => {

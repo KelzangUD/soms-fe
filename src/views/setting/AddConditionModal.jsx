@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { styled } from "@mui/material/styles";
 import {
   Button,
   Checkbox,
@@ -22,15 +21,6 @@ import {
 import { Formik } from "formik";
 import Route from "../../routes/Route";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
 const AddConditionModal = ({
   handleClose,
   open,
@@ -47,8 +37,8 @@ const AddConditionModal = ({
   const fetchHierarchyList = async () => {
     const res = await Route(
       "GET",
-      `/Common/FetchHierarchyName`,
-      null,
+      `/UserDtls/getHierarchyList`,
+      access_token,
       null,
       null
     );
@@ -96,17 +86,17 @@ const AddConditionModal = ({
 
   return (
     <>
-      <BootstrapDialog
+      <Dialog
         onClose={handleClose}
         aria-labelledby="add_new_role"
         ref={ref}
         id="add_new_role"
         open={open}
         fullWidth
-        maxWidth={"md"}
+        maxWidth={"lg"}
       >
         <DialogTitle
-          sx={{ m: 0, p: 2, background: "#1976d2", color: "#eee" }}
+          sx={{ px: 3, background: "#1976d2", color: "#eee" }}
           id="add_new_role_dialog"
         >
           Conditions
@@ -453,7 +443,7 @@ const AddConditionModal = ({
             )}
           </Formik>
         </DialogContent>
-      </BootstrapDialog>
+      </Dialog>
     </>
   );
 };

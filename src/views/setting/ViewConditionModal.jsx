@@ -1,102 +1,176 @@
-import React, { useRef } from 'react';
-import { styled } from '@mui/material/styles';
-import { Dialog, DialogContent, DialogTitle, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-      padding: theme.spacing(2)
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme.spacing(1)
-    }
-  }));
+import React, { useRef } from "react";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormLabel,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ViewConditionModal = ({ open, handleClose, condition, type }) => {
   const ref = useRef(null);
   return (
     <>
-      <BootstrapDialog
+      <Dialog
         onClose={handleClose}
         aria-labelledby="add_new_role"
         ref={ref}
         id="add_new_role"
         open={open}
         fullWidth
-        maxWidth={'md'}
+        maxWidth={"lg"}
       >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="add_new_role_dialog">
+        <DialogTitle
+          sx={{ px: 3, background: "#1976d2", color: "#eee" }}
+          id="add_new_role_dialog"
+        >
           Conditions
         </DialogTitle>
         <IconButton
           aria-label="close"
           onClick={handleClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500]
+            color: "#eee",
           }}
         >
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="Condition View">
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">Type</TableCell>
-                  <TableCell align="left">{type}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" style={{ fontSize:'20px', fontFamily: 'bold' }}>Approval</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{ fontSize:'18px', fontFamily: 'bold' }}>Hierarchy</TableCell>
-                  <TableCell align="left">{condition.approvalType === "hierarchy" ? "Yes" : "No"}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Name</TableCell>
-                  <TableCell align="left">{condition.approvalType === "hierarchy" ? condition.hierarchyName : "No"}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Max level</TableCell>
-                  <TableCell align="left">{condition.hierarchyLevel}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{ fontSize:'18px', fontFamily: 'bold' }}>Single User</TableCell>
-                  <TableCell align="left">{condition.approvalType === "singleUser" ? "Yes" : "No"}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Name</TableCell>
-                  <TableCell align="left">{condition.employeeName}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{ fontSize:'18px', fontFamily: 'bold' }}>Auto Approval</TableCell>
-                  <TableCell align="left">{condition.approvalType === "auto" ? "Yes" : "No"}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" style={{ fontSize:'20px', fontFamily: 'bold' }}>FYI</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Frequency</TableCell>
-                  <TableCell align="left">{condition.frequency}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Email</TableCell>
-                  <TableCell align="left">{condition.fyiEmail}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Employee</TableCell>
-                  <TableCell align="left">{condition.fyiEmployeeName}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <Grid container spacing={1} mb={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Type"
+                size="small"
+                name="approvalRuleName"
+                value={type}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={1} mb={2}>
+            <Grid item xs={12}>
+              <FormControl>
+                <FormLabel id="approval-radio-button-group-label">
+                  Approval*
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="approval-radio-button-group-label"
+                  name="approval-radio-buttons-group"
+                  value={condition?.approvalType}
+                >
+                  <FormControlLabel
+                    value="hierarchy"
+                    control={<Radio />}
+                    label="Hierarchy"
+                    disabled
+                  />
+                  <FormControlLabel
+                    value="singleUser"
+                    control={<Radio />}
+                    label="Single User"
+                    disabled
+                  />
+                  <FormControlLabel
+                    value="auto"
+                    control={<Radio />}
+                    label="Auto Approval"
+                    disabled
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Name"
+                size="small"
+                name="name"
+                value={condition?.hierarchyName}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Level"
+                size="small"
+                name="level"
+                value={condition?.hierarchyLevel}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={1} mb={2}>
+            <Grid item xs={12}>
+              <FormControl>
+                <FormLabel id="fyi-label">FYI</FormLabel>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                label="Frequency"
+                size="small"
+                name="frequency"
+                value={condition?.frequency}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                label="Email"
+                size="small"
+                name="email"
+                value={condition?.fyiEmail}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                label="Employee"
+                size="small"
+                name="employee"
+                value={condition?.fyiEmployeeName}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+          <Grid container sx={{ justifyContent: "flex-end", mt: 2 }}>
+            <Button
+              onClick={handleClose}
+              size="small"
+              type="button"
+              variant="outlined"
+              color="error"
+            >
+              Close
+            </Button>
+          </Grid>
         </DialogContent>
-      </BootstrapDialog>
+      </Dialog>
     </>
-  )
-}
+  );
+};
 
 export default ViewConditionModal;
