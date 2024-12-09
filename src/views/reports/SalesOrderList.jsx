@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   FormControl,
   MenuItem,
@@ -12,39 +10,50 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
-import PrintIcon from "@mui/icons-material/Print";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { CustomDataTable } from "../../component/common/index";
+import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
+import { exportToExcel } from "react-json-to-excel";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useReactToPrint } from "react-to-print";
 
 const SalesOrderList = () => {
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const access_token = localStorage.getItem("access_token");
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
+  const [rechargeCollection, setRechargeCollection] = useState([]);
+  const [printData, setPrintData] = useState([]);
+  const [regionOrExtension, setRegionOrExtension] = useState(
+    userDetails?.storeId
+  );
+  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
+  const [salesOrderList, setSalesOrderList] = useState([]);
   const sales_order_list_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "pos_no", headerName: "POS No", width: 150 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "pos_no", headerName: "POS No", flex: 1.5 },
     {
       field: "pos_date",
       headerName: "POS Date",
-      width: 150,
+      flex: 1.5,
     },
-    { field: "customer_name", headerName: "Customer Name", width: 250 },
-    { field: "mobile_no", headerName: "Mobile No", width: 150 },
-    { field: "ac_to_customer", headerName: "A/C to Customer", width: 150 },
-    { field: "payment_terms", headerName: "Payment Terms", width: 150 },
-    { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 150 },
-    { field: "created_user", headerName: "Created User", width: 150 },
+    { field: "customer_name", headerName: "Customer Name", flex: 2.5 },
+    { field: "mobile_no", headerName: "Mobile No", flex: 1.5 },
+    { field: "ac_to_customer", headerName: "A/C to Customer", flex: 1.5 },
+    { field: "payment_terms", headerName: "Payment Terms", flex: 1.5 },
+    { field: "payment_amount", headerName: "Payment Amount (Nu)", flex: 1.5 },
+    { field: "created_user", headerName: "Created User", felx: 1.5 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small">
+          <IconButton aria-label="view" size="small" color="secondary">
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
@@ -64,17 +73,26 @@ const SalesOrderList = () => {
     //   created_user: "",
     // },
   ];
+  const regionOrExtensionHandle = (e) => {
+    console.log(e?.target?.value);
+    setRegionOrExtension(e?.target?.value);
+  };
 
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const fetchRegionsOrExtensions = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchAllRegionOrExtension`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setRegionsOrExtensions(res?.data);
+    }
+  };
+  useEffect(() => {
+    fetchRegionsOrExtensions();
+  }, []);
 
   return (
     <>
@@ -87,29 +105,6 @@ const SalesOrderList = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid item container>
-                  <Paper
-                    sx={{
-                      p: "2px 0",
-                      display: "flex",
-                      alignItems: "center",
-                      maxWidth: 400,
-                    }}
-                  >
-                    <InputBase
-                      sx={{ ml: 1, flex: 1 }}
-                      placeholder="Search"
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                    <IconButton
-                      type="button"
-                      sx={{ p: "10px" }}
-                      aria-label="search"
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </Paper>
-                </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
                     <FormControl
@@ -123,11 +118,15 @@ const SalesOrderList = () => {
                       <Select
                         labelId="region-or-extension--select-label"
                         id="region-or-extension--select"
-                        // value={age}
+                        value={regionOrExtension}
                         label="Region/Extension"
-                        // onChange={handleChange}
+                        onChange={regionOrExtensionHandle}
                       >
-                        <MenuItem value={1}>TIPL_Dagapela Extension</MenuItem>
+                        {regionsOrExtensions?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.extensionName}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
@@ -195,19 +194,11 @@ const SalesOrderList = () => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <IconButton aria-label="pdf" color="error">
-                    <PictureAsPdfIcon fontSize="inherit" />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="success">
-                    <FileDownloadIcon fontSize="inherit" />
-                  </IconButton>
-                  <IconButton aria-label="print" color="primary">
-                    <PrintIcon fontSize="inherit" />
-                  </IconButton>
+                  <PrintSection />
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
                   <CustomDataTable
-                    rows={sales_order_list_rows}
+                    rows={salesOrderList}
                     cols={sales_order_list_columns}
                   />
                 </Grid>

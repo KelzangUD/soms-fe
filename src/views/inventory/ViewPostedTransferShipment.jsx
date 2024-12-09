@@ -20,25 +20,25 @@ const ViewPostedTransferShipment = ({
   transferOrderDetails,
 }) => {
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 30 },
-    { field: "item_Number", headerName: "Item Number", width: 180 },
+    { field: "sl", headerName: "Sl. No", flex: 0.3 },
+    { field: "item_Number", headerName: "Item Number", flex: 1.8 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 300,
+      flex: 3,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 250,
+      flex: 2.5,
     },
-    { field: "uom", headerName: "UOM", width: 70 },
-    { field: "qty", headerName: "Quantity", width: 80 },
-    { field: "received_Qty", headerName: "Received Qty", width: 80 },
+    { field: "uom", headerName: "UOM", flex: 0.7 },
+    { field: "qty", headerName: "Quantity", flex: 0.8 },
+    { field: "received_Qty", headerName: "Received Qty", flex: 0.8 },
     {
       field: "received_Remark",
       headerName: "Received Remarks",
-      width: 150,
+      flex: 1.5,
     },
   ];
   return (

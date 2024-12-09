@@ -94,24 +94,24 @@ const UpdateTransferOrderInward = ({
     }));
   };
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 30 },
-    { field: "item_Number", headerName: "Item Number", width: 180 },
+    { field: "sl", headerName: "Sl. No", flex: 0.3 },
+    { field: "item_Number", headerName: "Item Number", flex: 1.8 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 400,
+      flex: 4,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 300,
+      flex: 3,
     },
-    { field: "uom", headerName: "UOM", width: 100 },
-    { field: "qty", headerName: "Quantity", width: 100 },
+    { field: "uom", headerName: "UOM", flex: 1 },
+    { field: "qty", headerName: "Quantity", flex: 1 },
     {
       field: "rec_qty",
       headerName: "Rec. Qty",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <TextField
@@ -129,7 +129,7 @@ const UpdateTransferOrderInward = ({
     {
       field: "description",
       headerName: "Description",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <TextField

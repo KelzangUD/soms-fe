@@ -10,3 +10,4 @@ export { default as SalesAndOrderReport } from "./SalesAndStockReport";
 export { default as SalesReportAll } from "./SalesReportAll";
 export { default as CreditSalesReport } from "./CreditSaleReport";
 export { default as TransferOrderReport } from "./TransferOrderReport";
+export { default as SamsungWarrantyReport } from "./SamsungWarrantyReport";

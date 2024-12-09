@@ -34,22 +34,22 @@ export const sales_report_all_columns = [
   ];
 // ==================== Sales And Order Report Headers ===========================
 export const sales_and_stock_report_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_code", headerName: "Item Code", width: 200 },
+    { field: "sl", headerName: "Sl. No", width: 20 },
+    { field: "item_code", headerName: "Item Code", width: 180 },
     {
       field: "item_details",
       headerName: "Particulars (Details of Item)",
-      width: 300,
+      width: 320,
     },
-    { field: "unit", headerName: "Unit", width: 80 },
+    { field: "unit", headerName: "Unit", width: 65 },
     {
       field: "opening_balance",
       headerName: "Opening Balance (Qty)",
-      width: 150,
+      width: 140,
     },
-    { field: "stock_received", headerName: "Stock Received (Qty)", width: 150 },
+    { field: "stock_received", headerName: "Stock Received (Qty)", width: 140 },
     { field: "transfer_out", headerName: "Transfer Out (Qty)", width: 120 },
-    { field: "sales_qty", headerName: "Sales Qty", width: 80 },
+    { field: "sales_qty", headerName: "Sales Qty", width: 70 },
     {
       field: "amount",
       headerName: "Amount",

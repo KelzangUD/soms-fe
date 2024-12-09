@@ -10,7 +10,7 @@ import Notification from "../../ui/Notification";
 import { RenderStatus } from "../../ui";
 import UpdateRequisition from "./UpdateRequisition";
 import ApproveRequisition from "./ApproveRequisition";
-// import { CustomDataTable } from "../../component/common/index";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const RequisitionApproval = () => {
@@ -60,18 +60,18 @@ const RequisitionApproval = () => {
     }
   };
   const requisiton_approval_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "requisitionNo", headerName: "Requisition No", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "requisitionNo", headerName: "Requisition No", flex: 2 },
     {
       field: "requisitionTypeName",
       headerName: "Requisition Type",
-      width: 200,
+      flex: 2,
     },
-    { field: "requisition_Date", headerName: "Requisition Date", width: 150 },
+    { field: "requisition_Date", headerName: "Requisition Date", flex: 1.5 },
     {
       field: "approvalStatus",
       headerName: "Approval Status",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.approvalStatus} />
       ),
@@ -79,7 +79,7 @@ const RequisitionApproval = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <IconButton
@@ -211,31 +211,8 @@ const RequisitionApproval = () => {
                 <Grid
                   item
                   xs={12}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <Grid item>
-                    <Paper
-                      sx={{
-                        p: "2px 0",
-                        display: "flex",
-                        alignItems: "center",
-                        width: 400,
-                      }}
-                    >
-                      <InputBase
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search"
-                        inputProps={{ "aria-label": "search" }}
-                      />
-                      <IconButton
-                        type="button"
-                        sx={{ p: "10px" }}
-                        aria-label="search"
-                      >
-                        <SearchIcon />
-                      </IconButton>
-                    </Paper>
-                  </Grid>
                   <Grid item alignContent="center">
                     <Button
                       variant="contained"
@@ -259,7 +236,7 @@ const RequisitionApproval = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  {/* <CustomDataTable
+                  <CustomDataTable
                     rows={requisitionList?.map((row, index) => ({
                       ...row,
                       sl: index + 1,
@@ -267,8 +244,8 @@ const RequisitionApproval = () => {
                     cols={requisiton_approval_columns}
                     checkboxSelection={true}
                     onRowSelectionModelChange={handleRowSelection}
-                  /> */}
-                  <DataGrid
+                  />
+                  {/* <DataGrid
                       rows={requisitionList?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
@@ -282,7 +259,7 @@ const RequisitionApproval = () => {
                       pageSizeOptions={[5, 10]}
                       checkboxSelection
                       onRowSelectionModelChange={handleRowSelection}
-                    />
+                    /> */}
                 </Grid>
               </Grid>
             </Box>

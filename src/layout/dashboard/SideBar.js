@@ -229,7 +229,7 @@ export const MenuItems = [
       },
       {
         page: "Samsung Warranty Report",
-        route: "report/samsungwarrantyreport",
+        route: "reports/samsung-warranty-report",
       },
       {
         page: "Service Log Report",

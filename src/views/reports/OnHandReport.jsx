@@ -70,7 +70,6 @@ const OnHandReport = () => {
       null
     );
     if (res?.status === 200) {
-      console.log(res?.data);
       setOnHandReports(res?.data);
     }
   };
@@ -265,7 +264,10 @@ const OnHandReport = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <CustomDataTable
-                    rows={onHandReports}
+                    rows={onHandReports?.map((item, index) => ({
+                      sl: index+1,
+                      ...item,
+                    }))}
                     cols={on_hand_report_columns}
                   />
                 </Grid>

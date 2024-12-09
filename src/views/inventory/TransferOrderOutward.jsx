@@ -45,25 +45,25 @@ const TransferOrderOutward = () => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no);
   };
   const transfer_order_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", width: 160 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "transfer_order_no", headerName: "Transfer Order No", flex: 1.6 },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
-      width: 250,
+      flex: 2.5,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 250 },
-    { field: "posted_date", headerName: "Posted Date", width: 100 },
+    { field: "transfer_to_code", headerName: "Tansfer To Code", flex: 2.5 },
+    { field: "posted_date", headerName: "Posted Date", flex: 1 },
     {
       field: "status",
       headerName: "Status",
-      width: 120,
+      flex: 1.2,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -117,29 +117,6 @@ const TransferOrderOutward = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid item>
-                  <Paper
-                    sx={{
-                      p: "2px 0",
-                      display: "flex",
-                      alignItems: "center",
-                      maxWidth: 400,
-                    }}
-                  >
-                    <InputBase
-                      sx={{ ml: 1, flex: 1 }}
-                      placeholder="Search"
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                    <IconButton
-                      type="button"
-                      sx={{ p: "10px" }}
-                      aria-label="search"
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </Paper>
-                </Grid>
                 <Grid
                   item
                   xs={12}

@@ -89,25 +89,25 @@ const TransferOrders = () => {
     updateTransferOrderShipment(params?.row?.transfer_order_no);
   };
   const transfer_order_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "transfer_order_no", headerName: "Transfer Order No", flex: 2 },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
-      width: 240,
+      flex: 2.4,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 240 },
-    { field: "posted_date", headerName: "Posted Date", width: 150 },
+    { field: "transfer_to_code", headerName: "Tansfer To Code", flex: 2.4 },
+    { field: "posted_date", headerName: "Posted Date", flex: 1.5 },
     {
       field: "status",
       headerName: "Status",
-      width: 130,
+      flex: 1.3,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <IconButton
@@ -157,31 +157,8 @@ const TransferOrders = () => {
                 <Grid
                   item
                   xs={12}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <Grid item>
-                    <Paper
-                      sx={{
-                        p: "2px 0",
-                        display: "flex",
-                        alignItems: "center",
-                        width: 400,
-                      }}
-                    >
-                      <InputBase
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search"
-                        inputProps={{ "aria-label": "search" }}
-                      />
-                      <IconButton
-                        type="button"
-                        sx={{ p: "10px" }}
-                        aria-label="search"
-                      >
-                        <SearchIcon />
-                      </IconButton>
-                    </Paper>
-                  </Grid>
                   <Grid item>
                     <Button
                       variant="contained"

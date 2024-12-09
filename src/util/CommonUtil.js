@@ -61,25 +61,19 @@ export const menuListFilter = (menu, privileges) => {
 // ========================================================== DATE FORMATOR =================================================
 export const dateFormatter = (date) => {
   const d = new Date(date);
-
-  const day = String(d.getDate()).padStart(2, "0"); // Pads day with leading zero
-  const month = String(d.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
-
-  // return `${day}-${month}-${year}`; // Format: DD-MM-YYYY
-  return `${year}/${month}/${day}`; // Format: DD-MM-YYYY
+  return `${year}/${month}/${day}`;
 };
 
 // ========================================================== DATE FORMATOR =================================================
 export const dateFormatterTwo = (date) => {
   const d = new Date(date);
-
-  const day = String(d.getDate()).padStart(2, "0"); // Pads day with leading zero
-  const month = String(d.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
-
-  // return `${day}-${month}-${year}`; // Format: DD-MM-YYYY
-  return `${year}-${month}-${day}`; // Format: DD-MM-YYYY
+  return `${year}-${month}-${day}`;
 };
 
 // ======================================================== DOWNLOAD SAMPLE FILE ========================================

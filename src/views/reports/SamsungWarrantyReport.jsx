@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   FormControl,
   MenuItem,
@@ -13,6 +11,8 @@ import {
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import { RenderStatus } from "../../ui/index";
+import FindReplaceIcon from "@mui/icons-material/FindReplace";
+import BuildIcon from "@mui/icons-material/Build";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { exportToExcel } from "react-json-to-excel";
@@ -20,7 +20,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
 
-const BankCollection = () => {
+const SamsungWarrantyReport = () => {
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -30,43 +30,61 @@ const BankCollection = () => {
     userDetails?.storeId
   );
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
-  const [bankCollection, setBankCollection] = useState([]);
-  const bank_collection_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "payment_amount", headerName: "Payment Amount", width: 110 },
+  const [reports, setReports] = useState([]);
+  const samsung_warranty_columns = [
+    { field: "sl", headerName: "Sl. No", width: 20 },
+    { field: "pos_no", headerName: "POS No", width: 140 },
+    { field: "posting_date", headerName: "Posting Date", width: 90 },
     {
-      field: "type",
-      headerName: "Payment Type",
+      field: "customer_name",
+      headerName: "Customer Name",
+      width: 150,
+    },
+    { field: "store_name", headerName: "Store Name", width: 170 },
+    { field: "mobile_number", headerName: "Mobile Number", width: 100 },
+    {
+      field: "region_name",
+      headerName: "Region Name",
+      width: 90,
+    },
+    {
+      field: "bank_account_number",
+      headerName: "Bank Account",
       width: 100,
     },
-    { field: "payment_ref_number", headerName: "Reference Number", width: 130 },
-    { field: "bank_name", headerName: "Bank Name", width: 150 },
-    { field: "cheque", headerName: "Cheque No", width: 80 },
+    { field: "payment_type", headerName: "Payment Type", width: 90 },
+    { field: "cheque_number", headerName: "Cheque Number", width: 100 },
     { field: "cheque_date", headerName: "Cheque Date", width: 90 },
-    { field: "created_date", headerName: "Created Date", width: 90 },
-    { field: "created_by", headerName: "Created User", width: 160 },
+    { field: "payment_amount", headerName: "Payment Amount", width: 120 },
+    { field: "serial_number", headerName: "Serial Number", width: 130 },
+    { field: "created_by", headerName: "Created User", width: 100 },
+    { field: "warranty", headerName: "Warranty", width: 80 },
+    { field: "battery_warranty", headerName: "Battery Warranty", width: 120 },
     {
-      field: "result_code",
-      headerName: "Status",
-      width: 100,
-      renderCell: (params) => (
-        <RenderStatus status={params?.row?.result_code} />
-      ),
-    },
-    {
-      field: "action",
-      headerName: "Action",
+      field: "replace",
+      headerName: "Replace",
       width: 60,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small" color="primary">
-            <PrintIcon fontSize="inherit" />
+          <IconButton aria-label="view" color="primary">
+            <FindReplaceIcon fontSize="inherit" />
+          </IconButton>
+        </>
+      ),
+    },
+    {
+      field: "repair",
+      headerName: "Repair",
+      width: 70,
+      renderCell: (params) => (
+        <>
+          <IconButton aria-label="view" color="primary">
+            <BuildIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-
   const fetchRegionsOrExtensions = async () => {
     const res = await Route(
       "GET",
@@ -79,95 +97,122 @@ const BankCollection = () => {
       setRegionsOrExtensions(res?.data);
     }
   };
-  const fetchBankCollection = async () => {
+  const fetchSamsungWarrantyReport = async () => {
     const res = await Route(
       "GET",
-      `/Report/bankCollection?extension=${regionOrExtension}&fromDate=2024-08-01&toDate=2024-12-31`,
+      `/Report/samsungWarranty?extension=${regionOrExtension}&fromDate=2024-08-01&toDate=2024-12-31&posNo&serialNo`,
       access_token,
       null,
       null
     );
     if (res?.status === 200) {
-      setBankCollection(
+      setReports(
         res?.data?.map((item, index) => ({
           id: index,
           sl: index + 1,
-          payment_amount: item?.payment_amount,
-          type: item?.type,
-          result_code: item?.result_code,
-          created_date: item?.created_date,
-          payment_ref_number: item?.payment_ref_number,
+          pos_no: item?.pos_No,
+          posting_date: item?.posting_date,
+          customer_name: item?.customer_NAME,
+          store_name: item?.store_name,
+          mobile_number: item?.mobile_NUMBER,
+          region_name: item?.region_NAME,
+          bank_account_number: item?.bank_ACCOUNT_NUMBER,
+          payment_type: item?.payment_TYPE,
+          cheque_number: item?.cheque_NUMBER,
+          cheque_date: item?.cheque_DATE,
+          payment_amount: item?.payment_AMOUNT,
+          serial_number: item?.serial_NUMBER,
           created_by: item?.created_by,
-          cheque: item?.cheque,
-          cheque_date: item?.cheque_date,
-          bank_name: item?.bank_name,
-          filePath: item?.filePath,
+          warranty: item?.warranty,
+          battery_warranty: item?.battery_Warranty,
         }))
       );
       setPrintData(
         res?.data?.map((item, index) => ({
           sl: index + 1,
-          "Payment Amount": item?.payment_amount,
-          "Payment Type": item?.type,
-          "Ref No.": item?.payment_ref_number,
-          Status: item?.result_code,
-          "Bank Name": item?.bank_name,
-          "Cheque No": item?.cheque,
-          "Cheque Date": item?.cheque_date,
-          "Creation Date": item?.created_date,
-          "Created User": item?.created_by,
+          "POS No": item?.pos_No,
+          "Posting Date": item?.posting_date,
+          "Customer Name": item?.customer_NAME,
+          "Store Name": item?.store_name,
+          "Mobile Number": item?.mobile_NUMBER,
+          "Region Name": item?.region_NAME,
+          "Bank Account Number": item?.bank_ACCOUNT_NUMBER,
+          "Payment Type": item?.payment_TYPE,
+          "Cheque Number": item?.cheque_NUMBER,
+          "Cheque Date": item?.cheque_DATE,
+          "Payment Amount": item?.payment_AMOUNT,
+          "Serial Number": item?.serial_NUMBER,
+          "Created By": item?.created_by,
+          Warranty: item?.warranty,
+          "Battery Warranty": item?.battery_Warranty,
         }))
       );
     }
   };
+  useEffect(() => {
+    fetchRegionsOrExtensions();
+    fetchSamsungWarrantyReport();
+  }, []);
   const regionOrExtensionHandle = (e) => {
     console.log(e?.target?.value);
     setRegionOrExtension(e?.target?.value);
   };
-  useEffect(() => {
-    fetchRegionsOrExtensions();
-    fetchBankCollection();
-  }, []);
-
   const exportJsonToPdfHandle = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "pt",
+      format: "a4",
+    });
     autoTable(doc, {
       head: [
         [
           "sl",
-          "Payment Amount",
+          "POS No",
+          "Posting Date",
+          "Customer Name",
+          "Store Name",
+          "Mobile Number",
+          "Region Name",
+          "Bank Account Number",
           "Payment Type",
-          "Ref No.",
-          "Status",
-          "Bank Name",
-          "Cheque No",
+          "Cheque Number",
           "Cheque Date",
-          "Creation Date",
-          "Created User",
+          "Payment Amount",
+          "Serial Number",
+          "Created By",
+          "Warranty",
+          "Battery Warranty",
         ],
       ],
       body: printData?.map((item) => [
         item?.sl,
-        item?.["Payment Amount"],
-        item?.["Recharge Type"],
-        item?.["Ref No."],
-        item?.Status,
-        item?.["Bank Name"],
-        item?.["Cheque No"],
+        item?.["POS No"],
+        item?.["Posting Date"],
+        item?.["Customer Name"],
+        item?.["Store Name"],
+        item?.["Mobile Number"],
+        item?.["Region Name"],
+        item?.["Bank Account Number"],
+        item?.["Payment Type"],
+        item?.["Cheque Number"],
         item?.["Cheque Date"],
-        item?.["Creation Date"],
-        item?.["Created User"],
+        item?.["Payment Amount"],
+        item?.["Serial Number"],
+        item?.["Created By"],
+        item?.Warranty,
+        item?.["Battery Warranty"],
       ]),
       styles: {
-        fontSize: 8,
+        fontSize: 6,
+        cellPadding: 5,
+        overflow: "linebreak",
       },
-      margin: { top: 35 }, 
       didDrawPage: (data) => {
         doc.setFontSize(12);
-        doc.text("Bank Collection", data.settings.margin.left, 30);
+        doc.text("Samsung Warranty Report", data.settings.margin.left, 30);
       },
     });
-    doc.save("Bank_Collection");
+    doc.save("Samsung Warranty Report");
   };
 
   return (
@@ -220,7 +265,7 @@ const BankCollection = () => {
                 >
                   <PrintSection
                     exportExcel={() =>
-                      exportToExcel(printData, "Bank_Collection")
+                      exportToExcel(printData, "Samsung_Warranty")
                     }
                     exportPdf={exportJsonToPdfHandle}
                     handlePrint={reactToPrintFn}
@@ -234,8 +279,8 @@ const BankCollection = () => {
                   ref={contentRef}
                 >
                   <CustomDataTable
-                    rows={bankCollection}
-                    cols={bank_collection_columns}
+                    rows={reports}
+                    cols={samsung_warranty_columns}
                   />
                 </Grid>
               </Grid>
@@ -247,4 +292,4 @@ const BankCollection = () => {
   );
 };
 
-export default BankCollection;
+export default SamsungWarrantyReport;

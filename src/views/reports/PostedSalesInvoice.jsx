@@ -64,6 +64,7 @@ const PostedSalesInvoice = () => {
   const posted_sales_invoice_rows = [
     {
       id: 1,
+      sl: 1,
       pos_no: "EM/DP1/2024/00001",
       pos_date: "20-Aug-2024",
       customer_name: "TIPL",

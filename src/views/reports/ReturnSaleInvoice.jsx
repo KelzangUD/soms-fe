@@ -26,21 +26,21 @@ import Route from "../../routes/Route";
 
 const ReturnSaleInvoice = () => {
   const return_posted_sales_invoice_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "pos_credit_no", headerName: "POS Credit No", width: 150 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "pos_credit_no", headerName: "POS Credit No", flex: 1.5 },
     {
       field: "pos_date",
       headerName: "POS Date",
-      width: 150,
+      flex: 1.5,
     },
-    { field: "customer_name", headerName: "Customer Name", width: 250 },
-    { field: "mobile_no", headerName: "Mobile No", width: 150 },
-    { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 150 },
-    { field: "invoice_no", headerName: "Invoice No", width: 150 },
+    { field: "customer_name", headerName: "Customer Name", flex: 2.5 },
+    { field: "mobile_no", headerName: "Mobile No", flex: 1.5 },
+    { field: "payment_amount", headerName: "Payment Amount (Nu)", flex: 1.5 },
+    { field: "invoice_no", headerName: "Invoice No", flex: 1.5 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <IconButton aria-label="view" size="small" color="primary">

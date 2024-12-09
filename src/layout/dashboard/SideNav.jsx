@@ -42,9 +42,12 @@ export default function SideNav() {
     navigation(route);
   };
   const handleNestedItemClick = (index) => {
-    const newOpenStates = [openStates];
-    newOpenStates[index] = !newOpenStates[index];
-    setOpenStates(newOpenStates);
+    setOpenStates((prevOpenStates) => {
+      const isAlreadyOpen = prevOpenStates[index];
+      const newOpenStates = prevOpenStates.map(() => false);
+      newOpenStates[index] = !isAlreadyOpen;
+      return newOpenStates;
+    });
   };
   const [openStates, setOpenStates] = useState(MenuItems.map(() => false));
   const [menuList, setMenuList] = useState([]);

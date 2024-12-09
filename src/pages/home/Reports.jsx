@@ -12,7 +12,8 @@ import {
   SalesAndOrderReport,
   SalesReportAll,
   CreditSalesReport,
-  TransferOrderReport
+  TransferOrderReport,
+  SamsungWarrantyReport
 } from "../../views/reports/index";
 
 const Reports = () => {
@@ -31,6 +32,7 @@ const Reports = () => {
         <Route path="/sales-report-all" element={<SalesReportAll />} />
         <Route path="/credit-sale-report" element={<CreditSalesReport />} />
         <Route path="/transfer-order-report" element={<TransferOrderReport />} />
+        <Route path="/samsung-warranty-report" element={<SamsungWarrantyReport />} />
       </Routes>
     </>
   );
