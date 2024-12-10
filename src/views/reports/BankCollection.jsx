@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   FormControl,
   MenuItem,
@@ -12,6 +10,10 @@ import {
   Select,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { RenderStatus } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
@@ -19,36 +21,40 @@ import { exportToExcel } from "react-json-to-excel";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
+import { dateFormatterTwo } from "../../util/CommonUtil";
+import { useCommon } from "../../contexts/CommonContext";
 
 const BankCollection = () => {
+  const { regionsOrExtensions } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
   const [regionOrExtension, setRegionOrExtension] = useState(
-    userDetails?.storeId
+    userDetails?.regionName
   );
-  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
+  const [fromDate, setFromDate] = useState(dateFormatterTwo(new Date()));
+  const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
   const [bankCollection, setBankCollection] = useState([]);
   const bank_collection_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "payment_amount", headerName: "Payment Amount", width: 110 },
+    { field: "payment_amount", headerName: "Payment Amount", flex: 1.1 },
     {
       field: "type",
       headerName: "Payment Type",
-      width: 100,
+      flex: 1,
     },
-    { field: "payment_ref_number", headerName: "Reference Number", width: 130 },
-    { field: "bank_name", headerName: "Bank Name", width: 150 },
-    { field: "cheque", headerName: "Cheque No", width: 80 },
-    { field: "cheque_date", headerName: "Cheque Date", width: 90 },
-    { field: "created_date", headerName: "Created Date", width: 90 },
-    { field: "created_by", headerName: "Created User", width: 160 },
+    { field: "payment_ref_number", headerName: "Reference Number", flex: 1.3 },
+    { field: "bank_name", headerName: "Bank Name", flex: 1.5 },
+    { field: "cheque", headerName: "Cheque No", flex: 0.8 },
+    { field: "cheque_date", headerName: "Cheque Date", flex: 1 },
+    { field: "created_date", headerName: "Created Date", flex: 1 },
+    { field: "created_by", headerName: "Created User", flex: 1.6 },
     {
       field: "result_code",
       headerName: "Status",
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.result_code} />
       ),
@@ -56,7 +62,7 @@ const BankCollection = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 60,
+      flex: 0.6,
       renderCell: (params) => (
         <>
           <IconButton aria-label="view" size="small" color="primary">
@@ -67,22 +73,10 @@ const BankCollection = () => {
     },
   ];
 
-  const fetchRegionsOrExtensions = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchAllRegionOrExtension`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRegionsOrExtensions(res?.data);
-    }
-  };
   const fetchBankCollection = async () => {
     const res = await Route(
       "GET",
-      `/Report/bankCollection?extension=${regionOrExtension}&fromDate=2024-08-01&toDate=2024-12-31`,
+      `/Report/bankCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
       access_token,
       null,
       null
@@ -120,15 +114,18 @@ const BankCollection = () => {
       );
     }
   };
-  const regionOrExtensionHandle = (e) => {
-    console.log(e?.target?.value);
-    setRegionOrExtension(e?.target?.value);
-  };
   useEffect(() => {
-    fetchRegionsOrExtensions();
     fetchBankCollection();
   }, []);
-
+  const regionOrExtensionHandle = (e) => {
+    setRegionOrExtension(e?.target?.value);
+  };
+  const fromDateHandle = (e) => {
+    setFromDate(dateFormatterTwo(e?.$d));
+  };
+  const toDateHandle = (e) => {
+    setToDate(dateFormatterTwo(e?.$d));
+  };
   const exportJsonToPdfHandle = () => {
     const doc = new jsPDF();
     autoTable(doc, {
@@ -161,7 +158,7 @@ const BankCollection = () => {
       styles: {
         fontSize: 8,
       },
-      margin: { top: 35 }, 
+      margin: { top: 35 },
       didDrawPage: (data) => {
         doc.setFontSize(12);
         doc.text("Bank Collection", data.settings.margin.left, 30);
@@ -206,8 +203,42 @@ const BankCollection = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="From Date"
+                          value={dayjs(fromDate)}
+                          onChange={fromDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="To Date"
+                          value={dayjs(toDate)}
+                          onChange={toDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
                   <Grid item xs={2}>
-                    <Button variant="contained">Search</Button>
+                    <Button variant="contained" onClick={fetchBankCollection}>
+                      Search
+                    </Button>
                   </Grid>
                 </Grid>
                 <Grid
