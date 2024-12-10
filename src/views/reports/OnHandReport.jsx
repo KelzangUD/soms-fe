@@ -2,65 +2,37 @@ import React, { useState, useEffect } from "react";
 import {
   Autocomplete,
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   TextField,
 } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { CustomDataTable } from "../../component/common/index";
 import { on_hand_report_columns } from "../../data/static";
 import Route from "../../routes/Route";
+import { dateFormatterTwo } from "../../util/CommonUtil";
+import { useCommon } from "../../contexts/CommonContext";
 
 const OnHandReport = () => {
+  const {
+    regionsOrExtensions,
+    itemsList,
+    fetchLocatorsBasedOnExtension,
+    locatorsList,
+  } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [details, setDetails] = useState({
-    storeName: userDetails?.region_NAME,
+    storeName: userDetails?.regionName,
     item: "ALL",
     locator_id: "ALL",
     serialNo: "ALL",
     imei_no: "ALL",
   });
   const [onHandReports, setOnHandReports] = useState([]);
-  const [regionOrExtension, setRegionOrExtension] = useState([]);
-  const [itemsList, setItemsList] = useState([]);
-  const [locatorsList, setLocatorsList] = useState([]);
-  const fetchRegionOrExtension = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchAllRegionOrExtension`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRegionOrExtension(res?.data);
-    }
-  };
-  const fetchItemsList = async () => {
-    const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
-    if (res?.status === 200) {
-      setItemsList(res?.data);
-    }
-  };
-  const fetchLocatorsBasedOnExtension = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchLocatorByExtension?extension=${details?.storeName}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setLocatorsList(res?.data);
-    }
-  };
   const fetchOnHandReports = async () => {
     const res = await Route(
       "GET",
@@ -74,11 +46,11 @@ const OnHandReport = () => {
     }
   };
   useEffect(() => {
-    fetchRegionOrExtension();
-    fetchItemsList();
-    fetchLocatorsBasedOnExtension();
     fetchOnHandReports();
-  }, [details]);
+  }, []);
+  useEffect(() => {
+    fetchLocatorsBasedOnExtension(details?.storeName);
+  }, [details?.storeName]);
   const storeHandle = (e, value) => {
     setDetails((prev) => ({
       ...prev,
@@ -131,7 +103,7 @@ const OnHandReport = () => {
                       name="as_on_date"
                       required
                       disabled
-                      value={new Date().toString()}
+                      value={dateFormatterTwo(new Date())}
                       style={{ background: "#fff" }}
                       size="small"
                     />
@@ -139,7 +111,7 @@ const OnHandReport = () => {
                   <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
-                      options={regionOrExtension?.map((item) => ({
+                      options={regionsOrExtensions?.map((item) => ({
                         label: item?.extensionName,
                         id: item?.id,
                       }))}
@@ -158,10 +130,13 @@ const OnHandReport = () => {
                   <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
-                      options={itemsList?.map((item) => ({
-                        label: item?.item_number,
-                        id: item?.item_number,
-                      }))}
+                      options={[
+                        { label: "ALL", id: "ALL" },
+                        ...(itemsList?.map((item) => ({
+                          label: item?.item_number,
+                          id: item?.item_number,
+                        })) || []),
+                      ]}
                       value={details?.item}
                       onChange={itemHandle}
                       renderInput={(params) => (
@@ -173,10 +148,13 @@ const OnHandReport = () => {
                   <Grid item xs={2}>
                     <Autocomplete
                       disablePortal
-                      options={locatorsList?.map((item) => ({
-                        label: item?.locator,
-                        id: item?.locator,
-                      }))}
+                      options={[
+                        { label: "ALL", id: "ALL" },
+                        ...(locatorsList?.map((item) => ({
+                          label: item?.locator,
+                          id: item?.locator,
+                        })) || []),
+                      ]}
                       value={details?.locator_id}
                       onChange={locatorHandle}
                       renderInput={(params) => (
@@ -234,7 +212,7 @@ const OnHandReport = () => {
                 <Grid item xs={12}>
                   <CustomDataTable
                     rows={onHandReports?.map((item, index) => ({
-                      sl: index+1,
+                      sl: index + 1,
                       ...item,
                     }))}
                     cols={on_hand_report_columns}
