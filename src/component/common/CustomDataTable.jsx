@@ -58,7 +58,7 @@ const CustomDataTable = ({
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        pageSizeOptions={[5, 10, 20, 50, { label: 'All', value: -1 }]}
+        pageSizeOptions={[5, 10, 20, 50, { label: 'All', value: rows?.length }]}
         sx={{
           background: "#fff",
           "--DataGrid-overlayHeight": "300px",
