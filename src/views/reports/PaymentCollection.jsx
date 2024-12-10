@@ -10,6 +10,10 @@ import {
   Select,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { RenderStatus } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
@@ -17,20 +21,24 @@ import { exportToExcel } from "react-json-to-excel";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
+import { useCommon } from "../../contexts/CommonContext";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const PaymentCollection = () => {
+  const { regionsOrExtensions } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
-  const [rechargeCollection, setRechargeCollection] = useState([]);
+  const [paymentCollection, setPaymentCollection] = useState([]);
   const [regionOrExtension, setRegionOrExtension] = useState(
-    userDetails?.storeId
+    userDetails?.regionName
   );
-  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
+  const [fromDate, setFromDate] = useState(dateFormatterTwo(new Date()));
+  const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
 
-  const recharge_collection_columns = [
+  const payment_collection_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "payment_amount", headerName: "Payment Amount", flex: 1.1 },
     {
@@ -74,29 +82,16 @@ const PaymentCollection = () => {
       ),
     },
   ];
-
-  const fetchRegionsOrExtensions = async () => {
+  const fetchPaymentCollection = async () => {
     const res = await Route(
       "GET",
-      `/Common/FetchAllRegionOrExtension`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRegionsOrExtensions(res?.data);
-    }
-  };
-  const fetchRechargeCollection = async () => {
-    const res = await Route(
-      "GET",
-      `/Report/rechargeCollection?extension=${regionOrExtension}&fromDate=2024-08-01&toDate=2024-12-31`,
+      `/Report/paymentCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
       access_token,
       null,
       null
     );
     if (res?.status === 200) {
-      setRechargeCollection(
+      setPaymentCollection(
         res?.data?.map((item, index) => ({
           id: index,
           sl: index + 1,
@@ -128,12 +123,16 @@ const PaymentCollection = () => {
     }
   };
   const regionOrExtensionHandle = (e) => {
-    console.log(e?.target?.value);
     setRegionOrExtension(e?.target?.value);
   };
+  const fromDateHandle = (e) => {
+    setFromDate(dateFormatterTwo(e?.$d));
+  };
+  const toDateHandle = (e) => {
+    setToDate(dateFormatterTwo(e?.$d));
+  };
   useEffect(() => {
-    fetchRegionsOrExtensions();
-    fetchRechargeCollection();
+    fetchPaymentCollection();
   }, []);
   const exportJsonToPdfHandle = () => {
     const doc = new jsPDF();
@@ -167,7 +166,7 @@ const PaymentCollection = () => {
       styles: {
         fontSize: 8,
       },
-      margin: { top: 35 }, 
+      margin: { top: 35 },
       didDrawPage: (data) => {
         doc.setFontSize(12);
         doc.text("Payment Collection", data.settings.margin.left, 30);
@@ -212,8 +211,45 @@ const PaymentCollection = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="From Date"
+                          value={dayjs(fromDate)}
+                          onChange={fromDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="To Date"
+                          value={dayjs(toDate)}
+                          onChange={toDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
                   <Grid item xs={2}>
-                    <Button variant="contained">Search</Button>
+                    <Button
+                      variant="contained"
+                      onClick={fetchPaymentCollection}
+                    >
+                      Search
+                    </Button>
                   </Grid>
                 </Grid>
                 <Grid
@@ -240,8 +276,8 @@ const PaymentCollection = () => {
                   ref={contentRef}
                 >
                   <CustomDataTable
-                    rows={rechargeCollection}
-                    cols={recharge_collection_columns}
+                    rows={paymentCollection}
+                    cols={payment_collection_columns}
                   />
                 </Grid>
               </Grid>

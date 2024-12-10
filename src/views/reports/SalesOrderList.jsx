@@ -20,8 +20,10 @@ import { exportToExcel } from "react-json-to-excel";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
+import { useCommon } from "../../contexts/CommonContext";
 
 const SalesOrderList = () => {
+  const { regionsOrExtensions } = useCommon();
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const access_token = localStorage.getItem("access_token");
   const contentRef = useRef(null);
@@ -29,9 +31,8 @@ const SalesOrderList = () => {
   const [rechargeCollection, setRechargeCollection] = useState([]);
   const [printData, setPrintData] = useState([]);
   const [regionOrExtension, setRegionOrExtension] = useState(
-    userDetails?.storeId
+    userDetails?.regionName
   );
-  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [salesOrderList, setSalesOrderList] = useState([]);
   const sales_order_list_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
@@ -78,22 +79,6 @@ const SalesOrderList = () => {
     setRegionOrExtension(e?.target?.value);
   };
 
-  const fetchRegionsOrExtensions = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchAllRegionOrExtension`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRegionsOrExtensions(res?.data);
-    }
-  };
-  useEffect(() => {
-    fetchRegionsOrExtensions();
-  }, []);
-
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -123,7 +108,7 @@ const SalesOrderList = () => {
                         onChange={regionOrExtensionHandle}
                       >
                         {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.locationId} key={item?.id}>
+                          <MenuItem value={item?.id} key={item?.id}>
                             {item?.extensionName}
                           </MenuItem>
                         ))}

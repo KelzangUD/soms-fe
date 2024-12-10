@@ -25,6 +25,7 @@ export const CommonProvider = ({ children }) => {
   const [faToLocator, setFaToLocator] = useState([]);
   const [toStore, setToStore] = useState([]);
   const [onHandsTransferOrderItems, setOnHandsTransferOrderItems] = useState([]);
+  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
 
   const fetchSalesType = async () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
@@ -218,6 +219,18 @@ export const CommonProvider = ({ children }) => {
       setOnHandsTransferOrderItems(res?.data);
     }
   };
+  const fetchRegionsOrExtensions = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchAllRegionOrExtension`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setRegionsOrExtensions(res?.data);
+    }
+  };
 
   useEffect(() => {
     fetchSalesType();
@@ -234,6 +247,7 @@ export const CommonProvider = ({ children }) => {
     fetchFromLocator();
     fetchToStore();
     fetchAllItems();
+    fetchRegionsOrExtensions();
   }, []);
 
   return (
@@ -265,6 +279,7 @@ export const CommonProvider = ({ children }) => {
         faToLocator,
         toStore,
         onHandsTransferOrderItems,
+        regionsOrExtensions,
       }}
     >
       {children}
