@@ -35,42 +35,42 @@ const SystemUsers = () => {
   };
 
   const columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "full_name", headerName: "Name", width: 150 },
-    { field: "email_address", headerName: "Email", width: 230 },
-    { field: "createdDate", headerName: "Created Date", width: 120 },
+    { field: "sl", headerName: "Sl. No", flex: 0.3 },
+    { field: "full_name", headerName: "Name", flex: 1.5 },
+    { field: "email_address", headerName: "Email", flex: 2.3 },
+    { field: "createdDate", headerName: "Created Date", flex: 1.2 },
     {
       field: "roleName",
       headerName: "Role",
-      width: 150,
+      flex: 1.5,
     },
     {
       field: "status",
       headerName: "Status",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
-          <IconButton
-            aria-label="edit"
-            size="small"
-            onClick={() => handleAction(params?.row?.user_code, "edit")}
-            color="primary"
-          >
-            <EditIcon fontSize="inherit" />
-          </IconButton>
           <IconButton
             aria-label="view"
             size="small"
             onClick={() => handleAction(params.row.user_code, "view")}
-            color="secondary"
+            color="primary"
           >
             <VisibilityIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton
+            aria-label="edit"
+            size="small"
+            onClick={() => handleAction(params?.row?.user_code, "edit")}
+            color="success"
+          >
+            <EditIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
@@ -117,31 +117,8 @@ const SystemUsers = () => {
           <Grid
             item
             xs={12}
-            sx={{ display: "flex", justifyContent: "space-between" }}
+            sx={{ display: "flex", justifyContent: "flex-end" }}
           >
-            <Grid item>
-              <Paper
-                sx={{
-                  p: "2px 4px",
-                  display: "flex",
-                  alignItems: "center",
-                  width: 400,
-                }}
-              >
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder="Search"
-                  inputProps={{ "aria-label": "search" }}
-                />
-                <IconButton
-                  type="button"
-                  sx={{ p: "10px" }}
-                  aria-label="search"
-                >
-                  <SearchIcon />
-                </IconButton>
-              </Paper>
-            </Grid>
             <Grid item alignContent="center">
               <Button
                 variant="contained"
@@ -152,13 +129,6 @@ const SystemUsers = () => {
               >
                 Add New
               </Button>
-              <IconButton
-                aria-label="add"
-                color="success"
-                // onClick={}
-              >
-                <FileDownloadIcon />
-              </IconButton>
             </Grid>
           </Grid>
           <Grid item container alignItems="center" xs={12}>

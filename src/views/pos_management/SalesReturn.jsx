@@ -25,30 +25,17 @@ import { dateFormatter } from "../../util/CommonUtil";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ImageIcon from "@mui/icons-material/Image";
 import CircularProgress from "@mui/material/CircularProgress";
 import GetAppIcon from "@mui/icons-material/GetApp";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import Notification from "../../ui/Notification";
 import AddLineItem from "./AddLineItem";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-  outlineColor: "#fff",
-});
+import { useCommon } from "../../contexts/CommonContext";
 
 const SalesReturn = () => {
+  const { paymentType, fetchBankBasedOnPaymentType, banks } = useCommon();
   const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
@@ -58,9 +45,7 @@ const SalesReturn = () => {
   const [invoiceNo, setInoiceNo] = useState("");
   const [emptyInvoiceNo, setEmptyInvoiceNo] = useState(false);
   const [salesData, setSalesData] = useState(null);
-  const [paymentType, setPaymentType] = useState([]);
-  const [banks, setBanks] = useState([]);
-  const [fileName, setFileName] = useState("Upload File");
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [paymentLines, setPaymentLines] = useState([]);
   const [grossTotal, setGrossTotal] = useState("");
   const [taxAmount, setTaxAmount] = useState("");
@@ -89,32 +74,9 @@ const SalesReturn = () => {
     setInoiceNo(e?.target?.value);
   };
 
-  const fetchPaymentType = async () => {
-    const res = await Route("GET", "/Common/PaymentType", null, null, null);
-    if (res?.status === 200) {
-      setPaymentType(res?.data);
-    }
-  };
-  const fetchBankBasedOnPaymentType = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchBankDetails?userId=${user}&paymentType=${paymentLinesItem?.paymentType}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setBanks(res?.data);
-    }
-  };
-
   useEffect(() => {
-    fetchPaymentType();
-  }, []);
-
-  useEffect(() => {
-    fetchBankBasedOnPaymentType();
-  }, [paymentLinesItem?.paymentType, user]);
+    fetchBankBasedOnPaymentType(paymentLinesItem?.paymentType);
+  }, [paymentLinesItem?.paymentType]);
 
   const paymentAmountHandle = (e) => {
     setPaymentLinesItem((prev) => ({
@@ -154,6 +116,7 @@ const SalesReturn = () => {
     }));
   };
   const chequeCopyHandle = (e) => {
+    setIsFileUploaded(true);
     setPaymentLinesItem((prev) => ({
       ...prev,
       chequeCopy: e?.target?.files[0],
@@ -847,25 +810,13 @@ const SalesReturn = () => {
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
                     <Grid item sx={2} display="flex">
-                      <Button
-                        component="label"
-                        role={undefined}
-                        tabIndex={-1}
-                        endIcon={<CloudUploadIcon />}
-                        fullWidth
-                        variant="outlined"
-                        style={{
-                          border: "1px solid #B4B4B8",
-                          color: "#686D76",
-                        }}
-                      >
-                        {fileName}
-                        <VisuallyHiddenInput
-                          type="file"
-                          onChange={chequeCopyHandle}
-                          multiple
-                        />
-                      </Button>
+                      <TextField 
+                        type="file"
+                        size="small"
+                        label={isFileUploaded ? "File" : ""}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={chequeCopyHandle}
+                      />
                     </Grid>
                   )}
                   <Grid

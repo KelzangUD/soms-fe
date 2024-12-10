@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -27,17 +27,17 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Notification from "../../ui/Notification";
 import dayjs from "dayjs";
-import { dateFormatter, dateFormatterTwo } from "../../util/CommonUtil";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
 
 const Requisitions = () => {
+  const { requisitionType, requisitionItems } = useCommon();
   const empId = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [requisitionType, setRquisitionType] = useState([]);
-  const [requisitionItems, setRequisitionItems] = useState([]);
   const [isETop, setIsETop] = useState(false);
   const [requisitionData, setRequisitionData] = useState({
     requisitionType: null,
@@ -52,28 +52,6 @@ const Requisitions = () => {
     uom: "",
     amount: "",
   });
-  const fetchRequisitionType = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/RequisitionType?type=1`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRquisitionType(res?.data);
-    }
-  };
-  const fetchRequisitionItem = async () => {
-    const res = await Route("GET", "/Common/RequisitionItem", null, null, null);
-    if (res?.status === 200) {
-      setRequisitionItems(res?.data);
-    }
-  };
-  useEffect(() => {
-    fetchRequisitionType();
-    fetchRequisitionItem();
-  }, []);
   const requisitionTypeHandle = (e) => {
     setIsETop(e?.target?.value === "3" ? true : false);
     setRequisitionData((prev) => ({
@@ -135,8 +113,6 @@ const Requisitions = () => {
       requisitionData,
       null
     );
-    // console.log(requisitionData);
-    // console.log(res);
     if (res?.status === 201) {
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");

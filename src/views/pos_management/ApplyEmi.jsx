@@ -264,6 +264,7 @@ const ApplyEmi = () => {
                         name="file"
                         type="file"
                         size="small"
+                        // label="File"
                       />
                     </FormControl>
                   </Grid>

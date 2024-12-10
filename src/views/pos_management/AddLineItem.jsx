@@ -5,32 +5,27 @@ import {
   Grid,
   Button,
   Dialog,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
 import Route from "../../routes/Route";
-import Notification from "../../ui/Notification";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Notification } from "../../ui/index";
+import { Transition } from "../../component/common/index";
+import { useCommon } from "../../contexts/CommonContext";
 
 const AddLineItem = ({
   open,
   setOpen,
   storeName,
-  user,
   salesType,
   setLineItems,
   userDetails,
 }) => {
+  const { subInventory, fetchLocators, locators } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [subInventory, setSubInventory] = useState([]);
-  const [locator, setLocator] = useState([]);
   const [desc, setDesc] = useState("");
   const [onHandItems, setOnHandItems] = useState([]);
   const [pricingID, setPricingID] = useState("");
@@ -67,30 +62,7 @@ const AddLineItem = ({
     volumeDiscount: "",
     priceLocatorDTOs: [],
   });
-  const fetchSubInventory = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchSubInventory?userId=${user}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setSubInventory(res?.data);
-    }
-  };
-  const fetchLocator = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchLocator?userId=${user}&subInventory=${lineItemDetail?.subInventoryId}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setLocator(res?.data);
-    }
-  };
+  
   const fetchOnHandItems = async () => {
     const res = await Route(
       "GET",
@@ -212,10 +184,7 @@ const AddLineItem = ({
     }
   };
   useEffect(() => {
-    fetchSubInventory();
-  }, []);
-  useEffect(() => {
-    fetchLocator();
+    fetchLocators(lineItemDetail?.subInventoryId);
   }, [lineItemDetail?.subInventoryId]);
   useEffect(() => {
     fetchOnHandItems();
@@ -300,7 +269,7 @@ const AddLineItem = ({
     <>
       <Dialog
         fullWidth
-        maxWidth="xl"
+        maxWidth="lg"
         open={open}
         onClose={() => setOpen(false)}
         TransitionComponent={Transition}
@@ -374,7 +343,7 @@ const AddLineItem = ({
                   userDetails?.roleName === "General Manager" ? (
                     <Autocomplete
                       disablePortal
-                      options={locator?.map((item) => ({
+                      options={locators?.map((item) => ({
                         id: item?.id,
                         label: item?.name,
                       }))}

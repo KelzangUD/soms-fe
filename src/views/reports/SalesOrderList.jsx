@@ -123,7 +123,7 @@ const SalesOrderList = () => {
                         onChange={regionOrExtensionHandle}
                       >
                         {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
+                          <MenuItem value={item?.locationId} key={item?.id}>
                             {item?.extensionName}
                           </MenuItem>
                         ))}

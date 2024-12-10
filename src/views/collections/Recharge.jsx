@@ -20,16 +20,16 @@ import {
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import DownloadIcon from "@mui/icons-material/Download";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
 import { Transition } from "../../component/common/index";
 import dayjs from "dayjs";
 import Route from "../../routes/Route";
 import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
+import { useCommon } from "../../contexts/CommonContext";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -45,14 +45,13 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const Recharge = () => {
+  const { paymentType, bankAccountNames, fetchBankAccountName } = useCommon();
   const userID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [responseData, setResponseData] = useState({});
   const [severity, setSeverity] = useState("info");
-  const [paymentType, setPaymentType] = useState([]);
-  const [bankAccounts, setBankAccounts] = useState([]);
   const [rechargeDetails, setRechargeDetails] = useState({
     postingDate: dateFormatter(new Date().toISOString()),
     mobileNo: "",
@@ -71,31 +70,12 @@ const Recharge = () => {
     chequeDate: true,
     chequeCopy: true,
   });
-  const [fileName, setFileName] = useState("Upload File");
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [file, setFile] = useState(null);
   const [chequeCopy, setChequeCopy] = useState(null);
-  const fetchPaymentType = async () => {
-    const res = await Route("GET", "/Common/PaymentType", null, null, null);
-    if (res?.status === 200) {
-      setPaymentType(res?.data);
-    }
-  };
-  const fetchBankAccount = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchBankDetails?userId=${userID}&paymentType=1`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setBankAccounts(res?.data);
-    }
-  };
   useEffect(() => {
-    fetchPaymentType();
-    fetchBankAccount();
-  }, []);
+    fetchBankAccountName(rechargeDetails?.paymentType);
+  }, [rechargeDetails?.paymentType]);
   const postingDateHandle = (e) => {
     setRechargeDetails((prev) => ({
       ...prev,
@@ -120,7 +100,6 @@ const Recharge = () => {
       paymentType: e?.target?.value,
       payment: e?.target?.value,
     }));
-    // fetchBankAccount(e?.target?.value?.id);
     if (e?.target?.value?.id === "1") {
       setDisabledFields((prev) => ({
         ...prev,
@@ -164,7 +143,7 @@ const Recharge = () => {
     }));
   };
   const chequeCopyHandle = (e) => {
-    setFileName(e?.target?.files[0]?.name);
+    setIsFileUploaded(true);
     setChequeCopy(e?.target?.files[0]);
   };
 
@@ -184,7 +163,6 @@ const Recharge = () => {
       setFile(e?.target?.files[0]);
     }
   };
-  // const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
     e.preventDefault();
     let formData = new FormData();
@@ -213,7 +191,6 @@ const Recharge = () => {
       null,
       "multipart/form-data"
     );
-    console.log(res);
     if (res?.status === 201) {
       setResponseData(res?.data);
       setSeverity("success");
@@ -239,7 +216,7 @@ const Recharge = () => {
         chequeDate: true,
         chequeCopy: true,
       }));
-      setFileName("Upload File");
+      setIsFileUploaded(false);
     } else {
       setNotificationMsg(res?.response?.data?.message);
       setSeverity("error");
@@ -267,7 +244,7 @@ const Recharge = () => {
       chequeDate: true,
       chequeCopy: true,
     }));
-    setFileName("Upload File");
+    setIsFileUploaded(false);
   };
   const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
@@ -440,7 +417,7 @@ const Recharge = () => {
                         onChange={bankAccHandle}
                         value={rechargeDetails?.bankId}
                       >
-                        {bankAccounts?.map((item) => (
+                        {bankAccountNames?.map((item) => (
                           <MenuItem value={item?.id} key={item?.id}>
                             {item.bankName}
                           </MenuItem>
@@ -478,44 +455,16 @@ const Recharge = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={4} display="flex">
-                    <Button
-                      component="label"
-                      role={undefined}
-                      tabIndex={-1}
+                  <Grid item xs={4}>
+                    <TextField
+                      type="file"
                       size="small"
+                      label={isFileUploaded ? "File" : ""}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={chequeCopyHandle}
+                      disabled={disableFields?.chequeCopy}
                       fullWidth
-                      variant="outlined"
-                      style={{
-                        border: "1px solid #B4B4B8",
-                        color: "#686D76",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "flex-start",
-                        padding: "7px 12px",
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      <span
-                        style={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                          flexGrow: 1,
-                        }}
-                      >
-                        {fileName}
-                      </span>
-                      <CloudUploadIcon />
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={chequeCopyHandle}
-                        multiple
-                        disabled={disableFields?.chequeCopy}
-                      />
-                    </Button>
+                    />
                   </Grid>
                 </Grid>
               </Grid>

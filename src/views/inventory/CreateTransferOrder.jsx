@@ -8,15 +8,14 @@ import {
   FormControl,
   IconButton,
   InputLabel,
-  InputAdornment,
   MenuItem,
   Select,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
+import { Transition } from "../../component/common/index";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -26,11 +25,8 @@ import DownloadIcon from "@mui/icons-material/Download";
 import UploadIcon from "@mui/icons-material/Upload";
 import TransferBulkUploader from "../../assets/files/TransferBulkUploader.csv";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
 import { dateFormatterTwo } from "../../util/CommonUtil";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const CreateTransferOrder = ({
   open,
@@ -38,20 +34,25 @@ const CreateTransferOrder = ({
   fetchTransferOrderList,
   userDetails,
 }) => {
+  const {
+    transferType,
+    modeOfTransport,
+    fromSubInventory,
+    fetchFromLocator,
+    fromLocator,
+    fetchToLocator,
+    toLocator,
+    fetchLocatorBasedOExtension,
+    faToLocator,
+    toStore,
+    onHandsTransferOrderItems,
+  } = useCommon();
   const empID = localStorage.getItem("username");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [transferType, setTransferType] = useState([]);
-  const [fromSubInventory, setFromSubInventory] = useState([]);
-  const [fromLocator, setFromLocator] = useState([]);
-  const [toStore, setToStore] = useState([]);
-  const [toLocator, setToLocator] = useState([]);
-  const [faToLocator, setFaToLocator] = useState([]);
   const [withinStoreLocator, setWithinStoreLocator] = useState([]);
   const [enableToLocator, setEnableToLocator] = useState(false);
-  const [modeOfTransport, setModeOfTransport] = useState([]);
-  const [itemList, setItemList] = useState([]);
   const [file, setFile] = useState(null);
   const [parameters, setParameters] = useState({
     transfer_Date: dateFormatterTwo(new Date()),
@@ -81,113 +82,6 @@ const CreateTransferOrder = ({
   });
   const [serialInputDisabled, setSerialInputDisabled] = useState(true);
   const [disabledToSubInv, setDisabledToSubInv] = useState(true);
-
-  const fetchTransferType = async () => {
-    const res = await Route(
-      "GET",
-      "/Common/FetchTransferType",
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setTransferType(res?.data);
-    }
-  };
-  const fetchModeOfTransport = async () => {
-    const res = await Route(
-      "GET",
-      "/Common/fetchTransferMode",
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setModeOfTransport(res?.data);
-    }
-  };
-  const fetchFromSubInventory = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchSubInventory?userId=${empID}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setFromSubInventory(res?.data);
-    }
-  };
-  const fetchFromLocator = async (id) => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchLocator?userId=${empID}&subInventory=${id}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setFromLocator(res?.data);
-    }
-  };
-  const fetchToLocator = async (id) => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchLocator?userId=${empID}&subInventory=${id}`,
-      null,
-      null,
-      null
-    );
-    // console.log(res);
-    if (res?.status === 200) {
-      setToLocator(res?.data);
-    }
-  };
-  const fetchLocatorBasedOExtension = async (extension) => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchLocatorByExtension?extension=${extension}`,
-      null,
-      null,
-      null
-    );
-    // console.log(res);
-    if (res?.status === 200) {
-      setFaToLocator(res?.data);
-    }
-  };
-  const fetchToStore = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchToStore?StoreID=${userDetails?.storeId}&storeName=${userDetails?.region_NAME}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setToStore(res?.data);
-    }
-  };
-  const fetchAllItems = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchOnHandsTransferOrderItems?StoreName=${userDetails?.region_NAME}&SubInventoryID=${userDetails?.subInventory}&LocatorID=${userDetails?.locator}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setItemList(res?.data);
-    }
-  };
-
-  useEffect(() => {
-    fetchTransferType();
-    fetchModeOfTransport();
-    fetchFromSubInventory();
-    fetchToStore();
-    fetchAllItems();
-  }, []);
 
   const transferOrderDateHandle = (e) => {
     setParameters((prev) => ({
@@ -223,7 +117,6 @@ const CreateTransferOrder = ({
       : setEnableToLocator(true);
   };
   const fromLocatorHandle = (e) => {
-    console.log(e?.target?.value);
     setParameters((prev) => ({
       ...prev,
       transfer_From_Locator: e?.target?.value,
@@ -334,20 +227,20 @@ const CreateTransferOrder = ({
     }
   };
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "item_Number", headerName: "Item Number", flex: 2 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 400,
+      flex: 4,
     },
     {
       field: "item_Serial_Number",
       headerName: "Serial No",
-      width: 200,
+      flex: 2,
     },
-    { field: "uom", headerName: "UOM", width: 100 },
-    { field: "qty", headerName: "Quantity", width: 100 },
+    { field: "uom", headerName: "UOM", flex: 1 },
+    { field: "qty", headerName: "Quantity", flex: 1 },
   ];
   const fileDownloadHandle = () => {
     const fileUrl = TransferBulkUploader;
@@ -370,7 +263,6 @@ const CreateTransferOrder = ({
       null,
       "multipart/form-data"
     );
-    // console.log(res);
     if (res?.status === 200) {
       setParameters((prev) => ({
         ...prev,
@@ -772,7 +664,7 @@ const CreateTransferOrder = ({
               <Grid item xs={3} paddingRight={1}>
                 <Autocomplete
                   disablePortal
-                  options={itemList?.map((item, index) => ({
+                  options={onHandsTransferOrderItems?.map((item) => ({
                     label: item?.item_Description,
                     value: item?.item_Description,
                     item_Number: item?.item,

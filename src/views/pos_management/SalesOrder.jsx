@@ -10,7 +10,6 @@ import {
   DialogContentText,
   DialogTitle,
   DialogActions,
-  Paper,
   Grid,
   TextField,
   MenuItem,
@@ -26,10 +25,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import CheckIcon from "@mui/icons-material/Check";
 import AddLineItem from "./AddLineItem";
 import EditLineItem from "./EditLineItem";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
   Notification,
   LoaderDialog,
@@ -44,8 +41,16 @@ import { Transition } from "../../component/common/index";
 import Route from "../../routes/Route";
 import dayjs from "dayjs";
 import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
+import { useCommon } from "../../contexts/CommonContext";
 
 const SalesOrder = () => {
+  const {
+    salesType,
+    productsType,
+    paymentType,
+    fetchBankBasedOnPaymentType,
+    banks,
+  } = useCommon();
   const user = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const access_token = localStorage.getItem("access_token");
@@ -57,8 +62,6 @@ const SalesOrder = () => {
   const [edit, setEdit] = useState(false);
   const [editLineItemIndex, setEditLineItemIndex] = useState(null);
   const [editDetails, setEditDetails] = useState({});
-  const [salesType, setSalesType] = useState([]);
-  const [productsType, setProductsType] = useState([]);
   const [customersList, setCustomersList] = useState([]);
   const [salesOrderDetails, setSalesOrderDetails] = useState({
     pos_no: "",
@@ -85,7 +88,6 @@ const SalesOrder = () => {
     tdsAmount: 0,
     netAmount: 0,
   });
-  const [paymentType, setPaymentType] = useState([]);
   const [paymentLines, setPaymentLines] = useState([]);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
     paymentAmount: "",
@@ -104,27 +106,8 @@ const SalesOrder = () => {
   const [lineItems, setLineItems] = useState([]);
   const [itemsNotFound, setItemsNotFound] = useState([]);
   const [openItemsNotFoundDialog, setOpenItemsNotFoundDialog] = useState(false);
-  const [fileName, setFileName] = useState("Upload File");
-  const [banks, setbanks] = useState([]);
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [responseData, setResponseData] = useState({});
-  const fetchSalesType = async () => {
-    const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
-    if (res?.status === 200) {
-      setSalesType(res?.data);
-    }
-  };
-  const fetchProductsType = async () => {
-    const res = await Route("GET", "/Common/FetchProductType", null, null, 1);
-    if (res?.status === 200) {
-      setProductsType(res?.data);
-    }
-  };
-  const fetchPaymentType = async () => {
-    const res = await Route("GET", "/Common/PaymentType", null, null, null);
-    if (res?.status === 200) {
-      setPaymentType(res?.data);
-    }
-  };
   const fetchCustomersList = async () => {
     const res = await Route(
       "GET",
@@ -156,18 +139,6 @@ const SalesOrder = () => {
       }));
     }
   };
-  const fetchBankBasedOnPaymentType = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchBankDetails?userId=${user}&paymentType=${paymentLinesItem?.paymentType}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setbanks(res?.data);
-    }
-  };
   const fetchProductDetailsBasedOnItemList = async (file) => {
     setIsLoading(true);
     try {
@@ -177,7 +148,7 @@ const SalesOrder = () => {
       const res = await Route(
         "POST",
         `/SalesOrder/Product_Details`,
-        null,
+        access_token,
         data,
         null,
         "multipart/form-data"
@@ -216,7 +187,7 @@ const SalesOrder = () => {
           }
         });
         setLineItems(foundItems);
-        if (notFoundItems.length > 0) {
+        if (notFoundItems?.length > 0) {
           setItemsNotFound(notFoundItems);
           setOpenItemsNotFoundDialog(true);
         }
@@ -230,16 +201,11 @@ const SalesOrder = () => {
     }
   };
   useEffect(() => {
-    fetchSalesType();
-    fetchProductsType();
-    fetchPaymentType();
-  }, []);
-  useEffect(() => {
     salesOrderDetails?.salesType !== "" && fetchCustomersList();
   }, [salesOrderDetails?.salesType, user]);
   useEffect(() => {
-    fetchBankBasedOnPaymentType();
-  }, [paymentLinesItem?.paymentType, user]);
+    fetchBankBasedOnPaymentType(paymentLinesItem?.paymentType);
+  }, [paymentLinesItem?.paymentType]);
   useEffect(() => {
     setPaymentLinesItem((prev) => ({
       ...prev,
@@ -337,7 +303,7 @@ const SalesOrder = () => {
     }));
   };
   const chequeCopyHandle = (e) => {
-    setFileName(e?.target?.files[0]?.name);
+    setIsFileUploaded(true);
     setPaymentLinesItem((prev) => ({
       ...prev,
       chequeCopy: e?.target?.files[0],
@@ -438,7 +404,6 @@ const SalesOrder = () => {
         "multipart/form-data"
       );
       if (res?.status === 201) {
-        console.log(res?.data);
         setResponseData(res?.data);
         setSeverity("success");
         setNotificationMsg("Successfully Created");
@@ -459,7 +424,6 @@ const SalesOrder = () => {
           advanceAmt: 0,
           adjType: "",
         }));
-        setPaymentType([]);
         setPaymentLines([]);
         setPaymentLinesItem((prev) => ({
           ...prev,
@@ -895,24 +859,14 @@ const SalesOrder = () => {
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
-                      <Grid item sx={3} display="flex">
-                        <Button
-                          component="label"
-                          role={undefined}
-                          tabIndex={-1}
-                          endIcon={<CloudUploadIcon />}
-                          fullWidth
-                          variant="outlined"
-                          style={{
-                            border: "1px solid #B4B4B8",
-                            color: "#686D76",
-                          }}
-                        >
-                          {fileName}
-                          <VisuallyHiddentInputComponent
-                            onChange={chequeCopyHandle}
-                          />
-                        </Button>
+                      <Grid item sx={3}>
+                        <TextField
+                          type="file"
+                          size="small"
+                          label={isFileUploaded ? "File" : ""}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={chequeCopyHandle}
+                        />
                       </Grid>
                     </>
                   )}
@@ -969,7 +923,6 @@ const SalesOrder = () => {
           open={openDialog}
           setOpen={setOpenDialog}
           storeName={salesOrderDetails?.storeName}
-          user={user}
           salesType={salesOrderDetails?.salesType}
           setLineItems={setLineItems}
           userDetails={userDetails}
@@ -1015,10 +968,9 @@ const SalesOrder = () => {
             <DialogTitle>{notificationMsg}</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-slide-description">
-                <Alert
-                  severity="success"
-                >
-                  The Sales Order Created Successfully with application no: {responseData?.applicationNo}.
+                <Alert severity="success">
+                  The Sales Order Created Successfully with application no:{" "}
+                  {responseData?.applicationNo}.
                 </Alert>
               </DialogContentText>
             </DialogContent>
