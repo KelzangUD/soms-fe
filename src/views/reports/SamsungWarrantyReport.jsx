@@ -9,8 +9,6 @@ import {
   InputLabel,
   Select,
 } from "@mui/material";
-import PrintIcon from "@mui/icons-material/Print";
-import { RenderStatus } from "../../ui/index";
 import FindReplaceIcon from "@mui/icons-material/FindReplace";
 import BuildIcon from "@mui/icons-material/Build";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
@@ -19,51 +17,52 @@ import { exportToExcel } from "react-json-to-excel";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
+import { useCommon } from "../../contexts/CommonContext";
 
 const SamsungWarrantyReport = () => {
+  const { regionsOrExtensions } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
   const [regionOrExtension, setRegionOrExtension] = useState(
-    userDetails?.storeId
+    userDetails?.regionName
   );
-  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [reports, setReports] = useState([]);
   const samsung_warranty_columns = [
-    { field: "sl", headerName: "Sl. No", width: 20 },
-    { field: "pos_no", headerName: "POS No", width: 140 },
-    { field: "posting_date", headerName: "Posting Date", width: 90 },
+    { field: "sl", headerName: "Sl. No", flex: 0.3 },
+    { field: "pos_no", headerName: "POS No", flex: 1.4 },
+    { field: "posting_date", headerName: "Posting Date", flex: 0.9 },
     {
       field: "customer_name",
       headerName: "Customer Name",
-      width: 150,
+      flex: 1.5,
     },
-    { field: "store_name", headerName: "Store Name", width: 170 },
-    { field: "mobile_number", headerName: "Mobile Number", width: 100 },
+    { field: "store_name", headerName: "Store Name", flex: 1.7 },
+    { field: "mobile_number", headerName: "Mobile Number", flex: 1 },
     {
       field: "region_name",
       headerName: "Region Name",
-      width: 90,
+      flex: 0.9,
     },
     {
       field: "bank_account_number",
       headerName: "Bank Account",
-      width: 100,
+      flex: 1,
     },
-    { field: "payment_type", headerName: "Payment Type", width: 90 },
-    { field: "cheque_number", headerName: "Cheque Number", width: 100 },
-    { field: "cheque_date", headerName: "Cheque Date", width: 90 },
-    { field: "payment_amount", headerName: "Payment Amount", width: 120 },
-    { field: "serial_number", headerName: "Serial Number", width: 130 },
-    { field: "created_by", headerName: "Created User", width: 100 },
-    { field: "warranty", headerName: "Warranty", width: 80 },
-    { field: "battery_warranty", headerName: "Battery Warranty", width: 120 },
+    { field: "payment_type", headerName: "Payment Type", flex: 0.9 },
+    { field: "cheque_number", headerName: "Cheque Number", flex: 1 },
+    { field: "cheque_date", headerName: "Cheque Date", flex: 0.9 },
+    { field: "payment_amount", headerName: "Payment Amount", flex: 1.2 },
+    { field: "serial_number", headerName: "Serial Number", flex: 1.3 },
+    { field: "created_by", headerName: "Created User", flex: 1 },
+    { field: "warranty", headerName: "Warranty", flex: 0.8 },
+    { field: "battery_warranty", headerName: "Battery Warranty", flex: 1.2 },
     {
       field: "replace",
       headerName: "Replace",
-      width: 60,
+      flex: 0.6,
       renderCell: (params) => (
         <>
           <IconButton aria-label="view" color="primary">
@@ -85,18 +84,6 @@ const SamsungWarrantyReport = () => {
       ),
     },
   ];
-  const fetchRegionsOrExtensions = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchAllRegionOrExtension`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRegionsOrExtensions(res?.data);
-    }
-  };
   const fetchSamsungWarrantyReport = async () => {
     const res = await Route(
       "GET",
@@ -150,11 +137,9 @@ const SamsungWarrantyReport = () => {
     }
   };
   useEffect(() => {
-    fetchRegionsOrExtensions();
     fetchSamsungWarrantyReport();
   }, []);
   const regionOrExtensionHandle = (e) => {
-    console.log(e?.target?.value);
     setRegionOrExtension(e?.target?.value);
   };
   const exportJsonToPdfHandle = () => {

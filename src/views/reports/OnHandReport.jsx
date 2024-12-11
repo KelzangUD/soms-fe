@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Autocomplete,
   Box,
@@ -10,11 +10,15 @@ import {
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import { CustomDataTable } from "../../component/common/index";
+import { CustomDataTable, PrintSection } from "../../component/common/index";
 import { on_hand_report_columns } from "../../data/static";
 import Route from "../../routes/Route";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 import { useCommon } from "../../contexts/CommonContext";
+import { exportToExcel } from "react-json-to-excel";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useReactToPrint } from "react-to-print";
 
 const OnHandReport = () => {
   const {
@@ -25,6 +29,9 @@ const OnHandReport = () => {
   } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
+  const [printData, setPrintData] = useState([]);
   const [details, setDetails] = useState({
     storeName: userDetails?.regionName,
     item: "ALL",
@@ -44,6 +51,21 @@ const OnHandReport = () => {
     if (res?.status === 200) {
       setOnHandReports(res?.data);
     }
+    setPrintData(
+      res?.data?.map((item, index) => ({
+        sl: index + 1,
+        "Item": item?.item,
+        "Locator ID": item?.locator_id,
+        "Item Description": item?.item_Description,
+        "UOM": item?.uom,
+        "Serial Controlled": item?.serial_controlled,
+        "Transaction Quantity": parseInt(item?.transaction_Quantity),
+        "Serial Number": item?.serial_Number,
+        "Sub-inventory ID": item?.sub_inventory_id,
+        "Store Name": item?.store_name,
+        "Imei Number": item?.imei_number
+      }))
+    );
   };
   useEffect(() => {
     fetchOnHandReports();
@@ -81,6 +103,48 @@ const OnHandReport = () => {
       ...prev,
       imei_no: e?.target?.value,
     }));
+  };
+  const exportJsonToPdfHandle = () => {
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [
+        [
+          "sl",
+          "Item",
+          "Locator ID",
+          "Item Description",
+          "UOM",
+          "Serial Controlled",
+          "Transaction Quantity",
+          "Serial Number",
+          "Sub-inventory ID",
+          "Store Name",
+          "Imei Number"
+        ],
+      ],
+      body: printData?.map((item) => [
+        item?.sl,
+        item?.["Item"],
+        item?.["Locator ID"],
+        item?.["Item Description"],
+        item?.["UOM"],
+        item?.["Serial Controlled"],
+        item?.["Transaction Quantity"],
+        item?.["Serial Number"],
+        item?.["Sub-inventory ID"],
+        item?.["Store Name"],
+        item?.["Imei Number"],
+      ]),
+      styles: {
+        fontSize: 8,
+      },
+      margin: { top: 35 },
+      didDrawPage: (data) => {
+        doc.setFontSize(12);
+        doc.text("On-Hand Report", data.settings.margin.left, 30);
+      },
+    });
+    doc.save("OnHand_Report");
   };
 
   return (
@@ -199,17 +263,15 @@ const OnHandReport = () => {
                   container
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <IconButton aria-label="pdf" color="error">
-                    <PictureAsPdfIcon />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="success">
-                    <FileDownloadIcon />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="primary">
-                    <PrintIcon />
-                  </IconButton>
+                  <PrintSection
+                    exportExcel={() =>
+                      exportToExcel(printData, "OnHand_Report")
+                    }
+                    exportPdf={exportJsonToPdfHandle}
+                    handlePrint={reactToPrintFn}
+                  />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} ref={contentRef}>
                   <CustomDataTable
                     rows={onHandReports?.map((item, index) => ({
                       sl: index + 1,
