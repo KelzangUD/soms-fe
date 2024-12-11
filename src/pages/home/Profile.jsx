@@ -14,7 +14,7 @@ const Profile = () => {
     toStoreName: null,
     toStoreId: null,
     customer_NAME: null,
-    region_NAME: "",
+    regionName: "",
     city: null,
     country: null,
     person_FIRST_NAME: null,
@@ -46,7 +46,7 @@ const Profile = () => {
         subInventory: res?.data?.subInventory,
         locator: res?.data?.locator,
         storeId: res?.data?.storeId,
-        region_NAME: res?.data?.region_NAME,
+        regionName: res?.data?.regionName,
       }));
     }
   };
@@ -95,7 +95,7 @@ const Profile = () => {
                     gutterBottom
                     sx={{ color: "#758694" }}
                   >
-                    {userDetails?.region_NAME}, {userDetails?.region}
+                    {userDetails?.regionName}, {userDetails?.region}
                   </Typography>
                 </Grid>
               </Grid>

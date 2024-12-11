@@ -59,7 +59,7 @@ const CreateTransferOrder = ({
     transfer_Type: "",
     transfer_From: userDetails?.storeId,
     transfer_From_SubInventory: "",
-    region_NAME: userDetails?.region_NAME,
+    region_NAME: userDetails?.regionName,
     transfer_From_Locator: "",
     selectedStore: "",
     transfer_To: "",
@@ -424,7 +424,7 @@ const CreateTransferOrder = ({
                   required
                   disabled
                   fullWidth
-                  value={userDetails?.region_NAME}
+                  value={userDetails?.regionName}
                   size="small"
                 />
               </Grid>
