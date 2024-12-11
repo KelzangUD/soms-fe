@@ -48,6 +48,7 @@ const CreateTransferOrder = ({
     onHandsTransferOrderItems,
   } = useCommon();
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -258,7 +259,7 @@ const CreateTransferOrder = ({
     const res = await Route(
       "POST",
       `/transferOrder/getBulkTransferItems`,
-      null,
+      access_token,
       formData,
       null,
       "multipart/form-data"
@@ -301,7 +302,7 @@ const CreateTransferOrder = ({
     const res = await Route(
       "POST",
       `/transferOrder/createTransferOrder`,
-      null,
+      access_token,
       formData,
       null,
       "multipart/form-data"

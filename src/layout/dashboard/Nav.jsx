@@ -146,7 +146,7 @@ const Nav = () => {
         sx={{
           boxShadow: "none",
           paddingY: "21px",
-          marginBottom: 4
+          marginBottom: 4,
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>

@@ -1,58 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Box, Paper, Grid, Avatar, Typography, Divider } from "@mui/material";
-import Route from "../../routes/Route";
+import CakeIcon from "@mui/icons-material/Cake";
+import WcIcon from "@mui/icons-material/Wc";
+import WorkIcon from "@mui/icons-material/Work";
+import BorderInnerIcon from "@mui/icons-material/BorderInner";
+import LaptopIcon from "@mui/icons-material/Laptop";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import BadgeIcon from "@mui/icons-material/Badge";
+import GradingIcon from "@mui/icons-material/Grading";
+import MailIcon from "@mui/icons-material/Mail";
 
 const Profile = () => {
   const empID = localStorage.getItem("username");
-  const [userDetails, setUserDetails] = useState({
-    userName: "",
-    roleName: "",
-    region: "",
-    subInventory: "",
-    locator: "",
-    storeId: null,
-    toStoreName: null,
-    toStoreId: null,
-    customer_NAME: null,
-    regionName: "",
-    city: null,
-    country: null,
-    person_FIRST_NAME: null,
-    person_LAST_NAME: null,
-    store_LOCATION: null,
-    customerId: null,
-    customer_NUMBER: null,
-    customer_TYPE: null,
-    address1: null,
-    address2: null,
-    address3: null,
-    address4: null,
-    mobile_NUMBER: null,
-  });
-  const fetchUserDetails = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/fetchUserDtls?userId=${empID}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setUserDetails((prev) => ({
-        ...prev,
-        userName: res?.data?.userName,
-        roleName: res?.data?.roleName,
-        region: res?.data?.region,
-        subInventory: res?.data?.subInventory,
-        locator: res?.data?.locator,
-        storeId: res?.data?.storeId,
-        regionName: res?.data?.regionName,
-      }));
-    }
-  };
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 
   return (
     <>
@@ -86,21 +46,21 @@ const Profile = () => {
                   <Typography
                     variant="subtitle1"
                     gutterBottom
-                    sx={{ color: "#758694" }}
+                    sx={{ color: "#424242" }}
                   >
                     {empID}
                   </Typography>
                   <Typography
                     variant="subtitle1"
                     gutterBottom
-                    sx={{ color: "#758694" }}
+                    sx={{ color: "#424242" }}
                   >
                     {userDetails?.regionName}, {userDetails?.region}
                   </Typography>
                 </Grid>
               </Grid>
               <Divider />
-              <Grid sx={{ my: 4 }}>
+              <Grid sx={{ my: 2 }}>
                 <Typography
                   variant="subtitle1"
                   gutterBottom
@@ -109,22 +69,24 @@ const Profile = () => {
                   Personal Information
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid item xs={3}>
+                  <Grid item xs={3} display="flex">
+                    <CakeIcon />
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      sx={{ color: "#758694" }}
+                      sx={{ color: "#424242", ml: 2 }}
                     >
-                      Birthday: 2-Aug-1994
+                      Birthday: {userDetails?.dob}
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={3} display="flex">
+                    <WcIcon />
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      sx={{ color: "#758694" }}
+                      sx={{ color: "#424242", ml: 2 }}
                     >
-                      Gender: Male
+                      Gender: {userDetails?.gender}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -139,36 +101,39 @@ const Profile = () => {
                   Professional Information
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid item xs={4}>
+                  <Grid item xs={4} display="flex">
+                    <WorkIcon />
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      sx={{ color: "#758694" }}
+                      sx={{ color: "#424242", ml: 2 }}
                     >
                       Role: {userDetails?.roleName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={4} display="flex">
+                    <BorderInnerIcon />
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      sx={{ color: "#758694" }}
+                      sx={{ color: "#424242", ml: 2 }}
                     >
-                      Section: SAS
+                      Section: {userDetails?.section}
                     </Typography>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={4} display="flex">
+                    <BadgeIcon />
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      sx={{ color: "#758694" }}
+                      sx={{ color: "#424242", ml: 2 }}
                     >
-                      Designation: Software Developer
+                      Designation: {userDetails?.designation}
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item xs={4}>
+                  {/* <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -176,43 +141,47 @@ const Profile = () => {
                     >
                       Manager: Dechen Dorji
                     </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
+                  </Grid> */}
+                  <Grid item xs={4} display="flex">
+                    <CalendarMonthIcon />
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      sx={{ color: "#758694" }}
+                      sx={{ color: "#424242", ml: 2 }}
                     >
-                      DOJ: 2-Aug-2021
+                      DOJ: {userDetails?.doj}
                     </Typography>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={4} display="flex">
+                    <LaptopIcon />
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      sx={{ color: "#758694" }}
+                      sx={{ color: "#424242", ml: 2 }}
                     >
-                      Employment: Regular
+                      Employment: {userDetails?.empType}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4} display="flex">
+                    <GradingIcon />
+                    <Typography
+                      variant="subtitle1"
+                      gutterBottom
+                      sx={{ color: "#424242", ml: 2 }}
+                    >
+                      Grade: {userDetails?.grade}
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item xs={4}>
+                  <Grid item xs={6} display="flex">
+                    <MailIcon />
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      sx={{ color: "#758694" }}
+                      sx={{ color: "#424242", ml: 2 }}
                     >
-                      Grade: P.12
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      sx={{ color: "#758694" }}
-                    >
-                      Email: sw_engineer8.mis@tashicell.com
+                      Email: {userDetails?.email}
                     </Typography>
                   </Grid>
                 </Grid>

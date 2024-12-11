@@ -21,6 +21,7 @@ const UpdateTransferOrderInward = ({
   transferOrderDetails,
 }) => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -128,7 +129,7 @@ const UpdateTransferOrderInward = ({
     },
     {
       field: "description",
-      headerName: "Description",
+      headerName: "Remarks",
       flex: 1.5,
       renderCell: (params) => (
         <>
@@ -150,11 +151,11 @@ const UpdateTransferOrderInward = ({
     const res = await Route(
       "PUT",
       `/transferOrder/updateInwardTransferItemDetails`,
-      null,
+      access_token,
       parameters,
       null
     );
-    if (res?.status === 200 && res?.data?.success === true) {
+    if (res?.status === 200) {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
       setShowNofication(true);

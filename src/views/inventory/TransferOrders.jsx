@@ -73,6 +73,7 @@ const TransferOrders = () => {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
       setShowNofication(true);
+      fetchTransferOrderList();
     } else {
       setSeverity("error");
       setNotificationMsg(res?.data?.responseText);
