@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { Notification } from "../../ui/index";
-import { Transition } from "../../component/common";
+import { Transition, CustomDataTable } from "../../component/common";
 import Route from "../../routes/Route";
 
 const ApproveRequisition = ({
@@ -39,23 +39,23 @@ const ApproveRequisition = ({
     );
   }, [details]);
   const requisiton_item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "item_Number", headerName: "Item Number", flex: 2 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      flex: 5,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
+    { field: "uom", headerName: "UOM", flex: 1.5 },
     {
       field: "qty",
       headerName: "Actual Quantity",
-      width: 150,
+      flex: 1.5,
     },
     {
       field: "approve_quantity",
       headerName: "Approve Quantity",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <TextField
@@ -75,7 +75,7 @@ const ApproveRequisition = ({
     {
       field: "received_Remark",
       headerName: "Remarks",
-      width: 500,
+      flex: 5,
       renderCell: (params) => (
         <>
           <TextField
@@ -101,7 +101,6 @@ const ApproveRequisition = ({
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
       setShowNofication(true);
-      fetchRequisitionListByApprover();
     } else {
       setNotificationMsg(res?.data?.message);
       setSeverity("error");
@@ -127,7 +126,7 @@ const ApproveRequisition = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
+                  backgroundColor: (theme) => theme?.palette?.bg?.light,
                 }}
               >
                 <Grid item>
@@ -176,28 +175,13 @@ const ApproveRequisition = ({
               </Grid>
             </Grid>
             <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
-                }}
-              >
-                <DataGrid
-                  rows={itemDTOlist?.map((row, index) => ({
-                    ...row,
-                    sl: index + 1,
-                  }))}
-                  columns={requisiton_item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                  sx={{ mx: 2 }}
-                />
-              </div>
+              <CustomDataTable
+                rows={itemDTOlist?.map((row, index) => ({
+                  ...row,
+                  sl: index + 1,
+                }))}
+                cols={requisiton_item_columns}
+              />
             </Grid>
             <Grid
               item
@@ -225,7 +209,7 @@ const ApproveRequisition = ({
         <Notification
           open={showNotification}
           setOpen={() => {
-            setShowNofication(false);
+            fetchRequisitionListByApprover();
             setOpen(false);
           }}
           message={notificationMsg}

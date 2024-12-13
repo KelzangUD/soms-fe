@@ -4,17 +4,12 @@ import {
   Grid,
   Button,
   Dialog,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
+import { Transition, CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const UpdateRequisition = ({
   open,
@@ -23,6 +18,7 @@ const UpdateRequisition = ({
   fetchRequisitionListByApprover,
 }) => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -78,27 +74,24 @@ const UpdateRequisition = ({
       ),
     }));
   };
-  useEffect(() => {
-    console.log(details);
-  }, []);
   const requisiton_item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "item_Number", headerName: "Item Number", flex: 2 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 350,
+      flex: 3.5,
     },
-    { field: "uom", headerName: "UOM", width: 90 },
+    { field: "uom", headerName: "UOM", flex: 0.9 },
     {
       field: "qty",
       headerName: "Actual Quantity",
-      width: 110,
+      flex: 1.1,
     },
     {
       field: "approve_quantity",
       headerName: "Approve Quantity",
-      width: 130,
+      flex: 1.3,
       renderCell: (params) => (
         <>
           <TextField
@@ -118,7 +111,7 @@ const UpdateRequisition = ({
     {
       field: "received_Remark",
       headerName: "Remarks",
-      width: 500,
+      flex: 5,
       renderCell: (params) => (
         <>
           <TextField
@@ -141,7 +134,7 @@ const UpdateRequisition = ({
     const res = await Route(
       "PUT",
       `/requisition/updateRequisitionItemDetails`,
-      null,
+      access_token,
       updateRequisitionItems,
       null
     );
@@ -189,8 +182,7 @@ const UpdateRequisition = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EEEDEB",
-                  backgroundColor: "rgb(25, 118, 210)",
+                  backgroundColor: (theme) => theme?.palette.bg?.light,
                   color: "#fff",
                 }}
               >
@@ -236,28 +228,13 @@ const UpdateRequisition = ({
               </Grid>
             </Grid>
             <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
-                }}
-              >
-                <DataGrid
-                  rows={itemDTOlist?.map((row, index) => ({
-                    ...row,
-                    sl: index + 1,
-                  }))}
-                  columns={requisiton_item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                  sx={{ marginX: 2 }}
-                />
-              </div>
+              <CustomDataTable
+                rows={itemDTOlist?.map((row, index) => ({
+                  ...row,
+                  sl: index + 1,
+                }))}
+                cols={requisiton_item_columns}
+              />
             </Grid>
             <Grid
               item
