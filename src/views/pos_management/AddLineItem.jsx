@@ -283,7 +283,7 @@ const AddLineItem = ({
                 sx={{
                   alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#000",
+                  color: "#fff",
                 }}
               >
                 <Typography variant="subtitle1">Add Line Item</Typography>

@@ -294,7 +294,7 @@ const EditLineItem = ({
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#000",
+                  color: "#fff",
                 }}
               >
                 <Grid item>

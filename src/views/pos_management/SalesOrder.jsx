@@ -530,7 +530,7 @@ const SalesOrder = () => {
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle1" color="#fff">
                     Header
                   </Typography>
                 </Grid>
@@ -706,7 +706,7 @@ const SalesOrder = () => {
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1" color="#000">
+                  <Typography variant="subtitle1" color="#fff">
                     Line
                   </Typography>
                 </Grid>
@@ -730,11 +730,15 @@ const SalesOrder = () => {
                       aria-label="download"
                       onClick={() => downloadSampleHandle("BulkUploader")}
                     >
-                      <FileDownloadIcon />
+                      <FileDownloadIcon sx={{
+                        color: "#fff"
+                      }} />
                     </IconButton>
                   )}
                   <IconButton aria-label="add-line" onClick={addButtonHandle}>
-                    <AddBoxIcon />
+                    <AddBoxIcon sx={{
+                      color: "#fff"
+                    }} />
                   </IconButton>
                 </Grid>
               </Grid>
@@ -758,7 +762,7 @@ const SalesOrder = () => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#000"
+                  color: "#fff"
                 }}
               >
                 <Grid item>

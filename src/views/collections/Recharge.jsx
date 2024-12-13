@@ -269,7 +269,7 @@ const Recharge = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                 }}
               >
                 <Grid item>
@@ -334,7 +334,7 @@ const Recharge = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                 }}
               >
                 <Grid item>
@@ -500,39 +500,37 @@ const Recharge = () => {
         />
       )}
       {showNotification && (
-        <React.Fragment>
-          <Dialog
-            open={showNotification}
-            TransitionComponent={Transition}
-            keepMounted
-            fullWidth
-            size="sm"
-            aria-describedby="alert-dialog-slide-description"
-            onClose={(event, reason) => {
-              if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
-                setShowNofication(false);
-              }
-            }}
-          >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                <DialogTitle>{notificationMsg}</DialogTitle>
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={openInNewTab} variant="contained">
-                View Receipt
-              </Button>
-              <Button
-                onClick={() => setShowNofication(false)}
-                variant="outlined"
-                color="error"
-              >
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </React.Fragment>
+        <Dialog
+          open={showNotification}
+          TransitionComponent={Transition}
+          keepMounted
+          fullWidth
+          size="sm"
+          aria-describedby="alert-dialog-slide-description"
+          onClose={(event, reason) => {
+            if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
+              setShowNofication(false);
+            }
+          }}
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              <DialogTitle>{notificationMsg}</DialogTitle>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={openInNewTab} variant="contained">
+              View Receipt
+            </Button>
+            <Button
+              onClick={() => setShowNofication(false)}
+              variant="outlined"
+              color="error"
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </>
   );

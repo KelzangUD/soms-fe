@@ -330,7 +330,7 @@ const PaymentReceipt = () => {
                   <Grid
                     padding={2}
                     sx={{
-                      background: "#1976d2",
+                      background: (theme) => theme.palette.bg.light,
                     }}
                   >
                     <Typography variant="subtitle1" color="#eee">
@@ -400,7 +400,7 @@ const PaymentReceipt = () => {
                     container
                     padding={2}
                     sx={{
-                      background: "#1976d2",
+                      background: (theme) => theme.palette.bg.light,
                     }}
                   >
                     <Typography variant="subtitle1" color="#eee">
@@ -540,7 +540,7 @@ const PaymentReceipt = () => {
                       container
                       padding={2}
                       sx={{
-                        background: "#1976d2",
+                        background: (theme) => theme.palette.bg.light,
                       }}
                     >
                       <Typography variant="subtitle1" color="#eee">

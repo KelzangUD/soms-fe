@@ -149,7 +149,7 @@ const Nav = () => {
           paddingY: "21px",
           marginBottom: 4,
           background: (theme) => theme.palette.bg.light,
-          color: "#000"
+          color: "#fff"
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>

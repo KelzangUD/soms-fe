@@ -406,8 +406,8 @@ const UpdateTransferOrder = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#2196f3",
-                  color: "#fff",
+                  backgroundColor: (theme) => theme.palette.bg.light,
+                  color: "#eee",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -588,8 +588,8 @@ const UpdateTransferOrder = ({
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  backgroundColor: "#2196f3",
-                  color: "#fff",
+                  backgroundColor: (theme) => theme.palette.bg.light,
+                  color: "#eee",
                 }}
               >
                 <Grid item paddingX={2}>

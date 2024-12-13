@@ -31,6 +31,9 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
     { field: "uom", headerName: "UOM", flex: 1 },
     { field: "qty", headerName: "Quantity", flex: 1 },
   ];
+  React.useEffect(() => {
+    console.log(transferOrderDetails);
+  }, []);
   return (
     <>
       <Dialog
@@ -50,7 +53,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                   color: "#fff",
                 }}
               >
@@ -63,8 +66,8 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
             </Grid>
           </Grid>
           <Grid item container xs={12} paddingX={4}>
-            <Grid item container xs={12} paddingTop={2}>
-              <Grid item xs={3} paddingRight={1}>
+            <Grid item container xs={12} paddingTop={2} spacing={1}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Transfer Order No"
@@ -76,7 +79,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   size="small"
                 />
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
                 <FormControl fullWidth>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -92,7 +95,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   </LocalizationProvider>
                 </FormControl>
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Transfer Type"
@@ -104,21 +107,92 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   size="small"
                 />
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="From Store"
+                  variant="outlined"
+                  required
+                  disabled
+                  fullWidth
+                  value={transferOrderDetails?.transfer_From_Name}
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+            <Grid item container xs={12} mt={1} spacing={1}>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="From Sub-Inventory"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_From_SubInventory}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="From Locator"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_From_Locator}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="To Store"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_To_Name}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="To Sub-inventry"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_To_SubInventory}
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+            <Grid item container xs={12} mt={1} spacing={1}>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="To Locator"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_To_Locator}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Mode Of Transport"
                   variant="outlined"
                   required
-                  disabled
                   fullWidth
+                  disabled
                   value={transferOrderDetails?.transfer_Mode}
                   size="small"
                 />
               </Grid>
-            </Grid>
-            <Grid item container xs={12} paddingY={2}>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Vehicle No."

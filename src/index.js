@@ -15,8 +15,40 @@ const theme = createTheme({
   },
   palette: {
     bg: {
-      light: "#bbdefb"
-    }
+      light: "#0277bd",
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {},
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          "&.Mui-disabled": {
+            backgroundColor: "#f9f9f9",
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "#263238",
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#263238",
+          },
+        },
+      },
+    },
   },
 });
 

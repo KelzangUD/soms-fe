@@ -370,7 +370,7 @@ const SalesReturn = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                 }}
               >
                 <Grid item>
@@ -534,13 +534,12 @@ const SalesReturn = () => {
             <Card>
               <Grid
                 container
-                paddingX={2}
-                paddingY={2}
+                padding={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                 }}
               >
                 <Grid item>
@@ -700,13 +699,12 @@ const SalesReturn = () => {
             <Card>
               <Grid
                 container
-                paddingX={2}
-                paddingY={2}
+                padding={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                 }}
               >
                 <Grid item>
@@ -810,7 +808,7 @@ const SalesReturn = () => {
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
                     <Grid item sx={2} display="flex">
-                      <TextField 
+                      <TextField
                         type="file"
                         size="small"
                         label={isFileUploaded ? "File" : ""}

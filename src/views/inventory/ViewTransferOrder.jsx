@@ -50,7 +50,7 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                   color: "#eee",
                 }}
               >

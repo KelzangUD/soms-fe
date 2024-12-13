@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -47,10 +47,6 @@ const CreateTransferOrder = ({
     toStore,
     onHandsTransferOrderItems,
   } = useCommon();
-  useEffect(() => {
-    console.log(onHandsTransferOrderItems?.length)
-    
-  },[])
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
@@ -361,9 +357,8 @@ const CreateTransferOrder = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                   color: "#eee",
-                  paddingY: "14px",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -632,7 +627,7 @@ const CreateTransferOrder = ({
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                   color: "#eee",
                 }}
               >
@@ -741,30 +736,33 @@ const CreateTransferOrder = ({
               </Grid>
             </Grid>
             <Grid item container alignItems="center" xs={12} paddingY={2}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
+              <DataGrid
+                rows={parameters?.transferOrderItemDTOList?.map(
+                  (row, index) => ({
+                    ...row,
+                    sl: index + 1,
+                    id: index,
+                  })
+                )}
+                columns={item_columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 5 },
+                  },
                 }}
-              >
-                <DataGrid
-                  rows={parameters?.transferOrderItemDTOList?.map(
-                    (row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                      id: index,
-                    })
-                  )}
-                  columns={item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
+                pageSizeOptions={[5, 10]}
+                sx={{
+                  background: "#fff",
+                  "--DataGrid-overlayHeight": "300px",
+                  "& .MuiDataGrid-columnHeaders": {
+                    backgroundColor: "#F5F7F8",
+                  },
+                  "& .MuiDataGrid-row": {
+                    padding: "4px 0",
+                  },
+                }}
+                getRowHeight={() => "auto"}
+              />
             </Grid>
             <Grid
               item

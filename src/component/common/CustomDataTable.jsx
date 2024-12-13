@@ -43,6 +43,7 @@ const CustomDataTable = ({
   cols,
   checkboxSelection = false,
   onRowSelectionModelChange,
+  pageSize = 10
 }) => {
   return (
     <>
@@ -55,11 +56,11 @@ const CustomDataTable = ({
         onRowSelectionModelChange={onRowSelectionModelChange}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: pageSize },
           },
         }}
         // pageSizeOptions={[5, 10, 20, 50, { label: 'All', value: rows?.length }]}
-        pageSizeOptions={[5, 10, 20, 50, 100]}
+        pageSizeOptions={[10, 20, 50, 100]}
         sx={{
           background: "#fff",
           "--DataGrid-overlayHeight": "300px",

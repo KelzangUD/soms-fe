@@ -54,16 +54,16 @@ const OnHandReport = () => {
     setPrintData(
       res?.data?.map((item, index) => ({
         sl: index + 1,
-        "Item": item?.item,
+        Item: item?.item,
         "Locator ID": item?.locator_id,
         "Item Description": item?.item_Description,
-        "UOM": item?.uom,
+        UOM: item?.uom,
         "Serial Controlled": item?.serial_controlled,
         "Transaction Quantity": parseInt(item?.transaction_Quantity),
         "Serial Number": item?.serial_Number,
         "Sub-inventory ID": item?.sub_inventory_id,
         "Store Name": item?.store_name,
-        "Imei Number": item?.imei_number
+        "Imei Number": item?.imei_number,
       }))
     );
   };
@@ -119,7 +119,7 @@ const OnHandReport = () => {
           "Serial Number",
           "Sub-inventory ID",
           "Store Name",
-          "Imei Number"
+          "Imei Number",
         ],
       ],
       body: printData?.map((item) => [
@@ -189,6 +189,9 @@ const OnHandReport = () => {
                         />
                       )}
                       style={{ background: "#fff" }}
+                      disabled={
+                        userDetails?.roleName === "Administrator" ? false : true
+                      }
                     />
                   </Grid>
                   <Grid item xs={3}>

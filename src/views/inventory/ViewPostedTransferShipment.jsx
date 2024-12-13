@@ -12,7 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { CustomDataTable,Transition } from "../../component/common/index";
+import { CustomDataTable, Transition } from "../../component/common/index";
 
 const ViewPostedTransferShipment = ({
   open,
@@ -34,7 +34,7 @@ const ViewPostedTransferShipment = ({
     },
     { field: "uom", headerName: "UOM", flex: 0.7 },
     { field: "qty", headerName: "Quantity", flex: 0.8 },
-    { field: "received_Qty", headerName: "Received Qty", flex: 0.8 },
+    { field: "received_Qty", headerName: "Received Qty", flex: 1 },
     {
       field: "received_Remark",
       headerName: "Received Remarks",
@@ -60,9 +60,8 @@ const ViewPostedTransferShipment = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                   color: "#eee",
-                  paddingY: "20px",
                 }}
               >
                 <Grid item paddingX={2}>
@@ -74,8 +73,8 @@ const ViewPostedTransferShipment = ({
             </Grid>
           </Grid>
           <Grid item container xs={12} paddingX={4}>
-            <Grid item container xs={12} paddingTop={2}>
-              <Grid item xs={3} paddingRight={1}>
+            <Grid item container xs={12} paddingTop={2} spacing={1}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Transfer Order No"
@@ -87,7 +86,7 @@ const ViewPostedTransferShipment = ({
                   size="small"
                 />
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
                 <FormControl fullWidth>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -103,7 +102,7 @@ const ViewPostedTransferShipment = ({
                   </LocalizationProvider>
                 </FormControl>
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Transfer Type"
@@ -115,22 +114,90 @@ const ViewPostedTransferShipment = ({
                   size="small"
                 />
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
-                  label="Mode Of Transport"
+                  label="From Store"
                   variant="outlined"
                   required
                   disabled
                   fullWidth
-                  value={transferOrderDetails?.transfer_Mode}
+                  value={transferOrderDetails?.transfer_From_Name}
                   size="small"
                 />
               </Grid>
             </Grid>
-
-            <Grid item container xs={12} paddingY={2}>
-              <Grid item xs={3} paddingRight={1}>
+            <Grid item container xs={12} spacing={1} mt={1}>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="From Sub-Inventory"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_From_SubInventory}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="From Locator"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.remarks}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="To Store"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_From_Locator}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="To Sub-Inventory"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_To_SubInventory}
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+            <Grid item container xs={12} spacing={1} mt={1}>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="To Locator"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_To_Locator}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="Mode Of Transfer"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={transferOrderDetails?.transfer_Mode}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Vehicle No."
@@ -142,7 +209,7 @@ const ViewPostedTransferShipment = ({
                   size="small"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Remarks"
