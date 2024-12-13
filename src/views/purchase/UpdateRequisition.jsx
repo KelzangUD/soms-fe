@@ -19,7 +19,7 @@ const UpdateRequisition = ({
 }) => {
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [itemDTOlist, setItemDTOList] = useState([]);
@@ -54,7 +54,7 @@ const UpdateRequisition = ({
     if (qty > params?.row?.qty) {
       setNotificationMsg("Approve Qty should not be greater than Actual Qty!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     } else {
       setApproveRequisitionItems((prev) => ({
         ...prev,
@@ -141,7 +141,7 @@ const UpdateRequisition = ({
     if (res?.status === 200) {
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
-      setShowNofication(true);
+      setShowNotification(true);
       setApproveRequisitionItems((prev) => ({
         ...prev,
         requisitionNo: details?.requisitionNo,
@@ -155,12 +155,11 @@ const UpdateRequisition = ({
           received_Remark: "",
         })),
       }));
-      fetchRequisitionListByApprover();
       setOpen(false);
     } else {
       setNotificationMsg(res?.data?.message);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   };
   return (
@@ -261,7 +260,10 @@ const UpdateRequisition = ({
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={() => {
+            setShowNotification(false);
+            fetchRequisitionListByApprover();
+          }}
           message={notificationMsg}
           severity={severity}
         />
