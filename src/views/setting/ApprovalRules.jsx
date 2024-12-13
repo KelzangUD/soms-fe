@@ -9,7 +9,6 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
@@ -18,6 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
 import AddApprovalRuleDialog from "./AddApprovalRuleDialog";
 import ViewApprovalRule from "./ViewApprovalRule";
+import { CustomDataTable } from "../../component/common/index";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,17 +42,27 @@ function a11yProps(index) {
   };
 }
 const ApprovalRules = () => {
+  const access_token = localStorage.getItem("access_token");
   const [value, setValue] = useState(0);
   const [ruleList, setRuleList] = useState([]);
-  const [selectedLabel, setSelectedLabel] = useState('Requisition');
+  const [selectedLabel, setSelectedLabel] = useState("Requisition");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewRule, setShowViewRule] = useState(false);
-  const [ruleId, setRuleId] = useState('');
+  const [ruleId, setRuleId] = useState("");
 
   const fetchApprovalRules = async (type) => {
-    const res = await Route("GET", `/UserDtls/getApprovalRules/${type}`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/UserDtls/getApprovalRules/${type}`,
+      access_token,
+      null,
+      null
+    );
     if (res?.status === 200) {
-      const rowsWithIds = (res?.data || []).map((item, index) => ({ ...item, id: index + 1 }));
+      const rowsWithIds = (res?.data || []).map((item, index) => ({
+        ...item,
+        id: index + 1,
+      }));
       setRuleList(rowsWithIds);
     }
   };
@@ -62,7 +72,7 @@ const ApprovalRules = () => {
   }, [selectedLabel]);
 
   const approval_rules_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.1 },
+    { field: "sl", headerName: "Sl. No", flex: 0.05 },
     { field: "approvalUserRoleName", headerName: "For", flex: 0.2 },
     { field: "approvalTypeName", headerName: "Type", flex: 0.2 },
     { field: "approvalRuleName", headerName: "Rule Name", flex: 0.2 },
@@ -80,14 +90,16 @@ const ApprovalRules = () => {
           <IconButton
             aria-label="edit"
             size="small"
-            onClick={() => handleEditApprovalRule(params.row.approvalId)}
+            onClick={() => handleEditApprovalRule(params?.row?.approvalId)}
+            color="primary"
           >
             <EditIcon fontSize="inherit" />
           </IconButton>
           <IconButton
             aria-label="view"
             size="small"
-            onClick={() => handleViewApprovalRule(params.row.approvalId)}
+            onClick={() => handleViewApprovalRule(params?.row?.approvalId)}
+            color="secondary"
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
@@ -122,7 +134,11 @@ const ApprovalRules = () => {
           <Grid
             item
             xs={12}
-            sx={{ display: "flex", justifyContent: "flex-end", alignItems: 'center' }}
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
           >
             <Button
               variant="contained"
@@ -136,7 +152,6 @@ const ApprovalRules = () => {
           </Grid>
         </Grid>
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          {/* <SubHeader text="Approval Rules" /> */}
           <Grid
             item
             xs={12}
@@ -184,38 +199,20 @@ const ApprovalRules = () => {
                         </IconButton>
                       </Paper>
                     </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        endIcon={<FileDownloadIcon />}
-                      >
-                        Export
-                      </Button>
+                    <Grid item alignContent="center">
+                      <IconButton aria-label="export" color="success">
+                        <FileDownloadIcon />
+                      </IconButton>
                     </Grid>
                   </Grid>
-                  <Grid
-                    item
-                    container
-                    alignItems="center"
-                    sx={{ px: 2 }}
-                    xs={12}
-                  >
-                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
-                      <DataGrid
-                        rows={ruleList?.map((row, index) => ({
-                          ...row,
-                          sl: index + 1,
-                        }))}
-                        columns={approval_rules_columns}
-                        initialState={{
-                          pagination: {
-                            paginationModel: { page: 0, pageSize: 5 },
-                          },
-                        }}
-                        pageSizeOptions={[5, 10, 50, 100]}
-                      />
-                    </div>
+                  <Grid item container alignItems="center" xs={12}>
+                    <CustomDataTable
+                      rows={ruleList?.map((row, index) => ({
+                        ...row,
+                        sl: index + 1,
+                      }))}
+                      cols={approval_rules_columns}
+                    />
                   </Grid>
                 </Grid>
               </CustomTabPanel>
@@ -250,37 +247,19 @@ const ApprovalRules = () => {
                       </Paper>
                     </Grid>
                     <Grid item>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        endIcon={<FileDownloadIcon />}
-                      >
-                        Export
-                      </Button>
+                      <IconButton aria-label="export" color="success">
+                        <FileDownloadIcon />
+                      </IconButton>
                     </Grid>
                   </Grid>
-                  <Grid
-                    item
-                    container
-                    alignItems="center"
-                    sx={{ px: 2 }}
-                    xs={12}
-                  >
-                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
-                      <DataGrid
-                        rows={ruleList?.map((row, index) => ({
-                          ...row,
-                          sl: index + 1,
-                        }))}
-                        columns={approval_rules_columns}
-                        initialState={{
-                          pagination: {
-                            paginationModel: { page: 0, pageSize: 5 },
-                          },
-                        }}
-                        pageSizeOptions={[5, 10, 50, 100]}
-                      />
-                    </div>
+                  <Grid item container alignItems="center" xs={12}>
+                    <CustomDataTable
+                      rows={ruleList?.map((row, index) => ({
+                        ...row,
+                        sl: index + 1,
+                      }))}
+                      cols={approval_rules_columns}
+                    />
                   </Grid>
                 </Grid>
               </CustomTabPanel>
@@ -315,37 +294,19 @@ const ApprovalRules = () => {
                       </Paper>
                     </Grid>
                     <Grid item>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        endIcon={<FileDownloadIcon />}
-                      >
-                        Export
-                      </Button>
+                      <IconButton aria-label="export" color="success">
+                        <FileDownloadIcon />
+                      </IconButton>
                     </Grid>
                   </Grid>
-                  <Grid
-                    item
-                    container
-                    alignItems="center"
-                    sx={{ px: 2 }}
-                    xs={12}
-                  >
-                    <div style={{ height: "auto", width: "100%", background: "#fff" }}>
-                      <DataGrid
-                        rows={ruleList?.map((row, index) => ({
-                          ...row,
-                          sl: index + 1,
-                        }))}
-                        columns={approval_rules_columns}
-                        initialState={{
-                          pagination: {
-                            paginationModel: { page: 0, pageSize: 5 },
-                          },
-                        }}
-                        pageSizeOptions={[5, 10, 50, 100]}
-                      />
-                    </div>
+                  <Grid item container alignItems="center" xs={12}>
+                    <CustomDataTable
+                      rows={ruleList?.map((row, index) => ({
+                        ...row,
+                        sl: index + 1,
+                      }))}
+                      cols={approval_rules_columns}
+                    />
                   </Grid>
                 </Grid>
               </CustomTabPanel>
@@ -353,23 +314,24 @@ const ApprovalRules = () => {
           </Grid>
         </Grid>
       </Box>
-      {showAddModal &&
+      {showAddModal && (
         <AddApprovalRuleDialog
           open={showAddModal}
           handleClose={() => {
             setShowAddModal(false);
-            setRuleId('');
+            setRuleId("");
           }}
           ruleId={ruleId}
+          fetchApprovalRules={() => fetchApprovalRules("Requisition")}
         />
-      }
-      {showViewRule &&
+      )}
+      {showViewRule && (
         <ViewApprovalRule
           open={ViewApprovalRule}
           handleClose={() => setShowViewRule(false)}
           ruleId={ruleId}
         />
-      }
+      )}
     </>
   );
 };

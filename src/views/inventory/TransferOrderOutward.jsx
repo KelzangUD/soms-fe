@@ -8,23 +8,22 @@ import {
   IconButton,
   FormControl,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewTransferOrder from "./ViewTransferOrder";
 import { RenderStatus } from "../../ui/index";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const TransferOrderOutward = () => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [transferOrderList, setTransferOrderList] = useState([]);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
   const [view, setView] = useState(false);
@@ -33,7 +32,7 @@ const TransferOrderOutward = () => {
     const res = await Route(
       "GET",
       `/transferOrder/viewInTransitTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -46,25 +45,25 @@ const TransferOrderOutward = () => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no);
   };
   const transfer_order_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", width: 160 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "transfer_order_no", headerName: "Transfer Order No", flex: 1.6 },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
-      width: 250,
+      flex: 2.5,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 250 },
-    { field: "posted_date", headerName: "Posted Date", width: 100 },
+    { field: "transfer_to_code", headerName: "Tansfer To Code", flex: 2.5 },
+    { field: "posted_date", headerName: "Posted Date", flex: 1 },
     {
       field: "status",
       headerName: "Status",
-      width: 120,
+      flex: 1.2,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -80,12 +79,11 @@ const TransferOrderOutward = () => {
     },
   ];
 
-  //   const token = localStorage.getItem("token");
   const fetchTransferOrderOutward = async () => {
     const res = await Route(
       "GET",
       `/transferOrder/viewTransferOrderOutwardList/${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -93,6 +91,7 @@ const TransferOrderOutward = () => {
       setTransferOrderList(
         res?.data?.map((item, index) => ({
           id: index,
+          sl: index + 1,
           transfer_order_no: item?.transfer_Order_Number,
           transfer_from_code: item?.transfer_From_Name,
           transfer_to_code: item?.transfer_To_Name,
@@ -104,6 +103,7 @@ const TransferOrderOutward = () => {
   };
   useEffect(() => {
     fetchTransferOrderOutward();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -117,29 +117,6 @@ const TransferOrderOutward = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid item>
-                  <Paper
-                    sx={{
-                      p: "2px 0",
-                      display: "flex",
-                      alignItems: "center",
-                      maxWidth: 400,
-                    }}
-                  >
-                    <InputBase
-                      sx={{ ml: 1, flex: 1 }}
-                      placeholder="Search"
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                    <IconButton
-                      type="button"
-                      sx={{ p: "10px" }}
-                      aria-label="search"
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </Paper>
-                </Grid>
                 <Grid
                   item
                   xs={12}
@@ -197,27 +174,10 @@ const TransferOrderOutward = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={transferOrderList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={transfer_order_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={transferOrderList}
+                    cols={transfer_order_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

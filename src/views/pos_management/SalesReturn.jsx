@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Card,
   Paper,
   Grid,
   TextField,
@@ -24,30 +25,17 @@ import { dateFormatter } from "../../util/CommonUtil";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ImageIcon from "@mui/icons-material/Image";
 import CircularProgress from "@mui/material/CircularProgress";
 import GetAppIcon from "@mui/icons-material/GetApp";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import Notification from "../../ui/Notification";
 import AddLineItem from "./AddLineItem";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-  outlineColor: "#fff",
-});
+import { useCommon } from "../../contexts/CommonContext";
 
 const SalesReturn = () => {
+  const { paymentType, fetchBankBasedOnPaymentType, banks } = useCommon();
   const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
@@ -57,9 +45,7 @@ const SalesReturn = () => {
   const [invoiceNo, setInoiceNo] = useState("");
   const [emptyInvoiceNo, setEmptyInvoiceNo] = useState(false);
   const [salesData, setSalesData] = useState(null);
-  const [paymentType, setPaymentType] = useState([]);
-  const [banks, setBanks] = useState([]);
-  const [fileName, setFileName] = useState("Upload File");
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [paymentLines, setPaymentLines] = useState([]);
   const [grossTotal, setGrossTotal] = useState("");
   const [taxAmount, setTaxAmount] = useState("");
@@ -88,32 +74,9 @@ const SalesReturn = () => {
     setInoiceNo(e?.target?.value);
   };
 
-  const fetchPaymentType = async () => {
-    const res = await Route("GET", "/Common/PaymentType", null, null, null);
-    if (res?.status === 200) {
-      setPaymentType(res?.data);
-    }
-  };
-  const fetchBankBasedOnPaymentType = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchBankDetails?userId=${user}&paymentType=${paymentLinesItem?.paymentType}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setBanks(res?.data);
-    }
-  };
-
   useEffect(() => {
-    fetchPaymentType();
-  }, []);
-
-  useEffect(() => {
-    fetchBankBasedOnPaymentType();
-  }, [paymentLinesItem?.paymentType, user]);
+    fetchBankBasedOnPaymentType(paymentLinesItem?.paymentType);
+  }, [paymentLinesItem?.paymentType]);
 
   const paymentAmountHandle = (e) => {
     setPaymentLinesItem((prev) => ({
@@ -153,6 +116,7 @@ const SalesReturn = () => {
     }));
   };
   const chequeCopyHandle = (e) => {
+    setIsFileUploaded(true);
     setPaymentLinesItem((prev) => ({
       ...prev,
       chequeCopy: e?.target?.files[0],
@@ -234,7 +198,6 @@ const SalesReturn = () => {
           null,
           null
         );
-        console.log(res);
         if (res?.status === 200) {
           if (res?.data?.status === "Y") {
             setSalesData(res?.data);
@@ -398,16 +361,16 @@ const SalesReturn = () => {
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 paddingX={2}
-                paddingY={1}
+                paddingY={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -416,7 +379,7 @@ const SalesReturn = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container paddingX={2} paddingY={1}>
+              <Grid container paddingX={2} paddingTop={2} paddingBottom={1.5}>
                 <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <TextField
@@ -459,7 +422,7 @@ const SalesReturn = () => {
                       fullWidth
                       onClick={fetchSalesInvoice}
                       disabled={loading}
-                      style={{
+                      sx={{
                         padding: "7px 0",
                       }}
                       endIcon={<GetAppIcon />}
@@ -565,19 +528,19 @@ const SalesReturn = () => {
                   </Grid>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 paddingX={2}
-                paddingY={1}
+                paddingY={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -586,9 +549,9 @@ const SalesReturn = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2} sx={{ my: 1, px: 1 }}>
-                  <TableContainer component={Paper}>
+              <Grid container>
+                <Grid container>
+                  <TableContainer>
                     <Table
                       sx={{ minWidth: 650 }}
                       aria-label="simple table"
@@ -596,17 +559,33 @@ const SalesReturn = () => {
                     >
                       <TableHead>
                         <TableRow>
-                          <TableCell>Description</TableCell>
-                          <TableCell align="right">Quantity</TableCell>
-                          <TableCell align="right">Selling Price</TableCell>
-                          <TableCell align="right">Tax Amount</TableCell>
-                          <TableCell align="right">Disc/Comm Amount</TableCell>
-                          <TableCell align="right">
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Description
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Quantity
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Selling Price
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Tax Amount
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Disc/Comm Amount
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
                             Additional Discount
                           </TableCell>
-                          <TableCell align="right">TDS Amount</TableCell>
-                          <TableCell align="right">Line Item Amount</TableCell>
-                          <TableCell align="right">Action</TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            TDS Amount
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Line Item Amount
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontSize: "13px" }}>
+                            Action
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -715,19 +694,19 @@ const SalesReturn = () => {
                   </TableContainer>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 paddingX={2}
-                paddingY={1}
+                paddingY={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -760,7 +739,6 @@ const SalesReturn = () => {
                       <Select
                         labelId="refund-type-select-label"
                         id="refund-type-select"
-                        // value={age}
                         label="refund Type"
                         onChange={paymentHandle}
                       >
@@ -780,7 +758,6 @@ const SalesReturn = () => {
                       <Select
                         labelId="bank-ac-name-select-label"
                         id="bank-ac-name-select"
-                        // value={age}
                         label="Bank A/C Name"
                         onChange={bankHandle}
                       >
@@ -820,7 +797,6 @@ const SalesReturn = () => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             label="Cheque Date"
-                            // value={dayjs(rechargeDetails?.postingDate)}
                             onChange={chequeDateHandle}
                             slotProps={{
                               textField: {
@@ -834,25 +810,13 @@ const SalesReturn = () => {
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
                     <Grid item sx={2} display="flex">
-                      <Button
-                        component="label"
-                        role={undefined}
-                        tabIndex={-1}
-                        startIcon={<CloudUploadIcon />}
-                        fullWidth
-                        variant="outlined"
-                        style={{
-                          border: "1px solid #B4B4B8",
-                          color: "#686D76",
-                        }}
-                      >
-                        {fileName}
-                        <VisuallyHiddenInput
-                          type="file"
-                          onChange={chequeCopyHandle}
-                          multiple
-                        />
-                      </Button>
+                      <TextField 
+                        type="file"
+                        size="small"
+                        label={isFileUploaded ? "File" : ""}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={chequeCopyHandle}
+                      />
                     </Grid>
                   )}
                   <Grid
@@ -862,7 +826,7 @@ const SalesReturn = () => {
                     display="flex"
                     alignItems="center"
                   >
-                    <Grid item sx={1}>
+                    <Grid item xs={1}>
                       <IconButton
                         aria-label="add"
                         onClick={addPaymentItemHandle}
@@ -873,7 +837,7 @@ const SalesReturn = () => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
+              <Grid container p={2}>
                 <TableContainer component={Paper}>
                   <Table
                     sx={{ minWidth: 650 }}
@@ -926,8 +890,9 @@ const SalesReturn = () => {
                                 onClick={(e) =>
                                   deletePaymentItemHandle(e, index)
                                 }
+                                size="small"
                               >
-                                <DeleteIcon />
+                                <DeleteIcon color="error" />
                               </IconButton>
                             </TableCell>
                           </TableRow>
@@ -936,24 +901,16 @@ const SalesReturn = () => {
                   </Table>
                 </TableContainer>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
-            <Button
-              variant="contained"
-              onClick={postSalesReturn}
-              sx={{ ml: 2 }}
-              size="small"
-            >
+          <Grid container display="flex" justifyContent="flex-end" my={2}>
+            <Button variant="contained" onClick={postSalesReturn} size="small">
               Create & Post
             </Button>
             <Button
               variant="outlined"
               color="error"
-              sx={{ ml: 2 }}
-              style={{
-                background: "#fff",
-              }}
+              sx={{ background: "#fff", ml: 2 }}
               onClick={cancelHandle}
               size="small"
             >

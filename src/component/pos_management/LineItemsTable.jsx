@@ -23,7 +23,11 @@ const LineItemsTable = ({
     <>
       <TableContainer>
         <Table sx={{ minWidth: 500 }} aria-label="simple table" size="small">
-          <TableHead>
+          <TableHead
+            sx={{
+              background: "#F5F7F8",
+            }}
+          >
             <TableRow>
               <TableCell>Description</TableCell>
               <TableCell align="right">Quantity</TableCell>
@@ -62,10 +66,7 @@ const LineItemsTable = ({
                   <TableCell align="right">{item?.discountedAmount}</TableCell>
                   <TableCell align="right">{item?.lineItemAmt}</TableCell>
                   <TableCell align="right">
-                    <ButtonGroup
-                      variant="text"
-                      aria-label="Basic button group"
-                    >
+                    <ButtonGroup variant="text" aria-label="Basic button group">
                       <IconButton
                         aria-label="edit"
                         onClick={(e) => editLineItemHandle(e, item, index)}

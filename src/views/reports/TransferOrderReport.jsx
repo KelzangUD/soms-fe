@@ -23,6 +23,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const TransferOrderReport = () => {
@@ -53,19 +54,7 @@ const TransferOrderReport = () => {
       width: 150,
     },
   ];
-  const transfer_order_report_rows = [
-    {
-      id: 1,
-      customer_name: "",
-      date: "",
-      invoice_no: "",
-      item_description: "",
-      qty: "",
-      amount: "",
-      store_name: "",
-      created_by: "",
-    },
-  ];
+  const transfer_order_report_rows = [];
 
   //   const token = localStorage.getItem("token");
   //   const fetchResults = async () => {
@@ -114,7 +103,11 @@ const TransferOrderReport = () => {
                 </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={2}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="transfer-type-select-label">
                         Transfer Type
                       </InputLabel>
@@ -132,19 +125,37 @@ const TransferOrderReport = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="From Date" />
+                        <DatePicker
+                          label="From Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2} style={{ background: "#fff" }}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To Date" />
+                        <DatePicker
+                          label="To Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="from-select-label">From Store</InputLabel>
                       <Select
                         labelId="from-select-label"
@@ -158,7 +169,11 @@ const TransferOrderReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="to-select-label">To Store</InputLabel>
                       <Select
                         labelId="to-select-label"
@@ -180,10 +195,15 @@ const TransferOrderReport = () => {
                       required
                       style={{ background: "#fff" }}
                       // onChange={oldPasswordHandle}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="transaction-status-select-label">
                         Transaction Status
                       </InputLabel>
@@ -222,27 +242,10 @@ const TransferOrderReport = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={transfer_order_report_rows?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={transfer_order_report_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={transfer_order_report_rows}
+                    cols={transfer_order_report_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

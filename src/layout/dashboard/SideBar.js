@@ -13,12 +13,12 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 export const MenuItems = [
   {
     module: "Dashboard",
-    icon: <DashboardIcon fontSize="small" />,
+    icon: <DashboardIcon fontSize="small" sx={{ color: "#fff" }} />,
     route: "/home/dashboard",
   },
   {
     module: "Work Structures",
-    icon: <ManageAccountsIcon fontSize="small" />,
+    icon: <ManageAccountsIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 1,
     nestedItems: [
       {
@@ -53,7 +53,7 @@ export const MenuItems = [
   },
   {
     module: "Employee",
-    icon: <PeopleIcon fontSize="small" />,
+    icon: <PeopleIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 2,
     nestedItems: [
       {
@@ -68,7 +68,7 @@ export const MenuItems = [
   },
   {
     module: "POS Management",
-    icon: <PointOfSaleIcon fontSize="small" />,
+    icon: <PointOfSaleIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 3,
     nestedItems: [
       {
@@ -95,7 +95,7 @@ export const MenuItems = [
   },
   {
     module: "Collections",
-    icon: <CollectionsIcon fontSize="small" />,
+    icon: <CollectionsIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 4,
     nestedItems: [
       {
@@ -130,7 +130,7 @@ export const MenuItems = [
   },
   {
     module: "Purchase",
-    icon: <ShoppingCartIcon fontSize="small" />,
+    icon: <ShoppingCartIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 5,
     nestedItems: [
       {
@@ -149,7 +149,7 @@ export const MenuItems = [
   },
   {
     module: "Inventory",
-    icon: <InventoryIcon fontSize="small" />,
+    icon: <InventoryIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 6,
     nestedItems: [
       {
@@ -176,7 +176,7 @@ export const MenuItems = [
   },
   {
     module: "Reports",
-    icon: <AssessmentIcon fontSize="small" />,
+    icon: <AssessmentIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 7,
     nestedItems: [
       {
@@ -212,11 +212,11 @@ export const MenuItems = [
         route: "reports/sales-order-report",
       },
       {
-        page: "Sales & Stock Report",
+        page: "Sales and Stock Report",
         route: "reports/sales-and-stock-report",
       },
       {
-        page: "Sales Report-All",
+        page: "Sales Report - All",
         route: "reports/sales-report-all",
       },
       {
@@ -229,7 +229,7 @@ export const MenuItems = [
       },
       {
         page: "Samsung Warranty Report",
-        route: "report/samsungwarrantyreport",
+        route: "reports/samsung-warranty-report",
       },
       {
         page: "Service Log Report",
@@ -239,7 +239,7 @@ export const MenuItems = [
   },
   {
     module: "EBS Report",
-    icon: <DescriptionIcon fontSize="small" />,
+    icon: <DescriptionIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 8,
     nestedItems: [
       {
@@ -282,7 +282,7 @@ export const MenuItems = [
   },
   {
     module: "Settings",
-    icon: <SettingsIcon fontSize="small" />,
+    icon: <SettingsIcon fontSize="small" sx={{ color: "#fff" }} />,
     // itemNumber: 9,
     nestedItems: [
       {

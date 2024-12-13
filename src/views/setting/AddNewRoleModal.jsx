@@ -1,28 +1,38 @@
-import React, { useRef, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Grid, IconButton, TextField } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import Route from '../../routes/Route';
-import Notification from '../../ui/Notification';
+import React, { useRef, useState } from "react";
+import { styled } from "@mui/material/styles";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormHelperText,
+  Grid,
+  IconButton,
+  TextField,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import Route from "../../routes/Route";
+import Notification from "../../ui/Notification";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2)
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
   },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1)
-  }
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
 }));
 
 const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
-  console.log(open);
   const ref = useRef(null);
-  const user = localStorage.getItem('username');
-  const [notificationMsg, setNotificationMsg] = useState('');
+  const user = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
+  const [notificationMsg, setNotificationMsg] = useState("");
   const [showNotification, setShowNofication] = useState(false);
-  const [severity, setSeverity] = useState('');
+  const [severity, setSeverity] = useState("");
 
   return (
     <>
@@ -33,19 +43,22 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
         id="add_new_role"
         open={open}
         fullWidth
-        maxWidth={'md'}
+        maxWidth={"md"}
       >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="add_new_role_dialog">
+        <DialogTitle
+          sx={{ m: 0, p: 2, background: "#1976d2", color: "#eee" }}
+          id="add_new_role_dialog"
+        >
           Add Role
         </DialogTitle>
         <IconButton
           aria-label="close"
           onClick={handleClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500]
+            color: "#eee",
           }}
         >
           <CloseIcon />
@@ -53,16 +66,25 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
         <DialogContent dividers>
           <Formik
             initialValues={{
-              roleName: ''
+              roleName: "",
             }}
             validationSchema={Yup.object().shape({
-              roleName: Yup.string().required('Role name i required.')
+              roleName: Yup.string().required("Role name i required."),
             })}
-            onSubmit={async (values, { setStatus, setSubmitting, resetForm }) => {
+            onSubmit={async (
+              values,
+              { setStatus, setSubmitting, resetForm }
+            ) => {
               try {
-                const res = await Route("POST", `/UserDtls/createRole?roleName=${values.roleName}&createdBy=${user}`, null, null, null);
+                const res = await Route(
+                  "POST",
+                  `/UserDtls/createRole?roleName=${values.roleName}&createdBy=${user}`,
+                  access_token,
+                  null,
+                  null
+                );
                 if (res?.status === 201) {
-                  setNotificationMsg('New Role is created successfully.');
+                  setNotificationMsg("New Role is created successfully.");
                   setSeverity("info");
                   setShowNofication(true);
 
@@ -73,7 +95,9 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
                   fetchRole();
                   handleClose();
                 } else {
-                  setNotificationMsg('Error occured in creating new role. Try again!');
+                  setNotificationMsg(
+                    "Error occured in creating new role. Try again!"
+                  );
                   setSeverity("error");
                   setShowNofication(true);
 
@@ -85,7 +109,15 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
               }
             }}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+            {({
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values,
+            }) => (
               <form noValidate onSubmit={handleSubmit}>
                 <Grid container>
                   <Grid item xs={12} sm={12}>
@@ -97,15 +129,21 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
                       value={values.roleName}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      size="small"
                     />
                     {touched.roleName && errors.roleName && (
-                      <FormHelperText error id="standard-weight-helper-text--register">
+                      <FormHelperText
+                        error
+                        id="standard-weight-helper-text--register"
+                      >
                         {errors.roleName}
                       </FormHelperText>
                     )}
                   </Grid>
                 </Grid>
-                <DialogActions sx={{ justifyContent: 'center' }}>
+                <DialogActions
+                  sx={{ justifyContent: "flex-end", marginRight: -1 }}
+                >
                   <Button
                     autoFocus
                     disableElevation
@@ -132,7 +170,7 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
         />
       )}
     </>
-  )
-}
+  );
+};
 
 export default AddNewRoleModal;

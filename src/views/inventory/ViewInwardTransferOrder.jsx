@@ -5,36 +5,31 @@ import {
   Button,
   Dialog,
   FormControl,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { CustomDataTable, Transition } from "../../component/common";
 
 const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.3 },
+    { field: "item_Number", headerName: "Item Number", flex: 1.7 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      flex: 4,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 400,
+      flex: 3,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
+    { field: "uom", headerName: "UOM", flex: 1 },
+    { field: "qty", headerName: "Quantity", flex: 1 },
   ];
   return (
     <>
@@ -55,7 +50,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#2196f3",
+                  backgroundColor: "#1976d2",
                   color: "#fff",
                 }}
               >
@@ -122,7 +117,6 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                 />
               </Grid>
             </Grid>
-
             <Grid item container xs={12} paddingY={2}>
               <Grid item xs={3} paddingRight={1}>
                 <TextField
@@ -149,34 +143,20 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
               </Grid>
             </Grid>
             <Grid item container alignItems="center" xs={12} paddingY={2}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
-                }}
-              >
-                <DataGrid
-                  rows={
-                    transferOrderDetails?.transferOrderItemDTOList !== null
-                      ? transferOrderDetails?.transferOrderItemDTOList?.map(
-                          (row, index) => ({
-                            ...row,
-                            sl: index + 1,
-                            id: index,
-                          })
-                        )
-                      : []
-                  }
-                  columns={item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
+              <CustomDataTable
+                rows={
+                  transferOrderDetails?.transferOrderItemDTOList !== null
+                    ? transferOrderDetails?.transferOrderItemDTOList?.map(
+                        (row, index) => ({
+                          ...row,
+                          sl: index + 1,
+                          id: index,
+                        })
+                      )
+                    : []
+                }
+                cols={item_columns}
+              />
             </Grid>
             <Grid
               item
@@ -189,6 +169,7 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                 variant="outlined"
                 onClick={() => setOpen(false)}
                 color="error"
+                size="small"
               >
                 Close
               </Button>

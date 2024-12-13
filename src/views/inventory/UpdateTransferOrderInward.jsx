@@ -9,13 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
 import Route from "../../routes/Route";
 import { dateFormatterTwo } from "../../util/CommonUtil";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { CustomDataTable, Transition } from "../../component/common";
 
 const UpdateTransferOrderInward = ({
   open,
@@ -24,6 +21,7 @@ const UpdateTransferOrderInward = ({
   transferOrderDetails,
 }) => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -97,24 +95,24 @@ const UpdateTransferOrderInward = ({
     }));
   };
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.3 },
+    { field: "item_Number", headerName: "Item Number", flex: 1.8 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      flex: 4,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 400,
+      flex: 3,
     },
-    { field: "uom", headerName: "UOM", width: 150 },
-    { field: "qty", headerName: "Quantity", width: 150 },
+    { field: "uom", headerName: "UOM", flex: 1 },
+    { field: "qty", headerName: "Quantity", flex: 1 },
     {
       field: "rec_qty",
       headerName: "Rec. Qty",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <TextField
@@ -131,8 +129,8 @@ const UpdateTransferOrderInward = ({
     },
     {
       field: "description",
-      headerName: "Description",
-      width: 150,
+      headerName: "Remarks",
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <TextField
@@ -153,12 +151,11 @@ const UpdateTransferOrderInward = ({
     const res = await Route(
       "PUT",
       `/transferOrder/updateInwardTransferItemDetails`,
-      null,
+      access_token,
       parameters,
       null
     );
-    console.log(res);
-    if (res?.status === 200 && res?.data?.success === true) {
+    if (res?.status === 200) {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
       setShowNofication(true);
@@ -205,7 +202,7 @@ const UpdateTransferOrderInward = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#2196f3",
+                  backgroundColor: "#1976d2",
                   color: "#fff",
                 }}
               >
@@ -368,30 +365,16 @@ const UpdateTransferOrderInward = ({
               </Grid>
             </Grid>
             <Grid item container alignItems="center" xs={12} paddingY={2}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
-                }}
-              >
-                <DataGrid
-                  rows={parameters?.transferOrderItemDTOList?.map(
-                    (row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                      id: index,
-                    })
-                  )}
-                  columns={item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
+              <CustomDataTable
+                rows={parameters?.transferOrderItemDTOList?.map(
+                  (row, index) => ({
+                    ...row,
+                    sl: index + 1,
+                    id: index,
+                  })
+                )}
+                cols={item_columns}
+              />
             </Grid>
             <Grid
               item

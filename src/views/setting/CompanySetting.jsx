@@ -15,6 +15,7 @@ import Notification from "../../ui/Notification";
 
 const CompanySetting = () => {
   const user = localStorage.getItem('username');
+  const access_token = localStorage.getItem("access_token");
   const [companyDtls, setCompanyDtls] = useState({
     shortName: '',
     mobileNo: '',
@@ -72,7 +73,7 @@ const CompanySetting = () => {
   };
 
   const fetchCompanyDtls = async () => {
-    const res = await Route("GET", `/UserDtls/getCompanyDetail`, null, null, null);
+    const res = await Route("GET", `/UserDtls/getCompanyDetail`, access_token, null, null);
     if (res?.status === 200) {
       setCompanyDtls(prevState => ({
         ...prevState,
@@ -153,13 +154,13 @@ const CompanySetting = () => {
                           fullWidth
                           name="companyName"
                           onChange={handleChange}
-                          value={values.companyName}
+                          value={values?.companyName}
                           onBlur={handleBlur}
                           size="small"
                         />
-                        {touched.companyName && errors.companyName && (
+                        {touched?.companyName && errors?.companyName && (
                           <FormHelperText error id="standard-weight-helper-text--register">
-                            {errors.companyName}
+                            {errors?.companyName}
                           </FormHelperText>
                         )}
                       </Grid>
@@ -220,14 +221,14 @@ const CompanySetting = () => {
                           fullWidth
                           name="companyAddress"
                           onChange={handleChange}
-                          value={values.companyAddress}
+                          value={values?.companyAddress}
                           onBlur={handleBlur}
                           defaultValue='companyAddress'
                           size="small"
                         />
-                        {touched.companyAddress && errors.companyAddress && (
+                        {touched?.companyAddress && errors?.companyAddress && (
                           <FormHelperText error id="standard-weight-helper-text--register">
-                            {errors.companyAddress}
+                            {errors?.companyAddress}
                           </FormHelperText>
                         )}
                       </Grid>
@@ -239,7 +240,7 @@ const CompanySetting = () => {
                             margin="normal"
                             name="country_id"
                             type="text"
-                            value={values.country_id}
+                            value={values?.country_id}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             variant="outlined"
@@ -247,14 +248,14 @@ const CompanySetting = () => {
                             size="small"
                           >
                             {country.map((item) => (
-                              <MenuItem key={item.country_id} value={item.country_id}>
-                                {item.country_name}
+                              <MenuItem key={item?.country_id} value={item?.country_id}>
+                                {item?.country_name}
                               </MenuItem>
                             ))}
                           </TextField>
-                          {touched.country_id && errors.country_id && (
+                          {touched?.country_id && errors?.country_id && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.country_id}
+                              {errors?.country_id}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -265,7 +266,7 @@ const CompanySetting = () => {
                             margin="normal"
                             name="region_id"
                             type="text"
-                            value={values.region_id}
+                            value={values?.region_id}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             variant="outlined"
@@ -273,14 +274,14 @@ const CompanySetting = () => {
                             size="small"
                           >
                             {region.map((item) => (
-                              <MenuItem key={item.region_id} value={item.region_id}>
-                                {item.region_name}
+                              <MenuItem key={item?.region_id} value={item?.region_id}>
+                                {item?.region_name}
                               </MenuItem>
                             ))}
                           </TextField>
-                          {touched.region_id && errors.region_id && (
+                          {touched?.region_id && errors?.region_id && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.region_id}
+                              {errors?.region_id}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -291,7 +292,7 @@ const CompanySetting = () => {
                             margin="normal"
                             name="dzongkhag_id"
                             type="text"
-                            value={values.dzongkhag_id}
+                            value={values?.dzongkhag_id}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             variant="outlined"
@@ -299,14 +300,14 @@ const CompanySetting = () => {
                             size="small"
                           >
                             {dzongkhag.map((item) => (
-                              <MenuItem key={item.state_id} value={item.state_id}>
-                                {item.state_name}
+                              <MenuItem key={item?.state_id} value={item?.state_id}>
+                                {item?.state_name}
                               </MenuItem>
                             ))}
                           </TextField>
-                          {touched.dzongkhag_id && errors.dzongkhag_id && (
+                          {touched?.dzongkhag_id && errors?.dzongkhag_id && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.dzongkhag_id}
+                              {errors?.dzongkhag_id}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -317,7 +318,7 @@ const CompanySetting = () => {
                             margin="normal"
                             name="location_id"
                             type="text"
-                            value={values.location_id}
+                            value={values?.location_id}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             variant="outlined"
@@ -325,14 +326,14 @@ const CompanySetting = () => {
                             size="small"
                           >
                             {location.map((item) => (
-                              <MenuItem key={item.locationId} value={item.locationId}>
-                                {item.extensionName}
+                              <MenuItem key={item?.locationId} value={item?.locationId}>
+                                {item?.extensionName}
                               </MenuItem>
                             ))}
                           </TextField>
-                          {touched.location_id && errors.location_id && (
+                          {touched?.location_id && errors?.location_id && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.location_id}
+                              {errors?.location_id}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -345,14 +346,14 @@ const CompanySetting = () => {
                             fullWidth
                             name="postalCode"
                             onChange={handleChange}
-                            value={values.postalCode}
+                            value={values?.postalCode}
                             onBlur={handleBlur}
                             defaultValue='postalCode'
                             size="small"
                           />
-                          {touched.postalCode && errors.postalCode && (
+                          {touched?.postalCode && errors?.postalCode && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.postalCode}
+                              {errors?.postalCode}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -363,7 +364,7 @@ const CompanySetting = () => {
                             fullWidth
                             name="companyEmail"
                             onChange={handleChange}
-                            value={values.companyEmail}
+                            value={values?.companyEmail}
                             onBlur={handleBlur}
                             defaultValue='companyEmail'
                             size="small"
@@ -376,14 +377,14 @@ const CompanySetting = () => {
                             fullWidth
                             name="companyPhoneNo"
                             onChange={handleChange}
-                            value={values.companyPhoneNo}
+                            value={values?.companyPhoneNo}
                             onBlur={handleBlur}
                             defaultValue='companyPhoneNo'
                             size="small"
                           />
-                          {touched.companyPhoneNo && errors.companyPhoneNo && (
+                          {touched?.companyPhoneNo && errors?.companyPhoneNo && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.companyPhoneNo}
+                              {errors?.companyPhoneNo}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -396,14 +397,14 @@ const CompanySetting = () => {
                             fullWidth
                             name="contactPerson"
                             onChange={handleChange}
-                            value={values.contactPerson}
+                            value={values?.contactPerson}
                             onBlur={handleBlur}
                             defaultValue='contactPerson'
                             size="small"
                           />
-                          {touched.contactPerson && errors.contactPerson && (
+                          {touched?.contactPerson && errors?.contactPerson && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.contactPerson}
+                              {errors?.contactPerson}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -414,14 +415,14 @@ const CompanySetting = () => {
                             fullWidth
                             name="contactEmail"
                             onChange={handleChange}
-                            value={values.contactEmail}
+                            value={values?.contactEmail}
                             onBlur={handleBlur}
                             defaultValue='contactEmail'
                             size="small"
                           />
-                          {touched.contactEmail && errors.contactEmail && (
+                          {touched?.contactEmail && errors?.contactEmail && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.contactEmail}
+                              {errors?.contactEmail}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -432,14 +433,14 @@ const CompanySetting = () => {
                             fullWidth
                             name="mobileNo"
                             onChange={handleChange}
-                            value={values.mobileNo}
+                            value={values?.mobileNo}
                             onBlur={handleBlur}
                             defaultValue='mobileNo'
                             size="small"
                           />
-                          {touched.mobileNo && errors.mobileNo && (
+                          {touched?.mobileNo && errors?.mobileNo && (
                             <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors.mobileNo}
+                              {errors?.mobileNo}
                             </FormHelperText>
                           )}
                         </Grid>
@@ -451,14 +452,14 @@ const CompanySetting = () => {
                           fullWidth
                           name="website"
                           onChange={handleChange}
-                          value={values.website}
+                          value={values?.website}
                           onBlur={handleBlur}
                           defaultValue='website'
                           size="small"
                         />
-                        {touched.website && errors.website && (
+                        {touched?.website && errors?.website && (
                           <FormHelperText error id="standard-weight-helper-text--register">
-                            {errors.website}
+                            {errors?.website}
                           </FormHelperText>
                         )}
                       </Grid>

@@ -1,48 +1,61 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   FormControl,
   MenuItem,
   InputLabel,
   Select,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { RenderStatus } from "../../ui/index";
+import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
+import { exportToExcel } from "react-json-to-excel";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useReactToPrint } from "react-to-print";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const RechargeCollection = () => {
+  const { regionsOrExtensions } = useCommon();
+  const access_token = localStorage.getItem("access_token");
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
+  const [printData, setPrintData] = useState([]);
+  const [regionOrExtension, setRegionOrExtension] = useState(
+    userDetails?.regionName
+  );
+  const [fromDate, setFromDate] = useState(dateFormatterTwo(new Date()));
+  const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
   const [rechargeCollection, setRechargeCollection] = useState([]);
   const recharge_collection_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
     {
       field: "payment_amount",
       headerName: "Recharge Amount",
-      width: 150,
+      flex: 1.5,
     },
     {
       field: "recharge_type",
       headerName: "Payment Type",
-      width: 110,
+      flex: 1.1,
     },
-    { field: "payment_ref_number", headerName: "Reference Number", width: 150 },
-    { field: "created_date", headerName: "Created Date", width: 100 },
-    { field: "created_by", headerName: "Created User", width: 180 },
+    { field: "payment_ref_number", headerName: "Reference Number", flex: 1.5 },
+    { field: "created_date", headerName: "Created Date", flex: 1 },
+    { field: "created_by", headerName: "Created User", flex: 1.8 },
     {
       field: "result_code",
       headerName: "Status",
-      width: 120,
+      flex: 1.2,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.result_code} />
       ),
@@ -50,7 +63,7 @@ const RechargeCollection = () => {
     {
       field: "old_print",
       headerName: "Old Print",
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton aria-label="view" size="small" color="primary">
@@ -62,7 +75,7 @@ const RechargeCollection = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton aria-label="view" size="small" color="primary">
@@ -72,13 +85,11 @@ const RechargeCollection = () => {
       ),
     },
   ];
-
-  //   const token = localStorage.getItem("token");
   const fetchRechargeCollection = async () => {
     const res = await Route(
       "GET",
-      `/Report/rechargeCollection?extension=19&fromDate=2024-08-01&toDate=2024-10-31`,
-      null,
+      `/Report/rechargeCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
+      access_token,
       null,
       null
     );
@@ -86,6 +97,7 @@ const RechargeCollection = () => {
       setRechargeCollection(
         res?.data?.map((item, index) => ({
           id: index,
+          sl: index + 1,
           type: item?.type,
           created_date: item?.created_date,
           message_seq: item?.message_seq,
@@ -99,11 +111,61 @@ const RechargeCollection = () => {
           recharge_type: item?.recharge_type,
         }))
       );
+      setPrintData(
+        res?.data?.map((item, index) => ({
+          sl: index + 1,
+          "Recharge Amount": item?.payment_amount,
+          "Payment Type": item?.recharge_type,
+          "Ref No.": item?.payment_ref_number,
+          Status: item?.result_code,
+          "Creation Date": item?.created_date,
+          "Created User": item?.created_by,
+        }))
+      );
     }
   };
   useEffect(() => {
     fetchRechargeCollection();
   }, []);
+  const regionOrExtensionHandle = (e) => {
+    setRegionOrExtension(e?.target?.value);
+  };
+  const fromDateHandle = (e) => {
+    setFromDate(dateFormatterTwo(e?.$d));
+  };
+  const toDateHandle = (e) => {
+    setToDate(dateFormatterTwo(e?.$d));
+  };
+  const exportJsonToPdfHandle = () => {
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [
+        [
+          "sl",
+          "Recharge Amount",
+          "Payment Type",
+          "Ref No.",
+          "Status",
+          "Creation Date",
+          "Created User",
+        ],
+      ],
+      body: printData?.map((item) => [
+        item?.sl,
+        item?.["Recharge Amount"],
+        item?.["Payment Type"],
+        item?.["Ref No."],
+        item?.Status,
+        item?.["Creation Date"],
+        item?.["Created User"],
+      ]),
+      didDrawPage: (data) => {
+        doc.setFontSize(12);
+        doc.text("Recharge Collection", data.settings.margin.left, 30);
+      },
+    });
+    doc.save("Recharge_Collection");
+  };
 
   return (
     <>
@@ -116,29 +178,6 @@ const RechargeCollection = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid item>
-                  <Paper
-                    sx={{
-                      p: "2px 0",
-                      display: "flex",
-                      alignItems: "center",
-                      maxWidth: 400,
-                    }}
-                  >
-                    <InputBase
-                      sx={{ ml: 1, flex: 1 }}
-                      placeholder="Search"
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                    <IconButton
-                      type="button"
-                      sx={{ p: "10px" }}
-                      aria-label="search"
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </Paper>
-                </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
                     <FormControl
@@ -152,16 +191,57 @@ const RechargeCollection = () => {
                       <Select
                         labelId="region-or-extension--select-label"
                         id="region-or-extension--select"
-                        // value={age}
+                        value={regionOrExtension}
                         label="Region/Extension"
-                        // onChange={handleChange}
+                        onChange={regionOrExtensionHandle}
                       >
-                        <MenuItem value={1}>TIPL_Dagapela Extension</MenuItem>
+                        {regionsOrExtensions?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.extensionName}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="From Date"
+                          value={dayjs(fromDate)}
+                          onChange={fromDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="To Date"
+                          value={dayjs(toDate)}
+                          onChange={toDateHandle}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
                   <Grid item xs={2}>
-                    <Button variant="contained">Search</Button>
+                    <Button
+                      variant="contained"
+                      onClick={fetchRechargeCollection}
+                    >
+                      Search
+                    </Button>
                   </Grid>
                 </Grid>
                 <Grid
@@ -172,38 +252,25 @@ const RechargeCollection = () => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <IconButton aria-label="pdf" color="error">
-                    <PictureAsPdfIcon fontSize="inherit" />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="success">
-                    <FileDownloadIcon fontSize="inherit" />
-                  </IconButton>
-                  <IconButton aria-label="print" color="primary">
-                    <PrintIcon fontSize="inherit" />
-                  </IconButton>
+                  <PrintSection
+                    exportExcel={() =>
+                      exportToExcel(printData, "Recharge_Collection")
+                    }
+                    exportPdf={exportJsonToPdfHandle}
+                    handlePrint={reactToPrintFn}
+                  />
                 </Grid>
-                <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={rechargeCollection?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={recharge_collection_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                <Grid
+                  item
+                  container
+                  alignItems="center"
+                  xs={12}
+                  ref={contentRef}
+                >
+                  <CustomDataTable
+                    rows={rechargeCollection}
+                    cols={recharge_collection_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

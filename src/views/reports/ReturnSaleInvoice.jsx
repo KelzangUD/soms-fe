@@ -17,51 +17,40 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const ReturnSaleInvoice = () => {
   const return_posted_sales_invoice_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "pos_credit_no", headerName: "POS Credit No", width: 150 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "pos_credit_no", headerName: "POS Credit No", flex: 1.5 },
     {
       field: "pos_date",
       headerName: "POS Date",
-      width: 150,
+      flex: 1.5,
     },
-    { field: "customer_name", headerName: "Customer Name", width: 250 },
-    { field: "mobile_no", headerName: "Mobile No", width: 150 },
-    { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 150 },
-    { field: "invoice_no", headerName: "Invoice No", width: 150 },
+    { field: "customer_name", headerName: "Customer Name", flex: 2.5 },
+    { field: "mobile_no", headerName: "Mobile No", flex: 1.5 },
+    { field: "payment_amount", headerName: "Payment Amount (Nu)", flex: 1.5 },
+    { field: "invoice_no", headerName: "Invoice No", flex: 1.5 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small">
+          <IconButton aria-label="view" size="small" color="primary">
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
     },
   ];
-  const return_posted_sales_invoice_rows = [
-    {
-      id: 1,
-      pos_credit_no: "EM/DP1/2024/00001",
-      pos_date: "20-Aug-2024",
-      customer_name: "TIPL",
-      mobile_no: "77007700",
-      payment_amount: "",
-      invoice_no: "",
-    },
-  ];
+  const return_posted_sales_invoice_rows = [];
 
   //   const token = localStorage.getItem("token");
   //   const fetchResults = async () => {
@@ -110,7 +99,11 @@ const ReturnSaleInvoice = () => {
                 </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>
@@ -128,18 +121,32 @@ const ReturnSaleInvoice = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="From*" />
+                        <DatePicker
+                          label="From*"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To*" />
+                        <DatePicker
+                          label="To*"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     <TextField
                       label="Customer Name"
                       variant="outlined"
@@ -148,6 +155,7 @@ const ReturnSaleInvoice = () => {
                       required
                       // onChange={oldPasswordHandle}
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -159,9 +167,10 @@ const ReturnSaleInvoice = () => {
                       required
                       // onChange={oldPasswordHandle}
                       style={{ background: "#fff" }}
+                      size="small"
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <Button variant="contained">Search</Button>
                   </Grid>
                 </Grid>
@@ -184,29 +193,10 @@ const ReturnSaleInvoice = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={return_posted_sales_invoice_rows?.map(
-                        (row, index) => ({
-                          ...row,
-                          sl: index + 1,
-                        })
-                      )}
-                      columns={return_posted_sales_invoice_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={return_posted_sales_invoice_rows}
+                    cols={return_posted_sales_invoice_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

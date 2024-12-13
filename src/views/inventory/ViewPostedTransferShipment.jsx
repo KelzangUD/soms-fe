@@ -1,24 +1,18 @@
 import React from "react";
 import {
   Box,
-  Chip,
   Grid,
   Button,
   Dialog,
   FormControl,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { CustomDataTable,Transition } from "../../component/common/index";
 
 const ViewPostedTransferShipment = ({
   open,
@@ -26,25 +20,25 @@ const ViewPostedTransferShipment = ({
   transferOrderDetails,
 }) => {
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.3 },
+    { field: "item_Number", headerName: "Item Number", flex: 1.8 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 400,
+      flex: 3,
     },
     {
       field: "serial_no",
       headerName: "Serial No",
-      width: 300,
+      flex: 2.5,
     },
-    { field: "uom", headerName: "UOM", width: 70 },
-    { field: "qty", headerName: "Quantity", width: 100 },
-    { field: "received_Qty", headerName: "Received Qty", width: 100 },
+    { field: "uom", headerName: "UOM", flex: 0.7 },
+    { field: "qty", headerName: "Quantity", flex: 0.8 },
+    { field: "received_Qty", headerName: "Received Qty", flex: 0.8 },
     {
       field: "received_Remark",
       headerName: "Received Remarks",
-      width: 150,
+      flex: 1.5,
     },
   ];
   return (
@@ -90,6 +84,7 @@ const ViewPostedTransferShipment = ({
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Order_Number}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -99,6 +94,11 @@ const ViewPostedTransferShipment = ({
                       label="Transfer Order Create Date"
                       value={dayjs(transferOrderDetails?.transfer_Date)}
                       disabled
+                      slotProps={{
+                        textField: {
+                          size: "small",
+                        },
+                      }}
                     />
                   </LocalizationProvider>
                 </FormControl>
@@ -112,6 +112,7 @@ const ViewPostedTransferShipment = ({
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Type}
+                  size="small"
                 />
               </Grid>
               <Grid item xs={3} paddingRight={1}>
@@ -123,6 +124,7 @@ const ViewPostedTransferShipment = ({
                   disabled
                   fullWidth
                   value={transferOrderDetails?.transfer_Mode}
+                  size="small"
                 />
               </Grid>
             </Grid>
@@ -137,9 +139,10 @@ const ViewPostedTransferShipment = ({
                   fullWidth
                   disabled
                   value={transferOrderDetails?.vehicle_Number}
+                  size="small"
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
                 <TextField
                   id="outlined-basic"
                   label="Remarks"
@@ -147,47 +150,38 @@ const ViewPostedTransferShipment = ({
                   fullWidth
                   disabled
                   value={transferOrderDetails?.remarks}
+                  size="small"
                 />
               </Grid>
             </Grid>
             <Grid item container alignItems="center" xs={12} paddingY={2}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
-                }}
-              >
-                <DataGrid
-                  rows={
-                    transferOrderDetails?.transferOrderItemDTOList !== null
-                      ? transferOrderDetails?.transferOrderItemDTOList?.map(
-                          (row, index) => ({
-                            ...row,
-                            sl: index + 1,
-                            id: index,
-                          })
-                        )
-                      : []
-                  }
-                  columns={item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
+              <CustomDataTable
+                rows={
+                  transferOrderDetails?.transferOrderItemDTOList !== null
+                    ? transferOrderDetails?.transferOrderItemDTOList?.map(
+                        (row, index) => ({
+                          ...row,
+                          sl: index + 1,
+                          id: index,
+                        })
+                      )
+                    : []
+                }
+                cols={item_columns}
+              />
             </Grid>
             <Grid
               item
               xs={12}
-              alignItems="right"
               marginBottom={2}
-              sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
-              <Button variant="outlined" onClick={() => setOpen(false)}>
+              <Button
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                color="error"
+                size="small"
+              >
                 Close
               </Button>
             </Grid>

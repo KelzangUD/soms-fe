@@ -12,17 +12,14 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const SalesOrderReport = () => {
@@ -52,26 +49,7 @@ const SalesOrderReport = () => {
     { field: "created_user", headerName: "Created User", width: 150 },
     { field: "ebs_status", headerName: "EBS Status", width: 150 },
   ];
-  const sales_order_report_rows = [
-    {
-      id: 1,
-      sales_type: "",
-      customer_name: "",
-      customer_no: "",
-      order_no: "",
-      item_no: "",
-      item_description: "",
-      discount: "",
-      additional_discount: "",
-      lot_of_sale_dis: "",
-      tds: "",
-      sales_tax_amount: "",
-      total_sale_amount: "",
-      payment_mode: "",
-      created_user: "",
-      ebs_status: "",
-    },
-  ];
+  const sales_order_report_rows = [];
 
   //   const token = localStorage.getItem("token");
   //   const fetchResults = async () => {
@@ -156,7 +134,11 @@ const SalesOrderReport = () => {
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }} size="small">
+                    <FormControl
+                      fullWidth
+                      style={{ background: "#fff" }}
+                      size="small"
+                    >
                       <InputLabel id="employee-select-label">
                         Employee
                       </InputLabel>
@@ -222,27 +204,10 @@ const SalesOrderReport = () => {
                   </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={sales_order_report_rows?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={sales_order_report_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={sales_order_report_rows}
+                    cols={sales_order_report_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

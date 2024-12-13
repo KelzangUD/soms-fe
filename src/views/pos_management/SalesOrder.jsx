@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
-  Paper,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  DialogActions,
   Grid,
   TextField,
   MenuItem,
@@ -21,7 +27,6 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import AddLineItem from "./AddLineItem";
 import EditLineItem from "./EditLineItem";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
   Notification,
   LoaderDialog,
@@ -32,11 +37,20 @@ import {
   LineItemsTable,
   PaymentDetailsTable,
 } from "../../component/pos_management/index";
+import { Transition } from "../../component/common/index";
 import Route from "../../routes/Route";
 import dayjs from "dayjs";
 import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
+import { useCommon } from "../../contexts/CommonContext";
 
 const SalesOrder = () => {
+  const {
+    salesType,
+    productsType,
+    paymentType,
+    fetchBankBasedOnPaymentType,
+    banks,
+  } = useCommon();
   const user = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const access_token = localStorage.getItem("access_token");
@@ -48,8 +62,6 @@ const SalesOrder = () => {
   const [edit, setEdit] = useState(false);
   const [editLineItemIndex, setEditLineItemIndex] = useState(null);
   const [editDetails, setEditDetails] = useState({});
-  const [salesType, setSalesType] = useState([]);
-  const [productsType, setProductsType] = useState([]);
   const [customersList, setCustomersList] = useState([]);
   const [salesOrderDetails, setSalesOrderDetails] = useState({
     pos_no: "",
@@ -66,7 +78,7 @@ const SalesOrder = () => {
     advanceNo: "",
     advanceAmt: 0,
     adjType: "",
-    storeName: userDetails?.region_NAME,
+    storeName: userDetails?.regionName,
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0,
@@ -76,7 +88,6 @@ const SalesOrder = () => {
     tdsAmount: 0,
     netAmount: 0,
   });
-  const [paymentType, setPaymentType] = useState([]);
   const [paymentLines, setPaymentLines] = useState([]);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
     paymentAmount: "",
@@ -95,27 +106,8 @@ const SalesOrder = () => {
   const [lineItems, setLineItems] = useState([]);
   const [itemsNotFound, setItemsNotFound] = useState([]);
   const [openItemsNotFoundDialog, setOpenItemsNotFoundDialog] = useState(false);
-  const [fileName, setFileName] = useState("Upload File");
-  const [banks, setbanks] = useState([]);
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [responseData, setResponseData] = useState({});
-  const fetchSalesType = async () => {
-    const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
-    if (res?.status === 200) {
-      setSalesType(res?.data);
-    }
-  };
-  const fetchProductsType = async () => {
-    const res = await Route("GET", "/Common/FetchProductType", null, null, 1);
-    if (res?.status === 200) {
-      setProductsType(res?.data);
-    }
-  };
-  const fetchPaymentType = async () => {
-    const res = await Route("GET", "/Common/PaymentType", null, null, null);
-    if (res?.status === 200) {
-      setPaymentType(res?.data);
-    }
-  };
   const fetchCustomersList = async () => {
     const res = await Route(
       "GET",
@@ -126,7 +118,7 @@ const SalesOrder = () => {
     );
     if (res?.status === 200) {
       setCustomersList(res?.data);
-    };
+    }
   };
   const fetchCustomersDetails = async (customerID) => {
     const res = await Route(
@@ -147,28 +139,16 @@ const SalesOrder = () => {
       }));
     }
   };
-  const fetchBankBasedOnPaymentType = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchBankDetails?userId=${user}&paymentType=${paymentLinesItem?.paymentType}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setbanks(res?.data);
-    }
-  };
   const fetchProductDetailsBasedOnItemList = async (file) => {
     setIsLoading(true);
     try {
       let data = new FormData();
-      data.append("storeName", userDetails?.region_NAME);
+      data.append("storeName", userDetails?.regionName);
       data.append("File", file);
       const res = await Route(
         "POST",
         `/SalesOrder/Product_Details`,
-        null,
+        access_token,
         data,
         null,
         "multipart/form-data"
@@ -207,7 +187,7 @@ const SalesOrder = () => {
           }
         });
         setLineItems(foundItems);
-        if (notFoundItems.length > 0) {
+        if (notFoundItems?.length > 0) {
           setItemsNotFound(notFoundItems);
           setOpenItemsNotFoundDialog(true);
         }
@@ -221,22 +201,17 @@ const SalesOrder = () => {
     }
   };
   useEffect(() => {
-    fetchSalesType();
-    fetchProductsType();
-    fetchPaymentType();
-  }, []);
-  useEffect(() => {
     salesOrderDetails?.salesType !== "" && fetchCustomersList();
   }, [salesOrderDetails?.salesType, user]);
   useEffect(() => {
-    fetchBankBasedOnPaymentType();
-  }, [paymentLinesItem?.paymentType, user]);
+    fetchBankBasedOnPaymentType(paymentLinesItem?.paymentType);
+  }, [paymentLinesItem?.paymentType]);
   useEffect(() => {
     setPaymentLinesItem((prev) => ({
       ...prev,
       paymentAmount: linesAmount?.netAmount,
-    }))
-  },[linesAmount?.netAmount]);
+    }));
+  }, [linesAmount?.netAmount]);
 
   const salesTypeHandle = (e) => {
     setSalesOrderDetails((prev) => ({
@@ -328,7 +303,7 @@ const SalesOrder = () => {
     }));
   };
   const chequeCopyHandle = (e) => {
-    setFileName(e?.target?.files[0]?.name);
+    setIsFileUploaded(true);
     setPaymentLinesItem((prev) => ({
       ...prev,
       chequeCopy: e?.target?.files[0],
@@ -382,12 +357,6 @@ const SalesOrder = () => {
   }, [lineItems]);
 
   const postHandle = async () => {
-    console.log(parseInt(linesAmount?.netAmount), (paymentLines?.length > 0 &&
-      paymentLines?.reduce(
-        (accumulator, currentObject) =>
-          accumulator + parseInt(currentObject?.paymentAmount),
-        0
-      )))
     if (
       parseInt(linesAmount?.netAmount) ===
       (paymentLines?.length > 0 &&
@@ -426,8 +395,6 @@ const SalesOrder = () => {
         type: "application/json",
       });
       formData.append("details", jsonDataBlob, "data.json");
-      console.log(formData);
-      console.log(data);
       const res = await Route(
         "POST",
         `/SalesOrder/UpdateItemSales`,
@@ -436,7 +403,6 @@ const SalesOrder = () => {
         null,
         "multipart/form-data"
       );
-      console.log(res);
       if (res?.status === 201) {
         setResponseData(res?.data);
         setSeverity("success");
@@ -458,9 +424,8 @@ const SalesOrder = () => {
           advanceAmt: 0,
           adjType: "",
         }));
-        setPaymentType([]);
         setPaymentLines([]);
-        setPaymentLines((prev) => ({
+        setPaymentLinesItem((prev) => ({
           ...prev,
           paymentAmount: "",
           paymentType: "",
@@ -502,7 +467,8 @@ const SalesOrder = () => {
       advanceAmt: 0,
       adjType: "",
     }));
-    setPaymentLines((prev) => ({
+    setPaymentLines([]);
+    setPaymentLinesItem((prev) => ({
       ...prev,
       paymentAmount: "",
       paymentType: "",
@@ -517,21 +483,51 @@ const SalesOrder = () => {
     setBulkUpload(false);
     setLineItems([]);
   };
+  const openInNewTab = () => {
+    const queryParams = new URLSearchParams();
+    queryParams.append("advance", responseData?.advance);
+    queryParams.append("amount", responseData?.amount);
+    queryParams.append("applicationNo", responseData?.applicationNo);
+    queryParams.append("billing", responseData?.billing);
+    queryParams.append("companyName", responseData?.companyName);
+    queryParams.append("createdBy", responseData?.createdBy);
+    queryParams.append("customerName", responseData?.customerName);
+    queryParams.append("customerNo", responseData?.customerNo);
+    queryParams.append("discount", responseData?.discount);
+    queryParams.append("downPayment", responseData?.downPayment);
+    queryParams.append("grossTotal", responseData?.grossTotal);
+    queryParams.append("paymentDate", responseData?.paymentDate);
+    queryParams.append("phone", responseData?.phone);
+    queryParams.append("receiptType", responseData?.receiptType);
+    queryParams.append("rechargeDate", responseData?.rechargeDate);
+    queryParams.append("tax", responseData?.tax);
+    queryParams.append("totalAmount", responseData?.totalAmount);
+    responseData?.itemDetails.forEach((item) =>
+      queryParams.append("itemDetails", JSON.stringify(item))
+    );
+    const queryString = queryParams.toString();
+    const newWindow = window.open(
+      `/sales-order-receipt?${queryString}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+    if (newWindow) newWindow.opener = null;
+  };
   return (
     <>
       <Box sx={{ px: 2 }}>
-        <Grid container spacing={4} alignItems="center">
+        <Grid container spacing={2} alignItems="center">
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
-                paddingY={1}
+                paddingY={2}
                 paddingX={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -540,8 +536,8 @@ const SalesOrder = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container py={1} px={2}>
-                <Grid container spacing={1}>
+              <Grid container p={2}>
+                <Grid container spacing={1} mb={1}>
                   <Grid item xs={3}>
                     <TextField
                       label="POS No"
@@ -604,7 +600,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={1} py={1}>
+                <Grid container spacing={1} py={1} mb={1}>
                   <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
@@ -695,19 +691,19 @@ const SalesOrder = () => {
                   </Grid>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
                 px={2}
+                py={1.5}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
-                  paddingY: "3px"
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -752,19 +748,18 @@ const SalesOrder = () => {
                   linesAmount={linesAmount}
                 />
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Card>
               <Grid
                 container
-                paddingY={1}
-                paddingX={2}
+                padding={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#007dc5",
+                  backgroundColor: "#1976d2",
                 }}
               >
                 <Grid item>
@@ -773,7 +768,7 @@ const SalesOrder = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container px={2} py={1}>
+              <Grid container p={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={2}>
                     <TextField
@@ -864,24 +859,14 @@ const SalesOrder = () => {
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
-                      <Grid item sx={3} display="flex">
-                        <Button
-                          component="label"
-                          role={undefined}
-                          tabIndex={-1}
-                          startIcon={<CloudUploadIcon />}
-                          fullWidth
-                          variant="outlined"
-                          style={{
-                            border: "1px solid #B4B4B8",
-                            color: "#686D76",
-                          }}
-                        >
-                          {fileName}
-                          <VisuallyHiddentInputComponent
-                            onChange={chequeCopyHandle}
-                          />
-                        </Button>
+                      <Grid item sx={3}>
+                        <TextField
+                          type="file"
+                          size="small"
+                          label={isFileUploaded ? "File" : ""}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={chequeCopyHandle}
+                        />
                       </Grid>
                     </>
                   )}
@@ -904,9 +889,9 @@ const SalesOrder = () => {
                   deletePaymentItemHandle={deletePaymentItemHandle}
                 />
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
+          <Grid container display="flex" justifyContent="flex-end" marginY={2}>
             <Button variant="contained" onClick={postHandle} size="small">
               Post
             </Button>
@@ -925,7 +910,7 @@ const SalesOrder = () => {
           </Grid>
         </Grid>
       </Box>
-      {showNotification && (
+      {showNotification && (severity === "error" || severity === "info") && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}
@@ -938,7 +923,6 @@ const SalesOrder = () => {
           open={openDialog}
           setOpen={setOpenDialog}
           storeName={salesOrderDetails?.storeName}
-          user={user}
           salesType={salesOrderDetails?.salesType}
           setLineItems={setLineItems}
           userDetails={userDetails}
@@ -965,6 +949,55 @@ const SalesOrder = () => {
           setOpen={setOpenItemsNotFoundDialog}
           itemsNoFound={itemsNotFound}
         />
+      )}
+      {showNotification && severity === "success" && (
+        <>
+          <Dialog
+            open={showNotification}
+            TransitionComponent={Transition}
+            keepMounted
+            fullWidth
+            size="sm"
+            aria-describedby="alert-dialog-slide-description"
+            onClose={(event, reason) => {
+              if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
+                setShowNofication(false);
+              }
+            }}
+          >
+            <DialogTitle>{notificationMsg}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                <Alert severity="success">
+                  The Sales Order Created Successfully with application no:{" "}
+                  {responseData?.applicationNo}.
+                </Alert>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={openInNewTab}
+                variant="contained"
+                sx={{
+                  mb: 2,
+                }}
+              >
+                View Receipt
+              </Button>
+              <Button
+                onClick={() => setShowNofication(false)}
+                variant="outlined"
+                color="error"
+                sx={{
+                  mr: 2,
+                  mb: 2,
+                }}
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
       )}
     </>
   );

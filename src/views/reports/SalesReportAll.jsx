@@ -1,90 +1,141 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
+  Autocomplete,
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
-  IconButton,
   FormControl,
   MenuItem,
   InputLabel,
   Select,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
-import PrintIcon from "@mui/icons-material/Print";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
+import { sales_report_all_columns } from "../../data/static";
+import { exportToExcel } from "react-json-to-excel";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useReactToPrint } from "react-to-print";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const SalesReportAll = () => {
-  const sales_report_all_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "sales_type", headerName: "Sales Type", width: 150 },
-    {
-      field: "customer_name",
-      headerName: "Customer Name",
-      width: 250,
-    },
-    { field: "customer_no", headerName: "Customer Number", width: 100 },
-    {
-      field: "sales_order_no",
-      headerName: "Sales Order No.",
-      width: 150,
-    },
-    { field: "region", headerName: "Region", width: 150 },
-    { field: "office", headerName: "Office", width: 150 },
-    { field: "revenue_head", headerName: "Revenue Head", width: 150 },
-    {
-      field: "posting_date",
-      headerName: "Posting Date",
-      width: 150,
-    },
-    {
-      field: "item_code",
-      headerName: "Item Code",
-      width: 150,
-    },
-    {
-      field: "item_description",
-      headerName: "Item Description",
-      width: 150,
-    },
-  ];
-  const sales_report_all_rows = [
-    {
-      id: 1,
-      sales_type: "",
-      customer_name: "",
-      customer_no: "",
-      sales_order_no: "",
-      region: "",
-      office: "",
-      revenue_head: "",
-      posting_date: "",
-      item_code: "",
-      item_description: "",
-    },
-  ];
-
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const access_token = localStorage.getItem("access_token");
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
+  const [printData, setPrintData] = useState([]);
+  const [regionOrExtension, setRegionOrExtension] = useState(
+    userDetails?.regionName
+  );
+  const [salesType, setSalesType] = useState([]);
+  const [reportsType, setReportsType] = useState([]);
+  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
+  const [itemsList, setItemsList] = useState([]);
+  const [params, setParams] = useState({
+    extension: userDetails?.storeId,
+    fromDate: "2024-10-01",
+    toDate: "2024-12-10",
+    itemNo: "",
+    fieldAssistant: "",
+    reportType: 2,
+    roleId: 52,
+    saleType: 1,
+  });
+  const [salesAllReport, setSalesAllReport] = useState([]);
+  const fetchSalesType = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/fetchAllReportType`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setSalesType(res?.data);
+    }
+  };
+  const fetchReportsType = async () => {
+    const res = await Route("GET", `/Common/fetchReportType`, null, null, null);
+    if (res?.status === 200) {
+      setReportsType(res?.data);
+    }
+  };
+  const fetchRegionsOrExtensions = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchAllRegionOrExtension`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setRegionsOrExtensions(res?.data);
+    }
+  };
+  const fetchItemsList = async () => {
+    const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
+    if (res?.status === 200) {
+      setItemsList(res?.data);
+    }
+  };
+  const fetchSalesAllReport = async () => {
+    const res = await Route(
+      "GET",
+      `/Report/getSalesAllReport?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&itemNo=${params?.itemNo}&fieldAssistant=${params?.fieldAssistant}&reportType=${params?.reportType}&roleId=${params?.roleId}&saleType=${params?.saleType}`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      // setSalesAllReport(res?.data);
+    }
+  };
+  useEffect(() => {
+    fetchSalesType();
+    fetchReportsType();
+    fetchRegionsOrExtensions();
+    fetchItemsList();
+  }, []);
+  useEffect(() => {
+    fetchSalesAllReport();
+  }, [params]);
+  const salesTypeHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      saleType: parseInt(e?.target?.value),
+    }));
+  };
+  const reportsTypeHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      reportType: parseInt(e?.target?.value),
+    }));
+  };
+  const fromDateHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      fromDate: dateFormatterTwo(e.$d),
+    }));
+  };
+  const toDateHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      toDate: dateFormatterTwo(e.$d),
+    }));
+  };
+  const regionOrExtensionHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      extension: e?.target?.value,
+    }));
+  };
+  const itemHandle = (e) => {
+    console.log(e?.target?.value);
+  };
 
   return (
     <>
@@ -97,182 +148,161 @@ const SalesReportAll = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid
-                  item
-                  xs={12}
-                  spacing={2}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Grid
-                    item
-                    container
-                    xs={9}
-                    direction="column-reverse"
-                    spacing={2}
-                  >
-                    <Grid item container spacing={1} alignItems="center">
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
-                          <InputLabel id="report-type-select-label">
-                            Report Type
-                          </InputLabel>
-                          <Select
-                            labelId="report-type-select-label"
-                            id="report-type-select"
-                            // value={age}
-                            label="Report Type"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>Sales Summary</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
-                          <InputLabel id="sales-type-select-label">
-                            Sales Type
-                          </InputLabel>
-                          <Select
-                            labelId="sales-type-select-label"
-                            id="sales-type-select"
-                            // value={age}
-                            label="Sales Type"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>ALL</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label="From Date" />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label="To Date" />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
-                          <InputLabel id="region-or-extension-select-label">
-                            Region/Extension
-                          </InputLabel>
-                          <Select
-                            labelId="region-or-extension-select-label"
-                            id="region-or-extension-select"
-                            // value={age}
-                            label="Region/Extension"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>ALL</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
-                          <InputLabel id="field-assistant-select-label">
-                            Field Assistant
-                          </InputLabel>
-                          <Select
-                            labelId="field-assistant-select-label"
-                            id="field-assistant-select"
-                            // value={age}
-                            label="Field Assistant"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>ALL</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <FormControl fullWidth>
-                          <InputLabel id="item-select-label">Item</InputLabel>
-                          <Select
-                            labelId="item-select-label"
-                            id="item-select"
-                            // value={age}
-                            label="Item"
-                            // onChange={handleChange}
-                          >
-                            <MenuItem value={1}>ALL</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Button variant="contained">Search</Button>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Paper
-                        sx={{
-                          p: "2px 0",
-                          display: "flex",
-                          alignItems: "center",
-                          maxWidth: 400,
-                        }}
+                <Grid item container spacing={1} alignItems="center">
+                  <Grid item xs={2}>
+                    <FormControl
+                      fullWidth
+                      size="small"
+                      sx={{ background: "#fff" }}
+                    >
+                      <InputLabel id="report-type-select-label">
+                        Report Type
+                      </InputLabel>
+                      <Select
+                        labelId="report-type-select-label"
+                        id="report-type-select"
+                        value={params?.saleType}
+                        label="Report Type"
+                        onChange={salesTypeHandle}
                       >
-                        <InputBase
-                          sx={{ ml: 1, flex: 1 }}
-                          placeholder="Search"
-                          inputProps={{ "aria-label": "search" }}
-                        />
-                        <IconButton
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </Paper>
-                    </Grid>
+                        {salesType?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.type}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      endIcon={<PictureAsPdfIcon />}
-                      sx={{ mr: 2 }}
+                  <Grid item xs={2}>
+                    <FormControl
+                      fullWidth
+                      size="small"
+                      sx={{ background: "#fff" }}
                     >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      endIcon={<FileDownloadIcon />}
-                      sx={{ mr: 2 }}
+                      <InputLabel id="sales-type-select-label">
+                        Sales Type
+                      </InputLabel>
+                      <Select
+                        labelId="sales-type-select-label"
+                        id="sales-type-select"
+                        value={params?.reportType}
+                        label="Sales Type"
+                        onChange={reportsTypeHandle}
+                      >
+                        {reportsType?.map((item) => (
+                          <MenuItem value={item?.id}>{item?.type}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="From Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                          onChange={fromDateHandle}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="To Date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                            },
+                          }}
+                          onChange={toDateHandle}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Autocomplete
+                      disablePortal
+                      onChange={regionOrExtensionHandle}
+                      value={params?.extension}
+                      options={regionsOrExtensions?.map((item) => ({
+                        id: item?.id,
+                        label: item?.id,
+                      }))}
+                      size="small"
+                      sx={{
+                        background: "#fff"
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Region/Extension" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormControl
+                      fullWidth
+                      size="small"
+                      sx={{ background: "#fff" }}
                     >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      endIcon={<PrintIcon />}
-                    >
-                      Print
-                    </Button>
+                      <InputLabel id="field-assistant-select-label">
+                        Field Assistant
+                      </InputLabel>
+                      <Select
+                        labelId="field-assistant-select-label"
+                        id="field-assistant-select"
+                        // value={age}
+                        label="Field Assistant"
+                        // onChange={handleChange}
+                      >
+                        <MenuItem value={1}>ALL</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Autocomplete
+                      disablePortal
+                      onChange={regionOrExtensionHandle}
+                      value={params?.itemNo}
+                      options={itemsList?.map((item) => ({
+                        id: item?.item_number,
+                        label: item?.description,
+                      }))}
+                      size="small"
+                      sx={{
+                        background: "#fff"
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Item" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={0.5}>
+                    <Button variant="contained">Search</Button>
                   </Grid>
                 </Grid>
-                <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-                  <div style={{ height: "auto", width: "100%", background: "#fff" }}>
-                    <DataGrid
-                      rows={sales_report_all_rows?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={sales_report_all_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                <Grid
+                  item
+                  container
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <PrintSection />
+                </Grid>
+                <Grid
+                  item
+                  container
+                  alignItems="center"
+                  xs={12}
+                  ref={contentRef}
+                >
+                  <CustomDataTable
+                    rows={salesAllReport}
+                    cols={sales_report_all_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

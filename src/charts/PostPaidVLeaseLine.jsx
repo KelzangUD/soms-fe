@@ -1,76 +1,89 @@
 import React from "react";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
+  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Label
+  Label,
 } from "recharts";
 import { Paper, Typography } from "@mui/material";
 
 const data = [
   {
     name: "Jan",
-    amt: 2400,
+    pos: 240,
+    lea: 100,
   },
   {
     name: "Feb",
-    amt: 2210,
+    pos: 210,
+    lea: 200,
   },
   {
     name: "Mar",
-    amt: 2290,
+    pos: 220,
+    lea: 500,
   },
   {
     name: "Apr",
-    amt: 200,
+    pos: 200,
+    lea: 200,
   },
   {
     name: "May",
-    amt: 2181,
+    pos: 181,
+    lea: 100,
   },
   {
     name: "Jun",
-    amt: 500,
+    pos: 500,
+    lea: 110,
   },
   {
     name: "Jul",
-    amt: 2100,
+    pos: 210,
+    lea: 210,
   },
   {
     name: "Aug",
-    amt: 2290,
+    pos: 290,
+    lea: 200,
   },
   {
     name: "Sept",
-    amt: 2000,
+    pos: 200,
+    lea: 300,
   },
   {
     name: "Oct",
-    amt: 1181,
+    pos: 181,
+    lea: 70,
   },
   {
     name: "Nov",
-    amt: 2500,
+    pos: 250,
+    lea: 100,
   },
   {
     name: "Dec",
-    amt: 1100,
+    pos: 100,
+    lea: 600,
   },
 ];
 
-const Revenue = () => {
+const PostPaidVLeaseLine = () => {
   return (
     <Paper sx={{ width: "100%", height: 400, padding: 2 }}>
       <Typography variant="subtitle2" align="center">
-        Revenue
+        PostPaid Vs Leaseline
       </Typography>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart
+        <BarChart
           data={data}
           margin={{
             top: 10,
@@ -90,15 +103,19 @@ const Revenue = () => {
           </YAxis>
           <Tooltip />
           <Legend />
-          <Line
-            type="monotone"
-            dataKey="amt"
-            stroke="#4caf50"
-            activeDot={{ r: 8 }}
+          <Bar
+            dataKey="pos"
+            fill="#ffa000"
+            activeBar={<Rectangle fill="#ff8f00" />}
           />
-        </LineChart>
+          <Bar
+            dataKey="lea"
+            fill="#43a047"
+            activeBar={<Rectangle fill="#388e3c"/>}
+          />
+        </BarChart>
       </ResponsiveContainer>
     </Paper>
   );
 };
-export default Revenue;
+export default PostPaidVLeaseLine;

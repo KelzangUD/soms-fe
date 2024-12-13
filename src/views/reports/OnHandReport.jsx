@@ -1,108 +1,78 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Autocomplete,
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
-  // FormControl,
-  // MenuItem,
-  // InputLabel,
-  // Select,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-// import AddIcon from "@mui/icons-material/Add";
-// import EditIcon from "@mui/icons-material/Edit";
-// import VisibilityIcon from "@mui/icons-material/Visibility";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CustomDataTable, PrintSection } from "../../component/common/index";
+import { on_hand_report_columns } from "../../data/static";
 import Route from "../../routes/Route";
+import { dateFormatterTwo } from "../../util/CommonUtil";
+import { useCommon } from "../../contexts/CommonContext";
+import { exportToExcel } from "react-json-to-excel";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useReactToPrint } from "react-to-print";
 
 const OnHandReport = () => {
+  const {
+    regionsOrExtensions,
+    itemsList,
+    fetchLocatorsBasedOnExtension,
+    locatorsList,
+  } = useCommon();
+  const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
+  const [printData, setPrintData] = useState([]);
   const [details, setDetails] = useState({
-    storeName: userDetails?.region_NAME,
+    storeName: userDetails?.regionName,
     item: "ALL",
     locator_id: "ALL",
     serialNo: "ALL",
     imei_no: "ALL",
   });
   const [onHandReports, setOnHandReports] = useState([]);
-  const on_hand_report_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item", headerName: "Item No", width: 200 },
-    {
-      field: "item_Description",
-      headerName: "Item Description",
-      width: 350,
-    },
-    { field: "uom", headerName: "UOM", width: 90 },
-    { field: "transaction_Quantity", headerName: "Quantity", width: 90 },
-    { field: "serial_Number", headerName: "Serial No", width: 200 },
-    { field: "imei_number", headerName: "IMEI No", width: 150 },
-    { field: "sub_inventory_id", headerName: "Sub-Inventory", width: 150 },
-    { field: "locator_id", headerName: "Locator", width: 200 },
-  ];
-  const [regionOrExtension, setRegionOrExtension] = useState([]);
-  const [itemsList, setItemsList] = useState([]);
-  const [locatorsList, setLocatorsList] = useState([]);
-  // const token = localStorage.getItem("access_token");
-  const fetchRegionOrExtension = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchAllRegionOrExtension`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRegionOrExtension(res?.data);
-    }
-  };
-  const fetchItemsList = async () => {
-    const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
-    if (res?.status === 200) {
-      setItemsList(res?.data);
-    }
-  };
-  const fetchLocatorsBasedOnExtension = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchLocatorByExtension?extension=${details?.storeName}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setLocatorsList(res?.data);
-    }
-  };
   const fetchOnHandReports = async () => {
     const res = await Route(
       "GET",
       `/OnHand/Fetch_OnHand_Items?storeName=${details?.storeName}&item=${details?.item}&locator_id=${details?.locator_id}&serialNo=${details?.serialNo}&imei_no=${details?.imei_no}`,
-      null,
+      access_token,
       null,
       null
     );
     if (res?.status === 200) {
       setOnHandReports(res?.data);
     }
+    setPrintData(
+      res?.data?.map((item, index) => ({
+        sl: index + 1,
+        "Item": item?.item,
+        "Locator ID": item?.locator_id,
+        "Item Description": item?.item_Description,
+        "UOM": item?.uom,
+        "Serial Controlled": item?.serial_controlled,
+        "Transaction Quantity": parseInt(item?.transaction_Quantity),
+        "Serial Number": item?.serial_Number,
+        "Sub-inventory ID": item?.sub_inventory_id,
+        "Store Name": item?.store_name,
+        "Imei Number": item?.imei_number
+      }))
+    );
   };
   useEffect(() => {
-    fetchRegionOrExtension();
-    fetchItemsList();
-    fetchLocatorsBasedOnExtension();
     fetchOnHandReports();
-  }, [details]);
+  }, []);
+  useEffect(() => {
+    fetchLocatorsBasedOnExtension(details?.storeName);
+  }, [details?.storeName]);
   const storeHandle = (e, value) => {
     setDetails((prev) => ({
       ...prev,
@@ -134,6 +104,48 @@ const OnHandReport = () => {
       imei_no: e?.target?.value,
     }));
   };
+  const exportJsonToPdfHandle = () => {
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [
+        [
+          "sl",
+          "Item",
+          "Locator ID",
+          "Item Description",
+          "UOM",
+          "Serial Controlled",
+          "Transaction Quantity",
+          "Serial Number",
+          "Sub-inventory ID",
+          "Store Name",
+          "Imei Number"
+        ],
+      ],
+      body: printData?.map((item) => [
+        item?.sl,
+        item?.["Item"],
+        item?.["Locator ID"],
+        item?.["Item Description"],
+        item?.["UOM"],
+        item?.["Serial Controlled"],
+        item?.["Transaction Quantity"],
+        item?.["Serial Number"],
+        item?.["Sub-inventory ID"],
+        item?.["Store Name"],
+        item?.["Imei Number"],
+      ]),
+      styles: {
+        fontSize: 8,
+      },
+      margin: { top: 35 },
+      didDrawPage: (data) => {
+        doc.setFontSize(12);
+        doc.text("On-Hand Report", data.settings.margin.left, 30);
+      },
+    });
+    doc.save("OnHand_Report");
+  };
 
   return (
     <>
@@ -146,37 +158,6 @@ const OnHandReport = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Grid item>
-                    <Grid item>
-                      <Paper
-                        sx={{
-                          p: "2px 0",
-                          display: "flex",
-                          alignItems: "center",
-                          maxWidth: 400,
-                        }}
-                      >
-                        <InputBase
-                          sx={{ ml: 1, flex: 1 }}
-                          placeholder="Search"
-                          inputProps={{ "aria-label": "search" }}
-                        />
-                        <IconButton
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </Grid>
                 <Grid item container spacing={1} sx={{ pt: 2 }}>
                   <Grid item xs={2}>
                     <TextField
@@ -186,33 +167,40 @@ const OnHandReport = () => {
                       name="as_on_date"
                       required
                       disabled
-                      value={new Date().toString()}
+                      value={dateFormatterTwo(new Date())}
                       style={{ background: "#fff" }}
                       size="small"
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
-                      options={regionOrExtension?.map((item) => ({
+                      options={regionsOrExtensions?.map((item) => ({
                         label: item?.extensionName,
                         id: item?.id,
                       }))}
                       value={details?.storeName}
                       onChange={storeHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Region/Extension" size="small" />
+                        <TextField
+                          {...params}
+                          label="Region/Extension"
+                          size="small"
+                        />
                       )}
                       style={{ background: "#fff" }}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
-                      options={itemsList?.map((item) => ({
-                        label: item?.item_number,
-                        id: item?.item_number,
-                      }))}
+                      options={[
+                        { label: "ALL", id: "ALL" },
+                        ...(itemsList?.map((item) => ({
+                          label: item?.item_number,
+                          id: item?.item_number,
+                        })) || []),
+                      ]}
                       value={details?.item}
                       onChange={itemHandle}
                       renderInput={(params) => (
@@ -224,10 +212,13 @@ const OnHandReport = () => {
                   <Grid item xs={2}>
                     <Autocomplete
                       disablePortal
-                      options={locatorsList?.map((item) => ({
-                        label: item?.locator,
-                        id: item?.locator,
-                      }))}
+                      options={[
+                        { label: "ALL", id: "ALL" },
+                        ...(locatorsList?.map((item) => ({
+                          label: item?.locator,
+                          id: item?.locator,
+                        })) || []),
+                      ]}
                       value={details?.locator_id}
                       onChange={locatorHandle}
                       renderInput={(params) => (
@@ -236,7 +227,7 @@ const OnHandReport = () => {
                       style={{ background: "#fff" }}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     <TextField
                       label="Serial No."
                       variant="outlined"
@@ -272,40 +263,22 @@ const OnHandReport = () => {
                   container
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <IconButton aria-label="pdf" color="error">
-                    <PictureAsPdfIcon />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="success">
-                    <FileDownloadIcon />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="primary">
-                    <PrintIcon />
-                  </IconButton>
+                  <PrintSection
+                    exportExcel={() =>
+                      exportToExcel(printData, "OnHand_Report")
+                    }
+                    exportPdf={exportJsonToPdfHandle}
+                    handlePrint={reactToPrintFn}
+                  />
                 </Grid>
-                <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={onHandReports?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={on_hand_report_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                      showCellVerticalBorder
-                      showColumnVerticalBorder
-                    />
-                  </div>
+                <Grid item xs={12} ref={contentRef}>
+                  <CustomDataTable
+                    rows={onHandReports?.map((item, index) => ({
+                      sl: index + 1,
+                      ...item,
+                    }))}
+                    cols={on_hand_report_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

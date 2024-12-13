@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types';
-import React, { useState, useRef, useEffect, forwardRef } from 'react';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
+import PropTypes from "prop-types";
+import React, { useState, useRef, useEffect, forwardRef } from "react";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
 import {
   Autocomplete,
   Button,
@@ -12,33 +12,35 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  TextField
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { Formik } from 'formik';
-import Route from '../../routes/Route';
-import * as Yup from 'yup';
-import { FixedSizeList } from 'react-window';
-import Notification from '../../ui/Notification';
-import PermissionAccess from '../../component/roles_and_permission/PermissionAccess';
+  TextField,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Formik } from "formik";
+import Route from "../../routes/Route";
+import * as Yup from "yup";
+import { FixedSizeList } from "react-window";
+import Notification from "../../ui/Notification";
+import PermissionAccess from "../../component/roles_and_permission/PermissionAccess";
 
-const VirtualizedListboxComponent = forwardRef(function ListboxComponent(props, ref) {
+const VirtualizedListboxComponent = forwardRef(function ListboxComponent(
+  props,
+  ref
+) {
   const { children, ...other } = props;
-  // const theme = useTheme();
   const itemData = React.Children.toArray(children);
 
   return (
     <div ref={ref} {...other}>
       <FixedSizeList
         height={200} // Define the height of the listbox
-        width='100%'  // Define the width of the listbox
+        width="100%" // Define the width of the listbox
         itemSize={35} // Define the height of each item
         itemCount={itemData.length}
         outerElementType="ul" // Ensure it behaves as a list
         innerElementType="ul" // Ensure the inner element behaves as a list
       >
         {({ index, style }) => (
-          <li style={{ ...style, display: 'block' }} key={index}>
+          <li style={{ ...style, display: "block" }} key={index}>
             {itemData[index]}
           </li>
         )}
@@ -48,36 +50,43 @@ const VirtualizedListboxComponent = forwardRef(function ListboxComponent(props, 
 });
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2)
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
   },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1)
-  }
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
 }));
 
 const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
   AddSystemUserDialog.prototype = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
-    fetchSystemUser: PropTypes.func.isRequired
+    fetchSystemUser: PropTypes.func.isRequired,
   };
   const ref = useRef(null);
-  const user = localStorage.getItem('username');
+  const user = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [employeeCode, setEmployeeCode] = useState([]);
   const [roleList, setRoleList] = useState([]);
   const [location, setLocation] = useState([]);
   const [subInventory, setSubInventory] = useState([]);
   const [locator, setLocator] = useState([]);
-  const [notificationMsg, setNotificationMsg] = useState('');
+  const [notificationMsg, setNotificationMsg] = useState("");
   const [showNotification, setShowNofication] = useState(false);
-  const [severity, setSeverity] = useState('');
+  const [severity, setSeverity] = useState("");
   const [rolePrivileges, setRolePrivileges] = useState([]);
   const [moduleAccess, setModuleAccess] = useState([]);
   const [newPermission, setNewPermission] = useState([]);
 
   const fetchEmployeeList = async () => {
-    const res = await Route("GET", "/UserDtls/fetchEmpCodeList", null, null, null);
+    const res = await Route(
+      "GET",
+      "/UserDtls/fetchEmpCodeList",
+      access_token,
+      null,
+      null
+    );
     if (res.status === 200) {
       setEmployeeCode(res?.data);
     }
@@ -98,28 +107,52 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
   };
 
   const fetchSubInventory = async (id) => {
-    const res = await Route("GET", `/Common/FetchSubinventry_By_Location?workLocation=${id}`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/Common/FetchSubinventry_By_Location?workLocation=${id}`,
+      null,
+      null,
+      null
+    );
     if (res.status === 200) {
       setSubInventory(res?.data);
     }
   };
 
   const fetchLocator = async (id, storeId) => {
-    const res = await Route("GET", `/Common/Fetch_Locator?workLocation=${storeId}&subInventory=${id}`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/Common/Fetch_Locator?workLocation=${storeId}&subInventory=${id}`,
+      null,
+      null,
+      null
+    );
     if (res.status === 200) {
       setLocator(res?.data);
     }
   };
 
   const fetchRolePriviledges = async (id) => {
-    const res = await Route("GET", `/Common/fetchModulePermission?roleId=${id}`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/Common/fetchModulePermission?roleId=${id}`,
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setRolePrivileges(res?.data);
     }
   };
 
-  const fetchModuleAccess = async ( id ) => {
-    const res = await Route("GET", `/Common/fetchModuleAccess?roleId=${id}`, null, null, null);
+  const fetchModuleAccess = async (id) => {
+    const res = await Route(
+      "GET",
+      `/Common/fetchModuleAccess?roleId=${id}`,
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setModuleAccess(res?.data);
     }
@@ -139,21 +172,23 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
         ref={ref}
         id="add_system_user"
         open={open}
-        // fullScreen
         fullWidth
-        maxWidth={'lg'}
+        maxWidth={"lg"}
       >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="add_system_user_dialog">
+        <DialogTitle
+          sx={{ m: 0, p: 2, background: "#1976d2", color: "#eee" }}
+          id="add_system_user_dialog"
+        >
           Add User
         </DialogTitle>
         <IconButton
           aria-label="close"
           onClick={handleClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500]
+            color: "#eee",
           }}
         >
           <CloseIcon />
@@ -161,35 +196,48 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
         <DialogContent dividers>
           <Formik
             initialValues={{
-              employee_code: '',
-              user_code: '',
-              full_name: '',
-              email_address: '',
-              roleId: '',
-              storeId: '',
-              subInventoryId: '',
-              locatorId: '',
-              createdBy: ''
+              empNo: "",
+              employee_code: "",
+              user_code: "",
+              full_name: "",
+              email_address: "",
+              roleId: "",
+              storeId: "",
+              subInventoryId: "",
+              locatorId: "",
+              createdBy: "",
             }}
             validationSchema={Yup.object().shape({
-              employee_code: Yup.string().required('Select the employee details.'),
-              roleId: Yup.string().required('Role is required'),
-              storeId: Yup.string().required('Store is required')
+              employee_code: Yup.string().required(
+                "Select the employee details."
+              ),
+              roleId: Yup.string().required("Role is required"),
+              storeId: Yup.string().required("Store is required"),
             })}
-            onSubmit={async (values, { setStatus, setSubmitting, resetForm }) => {
+            onSubmit={async (
+              values,
+              { setStatus, setSubmitting, resetForm }
+            ) => {
               try {
                 let data = {
-                  'user_code': values.employee_code,
-                  'roleId': values.roleId,
-                  'storeId': values.storeId,
-                  'subInventoryId': values.subInventoryId,
-                  'locatorId': values.locatorId,
-                  'createdBy': user,
-                  'roleAndPermissionDtos': newPermission,
+                  empNo: values?.empNo,
+                  user_code: values.employee_code,
+                  roleId: values.roleId,
+                  storeId: values.storeId,
+                  subInventoryId: values.subInventoryId,
+                  locatorId: values.locatorId,
+                  createdBy: user,
+                  roleAndPermissionDtos: newPermission,
                 };
 
-                const res = await Route("POST", `/UserDtls/addEmployeeDetails`, null, data, null);
-                if (res.data.responseCode === 0) {
+                const res = await Route(
+                  "POST",
+                  `/UserDtls/addEmployeeDetails`,
+                  access_token,
+                  data,
+                  null
+                );
+                if (res?.data?.responseCode === 0) {
                   setNotificationMsg(res.data.responseText);
                   setSeverity("info");
                   setShowNofication(true);
@@ -213,19 +261,45 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
               }
             }}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue, resetForm }) => (
+            {({
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values,
+              setFieldValue,
+              resetForm,
+            }) => (
               <form noValidate onSubmit={handleSubmit}>
-                <Grid container>
+                <Grid container spacing={1} mb={2}>
                   <Grid item xs={12} sm={4}>
                     <Autocomplete
                       disableListWrap
                       options={employeeCode}
                       getOptionLabel={(option) => option.employee_code || ""}
-                      value={employeeCode.find(option => option.user_code === values.employee_code) || null} // Set value from Formik's values
+                      value={
+                        employeeCode.find(
+                          (option) => option.user_code === values.employee_code
+                        ) || null
+                      } // Set value from Formik's values
                       onChange={(e, newValue) => {
-                        setFieldValue('employee_code', newValue ? newValue.user_code : '');
-                        setFieldValue('full_name', newValue ? newValue.full_name : '');
-                        setFieldValue('email_address', newValue ? newValue.email_address : '');
+                        setFieldValue(
+                          "empNo", newValue ?  newValue?.empNo: ""
+                        );
+                        setFieldValue(
+                          "employee_code",
+                          newValue ? newValue.user_code : ""
+                        );
+                        setFieldValue(
+                          "full_name",
+                          newValue ? newValue.full_name : ""
+                        );
+                        setFieldValue(
+                          "email_address",
+                          newValue ? newValue.email_address : ""
+                        );
                       }}
                       onBlur={handleBlur}
                       renderInput={(params) => (
@@ -233,65 +307,71 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                           {...params}
                           label="Employee Code"
                           name="employee_code"
-                          margin="normal"
                           variant="outlined"
                         />
                       )}
                       renderOption={(props, option) => (
-                        <MenuItem {...props} key={option.user_code} value={option.user_code}>
+                        <MenuItem
+                          {...props}
+                          key={option.user_code}
+                          value={option.user_code}
+                        >
                           {option.employee_code}
                         </MenuItem>
                       )}
                       ListboxComponent={VirtualizedListboxComponent} // Use the virtualized list with forwardRef
                       fullWidth
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
+                      size="small"
                     />
-                    {touched.employee_code && errors.employee_code && (
-                      <FormHelperText error id="standard-weight-helper-text--register">
-                        {errors.employee_code}
+                    {touched?.employee_code && errors?.employee_code && (
+                      <FormHelperText
+                        error
+                        id="standard-weight-helper-text--register"
+                      >
+                        {errors?.employee_code}
                       </FormHelperText>
                     )}
                   </Grid>
-                  <Grid item xs={12} sm={4} style={{ paddingLeft: '1%' }}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="User Code(This will be used as login id)"
-                      margin="normal"
                       name="user_code"
-                      defaultValue='eg. E00001'
-                      value={values.employee_code}
+                      defaultValue="eg. E00001"
+                      value={values?.employee_code}
                       disabled
+                      size="small"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4} style={{ paddingLeft: '1%' }}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Full Name"
-                      margin="normal"
                       name="full_name"
-                      defaultValue='eg. John'
-                      value={values.full_name}
+                      defaultValue="eg. John"
+                      value={values?.full_name}
                       disabled
+                      size="small"
                     />
                   </Grid>
                 </Grid>
-                <Grid container>
+                <Grid container spacing={1} mb={2}>
                   <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Email Address"
-                      margin="normal"
                       name="email_address"
-                      defaultValue='eg. john@example.com'
-                      value={values.email_address}
+                      defaultValue="eg. john@example.com"
+                      value={values?.email_address}
                       disabled
+                      size="small"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4} style={{ paddingLeft: '1%' }}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Role"
-                      margin="normal"
                       name="roleId"
                       type="text"
                       value={values.roleId}
@@ -302,6 +382,7 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       }}
                       onBlur={handleBlur}
                       variant="outlined"
+                      size="small"
                       select
                     >
                       {roleList.map((item) => (
@@ -311,16 +392,18 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       ))}
                     </TextField>
                     {touched.roleId && errors.roleId && (
-                      <FormHelperText error id="standard-weight-helper-text--register">
+                      <FormHelperText
+                        error
+                        id="standard-weight-helper-text--register"
+                      >
                         {errors.roleId}
                       </FormHelperText>
                     )}
                   </Grid>
-                  <Grid item xs={12} sm={4} style={{ paddingLeft: '1%' }}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Work Location"
-                      margin="normal"
                       name="storeId"
                       type="text"
                       value={values.storeId}
@@ -330,6 +413,7 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       }}
                       onBlur={handleBlur}
                       variant="outlined"
+                      size="small"
                       select
                     >
                       {location.map((item) => (
@@ -339,27 +423,30 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       ))}
                     </TextField>
                     {touched.storeId && errors.storeId && (
-                      <FormHelperText error id="standard-weight-helper-text--register">
+                      <FormHelperText
+                        error
+                        id="standard-weight-helper-text--register"
+                      >
                         {errors.storeId}
                       </FormHelperText>
                     )}
                   </Grid>
                 </Grid>
-                <Grid container>
+                <Grid container spacing={1} mb={2}>
                   <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Sub Inventory"
-                      margin="normal"
                       name="subInventoryId"
                       type="text"
-                      value={values.subInventoryId}
+                      value={values?.subInventoryId}
                       onChange={(e) => {
                         handleChange(e);
                         fetchLocator(e.target.value, values.storeId);
                       }}
                       onBlur={handleBlur}
                       variant="outlined"
+                      size="small"
                       select
                     >
                       {subInventory.map((item) => (
@@ -369,11 +456,10 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       ))}
                     </TextField>
                   </Grid>
-                  <Grid item xs={12} sm={4} style={{ paddingLeft: '1%' }}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Locator"
-                      margin="normal"
                       name="locatorId"
                       type="text"
                       value={values.locatorId}
@@ -382,25 +468,42 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       }}
                       onBlur={handleBlur}
                       variant="outlined"
+                      size="small"
                       select
                     >
-                      {locator.map((item) => (
+                      {values?.subInventoryId === "FA" ? (
+                        <MenuItem value={values?.full_name}>
+                          {values?.full_name}
+                        </MenuItem>
+                      ) : (
+                        locator.map((item) => (
+                          <MenuItem key={item.id} value={item.id}>
+                            {item.id}
+                          </MenuItem>
+                        ))
+                      )}
+                      {/* {locator.map((item) => (
                         <MenuItem key={item.id} value={item.id}>
                           {item.id}
                         </MenuItem>
-                      ))}
+                      ))} */}
                     </TextField>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} sx={{ my: 1 }} style={{ marginTop: '5%'}}>
-                  <PermissionAccess permission={rolePrivileges} moduleAccess={moduleAccess} setNewPermission={setNewPermission} type='edit'/>
+                <Grid item xs={12} sx={{ my: 4, ml: 4, mt: 6 }}>
+                  <PermissionAccess
+                    permission={rolePrivileges}
+                    moduleAccess={moduleAccess}
+                    setNewPermission={setNewPermission}
+                    type="edit"
+                  />
                 </Grid>
-                <DialogActions sx={{ justifyContent: 'center' }}>
+                <DialogActions sx={{ justifyContent: "flex-end" }}>
                   <Button
                     autoFocus
                     disableElevation
                     disabled={isSubmitting}
-                    size="large"
+                    size="small"
                     type="submit"
                     variant="contained"
                     color="primary"
@@ -413,10 +516,10 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       setRolePrivileges([]);
                       setModuleAccess([]);
                     }}
-                    size="large"
-                    type='button'
-                    variant="contained"
-                    color="warning"
+                    size="small"
+                    type="button"
+                    variant="outlined"
+                    color="error"
                   >
                     Reset
                   </Button>

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Paper,
-  Grid,
-  InputBase,
-  IconButton,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Button, Paper, Grid, InputBase, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,11 +8,14 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CreateTransferOrder from "./CreateTransferOrder";
 import ViewTransferOrder from "./ViewTransferOrder";
 import UpdateTransferOrder from "./UpdateTransferOrder";
-import {Notification, RenderStatus} from "../../ui/index";
+import { Notification, RenderStatus } from "../../ui/index";
+import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
 const TransferOrders = () => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"))
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -29,15 +24,12 @@ const TransferOrders = () => {
   const [edit, setEdit] = useState(false);
   const [view, setView] = useState(false);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
-  const [userDetails, setUserDetails] = useState(
-    JSON.parse(localStorage.getItem("userDetails"))
-  );
 
   const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
     const res = await Route(
       "GET",
       `/transferOrder/viewTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -50,7 +42,7 @@ const TransferOrders = () => {
     const res = await Route(
       "GET",
       `/transferOrder/viewTransferOrderList/${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -58,6 +50,7 @@ const TransferOrders = () => {
       setViewTransferOrderList(
         res?.data?.map((item, index) => ({
           id: index,
+          sl: index + 1,
           transfer_order_no: item?.transfer_Order_Number,
           transfer_from_code: item?.transfer_From_Name,
           transfer_to_code: item?.transfer_To_Name,
@@ -71,7 +64,7 @@ const TransferOrders = () => {
     const res = await Route(
       "PUT",
       `/transferOrder/transferOrderShipment?transferOrderNo=${transferOrderNo}&empId=${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -80,6 +73,7 @@ const TransferOrders = () => {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
       setShowNofication(true);
+      fetchTransferOrderList();
     } else {
       setSeverity("error");
       setNotificationMsg(res?.data?.responseText);
@@ -96,25 +90,25 @@ const TransferOrders = () => {
     updateTransferOrderShipment(params?.row?.transfer_order_no);
   };
   const transfer_order_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "transfer_order_no", headerName: "Transfer Order No", flex: 2 },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
-      width: 240,
+      flex: 2.4,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", width: 240 },
-    { field: "posted_date", headerName: "Posted Date", width: 150 },
+    { field: "transfer_to_code", headerName: "Tansfer To Code", flex: 2.4 },
+    { field: "posted_date", headerName: "Posted Date", flex: 1.5 },
     {
       field: "status",
       headerName: "Status",
-      width: 130,
+      flex: 1.3,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <IconButton
@@ -147,6 +141,7 @@ const TransferOrders = () => {
   ];
   useEffect(() => {
     fetchTransferOrderList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -163,32 +158,9 @@ const TransferOrders = () => {
                 <Grid
                   item
                   xs={12}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
                   <Grid item>
-                    <Paper
-                      sx={{
-                        p: "2px 0",
-                        display: "flex",
-                        alignItems: "center",
-                        width: 400,
-                      }}
-                    >
-                      <InputBase
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search"
-                        inputProps={{ "aria-label": "search" }}
-                      />
-                      <IconButton
-                        type="button"
-                        sx={{ p: "10px" }}
-                        aria-label="search"
-                      >
-                        <SearchIcon />
-                      </IconButton>
-                    </Paper>
-                  </Grid>
-                  <Grid item >
                     <Button
                       variant="contained"
                       color="primary"
@@ -200,27 +172,10 @@ const TransferOrders = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
-                      rows={viewTransferOrderList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={transfer_order_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                    />
-                  </div>
+                  <CustomDataTable
+                    rows={viewTransferOrderList}
+                    cols={transfer_order_columns}
+                  />
                 </Grid>
               </Grid>
             </Box>

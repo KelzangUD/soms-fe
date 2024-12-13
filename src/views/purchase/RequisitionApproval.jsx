@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Route from "../../routes/Route";
+import { DataGrid } from "@mui/x-data-grid";
 import Notification from "../../ui/Notification";
 import { RenderStatus } from "../../ui";
 import UpdateRequisition from "./UpdateRequisition";
 import ApproveRequisition from "./ApproveRequisition";
-import { render } from "react-thermal-printer";
+import { CustomDataTable } from "../../component/common/index";
+import Route from "../../routes/Route";
 
 const RequisitionApproval = () => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [requisitionList, setRequisitionList] = useState([]);
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -28,7 +29,7 @@ const RequisitionApproval = () => {
     const res = await Route(
       "GET",
       `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -45,7 +46,7 @@ const RequisitionApproval = () => {
     const res = await Route(
       "GET",
       `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -59,18 +60,18 @@ const RequisitionApproval = () => {
     }
   };
   const requisiton_approval_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "requisitionNo", headerName: "Requisition No", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "requisitionNo", headerName: "Requisition No", flex: 2 },
     {
       field: "requisitionTypeName",
       headerName: "Requisition Type",
-      width: 200,
+      flex: 2,
     },
-    { field: "requisition_Date", headerName: "Requisition Date", width: 150 },
+    { field: "requisition_Date", headerName: "Requisition Date", flex: 1.5 },
     {
       field: "approvalStatus",
       headerName: "Approval Status",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.approvalStatus} />
       ),
@@ -78,7 +79,7 @@ const RequisitionApproval = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1.5,
       renderCell: (params) => (
         <>
           <IconButton
@@ -109,12 +110,12 @@ const RequisitionApproval = () => {
       ),
     },
   ];
-  //   const token = localStorage.getItem("token");
+
   const fetchRequisitionListByApprover = async () => {
     const res = await Route(
       "GET",
       `/requisition/viewRequisitionListByApprover/${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -124,13 +125,13 @@ const RequisitionApproval = () => {
   };
   useEffect(() => {
     fetchRequisitionListByApprover();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const rejectRequisitionHandle = async (params) => {
-    // console.log(params);
     const res = await Route(
       "PUT",
       `/requisition/rejectRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
-      null,
+      access_token,
       null,
       null
     );
@@ -158,7 +159,7 @@ const RequisitionApproval = () => {
     const res = await Route(
       "PUT",
       `/requisition/bulkApproveRequisitionDetails?empID=${empID}`,
-      null,
+      access_token,
       data,
       null
     );
@@ -180,7 +181,7 @@ const RequisitionApproval = () => {
     const res = await Route(
       "PUT",
       `/requisition/bulkRejectRequisitionDetails?empID=${empID}`,
-      null,
+      access_token,
       data,
       null
     );
@@ -210,31 +211,8 @@ const RequisitionApproval = () => {
                 <Grid
                   item
                   xs={12}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <Grid item>
-                    <Paper
-                      sx={{
-                        p: "2px 0",
-                        display: "flex",
-                        alignItems: "center",
-                        width: 400,
-                      }}
-                    >
-                      <InputBase
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search"
-                        inputProps={{ "aria-label": "search" }}
-                      />
-                      <IconButton
-                        type="button"
-                        sx={{ p: "10px" }}
-                        aria-label="search"
-                      >
-                        <SearchIcon />
-                      </IconButton>
-                    </Paper>
-                  </Grid>
                   <Grid item alignContent="center">
                     <Button
                       variant="contained"
@@ -250,7 +228,7 @@ const RequisitionApproval = () => {
                       onClick={rejectHandle}
                       endIcon={<ClearIcon />}
                       style={{
-                        background: "#fff"
+                        background: "#fff",
                       }}
                     >
                       Reject
@@ -258,14 +236,16 @@ const RequisitionApproval = () => {
                   </Grid>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
-                  >
-                    <DataGrid
+                  <CustomDataTable
+                    rows={requisitionList?.map((row, index) => ({
+                      ...row,
+                      sl: index + 1,
+                    }))}
+                    cols={requisiton_approval_columns}
+                    checkboxSelection={true}
+                    onRowSelectionModelChange={handleRowSelection}
+                  />
+                  {/* <DataGrid
                       rows={requisitionList?.map((row, index) => ({
                         ...row,
                         sl: index + 1,
@@ -279,8 +259,7 @@ const RequisitionApproval = () => {
                       pageSizeOptions={[5, 10]}
                       checkboxSelection
                       onRowSelectionModelChange={handleRowSelection}
-                    />
-                  </div>
+                    /> */}
                 </Grid>
               </Grid>
             </Box>

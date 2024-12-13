@@ -54,7 +54,7 @@ const PostedSalesInvoice = () => {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small">
+          <IconButton aria-label="view" size="small" color="primary">
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
@@ -64,6 +64,7 @@ const PostedSalesInvoice = () => {
   const posted_sales_invoice_rows = [
     {
       id: 1,
+      sl: 1,
       pos_no: "EM/DP1/2024/00001",
       pos_date: "20-Aug-2024",
       customer_name: "TIPL",

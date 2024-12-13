@@ -93,6 +93,7 @@ const ChangePassword = () => {
                     name="old_password"
                     required
                     onChange={oldPasswordHandle}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -103,6 +104,7 @@ const ChangePassword = () => {
                     name="new_password"
                     required
                     onChange={newPasswordHandle}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -113,6 +115,7 @@ const ChangePassword = () => {
                     name="confirm_password"
                     required
                     onChange={confirmPasswordHandle}
+                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -124,16 +127,16 @@ const ChangePassword = () => {
                 <Grid item>
                   <Button
                     variant="contained"
-                    size="large"
                     sx={{ mr: 2 }}
                     onClick={updateHandle}
+                    size="small"
                   >
                     Update
                   </Button>
                   <Button
                     variant="outlined"
                     color="error"
-                    size="large"
+                    size="small"
                     onClick={cancleHandle}
                   >
                     Cancel

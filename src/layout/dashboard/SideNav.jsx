@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Paper,
   Grid,
   Box,
   Typography,
@@ -15,27 +14,40 @@ import {
 import Logo from "../../assets/images/logo.ico";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { styled } from "@mui/material/styles";
+import MuiDrawer, { drawerClasses } from "@mui/material/Drawer";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { MenuItems } from "./SideBar";
 import { menuListFilter } from "../../util/CommonUtil";
 
+const drawerWidth = 240;
+
+const Drawer = styled(MuiDrawer)({
+  width: drawerWidth,
+  flexShrink: 0,
+  boxSizing: "border-box",
+  mt: 10,
+  [`& .${drawerClasses.paper}`]: {
+    width: drawerWidth,
+    boxSizing: "border-box",
+    backgroundColor: "#0F67B1",
+    color: "#fff",
+  },
+});
+
 export default function SideNav() {
   const navigation = useNavigate();
-  const containerStyle = {
-    minHeight: "100%",
-    display: "flex",
-    flexDirection: "column",
-    borderRadius: 0,
-    backgroundColor: "#F5F7F8",
-  };
   const routeHandle = (route) => {
     navigation(route);
   };
   const handleNestedItemClick = (index) => {
-    const newOpenStates = [...openStates];
-    newOpenStates[index] = !newOpenStates[index];
-    setOpenStates(newOpenStates);
+    setOpenStates((prevOpenStates) => {
+      const isAlreadyOpen = prevOpenStates[index];
+      const newOpenStates = prevOpenStates.map(() => false);
+      newOpenStates[index] = !isAlreadyOpen;
+      return newOpenStates;
+    });
   };
   const [openStates, setOpenStates] = useState(MenuItems.map(() => false));
   const [menuList, setMenuList] = useState([]);
@@ -52,7 +64,12 @@ export default function SideNav() {
   }, []);
 
   return (
-    <Paper style={containerStyle}>
+    <Drawer
+      variant="permanent"
+      sx={{
+        display: { xs: "none", md: "block" },
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -73,11 +90,11 @@ export default function SideNav() {
               <img
                 src={Logo}
                 alt="Logo"
-                style={{ width: "18%", height: "auto" }}
+                style={{ width: "30%", height: "auto" }}
               />
             </Button>
           </Grid>
-          <Grid item xs={12} marginBottom={2}>
+          <Grid item xs={12} marginBottom={1}>
             <Typography variant="body2" align="center">
               Sales & Order Management System
             </Typography>
@@ -139,11 +156,13 @@ export default function SideNav() {
                   {item.nestedItems.map((nestedItem, nestedIndex) => (
                     <ListItemButton
                       key={nestedIndex}
-                      // sx={{ pl: 1 }}
                       onClick={() => routeHandle(nestedItem?.route)}
                     >
                       <ListItemIcon>
-                        <KeyboardArrowRightIcon fontSize="small" />
+                        <KeyboardArrowRightIcon
+                          fontSize="small"
+                          sx={{ color: "#fff" }}
+                        />
                       </ListItemIcon>
                       <ListItemText style={{ marginLeft: -26 }}>
                         <Typography variant="body2">
@@ -158,6 +177,6 @@ export default function SideNav() {
           </React.Fragment>
         ))}
       </List>
-    </Paper>
+    </Drawer>
   );
 }

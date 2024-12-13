@@ -1,99 +1,113 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { 
-  Button, 
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogTitle, 
-  FormHelperText, 
-  Grid, 
-  IconButton, 
-  MenuItem, 
-  Paper, 
-  styled, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  tableCellClasses, 
-  TableContainer, 
-  TableHead, 
-  TableRow, 
-  TextField } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { Formik } from 'formik';
-import Route from '../../routes/Route';
-import * as Yup from 'yup';
-import EditIcon from '@mui/icons-material/Edit';
-import Notification from '../../ui/Notification';
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormHelperText,
+  Grid,
+  IconButton,
+  MenuItem,
+  Paper,
+  styled,
+  Table,
+  TableBody,
+  TableCell,
+  tableCellClasses,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Formik } from "formik";
+import Route from "../../routes/Route";
+import * as Yup from "yup";
+import EditIcon from "@mui/icons-material/Edit";
+import Notification from "../../ui/Notification";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2)
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
   },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1)
-  }
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: "rgb(245, 247, 248)",
+    fontSize: 14,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: 12,
+    padding: "3px 12px"
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
+  "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierarchyName, open}) => {
+const EditHierarchyDialog = ({
+  hierarchyDtls,
+  handleClose,
+  hierarchyRole,
+  hierarchyName,
+  open,
+}) => {
   const ref = useRef(null);
-  const user = localStorage.getItem('username');
+  const user = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [hierarchyDetails, setHierarchyDetails] = useState([]);
-  const [notificationMsg, setNotificationMsg] = useState('');
+  const [notificationMsg, setNotificationMsg] = useState("");
   const [showNotification, setShowNofication] = useState(false);
-  const [severity, setSeverity] = useState('');
+  const [severity, setSeverity] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
 
   useEffect(() => {
-    const updatedHierarchyDetails = hierarchyDtls.map(detail => ({
+    const updatedHierarchyDetails = hierarchyDtls.map((detail) => ({
       ...detail,
-      updatedBy: user
+      updatedBy: user,
     }));
-  
+
     setHierarchyDetails(updatedHierarchyDetails);
   }, [hierarchyDtls, user]);
 
   const [initialValues, setInitialValues] = useState({
     hierarchyName: hierarchyName,
     updatedBy: user,
-    hierarchyLevel: '',
-    status: '',
-    roleId: '',
-    hierarchyId: null
+    hierarchyLevel: "",
+    status: "",
+    roleId: "",
+    hierarchyId: null,
   });
-  
+
   const handleEdit = (index) => {
     const rowData = hierarchyDetails[index];
     setInitialValues(rowData); // Initialize form with row data
     setIsEditing(true); // Set editing state to true
     setCurrentIndex(index);
   };
-  
+
   const saveNewHierarchy = async () => {
     try {
       let data = hierarchyDetails;
-      const res = await Route("PUT", `/UserDtls/updateHierarchyName`, null, data, null);
+      const res = await Route(
+        "PUT",
+        `/UserDtls/updateHierarchyName`,
+        access_token,
+        data,
+        null
+      );
       if (res?.data?.responseCode === 0) {
         setNotificationMsg(res?.data?.responseText);
         setSeverity("info");
@@ -118,19 +132,22 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
         id="edit_hierarchy"
         open={open}
         fullWidth
-        maxWidth={'lg'}
+        maxWidth={"lg"}
       >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="edit_hierarchy_dialog">
+        <DialogTitle
+          sx={{ m: 0, p: 2, background: "#1976d2", color: "#eee" }}
+          id="edit_hierarchy_dialog"
+        >
           Edit Hierarchy
         </DialogTitle>
         <IconButton
           aria-label="close"
           onClick={handleClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500]
+            color: "#eee",
           }}
         >
           <CloseIcon />
@@ -140,14 +157,16 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
             enableReinitialize
             initialValues={initialValues}
             validationSchema={Yup.object().shape({
-              hierarchyName: Yup.string().required('Hierarchy name is required'),
-              status: Yup.string().required('Approval status is required'),
-              roleId: Yup.string().required('Role is required'),
-              hierarchyLevel: Yup.string().required('Level is required')
+              hierarchyName: Yup.string().required(
+                "Hierarchy name is required"
+              ),
+              status: Yup.string().required("Approval status is required"),
+              roleId: Yup.string().required("Role is required"),
+              hierarchyLevel: Yup.string().required("Level is required"),
             })}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
               if (isEditing && currentIndex !== null) {
-                setHierarchyDetails(prevDetails =>
+                setHierarchyDetails((prevDetails) =>
                   prevDetails.map((detail, index) =>
                     index === currentIndex ? values : detail
                   )
@@ -155,38 +174,47 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
                 setInitialValues({
                   hierarchyName: hierarchyName,
                   updatedBy: user,
-                  status: '',
-                  roleId: '',
-                  roleName: '',
-                  hierarchyLevel: '',
+                  status: "",
+                  roleId: "",
+                  roleName: "",
+                  hierarchyLevel: "",
                 });
                 setIsEditing(false);
                 setCurrentIndex(null);
               } else {
-                setHierarchyDetails(prevDetails => [...prevDetails, values]);
+                setHierarchyDetails((prevDetails) => [...prevDetails, values]);
                 resetForm();
               }
               setSubmitting(false);
             }}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue }) => (
+            {({
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values,
+              setFieldValue,
+            }) => (
               <form noValidate onSubmit={handleSubmit}>
-                <Grid container>
+                <Grid container spacing={1} mb={1}>
                   <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Hierarchy name"
-                      margin="normal"
+                      size="small"
                       name="hierarchyName"
                       value={hierarchyName}
                       disabled={true}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4} style={{ paddingLeft: '1%' }}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Level"
-                      margin="normal"
+                      size="small"
                       name="hierarchyLevel"
                       type="text"
                       value={values.hierarchyLevel}
@@ -200,23 +228,28 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
                       <MenuItem value="Level3">Level 3</MenuItem>
                     </TextField>
                     {touched.hierarchyLevel && errors.hierarchyLevel && (
-                      <FormHelperText error id="standard-weight-helper-text--register">
+                      <FormHelperText
+                        error
+                        id="standard-weight-helper-text--register"
+                      >
                         {errors.hierarchyLevel}
                       </FormHelperText>
                     )}
                   </Grid>
-                  <Grid item xs={12} sm={4} style={{ paddingLeft: '1%' }}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       fullWidth
                       label="Value"
-                      margin="normal"
+                      size="small"
                       name="roleId"
                       type="text"
                       value={values.roleId}
                       onChange={(e) => {
-                        const selectedRole = hierarchyRole.find(role => role.id === e.target.value);
-                        setFieldValue('roleId', selectedRole.id);  // Set the id
-                        setFieldValue('roleName', selectedRole.type);
+                        const selectedRole = hierarchyRole.find(
+                          (role) => role.id === e.target.value
+                        );
+                        setFieldValue("roleId", selectedRole.id); // Set the id
+                        setFieldValue("roleName", selectedRole.type);
                       }}
                       onBlur={handleBlur}
                       variant="outlined"
@@ -228,50 +261,60 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
                         </MenuItem>
                       ))}
                       {touched.roleId && errors.roleId && (
-                        <FormHelperText error id="standard-weight-helper-text--register">
+                        <FormHelperText
+                          error
+                          id="standard-weight-helper-text--register"
+                        >
                           {errors.roleId}
                         </FormHelperText>
                       )}
                     </TextField>
                   </Grid>
-                  <Grid container>
-                    <Grid item xs={12} sm={4}>
-                      <TextField
-                        fullWidth
-                        label="Status"
-                        margin="normal"
-                        name="status"
-                        type="text"
-                        value={values.status}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        variant="outlined"
-                        select
+                </Grid>
+                <Grid container spacing={1} mb={1}>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      fullWidth
+                      label="Status"
+                      size="small"
+                      name="status"
+                      type="text"
+                      value={values.status}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      variant="outlined"
+                      select
+                    >
+                      <MenuItem value="Active">Active</MenuItem>
+                      <MenuItem value="In_Active">In_Active</MenuItem>
+                    </TextField>
+                    {touched.status && errors.status && (
+                      <FormHelperText
+                        error
+                        id="standard-weight-helper-text--register"
                       >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="In_Active">In_Active</MenuItem>
-                      </TextField>
-                      {touched.status && errors.status && (
-                        <FormHelperText error id="standard-weight-helper-text--register">
-                          {errors.status}
-                        </FormHelperText>
-                      )}
-                    </Grid>
+                        {errors.status}
+                      </FormHelperText>
+                    )}
                   </Grid>
                 </Grid>
-                <DialogActions sx={{ justifyContent: 'center' }}>
+                <Grid
+                  container
+                  mb={2}
+                  sx={{ justifyContent: "flex-end" }}
+                >
                   <Button
                     autoFocus
                     disableElevation
                     disabled={isSubmitting}
-                    size="large"
+                    size="small"
                     type="submit"
                     variant="contained"
                     color="primary"
                   >
-                    {isEditing ? 'Update' : 'Add'}
+                    {isEditing ? "Update" : "Add"}
                   </Button>
-                </DialogActions>
+                </Grid>
               </form>
             )}
           </Formik>
@@ -281,9 +324,13 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell>Sr. No</StyledTableCell>
-                      <StyledTableCell align="right">Hierarchy Level</StyledTableCell>
-                      <StyledTableCell align="right">Hierarchy Value</StyledTableCell>
+                      <StyledTableCell >Sr. No</StyledTableCell>
+                      <StyledTableCell align="right">
+                        Hierarchy Level
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        Hierarchy Value
+                      </StyledTableCell>
                       <StyledTableCell align="right">Status</StyledTableCell>
                       <StyledTableCell align="right">Action</StyledTableCell>
                     </TableRow>
@@ -294,11 +341,21 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
                         <StyledTableCell component="th" scope="row">
                           {index + 1}
                         </StyledTableCell>
-                        <StyledTableCell align="right">{row.hierarchyLevel}</StyledTableCell>
-                        <StyledTableCell align="right">{row.roleName}</StyledTableCell>
-                        <StyledTableCell align="right">{row.status}</StyledTableCell>
                         <StyledTableCell align="right">
-                          <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(index)}>
+                          {row.hierarchyLevel}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          {row.roleName}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          {row.status}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          <IconButton
+                            color="primary"
+                            aria-label="edit"
+                            onClick={() => handleEdit(index)}
+                          >
                             <EditIcon />
                           </IconButton>
                         </StyledTableCell>
@@ -307,9 +364,9 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
                   </TableBody>
                 </Table>
               </TableContainer>
-              <DialogActions sx={{ justifyContent: 'center' }}>
+              <DialogActions sx={{ justifyContent: "flex-end", mr:-1, mt: 2 }}>
                 <Button
-                  size="large"
+                  size="small"
                   type="button"
                   variant="contained"
                   color="primary"
@@ -319,7 +376,9 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
                 </Button>
               </DialogActions>
             </>
-          ) : ("")}
+          ) : (
+            ""
+          )}
         </DialogContent>
       </BootstrapDialog>
       {showNotification && (
@@ -332,6 +391,6 @@ const EditHierarchyDialog = ({ hierarchyDtls, handleClose, hierarchyRole, hierar
       )}
     </>
   );
-}
+};
 
 export default EditHierarchyDialog;

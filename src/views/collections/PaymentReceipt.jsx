@@ -7,43 +7,34 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Paper,
   Grid,
   TextField,
   MenuItem,
   FormControl,
   InputLabel,
   Select,
-  Slide,
   Typography,
+  Card,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
+import { Transition } from "../../component/common/index";
 import Route from "../../routes/Route";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-  outlineColor: "#fff",
-});
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { useCommon } from "../../contexts/CommonContext";
 
 const PaymentReceipt = () => {
+  const {
+    serviceType,
+    paymentType,
+    paymentOptions,
+    bankAccountNames,
+    fetchBankAccountName,
+  } = useCommon();
   const userId = localStorage?.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [responseData, setResponseData] = useState({});
   const [showNotification, setShowNofication] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
@@ -75,51 +66,11 @@ const PaymentReceipt = () => {
     chequeDateField: true,
     chequeCopyField: true,
   });
-  const [fileName, setFileName] = useState("Upload File");
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [chequeCopy, setChequeCopy] = useState(null);
-  const [serviceType, setServiceType] = useState([]);
-  const [paymentType, setPaymentType] = useState([]);
-  const [paymentOptions, setPaymentOptions] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState("1");
-  const [bankAccountNames, setBankAccountNames] = useState([]);
-  const fetchServiceType = async () => {
-    const res = await Route("GET", "/Common/ServiceType", null, null, null);
-    if (res?.status === 200) {
-      setServiceType(res?.data);
-    }
-  };
-  const fetchPaymentType = async () => {
-    const res = await Route("GET", "/Common/PaymentType", null, null, null);
-    if (res?.status === 200) {
-      setPaymentType(res?.data);
-    }
-  };
-  const fetchPaymentOptions = async () => {
-    const res = await Route("GET", "/Common/PaymentOption", null, null, null);
-    if (res?.status === 200) {
-      setPaymentOptions(res?.data);
-    }
-  };
-  const fetchBankAccountName = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchBankDetails?userId=${userId}&paymentType=${paymentMethod}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setBankAccountNames(res?.data);
-    }
-  };
   useEffect(() => {
-    fetchServiceType();
-    fetchPaymentType();
-    fetchPaymentOptions();
-    fetchBankAccountName();
-  }, []);
-  useEffect(() => {
-    fetchBankAccountName();
+    fetchBankAccountName(paymentMethod);
   }, [paymentMethod]);
   const serviceTypeHandle = (e) => {
     e?.target?.value === "1"
@@ -144,19 +95,19 @@ const PaymentReceipt = () => {
   };
   const fetchCustomerDetailsHandle = async () => {
     if (
-      (paymentReceiptDetails?.serviceType == "1" &&
-        paymentReceiptDetails?.mobileNo?.length == 8) ||
-      (paymentReceiptDetails?.serviceType == "1" &&
+      (paymentReceiptDetails?.serviceType === "1" &&
+        paymentReceiptDetails?.mobileNo?.length === 8) ||
+      (paymentReceiptDetails?.serviceType === "1" &&
         paymentReceiptDetails?.mobileNo?.startsWith("77")) ||
-      (paymentReceiptDetails?.serviceType == "2" &&
-        paymentReceiptDetails?.mobileNo?.length == 9) ||
-      (paymentReceiptDetails?.serviceType == "3" &&
-        paymentReceiptDetails?.mobileNo?.length == 5)
+      (paymentReceiptDetails?.serviceType === "2" &&
+        paymentReceiptDetails?.mobileNo?.length === 9) ||
+      (paymentReceiptDetails?.serviceType === "3" &&
+        paymentReceiptDetails?.mobileNo?.length === 5)
     ) {
       const res = await Route(
         "GET",
         `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
-        null,
+        access_token,
         null,
         null
       );
@@ -185,6 +136,7 @@ const PaymentReceipt = () => {
     ) {
       fetchCustomerDetailsHandle();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     paymentReceiptDetails?.serviceType,
     paymentReceiptDetails?.mobileNo,
@@ -220,6 +172,7 @@ const PaymentReceipt = () => {
   const paymentHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
+      bankId: null,
       payment: e?.target?.value,
     }));
   };
@@ -248,7 +201,7 @@ const PaymentReceipt = () => {
     }));
   };
   const chequeCopyHandle = (e) => {
-    setFileName(e?.target?.files[0]?.name);
+    setIsFileUploaded(true);
     setChequeCopy(e?.target?.files[0]);
   };
   const remarksHandle = (e) => {
@@ -257,14 +210,12 @@ const PaymentReceipt = () => {
       remarks: e?.target?.value,
     }));
   };
-  // const token = localStorage.getItem("access_token");
   const createHandle = async (e) => {
     e.preventDefault();
-    console.log(paymentReceiptDetails?.mobileNo?.length);
     if (
-      (paymentReceiptDetails?.serviceType == "1" &&
+      (paymentReceiptDetails?.serviceType === "1" &&
         paymentReceiptDetails?.mobileNo?.length !== 8) ||
-      (paymentReceiptDetails?.serviceType == "2" &&
+      (paymentReceiptDetails?.serviceType === "2" &&
         paymentReceiptDetails?.mobileNo?.length !== 9)
     ) {
       setIncorrectFormat(true);
@@ -289,10 +240,7 @@ const PaymentReceipt = () => {
         null,
         "multipart/form-data"
       );
-      // console.log(paymentReceiptDetails);
-      // console.log(res);
       if (res?.status === 200) {
-        // console.log(res?.data);
         setResponseData(res?.data);
         setNotificationMsg(
           `Successfully Paid and your Application No is ${res?.data?.applicationNo}`
@@ -325,7 +273,7 @@ const PaymentReceipt = () => {
           chequeDateField: true,
           chequeCopyField: true,
         }));
-        setFileName("Upload File");
+        setIsFileUploaded(false);
       } else {
         setNotificationMsg(res?.response?.data?.message);
         setSeverity("error");
@@ -360,7 +308,7 @@ const PaymentReceipt = () => {
       chequeDateField: true,
       chequeCopyField: true,
     }));
-    setFileName("Upload File");
+    setIsFileUploaded(false);
   };
   const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
@@ -374,12 +322,22 @@ const PaymentReceipt = () => {
   return (
     <>
       <Box sx={{ px: 2 }}>
-        <Grid container spacing={4} alignItems="center">
+        <Grid container alignItems="center">
           <Grid item xs={12}>
-            <Paper elevation={1}>
-              <Grid container paddingX={2} paddingY={1} spacing={1}>
-                <Grid item xs={9} container>
-                  <Grid container spacing={1}>
+            <Grid container spacing={2}>
+              <Grid item container xs={9}>
+                <Card sx={{ width: "100%" }}>
+                  <Grid
+                    padding={2}
+                    sx={{
+                      background: "#1976d2",
+                    }}
+                  >
+                    <Typography variant="subtitle1" color="#eee">
+                      Service Details
+                    </Typography>
+                  </Grid>
+                  <Grid container spacing={1} mt={1} mb={2} paddingX={2}>
                     <Grid item xs={3}>
                       <FormControl fullWidth size="small">
                         <InputLabel id="service-type-select-label">
@@ -436,7 +394,20 @@ const PaymentReceipt = () => {
                       />
                     </Grid>
                   </Grid>
-                  <Grid container spacing={1}>
+                </Card>
+                <Card sx={{ width: "100%", marginTop: 2 }}>
+                  <Grid
+                    container
+                    padding={2}
+                    sx={{
+                      background: "#1976d2",
+                    }}
+                  >
+                    <Typography variant="subtitle1" color="#eee">
+                      Payment Details
+                    </Typography>
+                  </Grid>
+                  <Grid container spacing={1} marginY={1} paddingX={2}>
                     <Grid item xs={3}>
                       <FormControl fullWidth>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -506,7 +477,7 @@ const PaymentReceipt = () => {
                       </FormControl>
                     </Grid>
                   </Grid>
-                  <Grid container spacing={1}>
+                  <Grid container spacing={1} marginY={1} paddingX={2}>
                     <Grid item xs={3}>
                       <TextField
                         label="Cheque No"
@@ -537,128 +508,114 @@ const PaymentReceipt = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={3}>
-                      <Button
-                        component="label"
-                        role={undefined}
-                        tabIndex={-1}
-                        size="small"
-                        // endIcon={<CloudUploadIcon />}
-                        fullWidth
-                        variant="outlined"
-                        style={{
-                          border: "1px solid #B4B4B8",
-                          color: "#686D76",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-start",
-                          padding: "7px",
-                          textOverflow: "ellipsis",
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        <span
-                          style={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            flexGrow: 1,
-                          }}
-                        >
-                          {fileName}
-                        </span>
-                        <CloudUploadIcon />
-                        <VisuallyHiddenInput
-                          type="file"
-                          onChange={chequeCopyHandle}
-                          multiple
-                          disabled={disableFields?.chequeNoField}
-                        />
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
                       <TextField
-                        label="Remarks"
-                        variant="outlined"
-                        fullWidth
-                        name="remarks"
-                        required
-                        onChange={remarksHandle}
-                        value={paymentReceiptDetails?.remarks}
-                        multiline
-                        maxRows={3}
+                        type="file"
                         size="small"
+                        label={isFileUploaded ? "File" : ""}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={chequeCopyHandle}
+                        disabled={disableFields?.chequeNoField}
                       />
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item xs={3} container>
-                  <Paper>
-                    <Grid item xs={12}>
-                      <Grid
-                        container
-                        paddingX={2}
-                        paddingY={1}
-                        sx={{
-                          backgroundColor: "#1976d2",
-                        }}
-                      >
-                        <Grid item>
-                          <Typography variant="subtitle1" color="#fff">
-                            Customer Details
-                          </Typography>
-                        </Grid>
+                  <Grid item xs={12} marginY={2} paddingX={2}>
+                    <TextField
+                      label="Remarks"
+                      variant="outlined"
+                      fullWidth
+                      name="remarks"
+                      required
+                      onChange={remarksHandle}
+                      value={paymentReceiptDetails?.remarks}
+                      multiline
+                      rows={1}
+                    />
+                  </Grid>
+                </Card>
+              </Grid>
+              <Grid item xs={3} container>
+                <Card sx={{ width: "100%" }}>
+                  <Grid item xs={12}>
+                    <Grid
+                      container
+                      padding={2}
+                      sx={{
+                        background: "#1976d2",
+                      }}
+                    >
+                      <Typography variant="subtitle1" color="#eee">
+                        Customer Details
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      container
+                      paddingY={2}
+                      spacing={3.5}
+                      sx={{
+                        display: "flex",
+                        flexFlow: "column",
+                      }}
+                    >
+                      <Grid item marginX={1.5}>
+                        <TextField
+                          label="Customer Name"
+                          variant="outlined"
+                          fullWidth
+                          name="customer_name"
+                          disabled
+                          value={paymentReceiptDetails?.name}
+                          size="small"
+                        />
                       </Grid>
-                      <Grid
-                        container
-                        paddingY={2}
-                        spacing={1}
-                        sx={{
-                          display: "flex",
-                          flexFlow: "column",
-                        }}
-                      >
-                        <Grid item marginX={1}>
-                          <TextField
-                            label="Customer Name"
-                            variant="outlined"
-                            fullWidth
-                            name="customer_name"
-                            disabled
-                            value={paymentReceiptDetails?.name}
-                            size="small"
-                          />
-                        </Grid>
-                        <Grid item marginX={1}>
-                          <TextField
-                            label="Account Id"
-                            variant="outlined"
-                            fullWidth
-                            name="account_id"
-                            disabled
-                            value={paymentReceiptDetails?.accountId}
-                            size="small"
-                          />
-                        </Grid>
-                        <Grid item marginX={1}>
-                          <TextField
-                            label="Outstanding Balance"
-                            variant="outlined"
-                            fullWidth
-                            name="outstanding_balance"
-                            disabled
-                            value={paymentReceiptDetails?.outstandingBalance}
-                            size="small"
-                          />
-                        </Grid>
+                      <Grid item marginX={1.5}>
+                        <TextField
+                          label="Account Id"
+                          variant="outlined"
+                          fullWidth
+                          name="account_id"
+                          disabled
+                          value={paymentReceiptDetails?.accountId}
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item marginX={1.5}>
+                        <TextField
+                          label="Invoice No"
+                          variant="outlined"
+                          fullWidth
+                          name="invoice_no"
+                          disabled
+                          value="---"
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item marginX={1.5}>
+                        <TextField
+                          label="CBS Customer Status"
+                          variant="outlined"
+                          fullWidth
+                          name="cbs_customer_status"
+                          disabled
+                          value="---"
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item marginX={1.5}>
+                        <TextField
+                          label="Outstanding Balance"
+                          variant="outlined"
+                          fullWidth
+                          name="outstanding_balance"
+                          disabled
+                          value={paymentReceiptDetails?.outstandingBalance}
+                          size="small"
+                        />
                       </Grid>
                     </Grid>
-                  </Paper>
-                </Grid>
+                  </Grid>
+                </Card>
               </Grid>
-            </Paper>
+            </Grid>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
             <Button
@@ -673,7 +630,7 @@ const PaymentReceipt = () => {
               variant="outlined"
               color="error"
               onClick={cancelHandle}
-              style={{ background: "#fff" }}
+              sx={{ background: "#fff" }}
               size="small"
             >
               Cancel
