@@ -35,6 +35,7 @@ const Requisitions = () => {
   const { requisitionType, requisitionItems } = useCommon();
   const empId = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -109,7 +110,7 @@ const Requisitions = () => {
     const res = await Route(
       "POST",
       `/requisition/createRequisition`,
-      null,
+      access_token,
       requisitionData,
       null
     );
@@ -156,8 +157,8 @@ const Requisitions = () => {
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      backgroundColor: "#1976d2",
-                      color: "#eee",
+                      backgroundColor: (theme) => theme.palette.bg.light,
+                      color: "#000",
                     }}
                   >
                     <Grid item>
@@ -269,8 +270,8 @@ const Requisitions = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        backgroundColor: "#1976d2",
-                        color: "#eee",
+                        backgroundColor: (theme) => theme.palette.bg.light,
+                        color: "#000",
                       }}
                     >
                       <Grid item>

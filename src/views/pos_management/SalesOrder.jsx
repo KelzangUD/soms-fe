@@ -116,6 +116,7 @@ const SalesOrder = () => {
       null,
       null
     );
+    console.log(res);
     if (res?.status === 200) {
       setCustomersList(res?.data);
     }
@@ -521,17 +522,16 @@ const SalesOrder = () => {
             <Card>
               <Grid
                 container
-                paddingY={2}
-                paddingX={2}
+                padding={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1" color="#eee">
+                  <Typography variant="subtitle1">
                     Header
                   </Typography>
                 </Grid>
@@ -703,11 +703,11 @@ const SalesOrder = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1" color="#eee">
+                  <Typography variant="subtitle1" color="#000">
                     Line
                   </Typography>
                 </Grid>
@@ -719,9 +719,8 @@ const SalesOrder = () => {
                       tabIndex={-1}
                       fullWidth
                       variant="outlined"
-                      style={{ border: "0 solid #B4B4B8", color: "#686D76" }}
                     >
-                      <FileUploadIcon sx={{ color: "#eee" }} />
+                      <FileUploadIcon />
                       <VisuallyHiddentInputComponent
                         onChange={uploadCSVFileHandle}
                       />
@@ -732,11 +731,11 @@ const SalesOrder = () => {
                       aria-label="download"
                       onClick={() => downloadSampleHandle("BulkUploader")}
                     >
-                      <FileDownloadIcon sx={{ color: "#eee" }} />
+                      <FileDownloadIcon />
                     </IconButton>
                   )}
                   <IconButton aria-label="add-line" onClick={addButtonHandle}>
-                    <AddBoxIcon sx={{ color: "#eee" }} />
+                    <AddBoxIcon />
                   </IconButton>
                 </Grid>
               </Grid>
@@ -759,11 +758,12 @@ const SalesOrder = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
+                  color: "#000"
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1" color="#eee">
+                  <Typography variant="subtitle1">
                     Payment Details
                   </Typography>
                 </Grid>

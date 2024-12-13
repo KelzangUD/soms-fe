@@ -217,7 +217,9 @@ export const CommonProvider = ({ children }) => {
       null,
       null
     );
+    setOnHandsTransferOrderItems([]);
     if (res?.status === 200) {
+      console.log(res?.data?.length);
       setOnHandsTransferOrderItems(res?.data);
     }
   };

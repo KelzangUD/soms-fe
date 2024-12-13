@@ -31,8 +31,8 @@ const Drawer = styled(MuiDrawer)({
   [`& .${drawerClasses.paper}`]: {
     width: drawerWidth,
     boxSizing: "border-box",
-    backgroundColor: "#0F67B1",
-    color: "#fff",
+    color: "#000",
+    backgroundColor: "#bbdefb"
   },
 });
 
@@ -159,10 +159,7 @@ export default function SideNav() {
                       onClick={() => routeHandle(nestedItem?.route)}
                     >
                       <ListItemIcon>
-                        <KeyboardArrowRightIcon
-                          fontSize="small"
-                          sx={{ color: "#fff" }}
-                        />
+                        <KeyboardArrowRightIcon fontSize="small" />
                       </ListItemIcon>
                       <ListItemText style={{ marginLeft: -26 }}>
                         <Typography variant="body2">

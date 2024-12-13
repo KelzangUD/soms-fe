@@ -47,6 +47,10 @@ const CreateTransferOrder = ({
     toStore,
     onHandsTransferOrderItems,
   } = useCommon();
+  useEffect(() => {
+    console.log(onHandsTransferOrderItems?.length)
+    
+  },[])
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);

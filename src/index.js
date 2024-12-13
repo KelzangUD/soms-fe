@@ -13,6 +13,11 @@ const theme = createTheme({
   typography: {
     fontSize: 12,
   },
+  palette: {
+    bg: {
+      light: "#bbdefb"
+    }
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

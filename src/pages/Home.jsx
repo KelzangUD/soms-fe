@@ -31,36 +31,37 @@ const Home = () => {
       <Box sx={{ display: "flex" }}>
         <SideNav />
         <Box
-          component="main"
+          // component="main"
           sx={{
             flexGrow: 1,
             overflow: "auto",
           }}
         >
-          <Stack
+          {/* <Stack
             sx={{
               alignItems: "center",
             }}
           >
-            <Item style={{ backgroundImage: `url(${bg})` }}>
-              <Nav />
-              <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/work-structures/*" element={<WorkStructures />} />
-                <Route path="/employee/*" element={<Employee />} />
-                <Route path="/pos-management/*" element={<POSManagement />} />
-                <Route path="/collections/*" element={<Collections />} />
-                <Route path="/purchase/*" element={<Purchase />} />
-                <Route path="/inventory/*" element={<Inventory />} />
-                <Route path="/reports/*" element={<Reports />} />
-                <Route path="/ebs-reports/*" element={<EBSReports />} />
-                <Route path="/setting/*" element={<Setting />} />
-              </Routes>
-            </Item>
-            <Footer />
-          </Stack>
+            
+          </Stack> */}
+          <Item style={{ backgroundImage: `url(${bg})` }}>
+            <Nav />
+            <Routes>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/work-structures/*" element={<WorkStructures />} />
+              <Route path="/employee/*" element={<Employee />} />
+              <Route path="/pos-management/*" element={<POSManagement />} />
+              <Route path="/collections/*" element={<Collections />} />
+              <Route path="/purchase/*" element={<Purchase />} />
+              <Route path="/inventory/*" element={<Inventory />} />
+              <Route path="/reports/*" element={<Reports />} />
+              <Route path="/ebs-reports/*" element={<EBSReports />} />
+              <Route path="/setting/*" element={<Setting />} />
+            </Routes>
+          </Item>
+          <Footer />
         </Box>
       </Box>
     </>

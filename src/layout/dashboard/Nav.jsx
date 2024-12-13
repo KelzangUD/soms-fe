@@ -24,7 +24,6 @@ const Nav = () => {
   const [message, setMessage] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
   const [open, setOpen] = useState(false);
-  // const [openNotification, setOpenNotification] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -51,9 +50,11 @@ const Nav = () => {
   };
   const profileHandle = () => {
     navigation("/home/profile");
+    setAnchorEl(false);
   };
   const changePasswordHandle = () => {
     navigation("/home/change-password");
+    setAnchorEl(false);
   };
   const token = localStorage.getItem("access_token");
   const logoutHandle = async () => {
@@ -147,6 +148,8 @@ const Nav = () => {
           boxShadow: "none",
           paddingY: "21px",
           marginBottom: 4,
+          background: (theme) => theme.palette.bg.light,
+          color: "#000"
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -190,7 +193,6 @@ const Nav = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      {/* <Divider /> */}
       {renderMobileMenu}
       {renderMenu}
       {open && <Notification open={open} setOpen={setOpen} message={message} />}

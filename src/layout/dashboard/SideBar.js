@@ -13,12 +13,12 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 export const MenuItems = [
   {
     module: "Dashboard",
-    icon: <DashboardIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <DashboardIcon fontSize="small" />,
     route: "/home/dashboard",
   },
   {
     module: "Work Structures",
-    icon: <ManageAccountsIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <ManageAccountsIcon fontSize="small" />,
     // itemNumber: 1,
     nestedItems: [
       {
@@ -53,7 +53,7 @@ export const MenuItems = [
   },
   {
     module: "Employee",
-    icon: <PeopleIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <PeopleIcon fontSize="small" />,
     // itemNumber: 2,
     nestedItems: [
       {
@@ -68,7 +68,7 @@ export const MenuItems = [
   },
   {
     module: "POS Management",
-    icon: <PointOfSaleIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <PointOfSaleIcon fontSize="small" />,
     // itemNumber: 3,
     nestedItems: [
       {
@@ -95,7 +95,7 @@ export const MenuItems = [
   },
   {
     module: "Collections",
-    icon: <CollectionsIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <CollectionsIcon fontSize="small" />,
     // itemNumber: 4,
     nestedItems: [
       {
@@ -130,7 +130,7 @@ export const MenuItems = [
   },
   {
     module: "Purchase",
-    icon: <ShoppingCartIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <ShoppingCartIcon fontSize="small" />,
     // itemNumber: 5,
     nestedItems: [
       {
@@ -149,7 +149,7 @@ export const MenuItems = [
   },
   {
     module: "Inventory",
-    icon: <InventoryIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <InventoryIcon fontSize="small"  />,
     // itemNumber: 6,
     nestedItems: [
       {
@@ -176,7 +176,7 @@ export const MenuItems = [
   },
   {
     module: "Reports",
-    icon: <AssessmentIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <AssessmentIcon fontSize="small" />,
     // itemNumber: 7,
     nestedItems: [
       {
@@ -239,7 +239,7 @@ export const MenuItems = [
   },
   {
     module: "EBS Report",
-    icon: <DescriptionIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <DescriptionIcon fontSize="small" />,
     // itemNumber: 8,
     nestedItems: [
       {
@@ -282,7 +282,7 @@ export const MenuItems = [
   },
   {
     module: "Settings",
-    icon: <SettingsIcon fontSize="small" sx={{ color: "#fff" }} />,
+    icon: <SettingsIcon fontSize="small" />,
     // itemNumber: 9,
     nestedItems: [
       {

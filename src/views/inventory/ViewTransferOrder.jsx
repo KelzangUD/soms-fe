@@ -16,20 +16,20 @@ import { CustomDataTable, Transition } from "../../component/common";
 
 const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "item_Number", headerName: "Item Number", flex: 1.5 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 350,
+      flex: 3,
     },
     {
-      field: "serial_no",
+      field: "item_Serial_Number",
       headerName: "Serial No",
-      width: 250,
+      felx: 3,
     },
-    { field: "uom", headerName: "UOM", width: 100 },
-    { field: "qty", headerName: "Quantity", width: 100 },
+    { field: "uom", headerName: "UOM", flex: 1 },
+    { field: "qty", headerName: "Quantity", flex: 1 },
   ];
   return (
     <>
