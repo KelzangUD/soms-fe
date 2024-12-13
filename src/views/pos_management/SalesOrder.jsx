@@ -116,7 +116,6 @@ const SalesOrder = () => {
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200) {
       setCustomersList(res?.data);
     }

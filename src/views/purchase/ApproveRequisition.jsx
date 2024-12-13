@@ -4,17 +4,13 @@ import {
   Grid,
   Button,
   Dialog,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
+import { Transition } from "../../component/common";
 import Route from "../../routes/Route";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const ApproveRequisition = ({
   open,
@@ -23,6 +19,7 @@ const ApproveRequisition = ({
   fetchRequisitionListByApprover,
 }) => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -50,7 +47,6 @@ const ApproveRequisition = ({
       width: 500,
     },
     { field: "uom", headerName: "UOM", width: 150 },
-    // { field: "qty", headerName: "Quantity", width: 150 },
     {
       field: "qty",
       headerName: "Actual Quantity",
@@ -97,7 +93,7 @@ const ApproveRequisition = ({
     const res = await Route(
       "PUT",
       `/requisition/approveRequisitionDetails?requisitionNo=${details?.requisitionNo}&empID=${empID}`,
-      null,
+      access_token,
       null,
       null
     );

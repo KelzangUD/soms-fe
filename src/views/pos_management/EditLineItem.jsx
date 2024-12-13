@@ -11,24 +11,23 @@ import {
 import Route from "../../routes/Route";
 import { Notification } from "../../ui/index";
 import { Transition } from "../../component/common/index";
+import { useCommon } from "../../contexts/CommonContext";
 
 const EditLineItem = ({
   open,
   setOpen,
   storeName,
-  user,
   salesType,
   setLineItems,
   userDetails,
   editDetails,
   editLineItemIndex,
 }) => {
+  const { subInventory, locators, fetchLocators } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [subInventory, setSubInventory] = useState([]);
-  const [locator, setLocator] = useState([]);
   const [desc, setDesc] = useState("");
   const [onHandItems, setOnHandItems] = useState([]);
   const [pricingID, setPricingID] = useState("");
@@ -68,30 +67,6 @@ const EditLineItem = ({
         ? editDetails?.priceLocatorDTOs
         : [],
   });
-  const fetchSubInventory = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchSubInventory?userId=${user}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setSubInventory(res?.data);
-    }
-  };
-  const fetchLocator = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchLocator?userId=${user}&subInventory=${lineItemDetail?.subInventoryId}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setLocator(res?.data);
-    }
-  };
   const fetchOnHandItems = async () => {
     const res = await Route(
       "GET",
@@ -213,10 +188,7 @@ const EditLineItem = ({
     }
   };
   useEffect(() => {
-    fetchSubInventory();
-  }, []);
-  useEffect(() => {
-    fetchLocator();
+    fetchLocators(lineItemDetail?.subInventoryId);
   }, [lineItemDetail?.subInventoryId]);
   useEffect(() => {
     fetchOnHandItems();
@@ -316,13 +288,13 @@ const EditLineItem = ({
               <Grid
                 container
                 paddingX={4}
-                paddingY={1}
+                paddingY={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#0288d1",
-                  color: "#eee",
+                  backgroundColor: (theme) => theme.palette.bg.light,
+                  color: "#000",
                 }}
               >
                 <Grid item>
@@ -376,7 +348,7 @@ const EditLineItem = ({
                   {userDetails?.roleName === "Administrator" ? (
                     <Autocomplete
                       disablePortal
-                      options={locator?.map((item) => ({
+                      options={locators?.map((item) => ({
                         id: item?.id,
                         label: item?.name,
                       }))}
