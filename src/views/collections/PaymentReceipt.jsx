@@ -59,6 +59,7 @@ const PaymentReceipt = () => {
     remarks: "",
     payment: "",
     outstandingBalance: "",
+    invoiceNo: ""
   });
   const [disablePaymentSelect, setDisablePaymentSelect] = useState(true);
   const [disableFields, setDisabledFields] = useState({
@@ -122,6 +123,7 @@ const PaymentReceipt = () => {
           accountId: res?.data?.accountId,
           acctKey: res?.data?.acctKey,
           outstandingBalance: res?.data?.billAmount,
+          invoiceNo: res?.data?.invoiceNo
         }));
       }
     } else {
@@ -155,7 +157,7 @@ const PaymentReceipt = () => {
       accountCode: e?.target?.value === "1" ? "1" : "2",
     }));
     setPaymentMethod(e?.target?.value);
-    e?.target?.value === "2"
+    e?.target?.value !== "1"
       ? setDisabledFields((prev) => ({
           ...prev,
           chequeNoField: false,
@@ -235,7 +237,7 @@ const PaymentReceipt = () => {
       const res = await Route(
         "POST",
         `/Billing/outStandingBillPayment`,
-        null,
+        access_token,
         formData,
         null,
         "multipart/form-data"
@@ -275,7 +277,7 @@ const PaymentReceipt = () => {
         }));
         setIsFileUploaded(false);
       } else {
-        setNotificationMsg(res?.response?.data?.message);
+        setNotificationMsg("Failed to update payment collection. Try again!");
         setSeverity("error");
         setShowNofication(true);
       }
