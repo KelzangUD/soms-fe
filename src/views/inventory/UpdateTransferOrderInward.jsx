@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { Notification } from "../../ui/index";
 import Route from "../../routes/Route";
 import { dateFormatterTwo } from "../../util/CommonUtil";
@@ -74,14 +73,42 @@ const UpdateTransferOrderInward = ({
   });
 
   const receivedQtyHandle = (e, params) => {
-    setParameters((prev) => ({
-      ...prev,
-      transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
-        item?.transaction_Item_No === params?.row?.transaction_Item_No
-          ? { ...item, received_Qty: parseInt(e?.target?.value) }
-          : item
-      ),
-    }));
+    if (parseInt(e?.target?.value) === 0) {
+      // setParameters((prev) => ({
+      //   ...prev,
+      //   transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
+      //     item?.transaction_Item_No === params?.row?.transaction_Item_No
+      //       ? { ...item, received_Qty: 0 }
+      //       : item
+      //   ),
+      // }));
+      setNotificationMsg("Received quantity should be greater than 0");
+      setSeverity("error");
+      setShowNofication(true);
+    } else if (parseInt(e?.target?.value) > parseInt(params?.row?.qty)) {
+      // setParameters((prev) => ({
+      //   ...prev,
+      //   transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
+      //     item?.transaction_Item_No === params?.row?.transaction_Item_No
+      //       ? { ...item, received_Qty: 0 }
+      //       : item
+      //   ),
+      // }));
+      setNotificationMsg(
+        "Received quantity should not be greater than Actual Quantity"
+      );
+      setSeverity("error");
+      setShowNofication(true);
+    } else {
+      setParameters((prev) => ({
+        ...prev,
+        transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
+          item?.transaction_Item_No === params?.row?.transaction_Item_No
+            ? { ...item, received_Qty: parseInt(e?.target?.value) }
+            : item
+        ),
+      }));
+    }
   };
 
   const descriptionHandle = (e, params) => {
@@ -103,7 +130,7 @@ const UpdateTransferOrderInward = ({
       flex: 4,
     },
     {
-      field: "serial_no",
+      field: "item_Serial_Number",
       headerName: "Serial No",
       flex: 3,
     },
@@ -148,37 +175,42 @@ const UpdateTransferOrderInward = ({
 
   const updateHandle = async (e) => {
     e.preventDefault();
-    const res = await Route(
-      "PUT",
-      `/transferOrder/updateInwardTransferItemDetails`,
-      access_token,
-      parameters,
-      null
+    const allValid = parameters?.transferOrderItemDTOList?.every(
+      (item) => item?.received_Qty !== null
     );
-    if (res?.status === 200) {
-      setSeverity("success");
-      setNotificationMsg(res?.data?.responseText);
-      setShowNofication(true);
-      setParameters((prev) => ({
-        ...prev,
-        transfer_Date: dateFormatterTwo(new Date()),
-        transfer_Type: "",
-        transfer_From: "",
-        transfer_From_SubInventory: "",
-        transfer_From_Locator: "",
-        transfer_To: "",
-        transfer_To_SubInventory: "",
-        transfer_To_Locator: "",
-        transfer_Mode: "",
-        vehicle_Number: "",
-        remarks: "",
-        created_By: empID,
-        transferOrderItemDTOList: [],
-      }));
-      fetchInwardTrasnferOrderList();
-      setOpen(false);
+    if (allValid) {
+      const allFulfilled = parameters?.transferOrderItemDTOList?.every(
+        (item) => Number(item?.received_Qty) <= Number(item?.qty)
+      );
+      if (allFulfilled) {
+        const res = await Route(
+          "PUT",
+          `/transferOrder/updateInwardTransferItemDetails`,
+          access_token,
+          parameters,
+          null
+        );
+        if (res?.status === 200) {
+          fetchInwardTrasnferOrderList();
+          setSeverity("success");
+          setNotificationMsg(
+            res?.data?.responseText === null
+              ? "Items Successfully Received"
+              : res?.data?.responseText
+          );
+          setShowNofication(true);
+        } else {
+          setNotificationMsg(res?.response?.data?.message);
+          setSeverity("error");
+          setShowNofication(true);
+        }
+      } else {
+        setNotificationMsg("Recevied Qty cannot be Greater than Actual Qty!");
+        setSeverity("error");
+        setShowNofication(true);
+      }
     } else {
-      setNotificationMsg(res?.response?.data?.message);
+      setNotificationMsg("Recevied Qty cannot be empty!");
       setSeverity("error");
       setShowNofication(true);
     }
@@ -202,7 +234,7 @@ const UpdateTransferOrderInward = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#1976d2",
+                  backgroundColor: (theme) => theme.palette.bg.light,
                   color: "#fff",
                 }}
               >

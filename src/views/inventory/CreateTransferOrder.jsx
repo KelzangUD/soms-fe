@@ -79,6 +79,7 @@ const CreateTransferOrder = ({
     item_Number: "",
     item_Serial_Number: "",
     uom: "",
+    availaibleQty: "",
     qty: "",
   });
   const [serialInputDisabled, setSerialInputDisabled] = useState(true);
@@ -180,6 +181,7 @@ const CreateTransferOrder = ({
         item_Description: "",
         item_Number: "",
         uom: "",
+        availaibleQty: "",
       }));
     } else {
       setTransferOrderDTOList((prev) => ({
@@ -187,6 +189,7 @@ const CreateTransferOrder = ({
         item_Description: value?.label,
         item_Number: value?.item_Number,
         uom: value?.uom,
+        availaibleQty: value?.availaibleQty,
       }));
       setSerialInputDisabled(value?.serial_controlled === "N" ? true : false);
     }
@@ -660,8 +663,8 @@ const CreateTransferOrder = ({
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item container xs={12} paddingY={2}>
-              <Grid item xs={3} paddingRight={1}>
+            <Grid item container xs={12} paddingY={2} spacing={1}>
+              <Grid item xs={3}>
                 <Autocomplete
                   disablePortal
                   options={onHandsTransferOrderItems?.map((item) => ({
@@ -671,6 +674,7 @@ const CreateTransferOrder = ({
                     serial_controlled: item?.serial_controlled,
                     uom: item?.uom,
                     id: item?.id,
+                    availaibleQty: parseInt(item?.transaction_Quantity),
                   }))}
                   value={transferOrderItemDTOList?.item_Description}
                   onChange={descriptionHandle}
@@ -679,7 +683,7 @@ const CreateTransferOrder = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={2} paddingRight={1}>
+              <Grid item xs={2}>
                 <TextField
                   id="outlined-basic"
                   label="Item Number"
@@ -691,7 +695,7 @@ const CreateTransferOrder = ({
                   size="small"
                 />
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={2}>
                 <TextField
                   id="outlined-basic"
                   label="Serial Number"
@@ -703,7 +707,7 @@ const CreateTransferOrder = ({
                   size="small"
                 />
               </Grid>
-              <Grid item xs={2} paddingRight={1}>
+              <Grid item xs={1.5}>
                 <TextField
                   id="outlined-basic"
                   label="UOM"
@@ -715,7 +719,19 @@ const CreateTransferOrder = ({
                   size="small"
                 />
               </Grid>
-              <Grid item container xs={2} paddingRight={1} alignItems="center">
+              <Grid item xs={1.5}>
+                <TextField
+                  id="outlined-basic"
+                  label="Availiable Qty"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  disabled
+                  value={transferOrderItemDTOList?.availaibleQty}
+                  size="small"
+                />
+              </Grid>
+              <Grid item container xs={2} alignItems="center">
                 <Grid item xs={9}>
                   <TextField
                     id="outlined-basic"
@@ -730,7 +746,11 @@ const CreateTransferOrder = ({
                 </Grid>
                 <Grid item xs={3} alignContent="center">
                   <IconButton aria-label="add" onClick={addHandle}>
-                    <AddBoxIcon />
+                    <AddBoxIcon
+                      sx={{
+                        color: (theme) => theme?.palette?.addBtnColor?.light,
+                      }}
+                    />
                   </IconButton>
                 </Grid>
               </Grid>

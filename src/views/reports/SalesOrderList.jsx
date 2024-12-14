@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
+  Autocomplete,
   Box,
   Grid,
   Button,
@@ -61,19 +62,7 @@ const SalesOrderList = () => {
       ),
     },
   ];
-  const sales_order_list_rows = [
-    // {
-    //   id: 1,
-    //   pos_no: "EM/DP1/2024/00001",
-    //   pos_date: "20-Aug-2024",
-    //   customer_name: "TIPL",
-    //   mobile_no: "77007700",
-    //   ac_to_payment: "",
-    //   payment_term: "",
-    //   payment_amount: "",
-    //   created_user: "",
-    // },
-  ];
+  const sales_order_list_rows = [];
   const regionOrExtensionHandle = (e) => {
     console.log(e?.target?.value);
     setRegionOrExtension(e?.target?.value);
@@ -92,28 +81,26 @@ const SalesOrderList = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
+                    <Autocomplete
+                      disablePortal
+                      options={regionsOrExtensions?.map((item) => ({
+                        label: item?.extensionName,
+                        id: item?.id,
+                      }))}
+                      value={regionOrExtension}
+                      // onChange={storeHandle}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Region/Extension"
+                          size="small"
+                        />
+                      )}
                       style={{ background: "#fff" }}
-                      size="small"
-                    >
-                      <InputLabel id="region-or-extension-select-label">
-                        Region/Extension
-                      </InputLabel>
-                      <Select
-                        labelId="region-or-extension--select-label"
-                        id="region-or-extension--select"
-                        value={regionOrExtension}
-                        label="Region/Extension"
-                        onChange={regionOrExtensionHandle}
-                      >
-                        {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.extensionName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                      disabled={
+                        userDetails?.roleName === "Administrator" ? false : true
+                      }
+                    />
                   </Grid>
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>

@@ -15,7 +15,7 @@ import Route from "../../routes/Route";
 const TransferOrders = () => {
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
-  const userDetails = JSON.parse(localStorage.getItem("userDetails"))
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -25,19 +25,6 @@ const TransferOrders = () => {
   const [view, setView] = useState(false);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
 
-  const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
-    const res = await Route(
-      "GET",
-      `/transferOrder/viewTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setTransferOrderDetails(res?.data);
-      type === "view" ? setView(true) : setEdit(true);
-    }
-  };
   const fetchTransferOrderList = async () => {
     const res = await Route(
       "GET",
@@ -60,6 +47,20 @@ const TransferOrders = () => {
       );
     }
   };
+
+  const fetchViewTransferOrderDetails = async (transferOrderNo, type) => {
+    const res = await Route(
+      "GET",
+      `/transferOrder/viewTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferOrderDetails(res?.data);
+      type === "view" ? setView(true) : setEdit(true);
+    }
+  };
   const updateTransferOrderShipment = async (transferOrderNo) => {
     const res = await Route(
       "PUT",
@@ -69,14 +70,32 @@ const TransferOrders = () => {
       null
     );
     if (res?.status === 200) {
-      fetchTransferOrderList();
-      setSeverity("success");
-      setNotificationMsg(res?.data?.responseText);
-      setShowNofication(true);
-      fetchTransferOrderList();
+      const response = await Route(
+        "GET",
+        `/transferOrder/viewTransferOrderList/${empID}`,
+        access_token,
+        null,
+        null
+      );
+      if (response?.status === 200) {
+        setViewTransferOrderList(
+          response?.data?.map((item, index) => ({
+            id: index,
+            sl: index + 1,
+            transfer_order_no: item?.transfer_Order_Number,
+            transfer_from_code: item?.transfer_From_Name,
+            transfer_to_code: item?.transfer_To_Name,
+            posted_date: item?.stringTransferDate,
+            status: item?.status,
+          }))
+        );
+        setSeverity("success");
+        setNotificationMsg(res?.data?.responseText);
+        setShowNofication(true);
+      }
     } else {
       setSeverity("error");
-      setNotificationMsg(res?.data?.responseText);
+      setNotificationMsg(res?.response?.data?.responseText);
       setShowNofication(true);
     }
   };

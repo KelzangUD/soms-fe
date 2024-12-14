@@ -17,6 +17,9 @@ const theme = createTheme({
     bg: {
       light: "#0277bd",
     },
+    addBtnColor: {
+      light: "#009688"
+    }
   },
   components: {
     MuiTextField: {

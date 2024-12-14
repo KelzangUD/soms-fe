@@ -24,16 +24,13 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
       flex: 4,
     },
     {
-      field: "serial_no",
+      field: "item_Serial_Number",
       headerName: "Serial No",
       flex: 3,
     },
     { field: "uom", headerName: "UOM", flex: 1 },
     { field: "qty", headerName: "Quantity", flex: 1 },
   ];
-  React.useEffect(() => {
-    console.log(transferOrderDetails);
-  }, []);
   return (
     <>
       <Dialog

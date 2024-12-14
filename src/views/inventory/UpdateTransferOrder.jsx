@@ -683,7 +683,11 @@ const UpdateTransferOrder = ({
                 </Grid>
                 <Grid item xs={1}>
                   <IconButton aria-label="add" onClick={addHandle}>
-                    <AddBoxIcon />
+                    <AddBoxIcon
+                      sx={{
+                        color: (theme) => theme?.palette?.addBtnColor?.light,
+                      }}
+                    />
                   </IconButton>
                 </Grid>
               </Grid>

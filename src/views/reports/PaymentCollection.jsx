@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Autocomplete,
   Box,
   Grid,
   Button,
   IconButton,
   FormControl,
-  MenuItem,
-  InputLabel,
-  Select,
+  TextField,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -188,28 +187,26 @@ const PaymentCollection = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
+                    <Autocomplete
+                      disablePortal
+                      options={regionsOrExtensions?.map((item) => ({
+                        label: item?.extensionName,
+                        id: item?.id,
+                      }))}
+                      value={regionOrExtension}
+                      onChange={regionOrExtensionHandle}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Region/Extension"
+                          size="small"
+                        />
+                      )}
                       style={{ background: "#fff" }}
-                      size="small"
-                    >
-                      <InputLabel id="region-or-extension-select-label">
-                        Region/Extension
-                      </InputLabel>
-                      <Select
-                        labelId="region-or-extension--select-label"
-                        id="region-or-extension--select"
-                        value={regionOrExtension}
-                        label="Region/Extension"
-                        onChange={regionOrExtensionHandle}
-                      >
-                        {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.extensionName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                      disabled={
+                        userDetails?.roleName === "Administrator" ? false : true
+                      }
+                    />
                   </Grid>
                   <Grid item xs={3}>
                     <FormControl fullWidth sx={{ background: "#fff" }}>

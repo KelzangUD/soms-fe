@@ -55,6 +55,7 @@ const Profile = () => {
                     gutterBottom
                     sx={{ color: "#424242" }}
                   >
+                    {userDetails?.subInventory}, {userDetails?.locator},{" "}
                     {userDetails?.regionName}, {userDetails?.region}
                   </Typography>
                 </Grid>
