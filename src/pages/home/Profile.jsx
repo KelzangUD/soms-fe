@@ -55,7 +55,10 @@ const Profile = () => {
                     gutterBottom
                     sx={{ color: "#424242" }}
                   >
-                    {userDetails?.subInventory}, {userDetails?.locator},{" "}
+                    {userDetails?.subInventory !== "" &&
+                    userDetails?.locator !== "Select"
+                      ? `${userDetails?.subInventory}, ${userDetails?.locator},`
+                      : ""}
                     {userDetails?.regionName}, {userDetails?.region}
                   </Typography>
                 </Grid>
@@ -134,15 +137,6 @@ const Profile = () => {
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  {/* <Grid item xs={4}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      sx={{ color: "#758694" }}
-                    >
-                      Manager: Dechen Dorji
-                    </Typography>
-                  </Grid> */}
                   <Grid item xs={4} display="flex">
                     <CalendarMonthIcon />
                     <Typography

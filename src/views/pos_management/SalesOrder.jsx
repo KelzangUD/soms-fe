@@ -909,7 +909,7 @@ const SalesOrder = () => {
             </Card>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
-            <Button variant="contained" onClick={postHandle} size="small">
+            <Button variant="contained" onClick={postHandle}>
               Post
             </Button>
             <Button
@@ -917,10 +917,6 @@ const SalesOrder = () => {
               sx={{ ml: 2 }}
               onClick={cancelHandle}
               color="error"
-              style={{
-                background: "#fff",
-              }}
-              size="small"
             >
               Cancel
             </Button>

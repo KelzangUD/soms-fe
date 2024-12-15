@@ -4,6 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { DataGrid } from "@mui/x-data-grid";
 import Notification from "../../ui/Notification";
@@ -96,7 +97,7 @@ const RequisitionApproval = () => {
             onClick={() => viewDetailsHandle(params)}
             color="primary"
           >
-            <VisibilityIcon fontSize="inherit" />
+            <CheckBoxIcon fontSize="inherit" />
           </IconButton>
           <IconButton
             aria-label="reject"

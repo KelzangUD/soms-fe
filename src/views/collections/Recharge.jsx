@@ -2,12 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Paper,
   Grid,
   TextField,
   MenuItem,
@@ -24,8 +18,11 @@ import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Notification } from "../../ui/index";
-import { Transition } from "../../component/common/index";
+import {
+  Notification,
+  LoaderDialog,
+  SuccessNotification,
+} from "../../ui/index";
 import dayjs from "dayjs";
 import Route from "../../routes/Route";
 import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
@@ -73,6 +70,7 @@ const Recharge = () => {
   const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [file, setFile] = useState(null);
   const [chequeCopy, setChequeCopy] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     fetchBankAccountName(rechargeDetails?.paymentType);
   }, [rechargeDetails?.paymentType]);
@@ -100,14 +98,14 @@ const Recharge = () => {
       paymentType: e?.target?.value,
       payment: e?.target?.value,
     }));
-    if (e?.target?.value?.id === "1") {
+    if (e?.target?.value === "1") {
       setDisabledFields((prev) => ({
         ...prev,
         cardOrChequeNo: true,
         chequeDate: true,
         chequeCopy: true,
       }));
-    } else if (e?.target?.value?.id === "2") {
+    } else if (e?.target?.value === "2") {
       setDisabledFields((prev) => ({
         ...prev,
         cardOrChequeNo: false,
@@ -165,62 +163,70 @@ const Recharge = () => {
   };
   const createHandle = async (e) => {
     e.preventDefault();
-    let formData = new FormData();
-    if (chequeCopy && chequeCopy.length > 0) {
-      formData.append("cheque", chequeCopy);
-    } else {
-      const placeholderFile = new File([""], "cheque.png");
-      formData.append("cheque", placeholderFile);
-    }
-    if (file && file.length > 0) {
-      formData.append("rechargeFile ", file);
-    } else {
-      const placeholderFile = new File([""], "file.csv");
-      formData.append("rechargeFile ", placeholderFile);
-    }
-    const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
-      type: "application/json",
-    });
-
-    formData.append("recharge", jsonDataBlob, "data.json");
-    const res = await Route(
-      "POST",
-      `/Recharge/eTop_Up`,
-      access_token,
-      formData,
-      null,
-      "multipart/form-data"
-    );
-    if (res?.status === 201) {
-      setResponseData(res?.data);
-      setSeverity("success");
-      setNotificationMsg(res?.data?.status);
-      setShowNofication(true);
-      setRechargeDetails((prev) => ({
-        ...prev,
-        postingDate: new Date(),
-        mobileNo: "",
-        amount: "",
-        paymentType: null,
-        payment: "",
-        bankId: null,
-        bank: "",
-        cardOrChequeNo: "",
-        userId: userID,
-        type: "",
-        chequeDate: new Date(),
-      }));
-      setDisabledFields((prev) => ({
-        ...prev,
-        cardOrChequeNo: true,
-        chequeDate: true,
-        chequeCopy: true,
-      }));
-      setIsFileUploaded(false);
-    } else {
-      setNotificationMsg(res?.response?.data?.message);
+    setIsLoading(true);
+    try {
+      let formData = new FormData();
+      if (chequeCopy && chequeCopy.length > 0) {
+        formData.append("cheque", chequeCopy);
+      } else {
+        const placeholderFile = new File([""], "cheque.png");
+        formData.append("cheque", placeholderFile);
+      }
+      if (file && file.length > 0) {
+        formData.append("rechargeFile ", file);
+      } else {
+        const placeholderFile = new File([""], "file.csv");
+        formData.append("rechargeFile ", placeholderFile);
+      }
+      const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
+        type: "application/json",
+      });
+      formData.append("recharge", jsonDataBlob, "data.json");
+      const res = await Route(
+        "POST",
+        `/Recharge/eTop_Up`,
+        access_token,
+        formData,
+        null,
+        "multipart/form-data"
+      );
+      if (res?.status === 201) {
+        setResponseData(res?.data);
+        setSeverity("success");
+        setNotificationMsg(res?.data?.status);
+        setShowNofication(true);
+        setRechargeDetails((prev) => ({
+          ...prev,
+          postingDate: new Date(),
+          mobileNo: "",
+          amount: "",
+          paymentType: null,
+          payment: "",
+          bankId: null,
+          bank: "",
+          cardOrChequeNo: "",
+          userId: userID,
+          type: "",
+          chequeDate: new Date(),
+        }));
+        setDisabledFields((prev) => ({
+          ...prev,
+          cardOrChequeNo: true,
+          chequeDate: true,
+          chequeCopy: true,
+        }));
+        setIsFileUploaded(false);
+      } else {
+        setNotificationMsg(res?.response?.data?.message);
+        setSeverity("error");
+        setShowNofication(true);
+      }
+    } catch (err) {
+      setNotificationMsg(`Recharge Failed: ${err}`);
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   const cancelHandle = () => {
@@ -430,6 +436,7 @@ const Recharge = () => {
                       name="cheque_no"
                       onChange={cardOrChequeNumberHandle}
                       value={rechargeDetails?.cardOrChequeNo}
+                      disabled={disableFields?.cardOrChequeNo}
                       size="small"
                     />
                   </Grid>
@@ -481,6 +488,7 @@ const Recharge = () => {
           </Grid>
         </Grid>
       </Box>
+      {isLoading && <LoaderDialog opne={isLoading} />}
       {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
@@ -489,38 +497,14 @@ const Recharge = () => {
           severity={severity}
         />
       )}
-      {showNotification && (
-        <Dialog
-          open={showNotification}
-          TransitionComponent={Transition}
-          keepMounted
-          fullWidth
-          size="sm"
-          aria-describedby="alert-dialog-slide-description"
-          onClose={(event, reason) => {
-            if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
-              setShowNofication(false);
-            }
-          }}
-        >
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              <DialogTitle>{notificationMsg}</DialogTitle>
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={openInNewTab} variant="contained">
-              View Receipt
-            </Button>
-            <Button
-              onClick={() => setShowNofication(false)}
-              variant="outlined"
-              color="error"
-            >
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
+      {showNotification && severity === "success" && (
+        <SuccessNotification
+          showNotification={showNotification}
+          setShowNofication={setShowNofication}
+          notificationMsg="Succssfully Recharge"
+          alertMessange={notificationMsg}
+          openInNewTab={openInNewTab}
+        />
       )}
     </>
   );

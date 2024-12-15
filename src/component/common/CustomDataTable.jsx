@@ -30,7 +30,7 @@ function CustomToolbar() {
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: "#1976d2",
-            borderWidth: "2px"
+            borderWidth: "2px",
           },
         }}
       />
@@ -43,7 +43,7 @@ const CustomDataTable = ({
   cols,
   checkboxSelection = false,
   onRowSelectionModelChange,
-  pageSize = 10
+  pageSize = 10,
 }) => {
   return (
     <>
@@ -59,19 +59,8 @@ const CustomDataTable = ({
             paginationModel: { page: 0, pageSize: pageSize },
           },
         }}
-        // pageSizeOptions={[5, 10, 20, 50, { label: 'All', value: rows?.length }]}
         pageSizeOptions={[10, 20, 50, 100]}
-        sx={{
-          background: "#fff",
-          "--DataGrid-overlayHeight": "300px",
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: "#F5F7F8",
-          },
-          "& .MuiDataGrid-row": {
-            padding: "4px 0",
-          },
-        }}
-        getRowHeight={() => 'auto'}
+        getRowHeight={() => "auto"}
       />
     </>
   );

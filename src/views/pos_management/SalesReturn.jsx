@@ -27,10 +27,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ImageIcon from "@mui/icons-material/Image";
-import CircularProgress from "@mui/material/CircularProgress";
 import GetAppIcon from "@mui/icons-material/GetApp";
 // import dayjs from "dayjs";
-import Notification from "../../ui/Notification";
+import { Notification, LoaderDialog } from "../../ui/index";
 import AddLineItem from "./AddLineItem";
 import { useCommon } from "../../contexts/CommonContext";
 
@@ -296,6 +295,7 @@ const SalesReturn = () => {
   };
 
   const postSalesReturn = async () => {
+    setLoading(true);
     try {
       let formData = new FormData();
       if (paymentLines && parseInt(paymentLinesItem.paymentType) === 2) {
@@ -306,7 +306,6 @@ const SalesReturn = () => {
         const placeholderFile = new File([""], "cheque.png");
         formData.append("cheque", placeholderFile);
       }
-
       const data = {
         itemLines: salesLines,
         paymentLines,
@@ -314,16 +313,17 @@ const SalesReturn = () => {
           invoiceNo: invoiceNo,
         },
         linesAmount: {
-          grossTotal: Number(grossTotal),
-          taxAmount: Number(taxAmount),
-          discountAmount: Number(discountAmt),
-          additionalDiscount: Number(additionalDisAmt),
-          lotOfSaleDiscount: Number(lotOfSaleDiscount),
-          tdsAmount: Number(tdsAmount),
-          netAmount: Number(netTotal),
+          grossTotal: parseInt(grossTotal),
+          taxAmount: parseInt(taxAmount),
+          discountAmount: parseInt(discountAmt),
+          additionalDiscount: parseInt(additionalDisAmt),
+          lotOfSaleDiscount: parseInt(lotOfSaleDiscount),
+          tdsAmount: parseInt(tdsAmount),
+          netAmount: parseInt(netTotal),
         },
         userId: user,
       };
+      console.log(data);
 
       const jsonDataBlob = new Blob([JSON.stringify(data)], {
         type: "application/json",
@@ -345,6 +345,7 @@ const SalesReturn = () => {
         setNotificationMsg("Successfully Posted Sales Return");
         setShowNofication(true);
       } else {
+        console.log(res);
         setNotificationMsg(res?.response?.data?.message);
         setSeverity("error");
         setShowNofication(true);
@@ -353,6 +354,8 @@ const SalesReturn = () => {
       setNotificationMsg("Error posting the:", error);
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -418,20 +421,16 @@ const SalesReturn = () => {
                   </Grid>
                   <Grid item xs={3}>
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       fullWidth
                       onClick={fetchSalesInvoice}
                       disabled={loading}
                       sx={{
-                        padding: "7px 0",
+                        padding: "8px 0",
                       }}
                       endIcon={<GetAppIcon />}
                     >
-                      {loading ? (
-                        <CircularProgress size={24} />
-                      ) : (
-                        "Fetch Details"
-                      )}
+                      Fetch Details
                     </Button>
                   </Grid>
                 </Grid>
@@ -619,6 +618,7 @@ const SalesReturn = () => {
                                   onClick={(e) =>
                                     deleteLineItemHandle(e, item?.salesId)
                                   }
+                                  color="error"
                                 >
                                   <DeleteIcon />
                                 </IconButton>
@@ -825,9 +825,12 @@ const SalesReturn = () => {
                         aria-label="add"
                         onClick={addPaymentItemHandle}
                       >
-                        <AddBoxIcon sx={{
-                          color: theme => theme?.palette?.addBtnColor?.light
-                        }} />
+                        <AddBoxIcon
+                          sx={{
+                            color: (theme) =>
+                              theme?.palette?.addBtnColor?.light,
+                          }}
+                        />
                       </IconButton>
                     </Grid>
                   </Grid>
@@ -887,8 +890,9 @@ const SalesReturn = () => {
                                   deletePaymentItemHandle(e, index)
                                 }
                                 size="small"
+                                color="error"
                               >
-                                <DeleteIcon color="error" />
+                                <DeleteIcon />
                               </IconButton>
                             </TableCell>
                           </TableRow>
@@ -900,15 +904,14 @@ const SalesReturn = () => {
             </Card>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" my={2}>
-            <Button variant="contained" onClick={postSalesReturn} size="small">
+            <Button variant="contained" onClick={postSalesReturn}>
               Create & Post
             </Button>
             <Button
               variant="outlined"
               color="error"
-              sx={{ background: "#fff", ml: 2 }}
+              sx={{ ml: 2 }}
               onClick={cancelHandle}
-              size="small"
             >
               Cancel
             </Button>
@@ -933,6 +936,7 @@ const SalesReturn = () => {
           setLineItems={salesLines}
         />
       )}
+      {loading && <LoaderDialog open={loading} />}
     </>
   );
 };

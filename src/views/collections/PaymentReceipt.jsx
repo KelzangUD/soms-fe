@@ -2,11 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Grid,
   TextField,
   MenuItem,
@@ -20,8 +15,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Notification } from "../../ui/index";
-import { Transition } from "../../component/common/index";
+import {
+  Notification,
+  LoaderDialog,
+  SuccessNotification,
+} from "../../ui/index";
+import { PaymentReceiptCustomerDetails } from "../../component/collections";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
 
@@ -70,6 +69,7 @@ const PaymentReceipt = () => {
   const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [chequeCopy, setChequeCopy] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("1");
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     fetchBankAccountName(paymentMethod);
   }, [paymentMethod]);
@@ -113,7 +113,7 @@ const PaymentReceipt = () => {
         null
       );
       if (res?.status === 200) {
-        setNotificationMsg("Customer Detail Fetch Successfully");
+        setNotificationMsg("Customer Details Fetch Successfully");
         setSeverity("success");
         setShowNofication(true);
         setPaymentReceiptDetails((prev) => ({
@@ -125,6 +125,10 @@ const PaymentReceipt = () => {
           outstandingBalance: res?.data?.billAmount,
           invoiceNo: res?.data?.invoiceNo,
         }));
+      } else {
+        setNotificationMsg("Customer Details not Found!");
+        setSeverity("error");
+        setShowNofication(true);
       }
     } else {
       setIncorrectFormat(true);
@@ -222,64 +226,73 @@ const PaymentReceipt = () => {
     ) {
       setIncorrectFormat(true);
     } else {
-      let formData = new FormData();
-      formData.append("cheque", chequeCopy);
-      if (chequeCopy && chequeCopy.length > 0) {
+      setIsLoading(true);
+      try {
+        let formData = new FormData();
         formData.append("cheque", chequeCopy);
-      } else {
-        const placeholderFile = new File([""], "cheque.png");
-        formData.append("cheque", placeholderFile);
-      }
-      const jsonDataBlob = new Blob([JSON.stringify(paymentReceiptDetails)], {
-        type: "application/json",
-      });
-      formData.append("billingDetails", jsonDataBlob, "data.json");
-      const res = await Route(
-        "POST",
-        `/Billing/outStandingBillPayment`,
-        access_token,
-        formData,
-        null,
-        "multipart/form-data"
-      );
-      if (res?.status === 200) {
-        setResponseData(res?.data);
-        setNotificationMsg(
-          `Successfully Paid and your Application No is ${res?.data?.applicationNo}`
+        if (chequeCopy && chequeCopy.length > 0) {
+          formData.append("cheque", chequeCopy);
+        } else {
+          const placeholderFile = new File([""], "cheque.png");
+          formData.append("cheque", placeholderFile);
+        }
+        const jsonDataBlob = new Blob([JSON.stringify(paymentReceiptDetails)], {
+          type: "application/json",
+        });
+        formData.append("billingDetails", jsonDataBlob, "data.json");
+        const res = await Route(
+          "POST",
+          `/Billing/outStandingBillPayment`,
+          access_token,
+          formData,
+          null,
+          "multipart/form-data"
         );
-        setSeverity("success");
-        setShowDialog(true);
-        setPaymentReceiptDetails((prev) => ({
-          ...prev,
-          serviceType: "",
-          mobileNo: "",
-          postingDate: new Date().toString(),
-          paymentType: "",
-          accountCode: "",
-          bankId: null,
-          userId: userId,
-          name: "",
-          amount: "",
-          accountId: "",
-          acctKey: "",
-          billAmount: "",
-          chequeNo: "",
-          chequeDate: new Date().toString(),
-          remarks: "",
-          payment: "",
-          outstandingBalance: "",
-        }));
-        setDisabledFields((prev) => ({
-          ...prev,
-          chequeNoField: true,
-          chequeDateField: true,
-          chequeCopyField: true,
-        }));
-        setIsFileUploaded(false);
-      } else {
-        setNotificationMsg("Failed to update payment collection. Try again!");
+        if (res?.status === 200) {
+          setResponseData(res?.data);
+          setNotificationMsg(
+            `Successfully Paid and your Application No is ${res?.data?.applicationNo}`
+          );
+          setSeverity("success");
+          setShowDialog(true);
+          setPaymentReceiptDetails((prev) => ({
+            ...prev,
+            serviceType: "",
+            mobileNo: "",
+            postingDate: new Date().toString(),
+            paymentType: "",
+            accountCode: "",
+            bankId: null,
+            userId: userId,
+            name: "",
+            amount: "",
+            accountId: "",
+            acctKey: "",
+            billAmount: "",
+            chequeNo: "",
+            chequeDate: new Date().toString(),
+            remarks: "",
+            payment: "",
+            outstandingBalance: "",
+          }));
+          setDisabledFields((prev) => ({
+            ...prev,
+            chequeNoField: true,
+            chequeDateField: true,
+            chequeCopyField: true,
+          }));
+          setIsFileUploaded(false);
+        } else {
+          setNotificationMsg("Failed to update payment collection. Try again!");
+          setSeverity("error");
+          setShowNofication(true);
+        }
+      } catch (error) {
+        setNotificationMsg("Error", error);
         setSeverity("error");
         setShowNofication(true);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -531,86 +544,9 @@ const PaymentReceipt = () => {
                 </Card>
               </Grid>
               <Grid item xs={3} container>
-                <Card sx={{ width: "100%" }}>
-                  <Grid item xs={12}>
-                    <Grid
-                      container
-                      padding={2}
-                      sx={{
-                        background: (theme) => theme.palette.bg.light,
-                      }}
-                    >
-                      <Typography variant="subtitle1" color="#eee">
-                        Customer Details
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      container
-                      paddingY={2}
-                      spacing={3.5}
-                      sx={{
-                        display: "flex",
-                        flexFlow: "column",
-                      }}
-                    >
-                      <Grid item marginX={1.5}>
-                        <TextField
-                          label="Customer Name"
-                          variant="outlined"
-                          fullWidth
-                          name="customer_name"
-                          disabled
-                          value={paymentReceiptDetails?.name}
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid item marginX={1.5}>
-                        <TextField
-                          label="Account Id"
-                          variant="outlined"
-                          fullWidth
-                          name="account_id"
-                          disabled
-                          value={paymentReceiptDetails?.accountId}
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid item marginX={1.5}>
-                        <TextField
-                          label="Invoice No"
-                          variant="outlined"
-                          fullWidth
-                          name="invoice_no"
-                          disabled
-                          value="---"
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid item marginX={1.5}>
-                        <TextField
-                          label="CBS Customer Status"
-                          variant="outlined"
-                          fullWidth
-                          name="cbs_customer_status"
-                          disabled
-                          value="---"
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid item marginX={1.5}>
-                        <TextField
-                          label="Outstanding Balance"
-                          variant="outlined"
-                          fullWidth
-                          name="outstanding_balance"
-                          disabled
-                          value={paymentReceiptDetails?.outstandingBalance}
-                          size="small"
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Card>
+                <PaymentReceiptCustomerDetails
+                  paymentReceiptDetails={paymentReceiptDetails}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -635,6 +571,7 @@ const PaymentReceipt = () => {
           </Grid>
         </Grid>
       </Box>
+      {isLoading && <LoaderDialog open={isLoading} />}
       {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
@@ -644,39 +581,13 @@ const PaymentReceipt = () => {
         />
       )}
       {showDialog && (
-        <React.Fragment>
-          <Dialog
-            open={showDialog}
-            TransitionComponent={Transition}
-            keepMounted
-            fullWidth
-            size="sm"
-            aria-describedby="alert-dialog-slide-description"
-            onClose={(event, reason) => {
-              if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
-                setShowDialog(false);
-              }
-            }}
-          >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                <DialogTitle>{notificationMsg}</DialogTitle>
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={openInNewTab} variant="contained">
-                View Receipt
-              </Button>
-              <Button
-                onClick={() => setShowDialog(false)}
-                variant="outlined"
-                color="error"
-              >
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </React.Fragment>
+        <SuccessNotification
+          showNotification={showDialog}
+          setShowNofication={setShowDialog}
+          notificationMsg="Successully Notification!"
+          alertMessange={notificationMsg}
+          openInNewTab={openInNewTab}
+        />
       )}
     </>
   );

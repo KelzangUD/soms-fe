@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
+  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -11,23 +12,12 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import Route from "../../routes/Route";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Notification from "../../ui/Notification";
+import { Notification } from "../../ui/index";
 import PermissionAccess from "../../component/roles_and_permission/PermissionAccess";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
 
 const ViewEditSystemUserModal = ({
   open,
@@ -137,7 +127,7 @@ const ViewEditSystemUserModal = ({
 
   return (
     <>
-      <BootstrapDialog
+      <Dialog
         onClose={handleClose}
         aria-labelledby="view_system_user"
         ref={ref}
@@ -147,7 +137,12 @@ const ViewEditSystemUserModal = ({
         maxWidth={"lg"}
       >
         <DialogTitle
-          sx={{ m: 0, p: 2, background: "#1976d2", color: "#fff" }}
+          sx={{
+            m: 0,
+            p: 2,
+            background: (theme) => theme.palette.bg.light,
+            color: "#eee",
+          }}
           id="add_system_user_dialog"
         >
           {actionType === "view" ? "View User" : "Edit User"}
@@ -644,7 +639,7 @@ const ViewEditSystemUserModal = ({
             </>
           )}
         </DialogContent>
-      </BootstrapDialog>
+      </Dialog>
       {showNotification && (
         <Notification
           open={showNotification}

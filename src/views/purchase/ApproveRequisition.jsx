@@ -25,6 +25,7 @@ const ApproveRequisition = ({
   const [severity, setSeverity] = useState("info");
   const [itemDTOlist, setItemDTOList] = useState([]);
   useEffect(() => {
+    console.log(details)
     setItemDTOList(
       details?.itemDTOList?.map((item) => ({
         id: item?.req_Item_No,
@@ -39,7 +40,7 @@ const ApproveRequisition = ({
     );
   }, [details]);
   const requisiton_item_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "sl", headerName: "Sl. No", flex: 0.3 },
     { field: "item_Number", headerName: "Item Number", flex: 2 },
     {
       field: "item_Description",
@@ -49,12 +50,12 @@ const ApproveRequisition = ({
     { field: "uom", headerName: "UOM", flex: 1.5 },
     {
       field: "qty",
-      headerName: "Actual Quantity",
+      headerName: "Actual Qty",
       flex: 1.5,
     },
     {
       field: "approve_quantity",
-      headerName: "Approve Quantity",
+      headerName: "Approve Qty",
       flex: 1.5,
       renderCell: (params) => (
         <>
@@ -127,6 +128,7 @@ const ApproveRequisition = ({
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: (theme) => theme?.palette?.bg?.light,
+                  color: "#eee",
                 }}
               >
                 <Grid item>
@@ -135,46 +137,42 @@ const ApproveRequisition = ({
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Typography variant="subtitle1">
-                      Requisition Number: {details?.requisitionNo}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Employee Name: {details?.employeeName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Employee Code: {details?.employeeCode}
-                    </Typography>
-                  </Grid>
+              <Grid container padding={2} spacing={1}>
+                <Grid item xs={4}>
+                  <Typography variant="subtitle1">
+                    Requisition Number: {details?.requisitionNo}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Employee Name: {details?.employeeName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Employee Code: {details?.employeeCode}
+                  </Typography>
                 </Grid>
               </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Typography variant="body1">
-                      Store Name: {details?.requisitionStoreName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4} display="flex">
-                    <Typography variant="body1">
-                      Region Name: {details?.regionName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4} display="flex">
-                    <Typography variant="body1">
-                      Requisition Date: {details?.requisition_Date}
-                    </Typography>
-                  </Grid>
+              <Grid container paddingX={2} spacing={1}>
+                <Grid item xs={4}>
+                  <Typography variant="body1">
+                    Store Name: {details?.requisitionStoreName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4} display="flex">
+                  <Typography variant="body1">
+                    Region Name: {details?.regionName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4} display="flex">
+                  <Typography variant="body1">
+                    Requisition Date: {details?.requisition_Date}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
+            <Grid item container alignItems="center" sx={{ px: 2, mr: 1, ml: 2 }} xs={12}>
               <CustomDataTable
                 rows={itemDTOlist?.map((row, index) => ({
                   ...row,
@@ -189,6 +187,7 @@ const ApproveRequisition = ({
               alignItems="right"
               paddingX={2}
               paddingBottom={2}
+              marginRight={1}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}
             >
               <Button variant="contained" onClick={updateHandle}>
