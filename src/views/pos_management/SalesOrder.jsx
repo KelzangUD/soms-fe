@@ -32,12 +32,12 @@ import {
   LoaderDialog,
   ItemsNotFoundDialog,
   VisuallyHiddentInputComponent,
+  SuccessNotification,
 } from "../../ui/index";
 import {
   LineItemsTable,
   PaymentDetailsTable,
 } from "../../component/pos_management/index";
-import { Transition } from "../../component/common/index";
 import Route from "../../routes/Route";
 import dayjs from "dayjs";
 import { dateFormatter, downloadSampleHandle } from "../../util/CommonUtil";
@@ -366,83 +366,92 @@ const SalesOrder = () => {
           0
         ))
     ) {
-      let formData = new FormData();
-      if (paymentLines && parseInt(paymentLinesItem.paymentType) === 2) {
-        for (let i = 0; i < paymentLines?.length; i++) {
-          formData.append("cheque", paymentLines[i].chequeCopy);
+      setIsLoading(true);
+      try {
+        let formData = new FormData();
+        if (paymentLines && parseInt(paymentLinesItem.paymentType) === 2) {
+          for (let i = 0; i < paymentLines?.length; i++) {
+            formData.append("cheque", paymentLines[i].chequeCopy);
+          }
+        } else {
+          const placeholderFile = new File([""], "cheque.png");
+          formData.append("cheque", placeholderFile);
         }
-      } else {
-        const placeholderFile = new File([""], "cheque.png");
-        formData.append("cheque", placeholderFile);
-      }
-      formData?.append("storeName", salesOrderDetails?.customerName);
-      const data = {
-        itemLines: lineItems,
-        paymentLines,
-        salesHeader: salesOrderDetails,
-        linesAmount: {
-          grossTotal: linesAmount?.grossTotal,
-          taxAmount: linesAmount?.taxAmt,
-          discountAmount: linesAmount?.discountedAmount,
-          additionalDiscount: 0,
-          lotOfSaleDiscount: 0,
-          tdsAmount: linesAmount?.tdsAmount,
-          netAmount: linesAmount?.netAmount,
-        },
-        userId: user,
-      };
-      const jsonDataBlob = new Blob([JSON.stringify(data)], {
-        type: "application/json",
-      });
-      formData.append("details", jsonDataBlob, "data.json");
-      const res = await Route(
-        "POST",
-        `/SalesOrder/UpdateItemSales`,
-        access_token,
-        formData,
-        null,
-        "multipart/form-data"
-      );
-      if (res?.status === 201) {
-        setResponseData(res?.data);
-        setSeverity("success");
-        setNotificationMsg("Successfully Created");
-        setShowNofication(true);
-        setSalesOrderDetails((prev) => ({
-          ...prev,
-          postingDate: dateFormatter(dayjs(new Date())),
-          salesType: "",
-          productType: "",
-          mobileNo: "",
-          customerNumber: "",
-          customerName: "",
-          address: "",
-          address1: "",
-          city: "",
-          serviceRemarks: "",
-          advanceNo: "",
-          advanceAmt: 0,
-          adjType: "",
-        }));
-        setPaymentLines([]);
-        setPaymentLinesItem((prev) => ({
-          ...prev,
-          paymentAmount: "",
-          paymentType: "",
-          paymentTypeName: "",
-          bankAccountNumber: "",
-          chequeNumber: "",
-          chequeDate: "",
-          cardNumber: "",
-          emiRefrenceNo: "",
-          chequeCopy: "",
-        }));
-        setBulkUpload(false);
-        setLineItems([]);
-      } else {
-        setNotificationMsg("Failed to create the sales order. Try again!");
+        formData?.append("storeName", salesOrderDetails?.customerName);
+        const data = {
+          itemLines: lineItems,
+          paymentLines,
+          salesHeader: salesOrderDetails,
+          linesAmount: {
+            grossTotal: linesAmount?.grossTotal,
+            taxAmount: linesAmount?.taxAmt,
+            discountAmount: linesAmount?.discountedAmount,
+            additionalDiscount: 0,
+            lotOfSaleDiscount: 0,
+            tdsAmount: linesAmount?.tdsAmount,
+            netAmount: linesAmount?.netAmount,
+          },
+          userId: user,
+        };
+        const jsonDataBlob = new Blob([JSON.stringify(data)], {
+          type: "application/json",
+        });
+        formData.append("details", jsonDataBlob, "data.json");
+        const res = await Route(
+          "POST",
+          `/SalesOrder/UpdateItemSales`,
+          access_token,
+          formData,
+          null,
+          "multipart/form-data"
+        );
+        if (res?.status === 201) {
+          setResponseData(res?.data);
+          setSeverity("success");
+          setNotificationMsg("Successfully Created");
+          setShowNofication(true);
+          setSalesOrderDetails((prev) => ({
+            ...prev,
+            postingDate: dateFormatter(dayjs(new Date())),
+            salesType: "",
+            productType: "",
+            mobileNo: "",
+            customerNumber: "",
+            customerName: "",
+            address: "",
+            address1: "",
+            city: "",
+            serviceRemarks: "",
+            advanceNo: "",
+            advanceAmt: 0,
+            adjType: "",
+          }));
+          setPaymentLines([]);
+          setPaymentLinesItem((prev) => ({
+            ...prev,
+            paymentAmount: "",
+            paymentType: "",
+            paymentTypeName: "",
+            bankAccountNumber: "",
+            chequeNumber: "",
+            chequeDate: "",
+            cardNumber: "",
+            emiRefrenceNo: "",
+            chequeCopy: "",
+          }));
+          setBulkUpload(false);
+          setLineItems([]);
+        } else {
+          setNotificationMsg("Failed to create the sales order. Try again!");
+          setSeverity("error");
+          setShowNofication(true);
+        }
+      } catch (error) {
+        setNotificationMsg("Error", error);
         setSeverity("error");
         setShowNofication(true);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       setNotificationMsg("Total Payment is Not equal to Net Payment");
@@ -959,53 +968,14 @@ const SalesOrder = () => {
         />
       )}
       {showNotification && severity === "success" && (
-        <>
-          <Dialog
-            open={showNotification}
-            TransitionComponent={Transition}
-            keepMounted
-            fullWidth
-            size="sm"
-            aria-describedby="alert-dialog-slide-description"
-            onClose={(event, reason) => {
-              if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
-                setShowNofication(false);
-              }
-            }}
-          >
-            <DialogTitle>{notificationMsg}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                <Alert severity="success">
-                  The Sales Order Created Successfully with application no:{" "}
-                  {responseData?.applicationNo}.
-                </Alert>
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={openInNewTab}
-                variant="contained"
-                sx={{
-                  mb: 2,
-                }}
-              >
-                View Receipt
-              </Button>
-              <Button
-                onClick={() => setShowNofication(false)}
-                variant="outlined"
-                color="error"
-                sx={{
-                  mr: 2,
-                  mb: 2,
-                }}
-              >
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </>
+        <SuccessNotification
+          showNotification={showNotification}
+          setShowNofication={setShowNofication}
+          notificationMsg={notificationMsg}
+          alertMessange={`The Sales Order Created Successfully with application no
+      ${responseData?.applicationNo}`}
+          openInNewTab={openInNewTab}
+        />
       )}
     </>
   );
