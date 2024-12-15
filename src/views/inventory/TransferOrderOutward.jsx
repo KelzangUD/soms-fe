@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   FormControl,
 } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -127,28 +124,14 @@ const TransferOrderOutward = () => {
                     <Grid item xs={2}>
                       <FormControl fullWidth style={{ background: "#fff" }}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            label="From*"
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                              },
-                            }}
-                          />
+                          <DatePicker label="From*" />
                         </LocalizationProvider>
                       </FormControl>
                     </Grid>
                     <Grid item xs={2}>
                       <FormControl fullWidth style={{ background: "#fff" }}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            label="To*"
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                              },
-                            }}
-                          />
+                          <DatePicker label="To*" />
                         </LocalizationProvider>
                       </FormControl>
                     </Grid>

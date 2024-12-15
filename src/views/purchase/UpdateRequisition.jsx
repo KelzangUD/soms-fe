@@ -43,7 +43,10 @@ const UpdateRequisition = ({
         item_Description: item?.item_Description,
         uom: item?.uom,
         qty: item?.qty,
-        level1_Qty: item?.level1_Qty,
+        level1_Qty:
+          details?.hierarchyLevel === "Level1"
+            ? item?.level1_Qty
+            : item?.level2_Qty,
         received_Remark: item?.received_Remark,
       }))
     );
@@ -139,6 +142,7 @@ const UpdateRequisition = ({
       null
     );
     if (res?.status === 200) {
+      fetchRequisitionListByApprover();
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
       setShowNotification(true);
@@ -155,7 +159,6 @@ const UpdateRequisition = ({
           received_Remark: "",
         })),
       }));
-      setOpen(false);
     } else {
       setNotificationMsg(res?.data?.message);
       setSeverity("error");
@@ -261,8 +264,8 @@ const UpdateRequisition = ({
         <Notification
           open={showNotification}
           setOpen={() => {
+            setOpen(false);
             setShowNotification(false);
-            fetchRequisitionListByApprover();
           }}
           message={notificationMsg}
           severity={severity}

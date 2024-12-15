@@ -28,30 +28,30 @@ import Route from "../../routes/Route";
 
 const TransferOrderReport = () => {
   const transfer_order_report_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
     {
       field: "customer_name",
       headerName: "Customer Name",
-      width: 250,
+      flex: 2.5,
     },
-    { field: "date", headerName: "Date", width: 100 },
+    { field: "date", headerName: "Date", flex: 1.0 },
     {
       field: "invoice_no",
       headerName: "Invoice No.",
-      width: 150,
+      flex: 1.5,
     },
-    { field: "item_description", headerName: "Item Description", width: 350 },
-    { field: "qty", headerName: "Quantity", width: 150 },
-    { field: "amount", headerName: "Amount", width: 150 },
+    { field: "item_description", headerName: "Item Description", flex: 3.5 },
+    { field: "qty", headerName: "Quantity", flex: 1.5 },
+    { field: "amount", headerName: "Amount", flex: 1.5 },
     {
       field: "store_name",
       headerName: "Store Name",
-      width: 150,
+      flex: 1.5,
     },
     {
       field: "created_by",
       headerName: "Created By",
-      width: 150,
+      flex: 1.5,
     },
   ];
   const transfer_order_report_rows = [];
@@ -78,29 +78,6 @@ const TransferOrderReport = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid item>
-                  <Paper
-                    sx={{
-                      p: "2px 0",
-                      display: "flex",
-                      alignItems: "center",
-                      maxWidth: 400,
-                    }}
-                  >
-                    <InputBase
-                      sx={{ ml: 1, flex: 1 }}
-                      placeholder="Search"
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                    <IconButton
-                      type="button"
-                      sx={{ p: "10px" }}
-                      aria-label="search"
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </Paper>
-                </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={2}>
                     <FormControl
@@ -125,28 +102,14 @@ const TransferOrderReport = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="From Date"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="From Date" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2} style={{ background: "#fff" }}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="To Date"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="To Date" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>

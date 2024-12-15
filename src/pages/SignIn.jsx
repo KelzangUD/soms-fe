@@ -90,8 +90,8 @@ const SignIn = () => {
         setMessage(res?.response?.data?.message);
         setSeverity("error");
         setOpen(true);
-      };
-    };
+      }
+    }
   };
 
   const forgotPasswordHandle = () => {
@@ -131,59 +131,79 @@ const SignIn = () => {
                       Sign in to continue.
                     </Typography>
                   </Box>
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gap: 2,
-                      paddingX: "24px",
-                      paddingBottom: "24px",
-                    }}
-                  >
-                    <TextField
-                      label="User Name"
-                      variant="outlined"
-                      fullWidth
-                      type="text"
-                      name="username"
-                      value={formData?.username}
-                      onChange={handleChange}
-                      required
-                      InputProps={{
-                        endAdornment: <PersonIcon />,
+                  <form onSubmit={handleSubmit}>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gap: 2,
+                        paddingX: "24px",
+                        paddingBottom: "24px",
                       }}
-                    />
-                    <TextField
-                      label="Password"
-                      variant="outlined"
-                      fullWidth
-                      type="password"
-                      name="password"
-                      value={formData?.password}
-                      onChange={handleChange}
-                      required
-                      InputProps={{
-                        endAdornment: <KeyIcon />,
-                      }}
-                    />
-                    <Link
-                      component="button"
-                      onClick={forgotPasswordHandle}
-                      variant="body2"
-                      sx={{ display: "flex", justifyContent: "flex-end" }}
                     >
-                      Forgot your password?
-                    </Link>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      fullWidth
-                      onClick={handleSubmit}
-                      endIcon={<LoginIcon />}
-                    >
-                      Sign In
-                    </Button>
-                  </Box>
+                      <TextField
+                        label="User Name"
+                        variant="outlined"
+                        fullWidth
+                        type="text"
+                        name="username"
+                        value={formData?.username}
+                        onChange={handleChange}
+                        required
+                        InputProps={{
+                          endAdornment: <PersonIcon />,
+                        }}
+                      />
+                      <TextField
+                        label="Password"
+                        variant="outlined"
+                        fullWidth
+                        type="password"
+                        name="password"
+                        value={formData?.password}
+                        onChange={handleChange}
+                        required
+                        InputProps={{
+                          endAdornment: <KeyIcon />,
+                        }}
+                      />
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          forgotPasswordHandle();
+                        }}
+                        variant="text"
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          padding: 0,
+                          width: "auto",
+                          textDecoration: "underline",
+                          color: "primary.main",
+                          "&:hover": {
+                            textDecoration: "underline",
+                            color: "primary.dark",
+                          },
+                          "&:focus": {
+                            outline: "none",
+                            textDecoration: "underline",
+                          },
+                        }}
+                      >
+                        Forgot your password?
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        fullWidth
+                        // onClick={handleSubmit}
+                        type="submit"
+                        endIcon={<LoginIcon />}
+                      >
+                        Sign In
+                      </Button>
+                    </Box>
+                  </form>
                 </Paper>
               </Container>
             </Grid>

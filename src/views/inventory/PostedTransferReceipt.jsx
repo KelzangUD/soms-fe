@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Box,
-  Grid,
-  Button,
-  IconButton,
-  FormControl,
-} from "@mui/material";
+import { Box, Grid, Button, IconButton, FormControl } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -169,28 +163,14 @@ const PostedTransferReceipt = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth sx={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="From*"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="From*" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
                     <FormControl fullWidth sx={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="To*"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="To*" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>

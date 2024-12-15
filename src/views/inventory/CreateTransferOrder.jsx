@@ -390,11 +390,6 @@ const CreateTransferOrder = ({
                       label="Transfer Order Create Date"
                       value={dayjs(parameters?.transfer_Date)}
                       onChange={transferOrderDateHandle}
-                      slotProps={{
-                        textField: {
-                          size: "small",
-                        },
-                      }}
                     />
                   </LocalizationProvider>
                 </FormControl>

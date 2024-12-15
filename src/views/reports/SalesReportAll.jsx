@@ -200,11 +200,6 @@ const SalesReportAll = () => {
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="From Date"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
                           onChange={fromDateHandle}
                         />
                       </LocalizationProvider>
@@ -213,15 +208,7 @@ const SalesReportAll = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth sx={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="To Date"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                          onChange={toDateHandle}
-                        />
+                        <DatePicker label="To Date" onChange={toDateHandle} />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
@@ -236,7 +223,7 @@ const SalesReportAll = () => {
                       }))}
                       size="small"
                       sx={{
-                        background: "#fff"
+                        background: "#fff",
                       }}
                       renderInput={(params) => (
                         <TextField {...params} label="Region/Extension" />
@@ -274,7 +261,7 @@ const SalesReportAll = () => {
                       }))}
                       size="small"
                       sx={{
-                        background: "#fff"
+                        background: "#fff",
                       }}
                       renderInput={(params) => (
                         <TextField {...params} label="Item" />

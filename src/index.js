@@ -18,8 +18,8 @@ const theme = createTheme({
       light: "#0277bd",
     },
     addBtnColor: {
-      light: "#009688"
-    }
+      light: "#009688",
+    },
   },
   components: {
     MuiTextField: {
@@ -48,6 +48,15 @@ const theme = createTheme({
         root: {
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "#263238",
+          },
+        },
+      },
+    },
+    MuiDatePicker: {
+      defaultProps: {
+        slotProps: {
+          textField: {
+            size: "small", // Apply small size globally
           },
         },
       },

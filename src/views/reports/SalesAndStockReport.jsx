@@ -83,7 +83,7 @@ const SalesAndStockReport = () => {
           "Stock Received": item?.receiptIN,
           "Transfer Out": item?.issueQty,
           "Sales Qty": item?.saleQty,
-          "Amount": item?.amount,
+          Amount: item?.amount,
           "Closing Balance": item?.closing,
         }))
       );
@@ -95,7 +95,6 @@ const SalesAndStockReport = () => {
   }, []);
 
   const regionOrExtensionHandle = (e) => {
-    console.log(e?.target?.value);
     setRegionOrExtension(e?.target?.value);
   };
   const exportJsonToPdfHandle = () => {
@@ -130,7 +129,7 @@ const SalesAndStockReport = () => {
       styles: {
         fontSize: 8,
       },
-      margin: { top: 35 }, 
+      margin: { top: 35 },
       didDrawPage: (data) => {
         doc.setFontSize(12);
         doc.text("Sales and Stock Report", data.settings.margin.left, 30);
@@ -154,28 +153,14 @@ const SalesAndStockReport = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth sx={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="From Date"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="From Date" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
                     <FormControl fullWidth sx={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="To Date"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="To Date" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>

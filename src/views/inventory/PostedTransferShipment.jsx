@@ -158,28 +158,14 @@ const PostedTransferShipment = () => {
                   <Grid item xs={3}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="From*"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="From*" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="To*"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="To*" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>

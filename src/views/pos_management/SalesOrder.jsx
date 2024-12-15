@@ -719,7 +719,11 @@ const SalesOrder = () => {
                       fullWidth
                       variant="outlined"
                     >
-                      <FileUploadIcon />
+                      <FileUploadIcon
+                        sx={{
+                          color: "#fff",
+                        }}
+                      />
                       <VisuallyHiddentInputComponent
                         onChange={uploadCSVFileHandle}
                       />
@@ -730,15 +734,19 @@ const SalesOrder = () => {
                       aria-label="download"
                       onClick={() => downloadSampleHandle("BulkUploader")}
                     >
-                      <FileDownloadIcon sx={{
-                        color: "#fff"
-                      }} />
+                      <FileDownloadIcon
+                        sx={{
+                          color: "#fff",
+                        }}
+                      />
                     </IconButton>
                   )}
                   <IconButton aria-label="add-line" onClick={addButtonHandle}>
-                    <AddBoxIcon sx={{
-                      color: "#fff"
-                    }} />
+                    <AddBoxIcon
+                      sx={{
+                        color: "#fff",
+                      }}
+                    />
                   </IconButton>
                 </Grid>
               </Grid>
@@ -762,13 +770,11 @@ const SalesOrder = () => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#fff"
+                  color: "#fff",
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1">
-                    Payment Details
-                  </Typography>
+                  <Typography variant="subtitle1">Payment Details</Typography>
                 </Grid>
               </Grid>
               <Grid container p={2}>
@@ -805,7 +811,7 @@ const SalesOrder = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
@@ -853,16 +859,11 @@ const SalesOrder = () => {
                             <DatePicker
                               label="Cheque Date"
                               onChange={chequeDateHandle}
-                              slotProps={{
-                                textField: {
-                                  size: "small",
-                                },
-                              }}
                             />
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
-                      <Grid item sx={3}>
+                      <Grid item sx={2}>
                         <TextField
                           type="file"
                           size="small"
@@ -881,7 +882,11 @@ const SalesOrder = () => {
                     alignItems="center"
                   >
                     <IconButton aria-label="add" onClick={addPaymentItemHandle}>
-                      <AddBoxIcon />
+                      <AddBoxIcon
+                        sx={{
+                          color: (theme) => theme.palette.addBtnColor.light,
+                        }}
+                      />
                     </IconButton>
                   </Grid>
                 </Grid>

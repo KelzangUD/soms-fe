@@ -208,11 +208,6 @@ const Requisitions = () => {
                             value={dayjs(requisitionData?.requisitionDate)}
                             onChange={requisitionDateHandle}
                             disabled
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                              },
-                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>
@@ -224,11 +219,6 @@ const Requisitions = () => {
                             label="Need By Date*"
                             value={dayjs(requisitionData?.needByDate)}
                             onChange={needByDateHandle}
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                              },
-                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>
@@ -342,7 +332,12 @@ const Requisitions = () => {
                               aria-label="add"
                               onClick={addItemListButtonHandle}
                             >
-                              <AddBoxIcon />
+                              <AddBoxIcon
+                                sx={{
+                                  color: (theme) =>
+                                    theme?.palette?.addBtnColor?.light,
+                                }}
+                              />
                             </IconButton>
                           </Grid>
                         </Grid>

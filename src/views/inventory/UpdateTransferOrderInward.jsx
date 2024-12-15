@@ -4,7 +4,6 @@ import {
   Grid,
   Button,
   Dialog,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
@@ -173,45 +172,93 @@ const UpdateTransferOrderInward = ({
     },
   ];
 
-  const updateHandle = async (e) => {
-    e.preventDefault();
-    const allValid = parameters?.transferOrderItemDTOList?.every(
+  const validateTransferOrderItems = () => {
+    if (!parameters?.transferOrderItemDTOList) return false;
+    const hasValidQuantities = parameters.transferOrderItemDTOList.every(
       (item) => item?.received_Qty !== null
     );
-    if (allValid) {
-      const allFulfilled = parameters?.transferOrderItemDTOList?.every(
-        (item) => Number(item?.received_Qty) <= Number(item?.qty)
-      );
-      if (allFulfilled) {
-        const res = await Route(
-          "PUT",
-          `/transferOrder/updateInwardTransferItemDetails`,
-          access_token,
-          parameters,
-          null
-        );
-        if (res?.status === 200) {
-          fetchInwardTrasnferOrderList();
-          setSeverity("success");
-          setNotificationMsg(
-            res?.data?.responseText === null
-              ? "Items Successfully Received"
-              : res?.data?.responseText
-          );
-          setShowNofication(true);
-        } else {
-          setNotificationMsg(res?.response?.data?.message);
-          setSeverity("error");
-          setShowNofication(true);
-        }
-      } else {
-        setNotificationMsg("Recevied Qty cannot be Greater than Actual Qty!");
-        setSeverity("error");
-        setShowNofication(true);
-      }
-    } else {
-      setNotificationMsg("Recevied Qty cannot be empty!");
+    if (!hasValidQuantities) {
+      setNotificationMsg("Received Qty cannot be empty!");
       setSeverity("error");
+      setShowNofication(true);
+      return false;
+    }
+    const isWithinLimits = parameters.transferOrderItemDTOList.every(
+      (item) => Number(item?.received_Qty) <= Number(item?.qty)
+    );
+    if (!isWithinLimits) {
+      setNotificationMsg("Received Qty cannot be greater than Actual Qty!");
+      setSeverity("error");
+      setShowNofication(true);
+      return false;
+    }
+    return true;
+  };
+
+  const updateHandle = async (e) => {
+    e.preventDefault();
+    // const allValid = parameters?.transferOrderItemDTOList?.every(
+    //   (item) => item?.received_Qty !== null
+    // );
+    // if (allValid) {
+    //   const allFulfilled = parameters?.transferOrderItemDTOList?.every(
+    //     (item) => Number(item?.received_Qty) <= Number(item?.qty)
+    //   );
+    //   if (allFulfilled) {
+    //     const res = await Route(
+    //       "PUT",
+    //       `/transferOrder/updateInwardTransferItemDetails`,
+    //       access_token,
+    //       parameters,
+    //       null
+    //     );
+    //     if (res?.status === 200) {
+    //       fetchInwardTrasnferOrderList();
+    //       setSeverity("success");
+    //       setNotificationMsg(
+    //         res?.data?.responseText === null
+    //           ? "Items Successfully Received"
+    //           : res?.data?.responseText
+    //       );
+    //       setShowNofication(true);
+    //     } else {
+    //       setNotificationMsg(res?.response?.data?.message);
+    //       setSeverity("error");
+    //       setShowNofication(true);
+    //     }
+    //   } else {
+    //     setNotificationMsg("Recevied Qty cannot be Greater than Actual Qty!");
+    //     setSeverity("error");
+    //     setShowNofication(true);
+    //   }
+    // } else {
+    //   setNotificationMsg("Recevied Qty cannot be empty!");
+    //   setSeverity("error");
+    //   setShowNofication(true);
+    // }
+    if (!validateTransferOrderItems()) return;
+    try {
+      const res = await Route(
+        "PUT",
+        `/transferOrder/updateInwardTransferItemDetails`,
+        access_token,
+        parameters,
+        null
+      );
+      if (res?.status === 200) {
+        fetchInwardTrasnferOrderList();
+        setSeverity("success");
+        setNotificationMsg(
+          res?.data?.responseText ?? "Items Successfully Received"
+        );
+      } else {
+        setNotificationMsg(res?.response?.data?.message || "An error occurred");
+        setSeverity("error");
+      }
+    } catch (error) {
+      setNotificationMsg(error?.message || "An unexpected error occurred");
+      setSeverity("error");
+    } finally {
       setShowNofication(true);
     }
   };

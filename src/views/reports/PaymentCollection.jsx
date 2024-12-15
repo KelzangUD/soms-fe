@@ -215,11 +215,6 @@ const PaymentCollection = () => {
                           label="From Date"
                           value={dayjs(fromDate)}
                           onChange={fromDateHandle}
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -231,11 +226,6 @@ const PaymentCollection = () => {
                           label="To Date"
                           value={dayjs(toDate)}
                           onChange={toDateHandle}
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>

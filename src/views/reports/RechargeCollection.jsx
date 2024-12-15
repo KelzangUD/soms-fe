@@ -210,11 +210,6 @@ const RechargeCollection = () => {
                           label="From Date"
                           value={dayjs(fromDate)}
                           onChange={fromDateHandle}
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -226,11 +221,6 @@ const RechargeCollection = () => {
                           label="To Date"
                           value={dayjs(toDate)}
                           onChange={toDateHandle}
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>

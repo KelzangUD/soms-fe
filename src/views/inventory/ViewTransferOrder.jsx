@@ -83,11 +83,6 @@ const ViewTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                       label="Transfer Order Create Date"
                       value={dayjs(transferOrderDetails?.transfer_Date)}
                       disabled
-                      slotProps={{
-                        textField: {
-                          size: "small",
-                        },
-                      }}
                     />
                   </LocalizationProvider>
                 </FormControl>

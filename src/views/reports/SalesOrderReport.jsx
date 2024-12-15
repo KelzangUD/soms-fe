@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   FormControl,
   MenuItem,
@@ -13,7 +11,6 @@ import {
   TextField,
 } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -24,30 +21,30 @@ import Route from "../../routes/Route";
 
 const SalesOrderReport = () => {
   const sales_order_report_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "sales_type", headerName: "Sales Type", width: 150 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "sales_type", headerName: "Sales Type", flex: 1.5 },
     {
       field: "customer_name",
       headerName: "Customer Name",
-      width: 250,
+      flex: 2.5,
     },
-    { field: "customer_number", headerName: "customer_no", width: 100 },
-    { field: "order_no", headerName: "Order No", width: 150 },
-    { field: "item_no", headerName: "Item_no", width: 150 },
-    { field: "item_description", headerName: "Item Description", width: 150 },
-    { field: "discount", headerName: "Discount", width: 150 },
+    { field: "customer_number", headerName: "customer_no", flex: 1.0 },
+    { field: "order_no", headerName: "Order No", flex: 1.5 },
+    { field: "item_no", headerName: "Item_no", flex: 1.5 },
+    { field: "item_description", headerName: "Item Description", flex: 1.5 },
+    { field: "discount", headerName: "Discount", flex: 1.5 },
     {
       field: "additional_discount",
       headerName: "Additional Discount",
-      width: 150,
+      flex: 1.5,
     },
-    { field: "lot_of_sale_dis", headerName: "Lot Of Sale Dis", width: 150 },
-    { field: "tds", headerName: "TDS", width: 150 },
-    { field: "sales_tax_amount", headerName: "Sales Tax Amount", width: 150 },
-    { field: "total_sale_amount", headerName: "Total Sale Amount", width: 150 },
-    { field: "payment_mode", headerName: "Payment Mode", width: 150 },
-    { field: "created_user", headerName: "Created User", width: 150 },
-    { field: "ebs_status", headerName: "EBS Status", width: 150 },
+    { field: "lot_of_sale_dis", headerName: "Lot Of Sale Dis", flex: 1.5 },
+    { field: "tds", headerName: "TDS", flex: 1.5 },
+    { field: "sales_tax_amount", headerName: "Sales Tax Amount", flex: 1.5 },
+    { field: "total_sale_amount", headerName: "Total Sale Amount", flex: 1.5 },
+    { field: "payment_mode", headerName: "Payment Mode", flex: 1.5 },
+    { field: "created_user", headerName: "Created User", flex: 1.5 },
+    { field: "ebs_status", headerName: "EBS Status", flex: 1.5 },
   ];
   const sales_order_report_rows = [];
 
@@ -73,29 +70,6 @@ const SalesOrderReport = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid item container>
-                  <Paper
-                    sx={{
-                      p: "2px 0",
-                      display: "flex",
-                      alignItems: "center",
-                      maxWidth: 400,
-                    }}
-                  >
-                    <InputBase
-                      sx={{ ml: 1, flex: 1 }}
-                      placeholder="Search"
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                    <IconButton
-                      type="button"
-                      sx={{ p: "10px" }}
-                      aria-label="search"
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </Paper>
-                </Grid>
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={2}>
                     <TextField

@@ -287,11 +287,6 @@ const Recharge = () => {
                           label="Posting Date"
                           value={dayjs(rechargeDetails?.postingDate)}
                           onChange={postingDateHandle}
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -446,11 +441,6 @@ const Recharge = () => {
                           disabled={disableFields?.chequeDate}
                           onChange={chequeDateHandle}
                           value={dayjs(rechargeDetails?.chequeDate)}
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
                         />
                       </LocalizationProvider>
                     </FormControl>

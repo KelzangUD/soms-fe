@@ -1,64 +1,64 @@
 // ==================== Sales Report-All Headers =================================
 export const sales_report_all_columns = [
-  { field: "sl", headerName: "Sl. No", width: 40 },
-  { field: "sales_type", headerName: "Sales Type", width: 150 },
+  { field: "sl", headerName: "Sl. No", flex: 0.4 },
+  { field: "sales_type", headerName: "Sales Type", flex: 1.5 },
   {
     field: "customer_name",
     headerName: "Customer Name",
-    width: 250,
+    flex: 2.5,
   },
-  { field: "customer_no", headerName: "Customer Number", width: 100 },
+  { field: "customer_no", headerName: "Customer Number", flex: 1 },
   {
     field: "sales_order_no",
     headerName: "Sales Order No.",
-    width: 150,
+    flex: 1.5,
   },
-  { field: "region", headerName: "Region", width: 150 },
-  { field: "office", headerName: "Office", width: 150 },
-  { field: "revenue_head", headerName: "Revenue Head", width: 150 },
+  { field: "region", headerName: "Region", flex: 1.5 },
+  { field: "office", headerName: "Office", flex: 1.5 },
+  { field: "revenue_head", headerName: "Revenue Head", flex: 1.5 },
   {
     field: "posting_date",
     headerName: "Posting Date",
-    width: 150,
+    flex: 1.5,
   },
   {
     field: "item_code",
     headerName: "Item Code",
-    width: 150,
+    flex: 1.5,
   },
   {
     field: "item_description",
     headerName: "Item Description",
-    width: 150,
+    flex: 1.5,
   },
 ];
 // ==================== Sales And Order Report Headers ===========================
 export const sales_and_stock_report_columns = [
-  { field: "sl", headerName: "Sl. No", width: 20 },
-  { field: "item_code", headerName: "Item Code", width: 180 },
+  { field: "sl", headerName: "Sl. No", flex: 0.3 },
+  { field: "item_code", headerName: "Item Code", flex: 1.8 },
   {
     field: "item_details",
     headerName: "Particulars (Details of Item)",
-    width: 320,
+    flex: 3.2,
   },
-  { field: "unit", headerName: "Unit", width: 65 },
+  { field: "unit", headerName: "Unit", flex: 0.5 },
   {
     field: "opening_balance",
     headerName: "Opening Balance (Qty)",
-    width: 140,
+    flex: 1.4,
   },
-  { field: "stock_received", headerName: "Stock Received (Qty)", width: 140 },
-  { field: "transfer_out", headerName: "Transfer Out (Qty)", width: 120 },
-  { field: "sales_qty", headerName: "Sales Qty", width: 70 },
+  { field: "stock_received", headerName: "Stock Received (Qty)", flex: 1.4 },
+  { field: "transfer_out", headerName: "Transfer Out (Qty)", flex: 1.2 },
+  { field: "sales_qty", headerName: "Sales Qty", flex: 0.7 },
   {
     field: "amount",
     headerName: "Amount",
-    width: 70,
+    flex: 0.7,
   },
   {
     field: "closing_balance",
     headerName: "Closing Balance",
-    width: 100,
+    flex: 1,
   },
 ];
 // ===================== On-Hand Report Headers ===============================

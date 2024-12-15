@@ -59,7 +59,7 @@ const PaymentReceipt = () => {
     remarks: "",
     payment: "",
     outstandingBalance: "",
-    invoiceNo: ""
+    invoiceNo: "",
   });
   const [disablePaymentSelect, setDisablePaymentSelect] = useState(true);
   const [disableFields, setDisabledFields] = useState({
@@ -123,7 +123,7 @@ const PaymentReceipt = () => {
           accountId: res?.data?.accountId,
           acctKey: res?.data?.acctKey,
           outstandingBalance: res?.data?.billAmount,
-          invoiceNo: res?.data?.invoiceNo
+          invoiceNo: res?.data?.invoiceNo,
         }));
       }
     } else {
@@ -417,11 +417,6 @@ const PaymentReceipt = () => {
                             label="Posting Date"
                             value={dayjs(paymentReceiptDetails?.postingDate)}
                             onChange={postingDateHandle}
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                              },
-                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Button, Dialog, Slide, Typography } from "@mui/material";
+import { Box, Grid, Button, Dialog, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Transition } from "../../component/common";
 
 const ViewRequisitionItemDetails = ({
   open,
@@ -12,10 +10,7 @@ const ViewRequisitionItemDetails = ({
   approvalStatus,
 }) => {
   const [itemDTOlist, setItemDTOList] = useState([]);
-
   useEffect(() => {
-    // console.log(approvalStatus);
-    // console.log(details);
     setItemDTOList(
       details?.itemDTOList?.map((item) => ({
         id: item?.req_Item_No,
@@ -33,24 +28,24 @@ const ViewRequisitionItemDetails = ({
     );
   }, [details]);
   const requisiton_item_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
-    { field: "item_Number", headerName: "Item Number", width: 200 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "item_Number", headerName: "Item Number", flex: 2 },
     {
       field: "item_Description",
       headerName: "Description",
-      width: 500,
+      flex: 5,
     },
-    { field: "uom", headerName: "UOM", width: 80 },
-    { field: "qty", headerName: "Quantity", width: 70 },
+    { field: "uom", headerName: "UOM", flex: 0.8 },
+    { field: "qty", headerName: "Quantity", flex: 0.7 },
     {
       field: "level1_Qty",
       headerName: "Approve Quantity",
-      width: 130,
+      flex: 1.3,
     },
     {
       field: "received_Remark",
       headerName: "Remarks",
-      width: 150,
+      flex: 1.5,
     },
   ];
   return (
@@ -72,7 +67,7 @@ const ViewRequisitionItemDetails = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "rgb(25, 118, 210)",
+                  backgroundColor: theme => theme?.palette?.bg?.light,
                   color: "#fff",
                 }}
               >
@@ -118,28 +113,31 @@ const ViewRequisitionItemDetails = ({
               </Grid>
             </Grid>
             <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
-              <div
-                style={{
-                  height: "auto",
-                  width: "100%",
-                  background: "#fff",
+              <DataGrid
+                rows={itemDTOlist?.map((row, index) => ({
+                  ...row,
+                  sl: index + 1,
+                }))}
+                columns={requisiton_item_columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 5 },
+                  },
                 }}
-              >
-                <DataGrid
-                  rows={itemDTOlist?.map((row, index) => ({
-                    ...row,
-                    sl: index + 1,
-                  }))}
-                  columns={requisiton_item_columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                  sx={{ mx: 2 }}
-                />
-              </div>
+                pageSizeOptions={[5, 10]}
+                sx={{
+                  mx: 2,
+                  background: "#fff",
+                  "--DataGrid-overlayHeight": "300px",
+                  "& .MuiDataGrid-columnHeaders": {
+                    backgroundColor: "#F5F7F8",
+                  },
+                  "& .MuiDataGrid-row": {
+                    padding: "4px 0",
+                  },
+                }}
+                getRowHeight={() => "auto"}
+              />
             </Grid>
             <Grid
               item
@@ -154,6 +152,7 @@ const ViewRequisitionItemDetails = ({
                 variant="outlined"
                 onClick={() => setOpen(false)}
                 color="error"
+                size="small"
               >
                 Close
               </Button>

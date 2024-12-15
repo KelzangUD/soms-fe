@@ -748,7 +748,7 @@ const SalesReturn = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={3}>
                     <FormControl fullWidth size="small">
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
@@ -796,24 +796,20 @@ const SalesReturn = () => {
                           <DatePicker
                             label="Cheque Date"
                             onChange={chequeDateHandle}
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                              },
-                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>
                     </Grid>
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
-                    <Grid item sx={2} display="flex">
+                    <Grid item sx={1}>
                       <TextField
                         type="file"
                         size="small"
                         label={isFileUploaded ? "File" : ""}
                         InputLabelProps={{ shrink: true }}
                         onChange={chequeCopyHandle}
+                        fullWidth
                       />
                     </Grid>
                   )}
@@ -829,7 +825,9 @@ const SalesReturn = () => {
                         aria-label="add"
                         onClick={addPaymentItemHandle}
                       >
-                        <AddBoxIcon />
+                        <AddBoxIcon sx={{
+                          color: theme => theme?.palette?.addBtnColor?.light
+                        }} />
                       </IconButton>
                     </Grid>
                   </Grid>
