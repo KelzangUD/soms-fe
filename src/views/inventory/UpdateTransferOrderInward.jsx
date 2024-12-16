@@ -485,7 +485,10 @@ const UpdateTransferOrderInward = ({
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={() => {
+            setShowNofication(false);
+            setOpen(false);
+          }}
           message={notificationMsg}
           severity={severity}
         />
