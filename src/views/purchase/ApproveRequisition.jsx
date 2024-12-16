@@ -7,8 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { Notification } from "../../ui/index";
+import { Notification, LoaderDialog } from "../../ui/index";
 import { Transition, CustomDataTable } from "../../component/common";
 import Route from "../../routes/Route";
 
@@ -24,8 +23,8 @@ const ApproveRequisition = ({
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [itemDTOlist, setItemDTOList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    console.log(details)
     setItemDTOList(
       details?.itemDTOList?.map((item) => ({
         id: item?.req_Item_No,
@@ -91,21 +90,30 @@ const ApproveRequisition = ({
     },
   ];
   const updateHandle = async () => {
-    const res = await Route(
-      "PUT",
-      `/requisition/approveRequisitionDetails?requisitionNo=${details?.requisitionNo}&empID=${empID}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setNotificationMsg(res?.data?.responseText);
-      setSeverity("success");
-      setShowNofication(true);
-    } else {
-      setNotificationMsg(res?.data?.message);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "PUT",
+        `/requisition/approveRequisitionDetails?requisitionNo=${details?.requisitionNo}&empID=${empID}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setNotificationMsg(res?.data?.responseText);
+        setSeverity("success");
+        setShowNofication(true);
+      } else {
+        setNotificationMsg(res?.data?.message);
+        setSeverity("error");
+        setShowNofication(true);
+      }
+    } catch (err) {
+      setNotificationMsg(`Error: ${err}`);
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -172,7 +180,13 @@ const ApproveRequisition = ({
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item container alignItems="center" sx={{ px: 2, mr: 1, ml: 2 }} xs={12}>
+            <Grid
+              item
+              container
+              alignItems="center"
+              sx={{ px: 2, mr: 1, ml: 2 }}
+              xs={12}
+            >
               <CustomDataTable
                 rows={itemDTOlist?.map((row, index) => ({
                   ...row,
@@ -215,6 +229,7 @@ const ApproveRequisition = ({
           severity={severity}
         />
       )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

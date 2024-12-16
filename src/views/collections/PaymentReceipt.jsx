@@ -20,7 +20,7 @@ import {
   LoaderDialog,
   SuccessNotification,
 } from "../../ui/index";
-import { PaymentReceiptCustomerDetails } from "../../component/collections";
+import { PaymentReceiptCustomerDetails } from "../../component/collections/index";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
 

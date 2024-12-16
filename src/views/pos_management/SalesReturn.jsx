@@ -323,8 +323,6 @@ const SalesReturn = () => {
         },
         userId: user,
       };
-      console.log(data);
-
       const jsonDataBlob = new Blob([JSON.stringify(data)], {
         type: "application/json",
       });
@@ -345,7 +343,6 @@ const SalesReturn = () => {
         setNotificationMsg("Successfully Posted Sales Return");
         setShowNofication(true);
       } else {
-        console.log(res);
         setNotificationMsg(res?.response?.data?.message);
         setSeverity("error");
         setShowNofication(true);

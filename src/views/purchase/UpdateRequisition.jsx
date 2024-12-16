@@ -36,6 +36,7 @@ const UpdateRequisition = ({
     })),
   });
   useEffect(() => {
+    console.log(details);
     setItemDTOList(
       details?.itemDTOList?.map((item) => ({
         id: item?.req_Item_No,
@@ -53,10 +54,10 @@ const UpdateRequisition = ({
   }, [details]);
   const approveQtyHandle = (e, params) => {
     const { id } = params;
-    const qty = e?.target?.value;
+    const qty = parseInt(e?.target?.value);
     if (qty > params?.row?.qty) {
+      setSeverity("warning");
       setNotificationMsg("Approve Qty should not be greater than Actual Qty!");
-      setSeverity("info");
       setShowNotification(true);
     } else {
       setApproveRequisitionItems((prev) => ({
@@ -88,12 +89,12 @@ const UpdateRequisition = ({
     { field: "uom", headerName: "UOM", flex: 0.9 },
     {
       field: "qty",
-      headerName: "Actual Quantity",
+      headerName: "Actual Qty",
       flex: 1.1,
     },
     {
       field: "approve_quantity",
-      headerName: "Approve Quantity",
+      headerName: "Approve Qty",
       flex: 1.3,
       renderCell: (params) => (
         <>
@@ -126,7 +127,7 @@ const UpdateRequisition = ({
             onChange={(e) => remarksHandle(e, params)}
             multiline
             InputProps={{
-              inputProps: { style: { whiteSpace: "normal" } }, // Ensure multiline handling if needed
+              inputProps: { style: { whiteSpace: "normal" } },
             }}
           />
         </>
@@ -229,7 +230,13 @@ const UpdateRequisition = ({
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item container alignItems="center" sx={{ px: 2 }} xs={12}>
+            <Grid
+              item
+              container
+              alignItems="center"
+              sx={{ px: 2, ml: 2 }}
+              xs={12}
+            >
               <CustomDataTable
                 rows={itemDTOlist?.map((row, index) => ({
                   ...row,
@@ -260,13 +267,21 @@ const UpdateRequisition = ({
           </Grid>
         </Box>
       </Dialog>
-      {showNotification && (
+      {showNotification && severity !== "warning" && (
         <Notification
           open={showNotification}
           setOpen={() => {
             setOpen(false);
             setShowNotification(false);
           }}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
+      {showNotification && severity === "warning" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />

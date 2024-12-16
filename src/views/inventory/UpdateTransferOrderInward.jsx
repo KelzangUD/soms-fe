@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Notification } from "../../ui/index";
+import { Notification, LoaderDialog } from "../../ui/index";
 import Route from "../../routes/Route";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 import { CustomDataTable, Transition } from "../../component/common";
@@ -23,6 +23,7 @@ const UpdateTransferOrderInward = ({
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
+  const [isLoading, setIsLoading] = useState(false);
   const [parameters, setParameters] = useState({
     transfer_Order_Id: "",
     transfer_Order_Number: "",
@@ -237,6 +238,7 @@ const UpdateTransferOrderInward = ({
     //   setShowNofication(true);
     // }
     if (!validateTransferOrderItems()) return;
+    setIsLoading(true);
     try {
       const res = await Route(
         "PUT",
@@ -251,15 +253,18 @@ const UpdateTransferOrderInward = ({
         setNotificationMsg(
           res?.data?.responseText ?? "Items Successfully Received"
         );
+        setShowNofication(true);
       } else {
         setNotificationMsg(res?.response?.data?.message || "An error occurred");
         setSeverity("error");
+        setShowNofication(true);
       }
     } catch (error) {
       setNotificationMsg(error?.message || "An unexpected error occurred");
       setSeverity("error");
-    } finally {
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -485,6 +490,7 @@ const UpdateTransferOrderInward = ({
           severity={severity}
         />
       )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { Box, Grid, Button, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { DataGrid } from "@mui/x-data-grid";
 import Notification from "../../ui/Notification";
 import { RenderStatus } from "../../ui";
 import UpdateRequisition from "./UpdateRequisition";
