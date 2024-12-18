@@ -57,7 +57,7 @@ const SalesReturn = () => {
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
-    paymentAmount: "",
+    paymentAmount: netTotal,
     paymentType: "",
     paymentTypeName: "",
     bankAccountNumber: "",
@@ -323,7 +323,6 @@ const SalesReturn = () => {
         },
         userId: user,
       };
-      console.log(data);
 
       const jsonDataBlob = new Blob([JSON.stringify(data)], {
         type: "application/json",
@@ -723,10 +722,9 @@ const SalesReturn = () => {
                       type="number"
                       name="refund_amount"
                       defaultValue="refund_amount"
-                      value={netTotal}
+                      value={paymentLinesItem?.paymentAmount}
                       required
                       onChange={paymentAmountHandle}
-                      disabled
                       size="small"
                     />
                   </Grid>
