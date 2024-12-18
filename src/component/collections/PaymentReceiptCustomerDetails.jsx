@@ -28,56 +28,46 @@ const PaymentReceiptCustomerDetails = ({ paymentReceiptDetails }) => {
           <Grid item marginX={1.5}>
             <TextField
               label="Customer Name"
-              variant="outlined"
               fullWidth
               name="customer_name"
               disabled
               value={paymentReceiptDetails?.name}
-              size="small"
             />
           </Grid>
           <Grid item marginX={1.5}>
             <TextField
               label="Account Id"
-              variant="outlined"
               fullWidth
               name="account_id"
               disabled
               value={paymentReceiptDetails?.accountId}
-              size="small"
             />
           </Grid>
           <Grid item marginX={1.5}>
             <TextField
               label="Invoice No"
-              variant="outlined"
               fullWidth
               name="invoice_no"
               disabled
               value="---"
-              size="small"
             />
           </Grid>
           <Grid item marginX={1.5}>
             <TextField
               label="CBS Customer Status"
-              variant="outlined"
               fullWidth
               name="cbs_customer_status"
               disabled
               value="---"
-              size="small"
             />
           </Grid>
           <Grid item marginX={1.5}>
             <TextField
               label="Outstanding Balance"
-              variant="outlined"
               fullWidth
               name="outstanding_balance"
               disabled
               value={paymentReceiptDetails?.outstandingBalance}
-              size="small"
             />
           </Grid>
         </Grid>

@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Box, Grid, IconButton } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Button, Grid, IconButton } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import AddIcon from "@mui/icons-material/Add";
 import Route from "../../routes/Route";
 import { Notification, RenderStatus } from "../../ui/index";
 import ViewRequisitionItemDetails from "./ViewRequisitionItemDetails";
-import { CustomDataTable, PrintSection } from "../../component/common/index";
-import { exportToExcel } from "react-json-to-excel";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import { CustomDataTable } from "../../component/common/index";
 import { useReactToPrint } from "react-to-print";
+import CreateRequisition from "./CreateRequisition";
 
 const RequisitionList = () => {
   const access_token = localStorage.getItem("access_token");
@@ -20,9 +19,7 @@ const RequisitionList = () => {
   const [itemDetails, setItemDetails] = useState([]);
   const [showViewDetails, setShowViewDetails] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState("Submitted");
-  const contentRef = useRef(null);
-  const reactToPrintFn = useReactToPrint({ contentRef });
-  const [printData, setPrintData] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const viewDetailsHandle = async (params) => {
     const res = await Route(
@@ -79,64 +76,21 @@ const RequisitionList = () => {
     },
   ];
 
-  useEffect(() => {
-    const fetchRequisitionList = async () => {
-      const res = await Route(
-        "GET",
-        `/requisition/viewRequisitionListByCreator/${empId}`,
-        access_token,
-        null,
-        null
-      );
-      if (res?.status === 200) {
-        setRequisitionList(res?.data);
-        setPrintData(
-          res?.data?.map((item, index) => ({
-            sl: index + 1,
-            id: item?.id,
-            "Requisition No": item?.requisitionNo,
-            "Requisition Type Name": item?.requisitionTypeName,
-            "Approval Status": item?.approvalStatus,
-            "Requisition Date": item?.requisition_Date,
-          }))
-        );
-      }
-    };
-    fetchRequisitionList();
-  }, [access_token, empId]);
-
-  const exportJsonToPdfHandle = () => {
-    const doc = new jsPDF();
-    autoTable(doc, {
-      head: [
-        [
-          "sl",
-          "id",
-          "Requisition No",
-          "Requisition Type Name",
-          "Approval Status",
-          "Requisition Date",
-        ],
-      ],
-      body: printData?.map((item) => [
-        item?.sl,
-        item?.id,
-        item?.["Requisition No"],
-        item?.["Requisition Type Name"],
-        item?.["Approval Status"],
-        item?.["Requisition Date"],
-      ]),
-      styles: {
-        fontSize: 8,
-      },
-      margin: { top: 35 },
-      didDrawPage: (data) => {
-        doc.setFontSize(12);
-        doc.text("Requisition List", data.settings.margin.left, 30);
-      },
-    });
-    doc.save("Requisition_List");
+  const fetchRequisitionList = async (access_token, empId) => {
+    const res = await Route(
+      "GET",
+      `/requisition/viewRequisitionListByCreator/${empId}`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setRequisitionList(res?.data);
+    }
   };
+  useEffect(() => {
+    fetchRequisitionList(access_token, empId);
+  }, [access_token, empId]);
 
   return (
     <>
@@ -153,21 +107,15 @@ const RequisitionList = () => {
                   container
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <PrintSection
-                    exportExcel={() =>
-                      exportToExcel(printData, "Requisition List")
-                    }
-                    exportPdf={exportJsonToPdfHandle}
-                    handlePrint={reactToPrintFn}
-                  />
+                  <Button
+                    variant="contained"
+                    endIcon={<AddIcon />}
+                    onClick={() => setOpen(true)}
+                  >
+                    Add New
+                  </Button>
                 </Grid>
-                <Grid
-                  item
-                  container
-                  alignItems="center"
-                  xs={12}
-                  ref={contentRef}
-                >
+                <Grid item container alignItems="center" xs={12}>
                   <CustomDataTable
                     rows={requisitionList?.map((row, index) => ({
                       ...row,
@@ -181,6 +129,13 @@ const RequisitionList = () => {
           </Grid>
         </Grid>
       </>
+      {open && (
+        <CreateRequisition
+          open={open}
+          setOpen={setOpen}
+          fetchRequisitionList={() => fetchRequisitionList(access_token, empId)}
+        />
+      )}
       {showNotification && (
         <Notification
           open={showNotification}

@@ -23,7 +23,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DownloadIcon from "@mui/icons-material/Download";
 import UploadIcon from "@mui/icons-material/Upload";
-import TransferBulkUploader from "../../assets/files/TransferBulkUploader.csv";
+import TransferBulkUploader from "../../assets/files/TransferBulkUploader.xls";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
 import { dateFormatterTwo } from "../../util/CommonUtil";
@@ -46,7 +46,11 @@ const CreateTransferOrder = ({
     faToLocator,
     toStore,
     onHandsTransferOrderItems,
+    fetchAllItems,
   } = useCommon();
+  React.useEffect(() => {
+    console.log(onHandsTransferOrderItems);
+  }, []);
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
@@ -119,6 +123,11 @@ const CreateTransferOrder = ({
       : setEnableToLocator(true);
   };
   const fromLocatorHandle = (e) => {
+    fetchAllItems(
+      userDetails?.regionName,
+      parameters?.transfer_From_SubInventory,
+      e?.target?.value
+    );
     setParameters((prev) => ({
       ...prev,
       transfer_From_Locator: e?.target?.value,

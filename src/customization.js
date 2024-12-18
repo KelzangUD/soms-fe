@@ -13,6 +13,10 @@ export const customizedTheme = createTheme({
   },
   components: {
     MuiTextField: {
+      defaultProps: {
+        variant: "outlined", // Set default variant to outlined
+        size:"small",
+      },
       styleOverrides: {
         root: {},
       },

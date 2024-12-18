@@ -124,6 +124,7 @@ const PaymentReceipt = () => {
           acctKey: res?.data?.acctKey,
           outstandingBalance: res?.data?.billAmount,
           invoiceNo: res?.data?.invoiceNo,
+          amount: res?.data?.billAmount,
         }));
       } else {
         setNotificationMsg("Customer Details not Found!");
@@ -398,14 +399,12 @@ const PaymentReceipt = () => {
                       <TextField
                         error={incorrectFormant}
                         label="Mobile Number/Account Code"
-                        variant="outlined"
                         fullWidth
                         name="mobile_no"
                         required
                         onChange={mobileNoHandle}
                         value={paymentReceiptDetails?.mobileNo}
                         helperText={incorrectFormant && "Incorrect Entry"}
-                        size="small"
                       />
                     </Grid>
                   </Grid>
@@ -457,13 +456,11 @@ const PaymentReceipt = () => {
                     <Grid item xs={3}>
                       <TextField
                         label="Amount"
-                        variant="outlined"
                         fullWidth
                         name="amount"
                         required
                         onChange={amountHandle}
                         value={paymentReceiptDetails?.amount}
-                        size="small"
                       />
                     </Grid>
                     <Grid item xs={3}>
@@ -491,13 +488,11 @@ const PaymentReceipt = () => {
                     <Grid item xs={3}>
                       <TextField
                         label="Cheque No"
-                        variant="outlined"
                         fullWidth
                         name="cheque_no"
                         onChange={chequeNoHandle}
                         disabled={disableFields?.chequeNoField}
                         value={paymentReceiptDetails?.chequeNo}
-                        size="small"
                       />
                     </Grid>
                     <Grid item xs={3}>
@@ -520,7 +515,6 @@ const PaymentReceipt = () => {
                     <Grid item xs={3}>
                       <TextField
                         type="file"
-                        size="small"
                         label={isFileUploaded ? "File" : ""}
                         InputLabelProps={{ shrink: true }}
                         onChange={chequeCopyHandle}
@@ -531,7 +525,6 @@ const PaymentReceipt = () => {
                   <Grid item xs={12} marginY={2} paddingX={2}>
                     <TextField
                       label="Remarks"
-                      variant="outlined"
                       fullWidth
                       name="remarks"
                       required
@@ -551,12 +544,7 @@ const PaymentReceipt = () => {
             </Grid>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
-            <Button
-              variant="contained"
-              sx={{ mr: 2 }}
-              onClick={createHandle}
-              size="small"
-            >
+            <Button variant="contained" sx={{ mr: 2 }} onClick={createHandle}>
               Create & Post
             </Button>
             <Button
@@ -564,7 +552,6 @@ const PaymentReceipt = () => {
               color="error"
               onClick={cancelHandle}
               sx={{ background: "#fff" }}
-              size="small"
             >
               Cancel
             </Button>

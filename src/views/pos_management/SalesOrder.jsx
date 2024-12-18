@@ -549,7 +549,6 @@ const SalesOrder = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="POS No"
-                      variant="outlined"
                       fullWidth
                       name="pos_no"
                       disabled
@@ -559,7 +558,6 @@ const SalesOrder = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Posting Date"
-                      variant="outlined"
                       fullWidth
                       name="posting_date"
                       defaultValue={new Date().toDateString()}
@@ -630,7 +628,6 @@ const SalesOrder = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Mobile No"
-                      variant="outlined"
                       fullWidth
                       name="mobile_no"
                       required
@@ -642,7 +639,6 @@ const SalesOrder = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Customer No"
-                      variant="outlined"
                       fullWidth
                       name="customer_no"
                       required
@@ -654,7 +650,6 @@ const SalesOrder = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Address"
-                      variant="outlined"
                       fullWidth
                       name="address"
                       value={salesOrderDetails?.address}
@@ -667,7 +662,6 @@ const SalesOrder = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
-                      variant="outlined"
                       fullWidth
                       name="address 1"
                       value={salesOrderDetails?.address1}
@@ -678,7 +672,6 @@ const SalesOrder = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="City"
-                      variant="outlined"
                       fullWidth
                       name="city"
                       value={salesOrderDetails?.city}
@@ -689,7 +682,6 @@ const SalesOrder = () => {
                   <Grid item xs={6}>
                     <TextField
                       label="Remarks"
-                      variant="outlined"
                       fullWidth
                       name="remarks"
                       onChange={remarksHandle}
@@ -791,7 +783,6 @@ const SalesOrder = () => {
                   <Grid item xs={2}>
                     <TextField
                       label="Payment Amount"
-                      variant="outlined"
                       fullWidth
                       name="payment_amount"
                       required
@@ -856,7 +847,6 @@ const SalesOrder = () => {
                       <Grid item sx={2}>
                         <TextField
                           label="Cheque No"
-                          variant="outlined"
                           name="cheque_no"
                           onChange={chequeNoHandle}
                           size="small"
@@ -937,6 +927,7 @@ const SalesOrder = () => {
           setOpen={setOpenDialog}
           storeName={salesOrderDetails?.storeName}
           salesType={salesOrderDetails?.salesType}
+          productType={salesOrderDetails?.productType}
           setLineItems={setLineItems}
           userDetails={userDetails}
         />

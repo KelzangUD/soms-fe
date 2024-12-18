@@ -39,16 +39,18 @@ const SuccessNotification = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={openInNewTab}
-            variant="contained"
-            size="small"
-            sx={{
-              mb: 2,
-            }}
-          >
-            View Receipt
-          </Button>
+          {openInNewTab && (
+            <Button
+              onClick={openInNewTab}
+              variant="contained"
+              size="small"
+              sx={{
+                mb: 2,
+              }}
+            >
+              View Receipt
+            </Button>
+          )}
           <Button
             onClick={() => setShowNofication(false)}
             variant="outlined"

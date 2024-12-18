@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Paper, Grid, InputBase, IconButton } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { Box, Button, Grid, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";

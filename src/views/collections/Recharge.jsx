@@ -269,8 +269,7 @@ const Recharge = () => {
             <Card>
               <Grid
                 container
-                paddingX={2}
-                paddingY={2}
+                padding={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -300,25 +299,21 @@ const Recharge = () => {
                   <Grid item xs={4}>
                     <TextField
                       label="Recharge Type"
-                      variant="outlined"
                       fullWidth
                       name="payment_type"
                       defaultValue="E-Top Up"
                       required
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
                       label="Prepaid Number"
-                      variant="outlined"
                       fullWidth
                       name="prepaid_no"
                       onChange={prepaidNumberHandle}
                       required
                       value={rechargeDetails?.mobileNo}
-                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -371,64 +366,60 @@ const Recharge = () => {
                   </IconButton>
                 </Grid>
               </Grid>
-              <Grid container padding={2} py={2}>
-                <Grid container spacing={1}>
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Payment Amount"
-                      variant="outlined"
-                      fullWidth
-                      name="payment_amount"
-                      onChange={amountHandle}
-                      type="number"
-                      value={rechargeDetails?.amount}
-                      required
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel id="payment-type-select-label">
-                        Payment Type*
-                      </InputLabel>
-                      <Select
-                        labelId="payment-type-select-label"
-                        id="payment-type-select"
-                        label="Payment Type*"
-                        onChange={paymentTypeHandle}
-                        value={rechargeDetails?.payment}
-                      >
-                        {paymentType?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel id="bank-ac-name-select-label">
-                        Bank A/C Name*
-                      </InputLabel>
-                      <Select
-                        labelId="bank-ac-name-select-label"
-                        id="bank-ac-name-select"
-                        label="Bank A/C Name*"
-                        onChange={bankAccHandle}
-                        value={rechargeDetails?.bankId}
-                      >
-                        {bankAccountNames?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item.bankName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
+              <Grid container padding={2} py={2} spacing={1}>
+                <Grid item xs={4}>
+                  <TextField
+                    label="Payment Amount"
+                    fullWidth
+                    name="payment_amount"
+                    onChange={amountHandle}
+                    type="number"
+                    value={rechargeDetails?.amount}
+                    required
+                  />
                 </Grid>
-                <Grid container spacing={1} sx={{ mt: 0.5 }}>
-                  <Grid item xs={4} display="flex" alignItems="center">
+                <Grid item xs={4}>
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="payment-type-select-label">
+                      Payment Type*
+                    </InputLabel>
+                    <Select
+                      labelId="payment-type-select-label"
+                      id="payment-type-select"
+                      label="Payment Type*"
+                      onChange={paymentTypeHandle}
+                      value={rechargeDetails?.payment}
+                    >
+                      {paymentType?.map((item) => (
+                        <MenuItem value={item?.id} key={item?.id}>
+                          {item?.type}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="bank-ac-name-select-label">
+                      Bank A/C Name*
+                    </InputLabel>
+                    <Select
+                      labelId="bank-ac-name-select-label"
+                      id="bank-ac-name-select"
+                      label="Bank A/C Name*"
+                      onChange={bankAccHandle}
+                      value={rechargeDetails?.bankId}
+                    >
+                      {bankAccountNames?.map((item) => (
+                        <MenuItem value={item?.id} key={item?.id}>
+                          {item.bankName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid container pl={1} spacing={1} sx={{ mt: 0.5 }}>
+                  <Grid item xs={4}>
                     <TextField
                       label="Card/Cheque Number"
                       variant="outlined"
@@ -455,7 +446,6 @@ const Recharge = () => {
                   <Grid item xs={4}>
                     <TextField
                       type="file"
-                      size="small"
                       label={isFileUploaded ? "File" : ""}
                       InputLabelProps={{ shrink: true }}
                       onChange={chequeCopyHandle}
@@ -472,7 +462,6 @@ const Recharge = () => {
               variant="contained"
               sx={{ marginRight: 2 }}
               onClick={createHandle}
-              size="small"
             >
               Create & Post
             </Button>
@@ -481,7 +470,6 @@ const Recharge = () => {
               color="error"
               onClick={cancelHandle}
               style={{ background: "#fff" }}
-              size="small"
             >
               Cancel
             </Button>

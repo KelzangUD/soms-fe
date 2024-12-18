@@ -2,40 +2,42 @@ import React, { useState } from "react";
 import {
   Autocomplete,
   Box,
-  Button,
-  Card,
-  Paper,
   Grid,
-  TextField,
-  MenuItem,
+  Button,
+  Dialog,
   FormControl,
   IconButton,
   InputLabel,
+  MenuItem,
   Select,
+  TextField,
+  Typography,
+  Card,
+  Paper,
   Table,
   TableContainer,
   TableHead,
   TableBody,
   TableRow,
   TableCell,
-  Typography,
 } from "@mui/material";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Transition } from "../../component/common/index";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Notification,
   LoaderDialog,
   SuccessNotification,
 } from "../../ui/index";
-import dayjs from "dayjs";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
 
-const Requisitions = () => {
+const CreateRequisition = ({ open, setOpen, fetchRequisitionList }) => {
   const { requisitionType, itemsList } = useCommon();
   const empId = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
@@ -91,43 +93,24 @@ const Requisitions = () => {
       amount: e?.target?.value,
     }));
   };
-  const resetItemDTOList = () => {
-    setItemDTOList({
+  const addItemListButtonHandle = () => {
+    setRequisitionData((prev) => ({
+      ...prev,
+      itemDTOList: [...prev.itemDTOList, itemDTOList],
+    }));
+    setItemDTOList((prev) => ({
+      ...prev,
       item_Description: "",
       item_Number: "",
       uom: "",
       amount: "",
-    });
-  }
-  const addItemListButtonHandle = () => {
-    if (!itemDTOList?.item_Description || !itemDTOList?.amount) {
-      setNotificationMsg("Please complete the item details before adding.");
-      setSeverity("warning");
-      setShowNofication(true);
-      return;
-    }
-    setRequisitionData((prev) => ({
-      ...prev,
-      itemDTOList: [...prev.itemDTOList, { ...itemDTOList }],
     }));
-    resetItemDTOList();
   };
   const removeItemHandle = (index) => {
     setRequisitionData((prev) => ({
       ...prev,
       itemDTOList: prev.itemDTOList.filter((_, i) => i !== index),
     }));
-  };
-  const resetStates = () => {
-    setIsETop(false);
-    setRequisitionData({
-      requisitionType: "",
-      createdBy: empId,
-      needByDate: new Date(),
-      requisitionDate: new Date(),
-      itemDTOList: [],
-    });
-    resetItemDTOList();
   };
   const createHandle = async () => {
     if (
@@ -141,16 +124,33 @@ const Requisitions = () => {
     } else {
       setIsLoading(true);
       try {
-        const payload = { ...requisitionData };
         const res = await Route(
           "POST",
           `/requisition/createRequisition`,
           access_token,
-          payload,
+          requisitionData,
           null
         );
+        console.log(requisitionData);
+        console.log(res);
         if (res?.status === 201) {
-          resetStates();
+          fetchRequisitionList();
+          setIsETop(false);
+          setRequisitionData((prev) => ({
+            ...prev,
+            requisitionType: "",
+            createdBy: empId,
+            needByDate: dateFormatterTwo(new Date().toISOString()),
+            requisitionDate: dateFormatterTwo(new Date().toISOString()),
+            itemDTOList: [],
+          }));
+          setItemDTOList((prev) => ({
+            ...prev,
+            item_Description: "",
+            item_Number: "",
+            uom: "",
+            amount: "",
+          }));
           setNotificationMsg(res?.data?.responseText);
           setSeverity("success");
           setShowNofication(true);
@@ -168,10 +168,45 @@ const Requisitions = () => {
       }
     }
   };
+  const cancelHandle = () => {
+    setRequisitionData((prev) => ({
+      ...prev,
+      requisitionType: "",
+      createdBy: empId,
+      needByDate: dateFormatterTwo(new Date().toISOString()),
+      requisitionDate: dateFormatterTwo(new Date().toISOString()),
+      itemDTOList: [],
+    }));
+  };
   return (
     <>
-      <Box sx={{ px: 2 }}>
-        <Grid container>
+      <Dialog
+        fullWidth
+        maxWidth="lg"
+        open={open}
+        onClose={() => setOpen(false)}
+        TransitionComponent={Transition}
+      >
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12}>
+            <Grid
+              container
+              padding={2}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: (theme) => theme.palette.bg.light,
+                color: "#eee",
+              }}
+            >
+              <Grid item paddingX={2}>
+                <Typography variant="subtitle1">Create Requisition</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container px={2} mt={2}>
           <Grid item container xs={12}>
             <Card sx={{ width: "100%" }}>
               <Grid
@@ -386,7 +421,7 @@ const Requisitions = () => {
                   <TableBody>
                     {requisitionData?.itemDTOList?.length > 0 &&
                       requisitionData?.itemDTOList?.map((item, index) => (
-                        <TableRow key={index}>
+                        <TableRow key={item?.index}>
                           <TableCell component="th" scope="row">
                             {item?.item_Description}
                           </TableCell>
@@ -420,17 +455,18 @@ const Requisitions = () => {
             <Button
               variant="outlined"
               color="error"
-              onClick={() => resetStates()}
+              onClick={() => setOpen(false)}
             >
               Cancel
             </Button>
           </Grid>
         </Grid>
-      </Box>
+      </Dialog>
       {showNotification && severity === "success" && (
         <SuccessNotification
           showNotification={showNotification}
           setShowNofication={() => {
+            setOpen(false);
             setShowNofication(false);
           }}
           notificationMsg="Successfully Requested"
@@ -450,4 +486,4 @@ const Requisitions = () => {
   );
 };
 
-export default Requisitions;
+export default CreateRequisition;

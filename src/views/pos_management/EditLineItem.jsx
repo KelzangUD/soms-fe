@@ -310,13 +310,11 @@ const EditLineItem = ({
               >
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="store_name"
                     label="Store Name"
-                    variant="outlined"
                     fullWidth
                     value={storeName}
                     disabled
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -329,18 +327,16 @@ const EditLineItem = ({
                       }))}
                       onChange={subInventoryHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Sub-Inventory" size="small" />
+                        <TextField {...params} label="Sub-Inventory" />
                       )}
                     />
                   ) : (
                     <TextField
-                      id="outlined-basic"
+                      id="sub_inv"
                       label="Sub-Inventory"
-                      variant="outlined"
                       fullWidth
                       value={lineItemDetail?.subInventoryId}
                       disabled
-                      size="small"
                     />
                   )}
                 </Grid>
@@ -354,18 +350,16 @@ const EditLineItem = ({
                       }))}
                       onChange={locatorHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Locator" size="small" />
+                        <TextField {...params} label="Locator" />
                       )}
                     />
                   ) : (
                     <TextField
-                      id="outlined-basic"
+                      id="locator"
                       label="Locator"
-                      variant="outlined"
                       fullWidth
                       value={lineItemDetail?.locatorId}
                       disabled
-                      size="small"
                     />
                   )}
                 </Grid>
@@ -379,7 +373,7 @@ const EditLineItem = ({
                       handleInputChange(inputValue)
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="Description" size="small" />
+                      <TextField {...params} label="Description" />
                     )}
                   />
                 </Grid>
@@ -387,23 +381,19 @@ const EditLineItem = ({
               <Grid container spacing={1} paddingY={1} paddingX={4}>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="serial_no"
                     label="Serial No"
-                    variant="outlined"
                     fullWidth
                     onChange={serialNoHandle}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="qty"
                     label="Quantity"
-                    variant="outlined"
                     fullWidth
                     value={lineItemDetail?.qty}
                     onChange={qtyHandle}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -421,157 +411,131 @@ const EditLineItem = ({
                       lineItemDetail?.priceLocator == "Y" ? false : true
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="Price Locator" size="small" />
+                      <TextField {...params} label="Price Locator" />
                     )}
                     onChange={priceLocatorHandle}
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="disc_per"
                     label="Disc/Comm %"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.discPercentage}
-                    size="small"
                   />
                 </Grid>
               </Grid>
               <Grid container spacing={1} paddingY={1} paddingX={4}>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="tds_amt"
                     label="TDS Amount"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.tdsAmount}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="item_no"
                     label="Item No."
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.itemNo}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="mrp"
                     label="MRP"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.mrp}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="disc_com_amt"
                     label="Disc/Comm Amount"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.discountedAmount}
-                    size="small"
                   />
                 </Grid>
               </Grid>
               <Grid container spacing={1} paddingY={1} paddingX={4}>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="tax_per"
                     label="Tax %"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.taxPercentage}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="selling_price"
                     label="Selling Price"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="add_disc"
                     label="Additional Disc"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.additionalDiscount}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="tax_amt"
                     label="Tax Amount"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.taxAmt}
-                    size="small"
                   />
                 </Grid>
               </Grid>
               <Grid container spacing={1} paddingY={1} paddingX={4}>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="amt_excel"
                     label="Amount Excl. Tax"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.amountExclTax}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="adv_tax"
                     label="Advance Tax Amount"
-                    variant="outlined"
                     fullWidth
                     value={lineItemDetail?.advanceTaxAmount}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="vol_dis"
                     label="Volumn Discount"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.volumeDiscount}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="item_total_added_qty"
                     label="Item Total Added Qty"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.itemTotalAddedQty}
-                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -584,13 +548,11 @@ const EditLineItem = ({
               >
                 <Grid item xs={3}>
                   <TextField
-                    id="outlined-basic"
+                    id="selling_price"
                     label="Line Item Amount"
-                    variant="outlined"
                     fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
-                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -607,7 +569,6 @@ const EditLineItem = ({
                   variant="contained"
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
-                  size="small"
                 >
                   Update
                 </Button>
@@ -615,7 +576,6 @@ const EditLineItem = ({
                   variant="outlined"
                   onClick={() => setOpen(false)}
                   color="error"
-                  size="small"
                 >
                   Close
                 </Button>

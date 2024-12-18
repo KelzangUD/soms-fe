@@ -1,6 +1,6 @@
 import axios from "axios";
 const apiUrl = process.env.REACT_APP_API_URL;
-const refresh_token = localStorage.getItem("refresh_token");
+// const refresh_token = localStorage.getItem("refresh_token");
 
 const Route = async (
   method,
@@ -24,12 +24,11 @@ const Route = async (
   // Handle JSON or FormData content types
   if (contentType === "application/json") {
     requestOptions.data = JSON.stringify(data);
-    headers["Content-Type"] = "application/json";
+    // headers["Content-Type"] = "application/json";
   } else if (contentType === "multipart/form-data") {
     requestOptions.data = data;
   } else {
     requestOptions.data = data;
-    // headers["Content-Type"] = contentType;
   }
 
   try {

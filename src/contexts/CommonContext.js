@@ -209,17 +209,16 @@ export const CommonProvider = ({ children }) => {
       setToStore(res?.data);
     }
   };
-  const fetchAllItems = async () => {
+  const fetchAllItems = async (regionName, subInventory, locator) => {
     const res = await Route(
       "GET",
-      `/Common/FetchOnHandsTransferOrderItems?StoreName=${userDetails?.regionName}&SubInventoryID=${userDetails?.subInventory}&LocatorID=${userDetails?.locator}`,
+      `/Common/FetchOnHandsTransferOrderItems?StoreName=${regionName}&SubInventoryID=${subInventory}&LocatorID=${locator}`,
       null,
       null,
       null
     );
-    setOnHandsTransferOrderItems([]);
+    // setOnHandsTransferOrderItems([]);
     if (res?.status === 200) {
-      console.log(res?.data?.length);
       setOnHandsTransferOrderItems(res?.data);
     }
   };
@@ -267,7 +266,6 @@ export const CommonProvider = ({ children }) => {
     fetchFromSubInventory();
     fetchFromLocator();
     fetchToStore();
-    fetchAllItems();
     fetchRegionsOrExtensions();
     fetchItemsList();
   }, []);
@@ -305,6 +303,7 @@ export const CommonProvider = ({ children }) => {
         itemsList,
         fetchLocatorsBasedOnExtension,
         locatorsList,
+        fetchAllItems
       }}
     >
       {children}

@@ -142,7 +142,7 @@ const SignIn = () => {
                     >
                       <TextField
                         label="User Name"
-                        variant="outlined"
+                        size="medium"
                         fullWidth
                         type="text"
                         name="username"
@@ -155,7 +155,7 @@ const SignIn = () => {
                       />
                       <TextField
                         label="Password"
-                        variant="outlined"
+                        size="medium"
                         fullWidth
                         type="password"
                         name="password"

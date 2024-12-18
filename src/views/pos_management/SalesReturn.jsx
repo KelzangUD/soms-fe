@@ -364,8 +364,7 @@ const SalesReturn = () => {
             <Card>
               <Grid
                 container
-                paddingX={2}
-                paddingY={2}
+                padding={2}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -384,36 +383,30 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="POS No"
-                      variant="outlined"
                       fullWidth
                       name="pos_no"
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Posting Date"
-                      variant="outlined"
                       fullWidth
                       name="posting_date"
                       defaultValue={new Date().toDateString()}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       error={emptyInvoiceNo}
                       label="Invoice No"
-                      variant="outlined"
                       fullWidth
                       name="invoice_no"
                       onChange={setSalesInvoice}
                       value={invoiceNo}
                       required
                       helperText={emptyInvoiceNo ? "Invoice No is Empty" : null}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -435,45 +428,37 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Sales Type"
-                      variant="outlined"
                       fullWidth
                       defaultValue="Sales Type"
                       value={salesData?.salesHeader?.sales_Type}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Product Type"
-                      variant="outlined"
                       fullWidth
                       defaultValue="Product Type"
                       value={salesData?.salesHeader?.product_Type}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Mobile No"
-                      variant="outlined"
                       fullWidth
                       defaultValue="Mobile No"
                       value={salesData?.salesHeader?.mobileNo}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer No"
-                      variant="outlined"
                       fullWidth
                       defaultValue="Customer No"
                       value={salesData?.salesHeader?.customerNumber}
                       disabled
-                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -481,45 +466,37 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
-                      variant="outlined"
                       fullWidth
                       defaultValue="Customer Name"
                       value={salesData?.salesHeader?.customerName}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Address"
-                      variant="outlined"
                       fullWidth
                       defaultValue="Address"
                       value={salesData?.salesHeader?.address}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
-                      variant="outlined"
                       fullWidth
                       defaultValue="Address1"
                       value={salesData?.salesHeader?.address1}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="City"
-                      variant="outlined"
                       fullWidth
                       defaultValue="city"
                       value={salesData?.salesHeader?.city}
                       disabled
-                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -715,7 +692,6 @@ const SalesReturn = () => {
                   <Grid item xs={2}>
                     <TextField
                       label="Refund Amount"
-                      variant="outlined"
                       fullWidth
                       type="number"
                       name="refund_amount"
@@ -723,7 +699,6 @@ const SalesReturn = () => {
                       value={paymentLinesItem?.paymentAmount}
                       required
                       onChange={paymentAmountHandle}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -768,10 +743,8 @@ const SalesReturn = () => {
                     <Grid item sx={2}>
                       <TextField
                         label="Card No"
-                        variant="outlined"
                         name="card_no"
                         onChange={cardNoHandle}
-                        size="small"
                       />
                     </Grid>
                   )}
@@ -779,10 +752,8 @@ const SalesReturn = () => {
                     <Grid item sx={2}>
                       <TextField
                         label="Cheque No"
-                        variant="outlined"
                         name="cheque_no"
                         onChange={chequeNoHandle}
-                        size="small"
                       />
                     </Grid>
                   )}
@@ -802,7 +773,6 @@ const SalesReturn = () => {
                     <Grid item sx={1}>
                       <TextField
                         type="file"
-                        size="small"
                         label={isFileUploaded ? "File" : ""}
                         InputLabelProps={{ shrink: true }}
                         onChange={chequeCopyHandle}
