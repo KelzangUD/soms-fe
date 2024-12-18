@@ -723,9 +723,10 @@ const SalesReturn = () => {
                       type="number"
                       name="refund_amount"
                       defaultValue="refund_amount"
-                      value={paymentLinesItem?.paymentAmount}
+                      value={netTotal}
                       required
                       onChange={paymentAmountHandle}
+                      disabled
                       size="small"
                     />
                   </Grid>

@@ -55,7 +55,7 @@ const LineItemsTable = ({
                     {item?.description}
                   </TableCell>
                   <TableCell align="right">{item?.qty}</TableCell>
-                  <TableCell align="right">{item?.sellingPrice}</TableCell>
+                  <TableCell align="right">{item?.mrp}</TableCell>
                   <TableCell align="right">{item?.taxAmt}</TableCell>
                   <TableCell align="right">{item?.discountedAmount}</TableCell>
                   <TableCell align="right">
@@ -64,7 +64,7 @@ const LineItemsTable = ({
                   <TableCell align="right">{item?.tdsAmount}</TableCell>
                   <TableCell align="right">{item?.advanceTaxAmount}</TableCell>
                   <TableCell align="right">{item?.discountedAmount}</TableCell>
-                  <TableCell align="right">{item?.lineItemAmt}</TableCell>
+                  <TableCell align="right">{item?.sellingPrice}</TableCell>
                   <TableCell align="right">
                     <ButtonGroup variant="text" aria-label="Basic button group">
                       <IconButton
@@ -88,7 +88,9 @@ const LineItemsTable = ({
             <TableRow>
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Gross Total</TableCell>
-              <TableCell align="right">{linesAmount?.grossTotal}</TableCell>
+              <TableCell align="right">
+                {Math.round((linesAmount?.grossTotal)* 100) / 100}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
@@ -99,7 +101,7 @@ const LineItemsTable = ({
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Disc/Comm Amount</TableCell>
               <TableCell align="right">
-                {linesAmount?.discountedAmount}
+                {Math.round((linesAmount?.discountedAmount)* 100) / 100}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -142,7 +144,9 @@ const LineItemsTable = ({
             <TableRow>
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Net Total (Nu)</TableCell>
-              <TableCell align="right">{linesAmount?.netAmount}</TableCell>
+              <TableCell align="right">
+                {Math.round((linesAmount?.netAmount)* 100) / 100}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
