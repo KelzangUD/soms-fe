@@ -57,7 +57,7 @@ const SalesReturn = () => {
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
-    paymentAmount: "",
+    paymentAmount: netTotal,
     paymentType: "",
     paymentTypeName: "",
     bankAccountNumber: "",
@@ -323,6 +323,7 @@ const SalesReturn = () => {
         },
         userId: user,
       };
+
       const jsonDataBlob = new Blob([JSON.stringify(data)], {
         type: "application/json",
       });

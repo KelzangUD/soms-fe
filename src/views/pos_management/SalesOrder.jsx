@@ -5,11 +5,6 @@ import {
   Box,
   Button,
   Card,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  DialogActions,
   Grid,
   TextField,
   MenuItem,
@@ -179,6 +174,9 @@ const SalesOrder = () => {
               description: item?.description,
               itemNo: item?.itemNo,
               qty: 1,
+              serialNo: item?.serialNo,
+              subInventoryId: item?.sub_Inventory,
+              locatorId: item?.locator,
             });
           } else {
             notFoundItems.push({
@@ -333,12 +331,12 @@ const SalesOrder = () => {
   useEffect(() => {
     const totals = lineItems?.reduce(
       (accumulator, currentObject) => {
-        accumulator.grossTotal += currentObject?.sellingPrice || 0;
+        accumulator.grossTotal += currentObject?.mrp || 0;
         accumulator.taxAmt += currentObject?.taxAmt || 0;
         accumulator.discountedAmount += currentObject?.discountedAmount || 0;
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
-        accumulator.netAmount += currentObject?.sellingPrice || 0;
+        accumulator.netAmount += currentObject?.lineItemAmt || 0;
         return accumulator;
       },
       {
@@ -377,7 +375,8 @@ const SalesOrder = () => {
           const placeholderFile = new File([""], "cheque.png");
           formData.append("cheque", placeholderFile);
         }
-        formData?.append("storeName", salesOrderDetails?.customerName);
+        // data.append("storeName", userDetails?.regionName);
+        formData?.append("storeName", userDetails?.regionName);
         const data = {
           itemLines: lineItems,
           paymentLines,
@@ -788,7 +787,7 @@ const SalesOrder = () => {
                       required
                       onChange={paymentAmountHandle}
                       size="small"
-                      value={paymentLinesItem?.paymentAmount}
+                      value={Math.round((paymentLinesItem?.paymentAmount)* 100) / 100}
                     />
                   </Grid>
                   <Grid item xs={3}>
