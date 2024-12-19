@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Grid, IconButton } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import AddIcon from "@mui/icons-material/Add";
 import Route from "../../routes/Route";
 import { Notification, RenderStatus } from "../../ui/index";
 import ViewRequisitionItemDetails from "./ViewRequisitionItemDetails";
 import { CustomDataTable } from "../../component/common/index";
-import { useReactToPrint } from "react-to-print";
-import CreateRequisition from "./CreateRequisition";
 
 const RequisitionList = () => {
   const access_token = localStorage.getItem("access_token");
@@ -103,18 +100,6 @@ const RequisitionList = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
-                <Grid
-                  container
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Button
-                    variant="contained"
-                    endIcon={<AddIcon />}
-                    onClick={() => setOpen(true)}
-                  >
-                    Add New
-                  </Button>
-                </Grid>
                 <Grid item container alignItems="center" xs={12}>
                   <CustomDataTable
                     rows={requisitionList?.map((row, index) => ({
@@ -129,13 +114,6 @@ const RequisitionList = () => {
           </Grid>
         </Grid>
       </>
-      {open && (
-        <CreateRequisition
-          open={open}
-          setOpen={setOpen}
-          fetchRequisitionList={() => fetchRequisitionList(access_token, empId)}
-        />
-      )}
       {showNotification && (
         <Notification
           open={showNotification}

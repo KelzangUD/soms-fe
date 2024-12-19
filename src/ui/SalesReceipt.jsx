@@ -19,13 +19,10 @@ const SalesReceipt = () => {
   const totalPayment = query.get("totalPayment");
   const rechargeDate = query.get("rechargeDate");
   const receiptType = query.get("receiptType");
+  const totalAmount = query.get("totalAmount");
   const itemDetails = query
     .getAll("itemDetails")
     .map((item) => JSON.parse(item));
-
-  React.useEffect(() => {
-    console.log(itemDetails);
-  }, [location.search]);
   return (
     <>
       <div style={{ width: "400px", padding: "8px", lineHeight: "1.5" }}>
@@ -49,7 +46,7 @@ const SalesReceipt = () => {
             <div>
               <p>Description: {item?.description}</p>
               <p>Quantity: {item?.qty}</p>
-              <p>Unit Rate: {item?.mrp}</p>
+              <p>Unit Rate: {parseFloat(item?.mrp).toFixed(2)}</p>
               <p align="right">Amount(Nu): {item?.selling_Price}</p>
             </div>
             <hr />
@@ -59,20 +56,22 @@ const SalesReceipt = () => {
           <p>Gross Total (Nu): {grossTotal}</p>
         </div>
         <div>
-          <p>Tax: {tax}</p>
+          <p>Tax: {parseFloat(tax).toFixed(2)}</p>
         </div>
         <div>
-          <p>Discount/Commission: {disc}</p>
+          <p>Discount/Commission: {parseFloat(disc).toFixed(2)}</p>
         </div>
         <div>
-          <p>Advance Amount: {advance}</p>
+          <p>Advance Amount: {parseFloat(advance).toFixed(2)}</p>
         </div>
         <div>
-          <p>Downpayment: {downPayment === "null" ? 0 : downPayment}</p>
+          <p>
+            Downpayment: {downPayment === "null" ? parseFloat(0).toFixed(2) : parseFloat(downPayment).toFixed(2)}
+          </p>
         </div>
         <hr />
         <div>
-          <p>Total Payment: {totalPayment}</p>
+          <p>Total Payment: {parseFloat(totalAmount).toFixed(2)}</p>
         </div>
         <hr />
         <div>

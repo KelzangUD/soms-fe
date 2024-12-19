@@ -241,6 +241,11 @@ const AddLineItem = ({
     setDesc(inputValue);
   };
   const descriptionHandle = (e, value) => {
+    if (value?.serial_controlled === "Y") {
+      setNotificationMsg("Please Enter Serial Number!");
+      setSeverity("info");
+      setShowNofication(true);
+    }
     setLineItemDetail((prev) => ({
       ...prev,
       description: value?.label,
@@ -317,10 +322,7 @@ const AddLineItem = ({
                       }))}
                       onChange={subInventoryHandle}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Sub-Inventory"
-                        />
+                        <TextField {...params} label="Sub-Inventory" />
                       )}
                     />
                   ) : (
@@ -406,10 +408,7 @@ const AddLineItem = ({
                       lineItemDetail?.priceLocator == "Y" ? false : true
                     }
                     renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Price Locator"
-                      />
+                      <TextField {...params} label="Price Locator" />
                     )}
                     onChange={priceLocatorHandle}
                   />

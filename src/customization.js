@@ -14,11 +14,22 @@ export const customizedTheme = createTheme({
   components: {
     MuiTextField: {
       defaultProps: {
-        variant: "outlined", // Set default variant to outlined
-        size:"small",
+        variant: "outlined",
+        size: "small",
+        fullWidth: true,
       },
       styleOverrides: {
         root: {},
+      },
+    },
+    MuiFormControl: {
+      defaultProps: {
+        size: "small", // Default size set to "small"
+      },
+      styleOverrides: {
+        root: {
+          width: "100%", // Default width set to 100%
+        },
       },
     },
     MuiButton: {

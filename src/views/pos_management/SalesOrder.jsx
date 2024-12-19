@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Alert,
   Autocomplete,
   Box,
   Button,
@@ -74,6 +73,12 @@ const SalesOrder = () => {
     advanceAmt: 0,
     adjType: "",
     storeName: userDetails?.regionName,
+    advance_no: "",
+    advance_amount: "",
+    adj_type: "",
+    amount: "",
+    item_Number: "",
+    interest: "",
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0,
@@ -102,6 +107,7 @@ const SalesOrder = () => {
   const [itemsNotFound, setItemsNotFound] = useState([]);
   const [openItemsNotFoundDialog, setOpenItemsNotFoundDialog] = useState(false);
   const [isFileUploaded, setIsFileUploaded] = useState(false);
+  const [emiList, setEmiList] = useState([]);
   const [responseData, setResponseData] = useState({});
   const fetchCustomersList = async () => {
     const res = await Route(
@@ -134,6 +140,53 @@ const SalesOrder = () => {
       }));
     }
   };
+  const fetcEMIList = async (employeeCode) => {
+    const res = await Route(
+      "GET",
+      `/SalesOrder/GetEMIList?employeeCode=${employeeCode}`,
+      access_token,
+      null,
+      null
+    );
+    setIsLoading(true);
+    try {
+      if (res?.status === 200) {
+        setEmiList(res?.data);
+      }
+    } catch (err) {
+      setNotificationMsg("Error", err);
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetcEMIDetails = async (emiNo) => {
+    const res = await Route(
+      "GET",
+      `/SalesOrder/GetEMIDetails?emiNo=${emiNo}`,
+      access_token,
+      null,
+      null
+    );
+    setIsLoading(true);
+    try {
+      if (res?.status === 200) {
+        setSalesOrderDetails((prev) => ({
+          ...prev,
+          amount: res?.data[0]?.amount,
+          item_Number: res?.data[0]?.item_Number,
+          interest: res?.data[0]?.interest,
+        }));
+      }
+    } catch (err) {
+      setNotificationMsg("Error", err);
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const fetchProductDetailsBasedOnItemList = async (file) => {
     setIsLoading(true);
     try {
@@ -158,7 +211,7 @@ const SalesOrder = () => {
               mrp: item?.mrp,
               discPercentage: item?.discPercentage,
               tdsAmount: parseInt(item?.tdsAmount),
-              discountedAmount: item?.discountAmt,
+              discountedAmount: 0,
               sellingPrice: item?.sellingPrice,
               taxPercentage: parseInt(item?.taxPercentage),
               additionalDiscount: parseInt(item?.additionalDiscount),
@@ -212,6 +265,7 @@ const SalesOrder = () => {
   }, [linesAmount?.netAmount]);
 
   const salesTypeHandle = (e) => {
+    resetStateHandle();
     setSalesOrderDetails((prev) => ({
       ...prev,
       salesType: parseInt(e.target.value),
@@ -229,6 +283,23 @@ const SalesOrder = () => {
     setSalesOrderDetails((prev) => ({
       ...prev,
       customerName: value?.label,
+    }));
+  };
+  const advanceOrEmiHandle = (e) => {
+    if (e?.target?.value === "EMI") {
+      fetcEMIList(salesOrderDetails?.customerName.split("(")[1].split(")")[0]);
+    }
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      adj_type: e?.target?.value,
+      advance_amount: 0,
+    }));
+  };
+  const advanceNoHandle = (e, value) => {
+    fetcEMIDetails(value?.id.replaceAll("|", "%7C"));
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      advance_no: value?.id.replaceAll("|", "%7C"),
     }));
   };
   const remarksHandle = (e) => {
@@ -331,12 +402,18 @@ const SalesOrder = () => {
   useEffect(() => {
     const totals = lineItems?.reduce(
       (accumulator, currentObject) => {
-        accumulator.grossTotal += currentObject?.mrp || 0;
+        accumulator.grossTotal +=
+          currentObject?.mrp * parseInt(currentObject?.qty) || 0;
         accumulator.taxAmt += currentObject?.taxAmt || 0;
         accumulator.discountedAmount += currentObject?.discountedAmount || 0;
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
-        accumulator.netAmount += currentObject?.lineItemAmt || 0;
+        accumulator.netAmount +=
+          currentObject?.mrp * parseInt(currentObject?.qty) -
+            (currentObject?.taxAmt +
+              currentObject?.discountedAmount +
+              currentObject?.advanceTaxAmount +
+              currentObject?.tdsAmount) || 0;
         return accumulator;
       },
       {
@@ -353,6 +430,46 @@ const SalesOrder = () => {
       ...totals,
     }));
   }, [lineItems]);
+
+  const resetStateHandle = () => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      postingDate: dateFormatter(dayjs(new Date())),
+      salesType: "",
+      productType: "",
+      mobileNo: "",
+      customerNumber: "",
+      customerName: "",
+      address: "",
+      address1: "",
+      city: "",
+      serviceRemarks: "",
+      advanceNo: "",
+      advanceAmt: 0,
+      adjType: "",
+      advance_no: "",
+      advance_amount: "",
+      adj_type: "",
+      item_Number: "",
+      interest: "",
+      amount: "",
+    }));
+    setPaymentLines([]);
+    setPaymentLinesItem((prev) => ({
+      ...prev,
+      paymentAmount: "",
+      paymentType: "",
+      paymentTypeName: "",
+      bankAccountNumber: "",
+      chequeNumber: "",
+      chequeDate: "",
+      cardNumber: "",
+      emiRefrenceNo: "",
+      chequeCopy: "",
+    }));
+    setBulkUpload(false);
+    setLineItems([]);
+  };
 
   const postHandle = async () => {
     if (
@@ -375,7 +492,6 @@ const SalesOrder = () => {
           const placeholderFile = new File([""], "cheque.png");
           formData.append("cheque", placeholderFile);
         }
-        // data.append("storeName", userDetails?.regionName);
         formData?.append("storeName", userDetails?.regionName);
         const data = {
           itemLines: lineItems,
@@ -405,41 +521,11 @@ const SalesOrder = () => {
           "multipart/form-data"
         );
         if (res?.status === 201) {
+          resetStateHandle();
           setResponseData(res?.data);
           setSeverity("success");
           setNotificationMsg("Successfully Created");
           setShowNofication(true);
-          setSalesOrderDetails((prev) => ({
-            ...prev,
-            postingDate: dateFormatter(dayjs(new Date())),
-            salesType: "",
-            productType: "",
-            mobileNo: "",
-            customerNumber: "",
-            customerName: "",
-            address: "",
-            address1: "",
-            city: "",
-            serviceRemarks: "",
-            advanceNo: "",
-            advanceAmt: 0,
-            adjType: "",
-          }));
-          setPaymentLines([]);
-          setPaymentLinesItem((prev) => ({
-            ...prev,
-            paymentAmount: "",
-            paymentType: "",
-            paymentTypeName: "",
-            bankAccountNumber: "",
-            chequeNumber: "",
-            chequeDate: "",
-            cardNumber: "",
-            emiRefrenceNo: "",
-            chequeCopy: "",
-          }));
-          setBulkUpload(false);
-          setLineItems([]);
         } else {
           setNotificationMsg("Failed to create the sales order. Try again!");
           setSeverity("error");
@@ -458,39 +544,7 @@ const SalesOrder = () => {
       setShowNofication(true);
     }
   };
-  const cancelHandle = () => {
-    setSalesOrderDetails((prev) => ({
-      ...prev,
-      postingDate: dateFormatter(dayjs(new Date())),
-      salesType: "",
-      productType: "",
-      mobileNo: "",
-      customerNumber: "",
-      customerName: "",
-      address: "",
-      address1: "",
-      city: "",
-      serviceRemarks: "",
-      advanceNo: "",
-      advanceAmt: 0,
-      adjType: "",
-    }));
-    setPaymentLines([]);
-    setPaymentLinesItem((prev) => ({
-      ...prev,
-      paymentAmount: "",
-      paymentType: "",
-      paymentTypeName: "",
-      bankAccountNumber: "",
-      chequeNumber: "",
-      chequeDate: "",
-      cardNumber: "",
-      emiRefrenceNo: "",
-      chequeCopy: "",
-    }));
-    setBulkUpload(false);
-    setLineItems([]);
-  };
+
   const openInNewTab = () => {
     const queryParams = new URLSearchParams();
     queryParams.append("advance", responseData?.advance);
@@ -546,26 +600,18 @@ const SalesOrder = () => {
               <Grid container p={2}>
                 <Grid container spacing={1} mb={1}>
                   <Grid item xs={3}>
-                    <TextField
-                      label="POS No"
-                      fullWidth
-                      name="pos_no"
-                      disabled
-                      size="small"
-                    />
+                    <TextField label="POS No" name="pos_no" disabled />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Posting Date"
-                      fullWidth
                       name="posting_date"
                       defaultValue={new Date().toDateString()}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth size="small">
+                    <FormControl>
                       <InputLabel id="sales-type-select-label">
                         Sales Type
                       </InputLabel>
@@ -585,7 +631,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth size="small">
+                    <FormControl>
                       <InputLabel id="product-type-select-label">
                         Product Type
                       </InputLabel>
@@ -613,47 +659,51 @@ const SalesOrder = () => {
                         id: item?.customerId,
                         label: item?.customer_NAME,
                       }))}
-                      onChange={customerNameHandle}
+                      onChange={(event, newValue) => {
+                        if (newValue === null) {
+                          setSalesOrderDetails((prev) => ({
+                            ...prev,
+                            customerName: "",
+                            mobileNo: "",
+                            customerNumber: "",
+                            address: "",
+                            address1: "",
+                            city: "",
+                          }));
+                        } else {
+                          customerNameHandle(event, newValue);
+                        }
+                      }}
                       value={salesOrderDetails?.customerName}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Customer Name"
-                          size="small"
-                        />
+                        <TextField {...params} label="Customer Name" />
                       )}
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Mobile No"
-                      fullWidth
                       name="mobile_no"
                       required
                       value={salesOrderDetails?.mobileNo}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer No"
-                      fullWidth
                       name="customer_no"
                       required
                       value={salesOrderDetails?.customerNumber}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Address"
-                      fullWidth
                       name="address"
                       value={salesOrderDetails?.address}
                       disabled
-                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -661,27 +711,103 @@ const SalesOrder = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
-                      fullWidth
                       name="address 1"
                       value={salesOrderDetails?.address1}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="City"
-                      fullWidth
                       name="city"
                       value={salesOrderDetails?.city}
                       disabled
-                      size="small"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  {salesOrderDetails?.salesType === 4 && (
+                    <>
+                      <Grid item xs={3}>
+                        <FormControl>
+                          <InputLabel id="advance-emi-select-label">
+                            Advance/EMI
+                          </InputLabel>
+                          <Select
+                            labelId="advance-emi-select-label"
+                            id="advance-emi-select"
+                            value={salesOrderDetails?.adj_type}
+                            label="Advance/EMI"
+                            onChange={advanceOrEmiHandle}
+                          >
+                            <MenuItem value="Advance">Advance</MenuItem>
+                            <MenuItem value="EMI">EMI</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Autocomplete
+                          disablePortal
+                          options={emiList?.map((item) => ({
+                            id: item?.emiNo,
+                            label: item?.emiNo,
+                          }))}
+                          onChange={advanceNoHandle}
+                          value={salesOrderDetails?.advance_no}
+                          renderInput={(params) => (
+                            <TextField {...params} label="EMI Number" />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={3} mt={1}>
+                        <TextField
+                          label="Item Number"
+                          name="item_number"
+                          value={salesOrderDetails?.item_Number}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={3} mt={1}>
+                        <TextField
+                          label="Advance Amount"
+                          name="advance_amount"
+                          value={0}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={3} mt={1}>
+                        <TextField
+                          label="Down Payment Amount"
+                          name="down_payment_amount"
+                          value={0}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={3} mt={1}>
+                        <TextField
+                          label="Interest Amount"
+                          name="interest_amount"
+                          value={salesOrderDetails?.interest}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={3} mt={1}>
+                        <TextField
+                          label="Final Amount"
+                          name="city"
+                          value={salesOrderDetails?.amount}
+                          disabled
+                        />
+                      </Grid>
+                    </>
+                  )}
+                  <Grid
+                    item
+                    xs={6}
+                    sx={{
+                      mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
+                    }}
+                  >
                     <TextField
                       label="Remarks"
-                      fullWidth
                       name="remarks"
                       onChange={remarksHandle}
                       value={salesOrderDetails?.serviceRemarks}
@@ -782,16 +908,16 @@ const SalesOrder = () => {
                   <Grid item xs={2}>
                     <TextField
                       label="Payment Amount"
-                      fullWidth
                       name="payment_amount"
                       required
                       onChange={paymentAmountHandle}
-                      size="small"
-                      value={Math.round((paymentLinesItem?.paymentAmount)* 100) / 100}
+                      value={
+                        Math.round(paymentLinesItem?.paymentAmount * 100) / 100
+                      }
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth size="small">
+                    <FormControl>
                       <InputLabel id="payment-type-select-label">
                         Payment Type
                       </InputLabel>
@@ -811,7 +937,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={4}>
-                    <FormControl fullWidth size="small">
+                    <FormControl>
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
                       </InputLabel>
@@ -831,7 +957,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                   {paymentLinesItem?.paymentType === "3" && (
-                    <Grid item sx={2}>
+                    <Grid item sx={3}>
                       <TextField
                         label="Card No"
                         variant="outlined"
@@ -843,7 +969,7 @@ const SalesOrder = () => {
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
                     <>
-                      <Grid item sx={2}>
+                      <Grid item sx={3}>
                         <TextField
                           label="Cheque No"
                           name="cheque_no"
@@ -852,7 +978,7 @@ const SalesOrder = () => {
                         />
                       </Grid>
                       <Grid item sx={1}>
-                        <FormControl fullWidth>
+                        <FormControl>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                               label="Cheque Date"
@@ -864,7 +990,6 @@ const SalesOrder = () => {
                       <Grid item sx={2}>
                         <TextField
                           type="file"
-                          size="small"
                           label={isFileUploaded ? "File" : ""}
                           InputLabelProps={{ shrink: true }}
                           onChange={chequeCopyHandle}
@@ -904,7 +1029,7 @@ const SalesOrder = () => {
             <Button
               variant="outlined"
               sx={{ ml: 2 }}
-              onClick={cancelHandle}
+              onClick={() => resetStateHandle()}
               color="error"
             >
               Cancel

@@ -217,6 +217,35 @@ const PaymentReceipt = () => {
       remarks: e?.target?.value,
     }));
   };
+  const resetState = () => {
+    setPaymentReceiptDetails((prev) => ({
+      ...prev,
+      serviceType: "",
+      mobileNo: "",
+      postingDate: new Date().toString(),
+      paymentType: "",
+      accountCode: "",
+      bankId: null,
+      userId: userId,
+      name: "",
+      amount: "",
+      accountId: "",
+      acctKey: "",
+      billAmount: "",
+      chequeNo: "",
+      chequeDate: new Date().toString(),
+      remarks: "",
+      payment: "",
+      outstandingBalance: "",
+    }));
+    setDisabledFields((prev) => ({
+      ...prev,
+      chequeNoField: true,
+      chequeDateField: true,
+      chequeCopyField: true,
+    }));
+    setIsFileUploaded(false);
+  };
   const createHandle = async (e) => {
     e.preventDefault();
     if (
@@ -250,39 +279,13 @@ const PaymentReceipt = () => {
           "multipart/form-data"
         );
         if (res?.status === 200) {
+          resetState();
           setResponseData(res?.data);
           setNotificationMsg(
             `Successfully Paid and your Application No is ${res?.data?.applicationNo}`
           );
           setSeverity("success");
           setShowDialog(true);
-          setPaymentReceiptDetails((prev) => ({
-            ...prev,
-            serviceType: "",
-            mobileNo: "",
-            postingDate: new Date().toString(),
-            paymentType: "",
-            accountCode: "",
-            bankId: null,
-            userId: userId,
-            name: "",
-            amount: "",
-            accountId: "",
-            acctKey: "",
-            billAmount: "",
-            chequeNo: "",
-            chequeDate: new Date().toString(),
-            remarks: "",
-            payment: "",
-            outstandingBalance: "",
-          }));
-          setDisabledFields((prev) => ({
-            ...prev,
-            chequeNoField: true,
-            chequeDateField: true,
-            chequeCopyField: true,
-          }));
-          setIsFileUploaded(false);
         } else {
           setNotificationMsg("Failed to update payment collection. Try again!");
           setSeverity("error");
@@ -296,35 +299,6 @@ const PaymentReceipt = () => {
         setIsLoading(false);
       }
     }
-  };
-  const cancelHandle = () => {
-    setPaymentReceiptDetails((prev) => ({
-      ...prev,
-      serviceType: "",
-      mobileNo: "",
-      postingDate: new Date().toString(),
-      paymentType: "",
-      accountCode: "",
-      bankId: null,
-      userId: userId,
-      name: "",
-      amount: "",
-      accountId: "",
-      acctKey: "",
-      billAmount: "",
-      chequeNo: "",
-      chequeDate: new Date().toString(),
-      remarks: "",
-      payment: "",
-      outstandingBalance: "",
-    }));
-    setDisabledFields((prev) => ({
-      ...prev,
-      chequeNoField: true,
-      chequeDateField: true,
-      chequeCopyField: true,
-    }));
-    setIsFileUploaded(false);
   };
   const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
@@ -550,8 +524,7 @@ const PaymentReceipt = () => {
             <Button
               variant="outlined"
               color="error"
-              onClick={cancelHandle}
-              sx={{ background: "#fff" }}
+              onClick={() => resetState()}
             >
               Cancel
             </Button>
