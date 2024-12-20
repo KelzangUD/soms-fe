@@ -109,6 +109,27 @@ const SalesOrder = () => {
   const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [emiList, setEmiList] = useState([]);
   const [responseData, setResponseData] = useState({});
+  const [lineItemDetail, setLineItemDetail] = useState({
+    priceLocator: "",
+    mrp: "",
+    discPercentage: "",
+    tdsAmount: "",
+    discountedAmount: "",
+    sellingPrice: "",
+    taxPercentage: "",
+    additionalDiscount: "",
+    amountExclTax: "",
+    advanceTaxAmount: "",
+    volumeDiscount: "",
+    itemTotalAddedQty: "",
+    lineItemAmt: "",
+    available: "",
+    serialNoStatus: "",
+    taxAmt: "",
+    priceLocator: "",
+    priceLocatorDTOs: "",
+  });
+
   const fetchCustomersList = async () => {
     const res = await Route(
       "GET",
@@ -161,6 +182,38 @@ const SalesOrder = () => {
       setIsLoading(false);
     }
   };
+  const fetchItemDescription = async (itemNo) => {
+    const res = await Route(
+      "GET",
+      `/SalesOrder/FetchByDescription?salesType=${salesOrderDetails?.salesType}&storeName=${userDetails?.regionName}&item=${itemNo}&subInventory=${userDetails?.subInventory}&locator=${userDetails?.locator}&serialNo&qty=1`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setLineItemDetail((prev) => ({
+        ...prev,
+        description: res?.data?.description,
+        priceLocator: res?.data?.priceLocator,
+        mrp: res?.data?.mrp,
+        discPercentage: res?.data?.discPercentage,
+        tdsAmount: parseInt(res?.data?.tdsAmount),
+        discountedAmount: res?.data?.discountAmt,
+        sellingPrice: res?.data?.sellingPrice,
+        taxPercentage: parseInt(res?.data?.taxPercentage),
+        additionalDiscount: parseInt(res?.data?.additionalDiscount),
+        amountExclTax: res?.data?.amountExclTax,
+        advanceTaxAmount: res?.data?.advanceTaxAmount,
+        volumeDiscount: res?.data?.volumeDiscount,
+        itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
+        lineItemAmt: res?.data?.sellingPrice,
+        available: res?.data?.available,
+        serialNoStatus: res?.data?.serialNoStatus,
+        taxAmt: res?.data?.taxAmount,
+        priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+      }));
+    }
+  };
   const fetcEMIDetails = async (emiNo) => {
     const res = await Route(
       "GET",
@@ -172,6 +225,7 @@ const SalesOrder = () => {
     setIsLoading(true);
     try {
       if (res?.status === 200) {
+        fetchItemDescription(res?.data[0]?.item_Number);
         setSalesOrderDetails((prev) => ({
           ...prev,
           amount: res?.data[0]?.amount,
@@ -263,7 +317,6 @@ const SalesOrder = () => {
       paymentAmount: linesAmount?.netAmount,
     }));
   }, [linesAmount?.netAmount]);
-
   const salesTypeHandle = (e) => {
     resetStateHandle();
     setSalesOrderDetails((prev) => ({
@@ -300,6 +353,7 @@ const SalesOrder = () => {
     setSalesOrderDetails((prev) => ({
       ...prev,
       advance_no: value?.id.replaceAll("|", "%7C"),
+      advanceNo: value?.id,
     }));
   };
   const remarksHandle = (e) => {
@@ -469,6 +523,27 @@ const SalesOrder = () => {
     }));
     setBulkUpload(false);
     setLineItems([]);
+    setLineItemDetail((prev) => ({
+      ...prev,
+      priceLocator: "",
+      mrp: "",
+      discPercentage: "",
+      tdsAmount: "",
+      discountedAmount: "",
+      sellingPrice: "",
+      taxPercentage: "",
+      additionalDiscount: "",
+      amountExclTax: "",
+      advanceTaxAmount: "",
+      volumeDiscount: "",
+      itemTotalAddedQty: "",
+      lineItemAmt: "",
+      available: "",
+      serialNoStatus: "",
+      taxAmt: "",
+      priceLocator: "",
+      priceLocatorDTOs: "",
+    }));
   };
 
   const postHandle = async () => {
@@ -750,8 +825,19 @@ const SalesOrder = () => {
                             id: item?.emiNo,
                             label: item?.emiNo,
                           }))}
-                          onChange={advanceNoHandle}
-                          value={salesOrderDetails?.advance_no}
+                          onChange={(event, newValue) => {
+                            if (newValue === null) {
+                              setSalesOrderDetails((prev) => ({
+                                ...prev,
+                                item_Number: "",
+                                interest: "",
+                                amount: "",
+                              }));
+                            } else {
+                              advanceNoHandle(event, newValue);
+                            }
+                          }}
+                          value={salesOrderDetails?.advanceNo}
                           renderInput={(params) => (
                             <TextField {...params} label="EMI Number" />
                           )}
@@ -1054,6 +1140,9 @@ const SalesOrder = () => {
           productType={salesOrderDetails?.productType}
           setLineItems={setLineItems}
           userDetails={userDetails}
+          itemNo={salesOrderDetails?.item_Number}
+          lineItemDetails={lineItemDetail}
+          adj_type={salesOrderDetails?.adj_type}
         />
       )}
       {edit && (

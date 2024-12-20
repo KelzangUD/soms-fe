@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import Route from "../../routes/Route";
-import { Notification } from "../../ui/index";
+import { Notification, LoaderDialog } from "../../ui/index";
 import { Transition } from "../../component/common/index";
 import { useCommon } from "../../contexts/CommonContext";
 
@@ -21,6 +21,9 @@ const AddLineItem = ({
   productType,
   setLineItems,
   userDetails,
+  itemNo,
+  lineItemDetails,
+  adj_type,
 }) => {
   const { subInventory, fetchLocators, locators } = useCommon();
   const access_token = localStorage.getItem("access_token");
@@ -41,7 +44,7 @@ const AddLineItem = ({
     priceLocator: "N",
     discPercentage: "",
     tdsAmount: "",
-    itemNo: "",
+    itemNo: itemNo,
     mrp: "",
     discountedAmount: "",
     sellingPrice: "",
@@ -63,6 +66,7 @@ const AddLineItem = ({
     volumeDiscount: "",
     priceLocatorDTOs: [],
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchOnHandItems = async () => {
     const res = await Route(
@@ -83,46 +87,54 @@ const AddLineItem = ({
     }
   };
   const fetchItemDescriptionWithSerialNO = async () => {
-    const res = await Route(
-      "GET",
-      `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo=${lineItemDetail?.serialNo}&qty=${lineItemDetail?.qty}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200 && res?.data?.available === "Y") {
-      setLineItemDetail((prev) => ({
-        ...prev,
-        priceLocator: res?.data?.priceLocator,
-        mrp: res?.data?.mrp,
-        discPercentage: res?.data?.discPercentage,
-        tdsAmount: parseInt(res?.data?.tdsAmount),
-        mrp: res?.data?.mrp,
-        discountedAmount: res?.data?.discountAmt,
-        sellingPrice: res?.data?.sellingPrice,
-        taxPercentage: parseInt(res?.data?.taxPercentage),
-        additionalDiscount: parseInt(res?.data?.additionalDiscount),
-        amountExclTax: res?.data?.amountExclTax,
-        advanceTaxAmount: res?.data?.advanceTaxAmount,
-        volumeDiscount: res?.data?.volumeDiscount,
-        itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-        lineItemAmt: res?.data?.sellingPrice,
-        available: res?.data?.available,
-        serialNoStatus: res?.data?.serialNoStatus,
-        taxAmt: res?.data?.taxAmount,
-        priceLocator: res?.data?.priceLocator,
-        priceLocatorDTOs: res?.data?.priceLocatorDTOs,
-        description: res?.data?.description,
-        itemNo: res?.data?.itemNo,
-      }));
-    } else if (res?.status === 200 && res?.data?.available === "N") {
-      setNotificationMsg("Item Not Avaliable");
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo=${lineItemDetail?.serialNo}&qty=${lineItemDetail?.qty}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200 && res?.data?.available === "Y") {
+        setLineItemDetail((prev) => ({
+          ...prev,
+          priceLocator: res?.data?.priceLocator,
+          mrp: res?.data?.mrp,
+          discPercentage: res?.data?.discPercentage,
+          tdsAmount: parseInt(res?.data?.tdsAmount),
+          discountedAmount: res?.data?.discountAmt,
+          sellingPrice: res?.data?.sellingPrice,
+          taxPercentage: parseInt(res?.data?.taxPercentage),
+          additionalDiscount: parseInt(res?.data?.additionalDiscount),
+          amountExclTax: res?.data?.amountExclTax,
+          advanceTaxAmount: res?.data?.advanceTaxAmount,
+          volumeDiscount: res?.data?.volumeDiscount,
+          itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
+          lineItemAmt: res?.data?.sellingPrice,
+          available: res?.data?.available,
+          serialNoStatus: res?.data?.serialNoStatus,
+          taxAmt: res?.data?.taxAmount,
+          priceLocator: res?.data?.priceLocator,
+          priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+          description: res?.data?.description,
+          itemNo: res?.data?.itemNo,
+        }));
+      } else if (res?.status === 200 && res?.data?.available === "N") {
+        setNotificationMsg("Item Not Avaliable");
+        setSeverity("info");
+        setShowNofication(true);
+      } else {
+        setNotificationMsg(res?.response?.data?.detail);
+        setSeverity("info");
+        setShowNofication(true);
+      }
+    } catch (err) {
+      setNotificationMsg(`Error: ${err}`);
       setSeverity("info");
       setShowNofication(true);
-    } else {
-      setNotificationMsg(res?.response?.data?.detail);
-      setSeverity("info");
-      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   const fetchItemDescriptionWithOutSerialNO = async () => {
@@ -140,7 +152,6 @@ const AddLineItem = ({
         mrp: res?.data?.mrp,
         discPercentage: res?.data?.discPercentage,
         tdsAmount: parseInt(res?.data?.tdsAmount),
-        mrp: res?.data?.mrp,
         discountedAmount: res?.data?.discountAmt,
         sellingPrice: res?.data?.sellingPrice,
         taxPercentage: parseInt(res?.data?.taxPercentage),
@@ -184,6 +195,36 @@ const AddLineItem = ({
       }));
     }
   };
+  useEffect(() => {
+    if (adj_type === "EMI") {
+      console.log(lineItemDetails)
+      setLineItemDetail((prev) => ({
+        ...prev,
+        description: lineItemDetails?.description,
+        imeiNo: lineItemDetails?.imeiNo,
+        priceLocator: lineItemDetails?.priceLocator,
+        discPercentage: lineItemDetails?.discPercentage,
+        tdsAmount: lineItemDetails?.tdsAmount,
+        mrp: lineItemDetails?.mrp,
+        discountedAmount: lineItemDetails?.discountedAmount,
+        sellingPrice: lineItemDetails?.sellingPrice,
+        taxPercentage: lineItemDetails?.taxPercentage,
+        additionalDiscount: lineItemDetails?.additionalDiscount,
+        amountExclTax: lineItemDetails?.amountExclTax,
+        advanceTaxAmount: lineItemDetails?.advanceTaxAmount,
+        itemTotalAddedQty: lineItemDetails?.itemTotalAddedQty,
+        lineItemAmt: lineItemDetails?.lineItemAmt,
+        taxAmt: lineItemDetails?.taxAmt,
+        taxBasedAmt: lineItemDetails?.taxBasedAmt,
+        discountValue: lineItemDetails?.discountValue,
+        dineDiscountAmt: lineItemDetails?.dineDiscountAmt,
+        tdsPercent: lineItemDetails?.tdsPercent,
+        base_amount_tds: lineItemDetails?.base_amount_tds,
+        pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
+        volumeDiscount: lineItemDetails?.volumeDiscount,
+      }));
+    }
+  }, [adj_type]);
   useEffect(() => {
     fetchLocators(lineItemDetail?.subInventoryId);
   }, [lineItemDetail?.subInventoryId]);
@@ -305,7 +346,6 @@ const AddLineItem = ({
                   <TextField
                     id="storeName"
                     label="Store Name"
-                    fullWidth
                     value={storeName}
                     disabled
                   />
@@ -329,7 +369,6 @@ const AddLineItem = ({
                     <TextField
                       id="sub_inventory"
                       label="Sub-Inventory"
-                      fullWidth
                       value={lineItemDetail?.subInventoryId}
                       disabled
                     />
@@ -354,7 +393,6 @@ const AddLineItem = ({
                     <TextField
                       id="locator"
                       label="Locator"
-                      fullWidth
                       value={lineItemDetail?.locatorId}
                       disabled
                     />
@@ -380,7 +418,6 @@ const AddLineItem = ({
                   <TextField
                     id="serial_no"
                     label="Serial No"
-                    fullWidth
                     onChange={serialNoHandle}
                   />
                 </Grid>
@@ -388,7 +425,6 @@ const AddLineItem = ({
                   <TextField
                     id="qty"
                     label="Quantity"
-                    fullWidth
                     value={lineItemDetail?.qty}
                     onChange={qtyHandle}
                   />
@@ -417,7 +453,6 @@ const AddLineItem = ({
                   <TextField
                     id="dis_percentage"
                     label="Disc/Comm %"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.discPercentage}
                   />
@@ -429,7 +464,6 @@ const AddLineItem = ({
                     id="tds_amount"
                     label="TDS Amount"
                     variant="outlined"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.tdsAmount}
                   />
@@ -438,7 +472,6 @@ const AddLineItem = ({
                   <TextField
                     id="item_no"
                     label="Item No."
-                    fullWidth
                     disabled
                     value={lineItemDetail?.itemNo}
                   />
@@ -447,7 +480,6 @@ const AddLineItem = ({
                   <TextField
                     id="mrp"
                     label="MRP"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.mrp}
                   />
@@ -456,7 +488,6 @@ const AddLineItem = ({
                   <TextField
                     id="disc_amt"
                     label="Disc/Comm Amount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.discountedAmount}
                   />
@@ -467,7 +498,6 @@ const AddLineItem = ({
                   <TextField
                     id="tax_per"
                     label="Tax %"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.taxPercentage}
                   />
@@ -476,7 +506,6 @@ const AddLineItem = ({
                   <TextField
                     id="selling_price"
                     label="Selling Price"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
                   />
@@ -485,7 +514,6 @@ const AddLineItem = ({
                   <TextField
                     id="add_disc"
                     label="Additional Disc"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.additionalDiscount}
                   />
@@ -494,7 +522,6 @@ const AddLineItem = ({
                   <TextField
                     id="tax_amt"
                     label="Tax Amount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.taxAmt}
                   />
@@ -505,7 +532,6 @@ const AddLineItem = ({
                   <TextField
                     id="amt_excel_tax"
                     label="Amount Excl. Tax"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.amountExclTax}
                   />
@@ -514,7 +540,6 @@ const AddLineItem = ({
                   <TextField
                     id="adv_tax"
                     label="Advance Tax Amount"
-                    fullWidth
                     value={lineItemDetail?.advanceTaxAmount}
                   />
                 </Grid>
@@ -522,7 +547,6 @@ const AddLineItem = ({
                   <TextField
                     id="vol_disc"
                     label="Volumn Discount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.volumeDiscount}
                   />
@@ -531,7 +555,6 @@ const AddLineItem = ({
                   <TextField
                     id="item_total_added_qty"
                     label="Item Total Added Qty"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.itemTotalAddedQty}
                   />
@@ -548,7 +571,6 @@ const AddLineItem = ({
                   <TextField
                     id="selling_price"
                     label="Line Item Amount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
                   />
@@ -590,6 +612,7 @@ const AddLineItem = ({
           severity={severity}
         />
       )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };
