@@ -55,7 +55,6 @@ const SuccessNotification = ({
             onClick={() => setShowNofication(false)}
             variant="outlined"
             color="error"
-            size="small"
             sx={{
               mr: 2,
               mb: 2,

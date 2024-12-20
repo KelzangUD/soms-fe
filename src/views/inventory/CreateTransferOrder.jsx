@@ -27,6 +27,7 @@ import TransferBulkUploader from "../../assets/files/TransferBulkUploader.xls";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
 import { dateFormatterTwo } from "../../util/CommonUtil";
+import { SuccessNotification } from "../../ui/index";
 
 const CreateTransferOrder = ({
   open,
@@ -47,10 +48,8 @@ const CreateTransferOrder = ({
     toStore,
     onHandsTransferOrderItems,
     fetchAllItems,
+    validateSerialNumberWithLocator,
   } = useCommon();
-  React.useEffect(() => {
-    console.log(onHandsTransferOrderItems);
-  }, []);
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
@@ -216,27 +215,54 @@ const CreateTransferOrder = ({
       qty: e?.target?.value,
     }));
   };
-  const addHandle = () => {
+  const addHandle = async () => {
     if (transferOrderItemDTOList?.qty === "") {
       setNotificationMsg("Please Enter Quantity");
       setSeverity("info");
       setShowNofication(true);
     } else {
-      setParameters((prev) => ({
-        ...prev,
-        transferOrderItemDTOList: [
-          ...prev.transferOrderItemDTOList,
-          transferOrderItemDTOList,
-        ],
-      }));
-      setTransferOrderDTOList((prev) => ({
-        ...prev,
-        item_Description: "",
-        item_Number: "",
-        item_Serial_Number: "",
-        uom: "",
-        qty: "",
-      }));
+      if (serialInputDisabled) {
+        setParameters((prev) => ({
+          ...prev,
+          transferOrderItemDTOList: [
+            ...prev.transferOrderItemDTOList,
+            transferOrderItemDTOList,
+          ],
+        }));
+        setTransferOrderDTOList((prev) => ({
+          ...prev,
+          item_Description: "",
+          item_Number: "",
+          item_Serial_Number: "",
+          uom: "",
+          qty: "",
+        }));
+      } else {
+        const validation = await validateSerialNumberWithLocator(
+          transferOrderItemDTOList?.item_Serial_Number
+        );
+        if (validation === "False") {
+          setNotificationMsg("Please Valid Serial Number");
+          setSeverity("info");
+          setShowNofication(true);
+        } else {
+          setParameters((prev) => ({
+            ...prev,
+            transferOrderItemDTOList: [
+              ...prev.transferOrderItemDTOList,
+              transferOrderItemDTOList,
+            ],
+          }));
+          setTransferOrderDTOList((prev) => ({
+            ...prev,
+            item_Description: "",
+            item_Number: "",
+            item_Serial_Number: "",
+            uom: "",
+            qty: "",
+          }));
+        }
+      }
     }
   };
   const item_columns = [
@@ -380,20 +406,18 @@ const CreateTransferOrder = ({
             </Grid>
           </Grid>
           <Grid item container xs={12} paddingX={4}>
-            <Grid item container xs={12} paddingTop={2}>
-              <Grid item xs={3} paddingRight={1}>
+            <Grid item container xs={12} paddingTop={2} spacing={1}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Transfer Order No"
                   variant="outlined"
                   required
                   disabled
-                  fullWidth
-                  size="small"
                 />
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth>
+              <Grid item xs={3}>
+                <FormControl>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Transfer Order Create Date"
@@ -403,8 +427,8 @@ const CreateTransferOrder = ({
                   </LocalizationProvider>
                 </FormControl>
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth size="small">
+              <Grid item xs={3}>
+                <FormControl>
                   <InputLabel id="transfer-type-select-label">
                     Transfer Type*
                   </InputLabel>
@@ -430,15 +454,13 @@ const CreateTransferOrder = ({
                   variant="outlined"
                   required
                   disabled
-                  fullWidth
                   value={userDetails?.regionName}
-                  size="small"
                 />
               </Grid>
             </Grid>
-            <Grid item container xs={12} paddingTop={2}>
-              <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth size="small">
+            <Grid item container xs={12} paddingTop={2} spacing={1}>
+              <Grid item xs={3}>
+                <FormControl>
                   <InputLabel id="from-sub-inventory-select-label">
                     From Sub-inventoy
                   </InputLabel>
@@ -457,8 +479,8 @@ const CreateTransferOrder = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth size="small">
+              <Grid item xs={3}>
+                <FormControl>
                   <InputLabel id="from-locator-select-label">
                     From Locator
                   </InputLabel>
@@ -477,7 +499,7 @@ const CreateTransferOrder = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
                 {parameters?.transfer_Type === "With In Store" ? (
                   <TextField
                     id="outlined-basic"
@@ -490,7 +512,7 @@ const CreateTransferOrder = ({
                     disabled
                   />
                 ) : (
-                  <FormControl fullWidth size="small">
+                  <FormControl>
                     <InputLabel id="to-store-select-label">To Store</InputLabel>
                     <Select
                       labelId="to-store-select-label"
@@ -509,7 +531,7 @@ const CreateTransferOrder = ({
                 )}
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth size="small">
+                <FormControl>
                   <InputLabel id="to-sub-inventory-select-label">
                     To Sub-Inventry
                   </InputLabel>
@@ -530,9 +552,9 @@ const CreateTransferOrder = ({
                 </FormControl>
               </Grid>
             </Grid>
-            <Grid item container xs={12} paddingY={2}>
-              <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth size="small">
+            <Grid item container xs={12} paddingY={2} spacing={1}>
+              <Grid item xs={3}>
+                <FormControl>
                   <InputLabel id="to-locator-select-label">
                     To Locator
                   </InputLabel>
@@ -582,8 +604,8 @@ const CreateTransferOrder = ({
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
-                <FormControl fullWidth size="small">
+              <Grid item xs={3}>
+                <FormControl>
                   <InputLabel id="mode-of-transport-select-label">
                     Mode Of Transport
                   </InputLabel>
@@ -602,16 +624,14 @@ const CreateTransferOrder = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3} paddingRight={1}>
+              <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
                   label="Vehicle No."
                   variant="outlined"
                   required
-                  fullWidth
                   onChange={vehicleNoHandle}
                   value={parameters?.vehicle_Number}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -619,10 +639,8 @@ const CreateTransferOrder = ({
                   id="outlined-basic"
                   label="Remarks"
                   variant="outlined"
-                  fullWidth
                   onChange={remarksHandle}
                   value={parameters?.remarks}
-                  size="small"
                 />
               </Grid>
             </Grid>
@@ -640,9 +658,11 @@ const CreateTransferOrder = ({
               >
                 <Grid
                   item
-                  paddingX={2}
-                  alignItems="center"
-                  justifyContent="center"
+                  px={2}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
                 >
                   <IconButton
                     aria-label="download"
@@ -657,11 +677,11 @@ const CreateTransferOrder = ({
                     <input
                       type="file"
                       id="file-upload"
-                      style={{ display: "none" }} // Hide the default input
+                      style={{ display: "none" }}
                       onChange={(e) => handleFileUpload(e)}
                     />
                     <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
-                      <UploadIcon sx={{ mt: 1 }} /> {/* Upload icon */}
+                      <UploadIcon sx={{ mt: 0.9 }} />
                     </label>
                   </FormControl>
                 </Grid>
@@ -680,6 +700,9 @@ const CreateTransferOrder = ({
                     id: item?.id,
                     availaibleQty: parseInt(item?.transaction_Quantity),
                   }))}
+                  sx={{
+                    zIndex: 1500,
+                  }}
                   value={transferOrderItemDTOList?.item_Description}
                   onChange={descriptionHandle}
                   renderInput={(params) => (
@@ -691,48 +714,36 @@ const CreateTransferOrder = ({
                 <TextField
                   id="outlined-basic"
                   label="Item Number"
-                  variant="outlined"
                   required
-                  fullWidth
                   disabled
                   value={transferOrderItemDTOList?.item_Number}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={2}>
                 <TextField
                   id="outlined-basic"
                   label="Serial Number"
-                  variant="outlined"
                   required
-                  fullWidth
                   onChange={serialNumberHandle}
                   disabled={serialInputDisabled}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={1.5}>
                 <TextField
                   id="outlined-basic"
                   label="UOM"
-                  variant="outlined"
                   required
-                  fullWidth
                   disabled
                   value={transferOrderItemDTOList?.uom}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={1.5}>
                 <TextField
                   id="outlined-basic"
                   label="Availiable Qty"
-                  variant="outlined"
                   required
-                  fullWidth
                   disabled
                   value={transferOrderItemDTOList?.availaibleQty}
-                  size="small"
                 />
               </Grid>
               <Grid item container xs={2} alignItems="center">
@@ -740,12 +751,9 @@ const CreateTransferOrder = ({
                   <TextField
                     id="outlined-basic"
                     label="Quantity"
-                    variant="outlined"
                     required
-                    fullWidth
                     value={transferOrderItemDTOList?.qty}
                     onChange={qtyHandle}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3} alignContent="center">
@@ -799,14 +807,13 @@ const CreateTransferOrder = ({
                 mb: 2,
               }}
             >
-              <Button variant="contained" onClick={createHandle} size="small">
+              <Button variant="contained" onClick={createHandle}>
                 Create
               </Button>
               <Button
                 variant="outlined"
                 onClick={() => setOpen(false)}
                 color="error"
-                size="small"
               >
                 Close
               </Button>
@@ -814,13 +821,21 @@ const CreateTransferOrder = ({
           </Grid>
         </Box>
       </Dialog>
-      {showNotification && (
-        <Notification
-          open={showNotification}
-          setOpen={() => {
+      {showNotification && severity === "success" && (
+        <SuccessNotification
+          showNotification={showNotification}
+          setShowNofication={() => {
             setShowNofication(false);
             setOpen(false);
           }}
+          notificationMsg="Successfully Created Transfer Order"
+          alertMessange={notificationMsg}
+        />
+      )}
+      {showNotification && severity === "info" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
           message={notificationMsg}
           severity={severity}
         />

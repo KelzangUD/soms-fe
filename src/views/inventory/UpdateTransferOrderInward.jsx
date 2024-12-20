@@ -66,34 +66,13 @@ const UpdateTransferOrderInward = ({
       last_Updated_By: empID,
     }));
   }, [transferOrderDetails]);
-  const [transferOrderItemDTOList, setTransferOrderDTOList] = useState({
-    transaction_Item_No: "",
-    received_Qty: "",
-    received_Remark: "",
-  });
 
   const receivedQtyHandle = (e, params) => {
     if (parseInt(e?.target?.value) === 0) {
-      // setParameters((prev) => ({
-      //   ...prev,
-      //   transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
-      //     item?.transaction_Item_No === params?.row?.transaction_Item_No
-      //       ? { ...item, received_Qty: 0 }
-      //       : item
-      //   ),
-      // }));
       setNotificationMsg("Received quantity should be greater than 0");
       setSeverity("error");
       setShowNofication(true);
     } else if (parseInt(e?.target?.value) > parseInt(params?.row?.qty)) {
-      // setParameters((prev) => ({
-      //   ...prev,
-      //   transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
-      //     item?.transaction_Item_No === params?.row?.transaction_Item_No
-      //       ? { ...item, received_Qty: 0 }
-      //       : item
-      //   ),
-      // }));
       setNotificationMsg(
         "Received quantity should not be greater than Actual Quantity"
       );
@@ -146,8 +125,7 @@ const UpdateTransferOrderInward = ({
             id="outlined-basic"
             variant="outlined"
             required
-            fullWidth
-            size="small"
+            defaultValue={params?.row?.qty}
             type="number"
             onChange={(e) => receivedQtyHandle(e, params)}
           />
@@ -198,45 +176,6 @@ const UpdateTransferOrderInward = ({
 
   const updateHandle = async (e) => {
     e.preventDefault();
-    // const allValid = parameters?.transferOrderItemDTOList?.every(
-    //   (item) => item?.received_Qty !== null
-    // );
-    // if (allValid) {
-    //   const allFulfilled = parameters?.transferOrderItemDTOList?.every(
-    //     (item) => Number(item?.received_Qty) <= Number(item?.qty)
-    //   );
-    //   if (allFulfilled) {
-    //     const res = await Route(
-    //       "PUT",
-    //       `/transferOrder/updateInwardTransferItemDetails`,
-    //       access_token,
-    //       parameters,
-    //       null
-    //     );
-    //     if (res?.status === 200) {
-    //       fetchInwardTrasnferOrderList();
-    //       setSeverity("success");
-    //       setNotificationMsg(
-    //         res?.data?.responseText === null
-    //           ? "Items Successfully Received"
-    //           : res?.data?.responseText
-    //       );
-    //       setShowNofication(true);
-    //     } else {
-    //       setNotificationMsg(res?.response?.data?.message);
-    //       setSeverity("error");
-    //       setShowNofication(true);
-    //     }
-    //   } else {
-    //     setNotificationMsg("Recevied Qty cannot be Greater than Actual Qty!");
-    //     setSeverity("error");
-    //     setShowNofication(true);
-    //   }
-    // } else {
-    //   setNotificationMsg("Recevied Qty cannot be empty!");
-    //   setSeverity("error");
-    //   setShowNofication(true);
-    // }
     if (!validateTransferOrderItems()) return;
     setIsLoading(true);
     try {
@@ -482,7 +421,15 @@ const UpdateTransferOrderInward = ({
           </Grid>
         </Box>
       </Dialog>
-      {showNotification && (
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
+      {showNotification && severity !== "error" && (
         <Notification
           open={showNotification}
           setOpen={() => {

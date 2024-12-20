@@ -217,7 +217,6 @@ export const CommonProvider = ({ children }) => {
       null,
       null
     );
-    // setOnHandsTransferOrderItems([]);
     if (res?.status === 200) {
       setOnHandsTransferOrderItems(res?.data);
     }
@@ -250,6 +249,18 @@ export const CommonProvider = ({ children }) => {
     );
     if (res?.status === 200) {
       setLocatorsList(res?.data);
+    }
+  };
+  const validateSerialNumberWithLocator = async (serialNo) => {
+    const res = await Route(
+      "GET",
+      `/Common/validateSerialNumberWithLocator?StoreName=${userDetails?.regionName}&SubInventoryID=${userDetails?.subInventory}&LocatorID=${userDetails?.locator}&SerialNo=${serialNo}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      return res?.data;
     }
   };
   useEffect(() => {
@@ -303,7 +314,8 @@ export const CommonProvider = ({ children }) => {
         itemsList,
         fetchLocatorsBasedOnExtension,
         locatorsList,
-        fetchAllItems
+        fetchAllItems,
+        validateSerialNumberWithLocator
       }}
     >
       {children}
