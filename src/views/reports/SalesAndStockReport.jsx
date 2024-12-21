@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Autocomplete,
   Box,
   Grid,
   Button,
@@ -7,6 +8,7 @@ import {
   MenuItem,
   InputLabel,
   Select,
+  TextField,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -21,9 +23,15 @@ import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
 import { useCommon } from "../../contexts/CommonContext";
 import { dateFormatterTwo } from "../../util/CommonUtil";
+import { LoaderDialog, Notification } from "../../ui/index";
 
 const SalesAndStockReport = () => {
-  const { regionsOrExtensions } = useCommon();
+  const {
+    regionsOrExtensions,
+    fetchLocatorsBasedOnExtension,
+    locatorsList,
+    itemsList,
+  } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -34,51 +42,71 @@ const SalesAndStockReport = () => {
     toDate: dateFormatterTwo(new Date()),
     store: userDetails?.regionName,
     fieldAssistant: "",
+    fieldAssistantLabel: "ALL",
     itemNo: "",
+    itemNoLabel: "ALL",
   });
   const [salesAndStocks, setSalesAndStock] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
+  useEffect(() => {
+    fetchLocatorsBasedOnExtension(userDetails?.regionName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userDetails?.regionName]);
   const fetchSalesAndStockReport = async () => {
-    const res = await Route(
-      "GET",
-      `/Report/salesAndStock?extension=${params?.store}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&itemNo&fieldAssistant`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setSalesAndStock(
-        res?.data?.map((item, index) => ({
-          id: item?.srNo,
-          sl: index + 1,
-          item_code: item?.item,
-          item_details: item?.description,
-          unit: item?.uom,
-          opening_balance: item?.opBal,
-          stock_received: item?.receiptIN,
-          transfer_out: item?.issueQty,
-          sales_qty: item?.saleQty,
-          amount: item?.amount,
-          closing_balance: item?.closing,
-        }))
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/Report/salesAndStock?extension=${params?.store}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&itemNo=${params?.itemNo}&fieldAssistant=${params?.fieldAssistant}`,
+        access_token,
+        null,
+        null
       );
-      setPrintData(
-        res?.data?.map((item, index) => ({
-          sl: index + 1,
-          "Item Code": item?.item,
-          "Item Details": item?.description,
-          Unit: item?.uom,
-          "Opening Balance": item?.opBal,
-          "Stock Received": item?.receiptIN,
-          "Transfer Out": item?.issueQty,
-          "Sales Qty": item?.saleQty,
-          Amount: item?.amount,
-          "Closing Balance": item?.closing,
-        }))
-      );
+      if (res?.status === 200) {
+        setSalesAndStock(
+          res?.data?.map((item, index) => ({
+            id: item?.srNo,
+            sl: index + 1,
+            item_code: item?.item,
+            item_details: item?.description,
+            unit: item?.uom,
+            opening_balance: item?.opBal,
+            stock_received: item?.receiptIN,
+            transfer_out: item?.issueQty,
+            sales_qty: item?.saleQty,
+            amount: item?.amount,
+            closing_balance: item?.closing,
+          }))
+        );
+        setPrintData(
+          res?.data?.map((item, index) => ({
+            sl: index + 1,
+            "Item Code": item?.item,
+            "Item Details": item?.description,
+            Unit: item?.uom,
+            "Opening Balance": item?.opBal,
+            "Stock Received": item?.receiptIN,
+            "Transfer Out": item?.issueQty,
+            "Sales Qty": item?.saleQty,
+            Amount: item?.amount,
+            "Closing Balance": item?.closing,
+          }))
+        );
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
     fetchSalesAndStockReport();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const fromDateHandle = (e) => {
     setParams((prev) => ({
@@ -96,6 +124,20 @@ const SalesAndStockReport = () => {
     setParams((prev) => ({
       ...prev,
       store: e?.target?.value,
+    }));
+  };
+  const fieldAssistantHandle = (e, value) => {
+    setParams((prev) => ({
+      ...prev,
+      fieldAssistant: value?.id,
+      fieldAssistantLabel: value?.label,
+    }));
+  };
+  const itemNoHandle = (e, value) => {
+    setParams((prev) => ({
+      ...prev,
+      itemNo: value?.id,
+      itemNoLabel: value?.label,
     }));
   };
   const exportJsonToPdfHandle = () => {
@@ -184,6 +226,11 @@ const SalesAndStockReport = () => {
                         value={params?.store}
                         label="Region/Extension"
                         onChange={regionOrExtensionHandle}
+                        disabled={
+                          userDetails?.roleName === "Administrator"
+                            ? false
+                            : true
+                        }
                       >
                         {regionsOrExtensions?.map((item) => (
                           <MenuItem value={item?.id} key={item?.id}>
@@ -194,37 +241,46 @@ const SalesAndStockReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl>
-                      <InputLabel id="field-assistant-select-label">
-                        Field Assistant
-                      </InputLabel>
-                      <Select
-                        labelId="field-assistant-select-label"
-                        id="field-assistant-select"
-                        // value={age}
-                        label="Field Assistant"
-                        // onChange={handleChange}
-                      >
-                        <MenuItem value={1}>ALL</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      disablePortal
+                      options={[
+                        { label: "ALL", id: "" },
+                        ...(locatorsList?.map((item) => ({
+                          label: item?.locator,
+                          id: item?.locator,
+                        })) || []),
+                      ]}
+                      value={params?.fieldAssistantLabel}
+                      onChange={fieldAssistantHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Field Assistant" />
+                      )}
+                    />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl>
-                      <InputLabel id="item-select-label">Item</InputLabel>
-                      <Select
-                        labelId="item-select-label"
-                        id="item-select"
-                        // value={age}
-                        label="Item"
-                        // onChange={handleChange}
-                      >
-                        <MenuItem value={1}>ALL</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      disablePortal
+                      options={[
+                        { label: "ALL", id: "" },
+                        ...(itemsList?.map((item) => ({
+                          label: item?.description,
+                          id: item?.item_number,
+                        })) || []),
+                      ]}
+                      value={params?.itemNoLabel}
+                      onChange={itemNoHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Item" />
+                      )}
+                    />
                   </Grid>
                   <Grid item xs={1}>
-                    <Button variant="contained">Search</Button>
+                    <Button
+                      variant="contained"
+                      onClick={fetchSalesAndStockReport}
+                    >
+                      Search
+                    </Button>
                   </Grid>
                 </Grid>
                 <Grid
@@ -257,6 +313,15 @@ const SalesAndStockReport = () => {
           </Grid>
         </Grid>
       </Box>
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setNotificationMessage}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

@@ -73,11 +73,7 @@ const CreditSaleReport = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="report-type-select-label">
                         Report Type
                       </InputLabel>
@@ -93,25 +89,21 @@ const CreditSaleReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker label="From Date" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker label="To Date" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>
@@ -127,11 +119,7 @@ const CreditSaleReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="field-assistant-select-label">
                         Field Assistant
                       </InputLabel>
@@ -147,11 +135,7 @@ const CreditSaleReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="item-select-label">Item</InputLabel>
                       <Select
                         labelId="item-select-label"
@@ -167,13 +151,9 @@ const CreditSaleReport = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
-                      variant="outlined"
-                      fullWidth
                       name="customer_name"
                       required
                       // onChange={oldPasswordHandle}
-                      style={{ background: "#fff" }}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>

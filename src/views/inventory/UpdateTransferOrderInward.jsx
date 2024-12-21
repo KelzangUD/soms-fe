@@ -65,6 +65,7 @@ const UpdateTransferOrderInward = ({
       transferOrderItemDTOList: transferOrderDetails?.transferOrderItemDTOList,
       last_Updated_By: empID,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transferOrderDetails]);
 
   const receivedQtyHandle = (e, params) => {

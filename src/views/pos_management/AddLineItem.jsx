@@ -115,7 +115,6 @@ const AddLineItem = ({
           available: res?.data?.available,
           serialNoStatus: res?.data?.serialNoStatus,
           taxAmt: res?.data?.taxAmount,
-          priceLocator: res?.data?.priceLocator,
           priceLocatorDTOs: res?.data?.priceLocatorDTOs,
           description: res?.data?.description,
           itemNo: res?.data?.itemNo,
@@ -145,7 +144,7 @@ const AddLineItem = ({
       null,
       null
     );
-    if (res?.status === 200 && res?.data?.serialControlled != "Y") {
+    if (res?.status === 200 && res?.data?.serialControlled !== "Y") {
       setLineItemDetail((prev) => ({
         ...prev,
         priceLocator: res?.data?.priceLocator,
@@ -164,7 +163,6 @@ const AddLineItem = ({
         available: res?.data?.available,
         serialNoStatus: res?.data?.serialNoStatus,
         taxAmt: res?.data?.taxAmount,
-        priceLocator: res?.data?.priceLocator,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
       }));
     }
@@ -197,7 +195,6 @@ const AddLineItem = ({
   };
   useEffect(() => {
     if (adj_type === "EMI") {
-      console.log(lineItemDetails)
       setLineItemDetail((prev) => ({
         ...prev,
         description: lineItemDetails?.description,
@@ -224,12 +221,15 @@ const AddLineItem = ({
         volumeDiscount: lineItemDetails?.volumeDiscount,
       }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adj_type]);
   useEffect(() => {
     fetchLocators(lineItemDetail?.subInventoryId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lineItemDetail?.subInventoryId]);
   useEffect(() => {
     fetchOnHandItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [desc]);
   useEffect(() => {
     if (
@@ -242,6 +242,7 @@ const AddLineItem = ({
     ) {
       fetchItemDescriptionWithOutSerialNO();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     salesType,
     storeName,
@@ -259,11 +260,13 @@ const AddLineItem = ({
       setSeverity("info");
       setShowNofication(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lineItemDetail?.serialNo, lineItemDetail?.qty]);
   useEffect(() => {
     if (pricingID !== "") {
       fetchPriceLocatorDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pricingID]);
 
   const subInventoryHandle = (e, value) => {
@@ -441,7 +444,7 @@ const AddLineItem = ({
                         : []
                     }
                     disabled={
-                      lineItemDetail?.priceLocator == "Y" ? false : true
+                      lineItemDetail?.priceLocator === "Y" ? false : true
                     }
                     renderInput={(params) => (
                       <TextField {...params} label="Price Locator" />

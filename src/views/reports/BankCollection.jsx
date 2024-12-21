@@ -116,6 +116,7 @@ const BankCollection = () => {
   };
   useEffect(() => {
     fetchBankCollection();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const regionOrExtensionHandle = (e) => {
     setRegionOrExtension(e?.target?.value);
@@ -180,11 +181,7 @@ const BankCollection = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>
@@ -204,7 +201,7 @@ const BankCollection = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="From Date"
@@ -215,7 +212,7 @@ const BankCollection = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="To Date"

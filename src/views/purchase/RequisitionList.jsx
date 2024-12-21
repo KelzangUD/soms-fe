@@ -16,7 +16,6 @@ const RequisitionList = () => {
   const [itemDetails, setItemDetails] = useState([]);
   const [showViewDetails, setShowViewDetails] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState("Submitted");
-  const [open, setOpen] = useState(false);
 
   const viewDetailsHandle = async (params) => {
     const res = await Route(

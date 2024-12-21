@@ -126,7 +126,6 @@ const SalesOrder = () => {
     available: "",
     serialNoStatus: "",
     taxAmt: "",
-    priceLocator: "",
     priceLocatorDTOs: "",
   });
 
@@ -307,9 +306,11 @@ const SalesOrder = () => {
   };
   useEffect(() => {
     salesOrderDetails?.salesType !== "" && fetchCustomersList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesOrderDetails?.salesType, user]);
   useEffect(() => {
     fetchBankBasedOnPaymentType(paymentLinesItem?.paymentType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paymentLinesItem?.paymentType]);
   useEffect(() => {
     setPaymentLinesItem((prev) => ({
@@ -541,7 +542,6 @@ const SalesOrder = () => {
       available: "",
       serialNoStatus: "",
       taxAmt: "",
-      priceLocator: "",
       priceLocatorDTOs: "",
     }));
   };

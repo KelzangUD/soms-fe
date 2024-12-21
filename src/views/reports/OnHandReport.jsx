@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Autocomplete,
-  Box,
-  Grid,
-  Button,
-  TextField,
-} from "@mui/material";
+import { Autocomplete, Box, Grid, Button, TextField } from "@mui/material";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import { on_hand_report_columns } from "../../data/static";
 import Route from "../../routes/Route";
@@ -65,9 +59,11 @@ const OnHandReport = () => {
   };
   useEffect(() => {
     fetchOnHandReports();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     fetchLocatorsBasedOnExtension(details?.storeName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [details?.storeName]);
   const storeHandle = (e, value) => {
     setDetails((prev) => ({
@@ -158,14 +154,10 @@ const OnHandReport = () => {
                   <Grid item xs={2}>
                     <TextField
                       label="As On Date"
-                      variant="outlined"
-                      fullWidth
                       name="as_on_date"
                       required
                       disabled
                       value={dateFormatterTwo(new Date())}
-                      style={{ background: "#fff" }}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -178,13 +170,8 @@ const OnHandReport = () => {
                       value={details?.storeName}
                       onChange={storeHandle}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Region/Extension"
-                          size="small"
-                        />
+                        <TextField {...params} label="Region/Extension" />
                       )}
-                      style={{ background: "#fff" }}
                       disabled={
                         userDetails?.roleName === "Administrator" ? false : true
                       }
@@ -203,9 +190,8 @@ const OnHandReport = () => {
                       value={details?.item}
                       onChange={itemHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Item" size="small" />
+                        <TextField {...params} label="Item" />
                       )}
-                      style={{ background: "#fff" }}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -221,35 +207,26 @@ const OnHandReport = () => {
                       value={details?.locator_id}
                       onChange={locatorHandle}
                       renderInput={(params) => (
-                        <TextField {...params} label="Locator" size="small" />
+                        <TextField {...params} label="Locator" />
                       )}
-                      style={{ background: "#fff" }}
                     />
                   </Grid>
                   <Grid item xs={2}>
                     <TextField
                       label="Serial No."
-                      variant="outlined"
-                      fullWidth
                       name="serial_no"
                       required
                       value={details?.serialNo}
                       onChange={serialNoHandle}
-                      style={{ background: "#fff" }}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="IMEI No."
-                      variant="outlined"
-                      fullWidth
                       name="imei_no"
                       required
                       value={details?.imei_no}
                       onChange={imeiNoHandle}
-                      style={{ background: "#fff" }}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2} alignContent="center">
