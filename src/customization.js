@@ -24,11 +24,12 @@ export const customizedTheme = createTheme({
     },
     MuiFormControl: {
       defaultProps: {
-        size: "small", // Default size set to "small"
+        size: "small",
       },
       styleOverrides: {
         root: {
-          width: "100%", // Default width set to 100%
+          width: "100%",
+          background: "#fff",
         },
       },
     },
