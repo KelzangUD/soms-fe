@@ -88,34 +88,25 @@ const ChangePassword = () => {
                 <Grid item xs={12}>
                   <TextField
                     label="Old Password"
-                    variant="outlined"
-                    fullWidth
                     name="old_password"
                     required
                     onChange={oldPasswordHandle}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     label="New Password"
-                    variant="outlined"
-                    fullWidth
                     name="new_password"
                     required
                     onChange={newPasswordHandle}
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     label="Confirm Password"
-                    variant="outlined"
-                    fullWidth
                     name="confirm_password"
                     required
                     onChange={confirmPasswordHandle}
-                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -129,14 +120,12 @@ const ChangePassword = () => {
                     variant="contained"
                     sx={{ mr: 2 }}
                     onClick={updateHandle}
-                    size="small"
                   >
                     Update
                   </Button>
                   <Button
                     variant="outlined"
                     color="error"
-                    size="small"
                     onClick={cancleHandle}
                   >
                     Cancel

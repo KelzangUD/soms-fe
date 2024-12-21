@@ -111,16 +111,12 @@ const ResetPasswordPage = () => {
                 <Box component="form" sx={{ display: "grid", gap: 2 }}>
                   <TextField
                     label="New Password"
-                    variant="outlined"
-                    fullWidth
                     value={newPassword}
                     onChange={handlePasswordChange}
                     required
                   />
                   <TextField
                     label="Confirm Password"
-                    variant="outlined"
-                    fullWidth
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
                     required

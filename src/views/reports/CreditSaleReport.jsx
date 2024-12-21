@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Box,
   Grid,
@@ -17,7 +17,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { CustomDataTable } from "../../component/common/index";
-import Route from "../../routes/Route";
+// import Route from "../../routes/Route";
 
 const CreditSaleReport = () => {
   const credit_sale_report_columns = [

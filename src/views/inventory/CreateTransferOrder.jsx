@@ -411,7 +411,6 @@ const CreateTransferOrder = ({
                 <TextField
                   id="outlined-basic"
                   label="Transfer Order No"
-                  variant="outlined"
                   required
                   disabled
                 />
@@ -451,7 +450,6 @@ const CreateTransferOrder = ({
                 <TextField
                   id="outlined-basic"
                   label="From Store"
-                  variant="outlined"
                   required
                   disabled
                   value={userDetails?.regionName}
@@ -504,11 +502,8 @@ const CreateTransferOrder = ({
                   <TextField
                     id="outlined-basic"
                     label="To Store"
-                    variant="outlined"
                     required
-                    fullWidth
                     value={parameters?.transfer_To_Store}
-                    size="small"
                     disabled
                   />
                 ) : (
@@ -628,7 +623,6 @@ const CreateTransferOrder = ({
                 <TextField
                   id="outlined-basic"
                   label="Vehicle No."
-                  variant="outlined"
                   required
                   onChange={vehicleNoHandle}
                   value={parameters?.vehicle_Number}
@@ -638,7 +632,6 @@ const CreateTransferOrder = ({
                 <TextField
                   id="outlined-basic"
                   label="Remarks"
-                  variant="outlined"
                   onChange={remarksHandle}
                   value={parameters?.remarks}
                 />

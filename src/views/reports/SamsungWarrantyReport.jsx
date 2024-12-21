@@ -12,12 +12,17 @@ import {
 import FindReplaceIcon from "@mui/icons-material/FindReplace";
 import BuildIcon from "@mui/icons-material/Build";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Route from "../../routes/Route";
 import { exportToExcel } from "react-json-to-excel";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
 import { useCommon } from "../../contexts/CommonContext";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const SamsungWarrantyReport = () => {
   const { regionsOrExtensions } = useCommon();
@@ -30,6 +35,13 @@ const SamsungWarrantyReport = () => {
     userDetails?.regionName
   );
   const [reports, setReports] = useState([]);
+  const [params, setParams] = useState({
+    extension: "",
+    fromDate: dateFormatterTwo(new Date()),
+    toDate: dateFormatterTwo(new Date()),
+    posNo: "",
+    serialNo: "",
+  });
   const samsung_warranty_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.3 },
     { field: "pos_no", headerName: "POS No", flex: 1.4 },
@@ -138,9 +150,22 @@ const SamsungWarrantyReport = () => {
   };
   useEffect(() => {
     fetchSamsungWarrantyReport();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const regionOrExtensionHandle = (e) => {
     setRegionOrExtension(e?.target?.value);
+  };
+  const fromDateHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      fromDate: dateFormatterTwo(e?.$d),
+    }));
+  };
+  const toDateHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      toDate: dateFormatterTwo(e?.$d),
+    }));
   };
   const exportJsonToPdfHandle = () => {
     const doc = new jsPDF({
@@ -212,6 +237,28 @@ const SamsungWarrantyReport = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
+                  <Grid item xs={2}>
+                    <FormControl>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="From Date"
+                          value={dayjs(params?.fromDate)}
+                          onChange={fromDateHandle}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormControl>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="To Date"
+                          value={dayjs(params?.toDate)}
+                          onChange={toDateHandle}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
                   <Grid item xs={3}>
                     <FormControl
                       fullWidth
@@ -237,7 +284,12 @@ const SamsungWarrantyReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <Button variant="contained">Search</Button>
+                    <Button
+                      variant="contained"
+                      onClick={fetchSamsungWarrantyReport}
+                    >
+                      Search
+                    </Button>
                   </Grid>
                 </Grid>
                 <Grid

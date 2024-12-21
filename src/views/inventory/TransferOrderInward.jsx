@@ -171,14 +171,14 @@ const TransferOrderInward = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={2}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker label="From*" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker label="To*" />
                       </LocalizationProvider>

@@ -312,7 +312,6 @@ const EditLineItem = ({
                   <TextField
                     id="store_name"
                     label="Store Name"
-                    fullWidth
                     value={storeName}
                     disabled
                   />
@@ -334,7 +333,6 @@ const EditLineItem = ({
                     <TextField
                       id="sub_inv"
                       label="Sub-Inventory"
-                      fullWidth
                       value={lineItemDetail?.subInventoryId}
                       disabled
                     />
@@ -357,7 +355,6 @@ const EditLineItem = ({
                     <TextField
                       id="locator"
                       label="Locator"
-                      fullWidth
                       value={lineItemDetail?.locatorId}
                       disabled
                     />
@@ -383,7 +380,6 @@ const EditLineItem = ({
                   <TextField
                     id="serial_no"
                     label="Serial No"
-                    fullWidth
                     onChange={serialNoHandle}
                   />
                 </Grid>
@@ -391,7 +387,6 @@ const EditLineItem = ({
                   <TextField
                     id="qty"
                     label="Quantity"
-                    fullWidth
                     value={lineItemDetail?.qty}
                     onChange={qtyHandle}
                   />
@@ -420,7 +415,6 @@ const EditLineItem = ({
                   <TextField
                     id="disc_per"
                     label="Disc/Comm %"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.discPercentage}
                   />
@@ -431,7 +425,6 @@ const EditLineItem = ({
                   <TextField
                     id="tds_amt"
                     label="TDS Amount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.tdsAmount}
                   />
@@ -440,7 +433,6 @@ const EditLineItem = ({
                   <TextField
                     id="item_no"
                     label="Item No."
-                    fullWidth
                     disabled
                     value={lineItemDetail?.itemNo}
                   />
@@ -449,7 +441,6 @@ const EditLineItem = ({
                   <TextField
                     id="mrp"
                     label="MRP"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.mrp}
                   />
@@ -458,7 +449,6 @@ const EditLineItem = ({
                   <TextField
                     id="disc_com_amt"
                     label="Disc/Comm Amount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.discountedAmount}
                   />
@@ -469,7 +459,6 @@ const EditLineItem = ({
                   <TextField
                     id="tax_per"
                     label="Tax %"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.taxPercentage}
                   />
@@ -478,7 +467,6 @@ const EditLineItem = ({
                   <TextField
                     id="selling_price"
                     label="Selling Price"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
                   />
@@ -487,7 +475,6 @@ const EditLineItem = ({
                   <TextField
                     id="add_disc"
                     label="Additional Disc"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.additionalDiscount}
                   />
@@ -496,7 +483,6 @@ const EditLineItem = ({
                   <TextField
                     id="tax_amt"
                     label="Tax Amount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.taxAmt}
                   />
@@ -507,7 +493,6 @@ const EditLineItem = ({
                   <TextField
                     id="amt_excel"
                     label="Amount Excl. Tax"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.amountExclTax}
                   />
@@ -516,7 +501,6 @@ const EditLineItem = ({
                   <TextField
                     id="adv_tax"
                     label="Advance Tax Amount"
-                    fullWidth
                     value={lineItemDetail?.advanceTaxAmount}
                   />
                 </Grid>
@@ -524,7 +508,6 @@ const EditLineItem = ({
                   <TextField
                     id="vol_dis"
                     label="Volumn Discount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.volumeDiscount}
                   />
@@ -533,7 +516,6 @@ const EditLineItem = ({
                   <TextField
                     id="item_total_added_qty"
                     label="Item Total Added Qty"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.itemTotalAddedQty}
                   />
@@ -550,7 +532,6 @@ const EditLineItem = ({
                   <TextField
                     id="selling_price"
                     label="Line Item Amount"
-                    fullWidth
                     disabled
                     value={lineItemDetail?.sellingPrice}
                   />

@@ -28,7 +28,6 @@ const PaymentReceiptCustomerDetails = ({ paymentReceiptDetails }) => {
           <Grid item marginX={1.5}>
             <TextField
               label="Customer Name"
-              fullWidth
               name="customer_name"
               disabled
               value={paymentReceiptDetails?.name}
@@ -37,7 +36,6 @@ const PaymentReceiptCustomerDetails = ({ paymentReceiptDetails }) => {
           <Grid item marginX={1.5}>
             <TextField
               label="Account Id"
-              fullWidth
               name="account_id"
               disabled
               value={paymentReceiptDetails?.accountId}
@@ -46,7 +44,6 @@ const PaymentReceiptCustomerDetails = ({ paymentReceiptDetails }) => {
           <Grid item marginX={1.5}>
             <TextField
               label="Invoice No"
-              fullWidth
               name="invoice_no"
               disabled
               value="---"
@@ -55,7 +52,6 @@ const PaymentReceiptCustomerDetails = ({ paymentReceiptDetails }) => {
           <Grid item marginX={1.5}>
             <TextField
               label="CBS Customer Status"
-              fullWidth
               name="cbs_customer_status"
               disabled
               value="---"
@@ -64,7 +60,6 @@ const PaymentReceiptCustomerDetails = ({ paymentReceiptDetails }) => {
           <Grid item marginX={1.5}>
             <TextField
               label="Outstanding Balance"
-              fullWidth
               name="outstanding_balance"
               disabled
               value={paymentReceiptDetails?.outstandingBalance}

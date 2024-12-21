@@ -382,17 +382,11 @@ const SalesReturn = () => {
               <Grid container paddingX={2} paddingTop={2} paddingBottom={1.5}>
                 <Grid container spacing={1}>
                   <Grid item xs={3}>
-                    <TextField
-                      label="POS No"
-                      fullWidth
-                      name="pos_no"
-                      disabled
-                    />
+                    <TextField label="POS No" name="pos_no" disabled />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Posting Date"
-                      fullWidth
                       name="posting_date"
                       defaultValue={new Date().toDateString()}
                       disabled
@@ -402,7 +396,6 @@ const SalesReturn = () => {
                     <TextField
                       error={emptyInvoiceNo}
                       label="Invoice No"
-                      fullWidth
                       name="invoice_no"
                       onChange={setSalesInvoice}
                       value={invoiceNo}
@@ -413,7 +406,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <Button
                       variant="contained"
-                      fullWidth
                       onClick={fetchSalesInvoice}
                       disabled={loading}
                       sx={{
@@ -429,7 +421,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Sales Type"
-                      fullWidth
                       defaultValue="Sales Type"
                       value={salesData?.salesHeader?.sales_Type}
                       disabled
@@ -438,7 +429,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Product Type"
-                      fullWidth
                       defaultValue="Product Type"
                       value={salesData?.salesHeader?.product_Type}
                       disabled
@@ -447,7 +437,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Mobile No"
-                      fullWidth
                       defaultValue="Mobile No"
                       value={salesData?.salesHeader?.mobileNo}
                       disabled
@@ -456,7 +445,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Customer No"
-                      fullWidth
                       defaultValue="Customer No"
                       value={salesData?.salesHeader?.customerNumber}
                       disabled
@@ -467,7 +455,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
-                      fullWidth
                       defaultValue="Customer Name"
                       value={salesData?.salesHeader?.customerName}
                       disabled
@@ -476,7 +463,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Address"
-                      fullWidth
                       defaultValue="Address"
                       value={salesData?.salesHeader?.address}
                       disabled
@@ -485,7 +471,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
-                      fullWidth
                       defaultValue="Address1"
                       value={salesData?.salesHeader?.address1}
                       disabled
@@ -494,7 +479,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="City"
-                      fullWidth
                       defaultValue="city"
                       value={salesData?.salesHeader?.city}
                       disabled
@@ -693,7 +677,6 @@ const SalesReturn = () => {
                   <Grid item xs={2}>
                     <TextField
                       label="Refund Amount"
-                      fullWidth
                       type="number"
                       name="refund_amount"
                       defaultValue="refund_amount"
@@ -703,7 +686,7 @@ const SalesReturn = () => {
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth size="small">
+                    <FormControl>
                       <InputLabel id="refund-type-select-label">
                         Refund Type
                       </InputLabel>
@@ -722,7 +705,7 @@ const SalesReturn = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth size="small">
+                    <FormControl>
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
                       </InputLabel>

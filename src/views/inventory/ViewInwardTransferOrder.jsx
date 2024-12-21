@@ -66,150 +66,112 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
             <Grid item container xs={12} paddingTop={2} spacing={1}>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="transfer_order_no"
                   label="Transfer Order No"
-                  variant="outlined"
                   required
                   disabled
-                  fullWidth
                   value={transferOrderDetails?.transfer_Order_Number}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Transfer Order Create Date"
                       value={dayjs(transferOrderDetails?.transfer_Date)}
                       disabled
-                      slotProps={{
-                        textField: {
-                          size: "small",
-                        },
-                      }}
                     />
                   </LocalizationProvider>
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="transfer_type"
                   label="Transfer Type"
-                  variant="outlined"
                   required
                   disabled
-                  fullWidth
                   value={transferOrderDetails?.transfer_Type}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="from_store"
                   label="From Store"
-                  variant="outlined"
                   required
                   disabled
-                  fullWidth
                   value={transferOrderDetails?.transfer_From_Name}
-                  size="small"
                 />
               </Grid>
             </Grid>
             <Grid item container xs={12} mt={1} spacing={1}>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="from_sub_inv"
                   label="From Sub-Inventory"
-                  variant="outlined"
                   required
-                  fullWidth
                   disabled
                   value={transferOrderDetails?.transfer_From_SubInventory}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="from_locator"
                   label="From Locator"
-                  variant="outlined"
-                  fullWidth
                   disabled
                   value={transferOrderDetails?.transfer_From_Locator}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="to_store"
                   label="To Store"
-                  variant="outlined"
-                  fullWidth
                   disabled
                   value={transferOrderDetails?.transfer_To_Name}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="to_sub_inv"
                   label="To Sub-inventry"
-                  variant="outlined"
-                  fullWidth
                   disabled
                   value={transferOrderDetails?.transfer_To_SubInventory}
-                  size="small"
                 />
               </Grid>
             </Grid>
             <Grid item container xs={12} mt={1} spacing={1}>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="to_locator"
                   label="To Locator"
-                  variant="outlined"
                   required
-                  fullWidth
                   disabled
                   value={transferOrderDetails?.transfer_To_Locator}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="mode_of_transport"
                   label="Mode Of Transport"
-                  variant="outlined"
                   required
-                  fullWidth
                   disabled
                   value={transferOrderDetails?.transfer_Mode}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="vehicle_no"
                   label="Vehicle No."
-                  variant="outlined"
                   required
-                  fullWidth
                   disabled
                   value={transferOrderDetails?.vehicle_Number}
-                  size="small"
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="outlined-basic"
+                  id="remarks"
                   label="Remarks"
-                  variant="outlined"
-                  fullWidth
                   disabled
                   value={transferOrderDetails?.remarks}
-                  size="small"
                 />
               </Grid>
             </Grid>
@@ -240,7 +202,6 @@ const ViewInwardTransferOrder = ({ open, setOpen, transferOrderDetails }) => {
                 variant="outlined"
                 onClick={() => setOpen(false)}
                 color="error"
-                size="small"
               >
                 Close
               </Button>

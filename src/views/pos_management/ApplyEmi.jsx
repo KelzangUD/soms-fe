@@ -10,7 +10,6 @@ import {
   InputLabel,
   Select,
 } from "@mui/material";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -25,51 +24,30 @@ const ApplyEmi = () => {
               <Grid container padding={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={3}>
-                    <TextField
-                      label="EMI No"
-                      variant="outlined"
-                      fullWidth
-                      name="emi_no"
-                      disabled
-                      required
-                      size="small"
-                    />
+                    <TextField label="EMI No" name="emi_no" disabled required />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
-                      variant="outlined"
-                      fullWidth
                       name="customer_name"
                       disabled
                       required
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer No"
-                      variant="outlined"
-                      fullWidth
                       name="customer_no"
                       required
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <TextField
-                      label="Mobile No"
-                      variant="outlined"
-                      fullWidth
-                      name="mobile_no"
-                      required
-                      size="small"
-                    />
+                    <TextField label="Mobile No" name="mobile_no" required />
                   </Grid>
                 </Grid>
                 <Grid container spacing={1} sx={{ my: 0.5 }}>
                   <Grid item xs={3}>
-                    <FormControl fullWidth size="small">
+                    <FormControl>
                       <InputLabel id="emi-type-select-label">
                         EMI Type
                       </InputLabel>
@@ -85,93 +63,49 @@ const ApplyEmi = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Date"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="Date" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Item No"
-                      variant="outlined"
-                      fullWidth
                       name="item_no"
                       required
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Item Description"
-                      variant="outlined"
-                      fullWidth
                       name="item_description"
                       required
-                      size="small"
                     />
                   </Grid>
                 </Grid>
                 <Grid container spacing={1} sx={{ my: 0.5 }}>
                   <Grid item xs={3}>
-                    <TextField
-                      label="Price"
-                      variant="outlined"
-                      fullWidth
-                      name="price"
-                      required
-                      disabled
-                      size="small"
-                    />
+                    <TextField label="Price" name="price" required disabled />
                   </Grid>
                   <Grid item xs={3}>
-                    <TextField
-                      label="Discount"
-                      variant="outlined"
-                      fullWidth
-                      name="discount"
-                      size="small"
-                    />
+                    <TextField label="Discount" name="discount" />
                   </Grid>
                   <Grid item xs={3}>
-                    <TextField
-                      label="Down Payment"
-                      variant="outlined"
-                      fullWidth
-                      name="down_payment"
-                      size="small"
-                    />
+                    <TextField label="Down Payment" name="down_payment" />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Advance Payment"
-                      variant="outlined"
-                      fullWidth
                       name="advance_payment"
                       disabled
-                      size="small"
                     />
                   </Grid>
                 </Grid>
                 <Grid container spacing={1} sx={{ my: 0.5 }}>
                   <Grid item xs={3}>
-                    <TextField
-                      label="Amount"
-                      variant="outlined"
-                      fullWidth
-                      name="amount"
-                      required
-                      disabled
-                      size="small"
-                    />
+                    <TextField label="Amount" name="amount" required disabled />
                   </Grid>
                   <Grid item xs={3}>
                     <FormControl fullWidth size="small">
@@ -193,29 +127,23 @@ const ApplyEmi = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Interest Amount"
-                      variant="outlined"
-                      fullWidth
                       name="interest_amount"
                       disabled
                       required
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Final Amount"
-                      variant="outlined"
-                      fullWidth
                       name="final_amount"
                       disabled
                       required
-                      size="small"
                     />
                   </Grid>
                 </Grid>
                 <Grid container spacing={1} sx={{ my: 0.5 }}>
                   <Grid item xs={3}>
-                    <FormControl fullWidth size="small">
+                    <FormControl>
                       <InputLabel id="no-of-emi-select-label">
                         No of EMI
                       </InputLabel>
@@ -234,36 +162,25 @@ const ApplyEmi = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Monthly EMI Amount"
-                      variant="outlined"
-                      fullWidth
                       name="amount"
                       required
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Deduction From Period"
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                            },
-                          }}
-                        />
+                        <DatePicker label="Deduction From Period" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth>
+                    <FormControl>
                       <TextField
                         variant="outlined"
-                        fullWidth
                         name="file"
                         type="file"
-                        size="small"
+
                         // label="File"
                       />
                     </FormControl>
@@ -273,12 +190,9 @@ const ApplyEmi = () => {
                   <Grid item xs={12}>
                     <TextField
                       label="Purpose"
-                      variant="outlined"
-                      fullWidth
                       name="purpose"
                       multiline
                       rows={3}
-                      size="small"
                     />
                   </Grid>
                 </Grid>
@@ -292,7 +206,6 @@ const ApplyEmi = () => {
             <Button
               variant="outlined"
               color="error"
-              size="small"
               sx={{
                 background: "#fff",
               }}
