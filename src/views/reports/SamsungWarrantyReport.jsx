@@ -8,6 +8,7 @@ import {
   MenuItem,
   InputLabel,
   Select,
+  TextField,
 } from "@mui/material";
 import FindReplaceIcon from "@mui/icons-material/FindReplace";
 import BuildIcon from "@mui/icons-material/Build";
@@ -31,12 +32,9 @@ const SamsungWarrantyReport = () => {
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
-  const [regionOrExtension, setRegionOrExtension] = useState(
-    userDetails?.regionName
-  );
   const [reports, setReports] = useState([]);
   const [params, setParams] = useState({
-    extension: "",
+    extension: userDetails?.regionName,
     fromDate: dateFormatterTwo(new Date()),
     toDate: dateFormatterTwo(new Date()),
     posNo: "",
@@ -99,7 +97,7 @@ const SamsungWarrantyReport = () => {
   const fetchSamsungWarrantyReport = async () => {
     const res = await Route(
       "GET",
-      `/Report/samsungWarranty?extension=${regionOrExtension}&fromDate=2024-08-01&toDate=2024-12-31&posNo&serialNo`,
+      `/Report/samsungWarranty?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&posNo=${params?.posNo}&serialNo=${params?.serialNo}`,
       access_token,
       null,
       null
@@ -153,7 +151,10 @@ const SamsungWarrantyReport = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const regionOrExtensionHandle = (e) => {
-    setRegionOrExtension(e?.target?.value);
+    setParams((prev) => ({
+      ...prev,
+      extension: e?.target?.value,
+    }));
   };
   const fromDateHandle = (e) => {
     setParams((prev) => ({
@@ -165,6 +166,18 @@ const SamsungWarrantyReport = () => {
     setParams((prev) => ({
       ...prev,
       toDate: dateFormatterTwo(e?.$d),
+    }));
+  };
+  const posNoHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      posNo: e?.target?.value,
+    }));
+  };
+  const serialNoHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      serialNo: e?.target?.value,
     }));
   };
   const exportJsonToPdfHandle = () => {
@@ -271,7 +284,7 @@ const SamsungWarrantyReport = () => {
                       <Select
                         labelId="region-or-extension--select-label"
                         id="region-or-extension--select"
-                        value={regionOrExtension}
+                        value={params?.extension}
                         label="Region/Extension"
                         onChange={regionOrExtensionHandle}
                       >
@@ -284,9 +297,28 @@ const SamsungWarrantyReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
+                    <TextField
+                      label="Pos No"
+                      name="pos_no"
+                      required
+                      value={params?.posNo}
+                      onChange={posNoHandle}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Serial No"
+                      name="serial_no"
+                      required
+                      value={params?.serialNo}
+                      onChange={serialNoHandle}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
                     <Button
                       variant="contained"
                       onClick={fetchSamsungWarrantyReport}
+                      fullWidth
                     >
                       Search
                     </Button>
