@@ -200,14 +200,14 @@ const SalesReturn = () => {
         if (res?.status === 200) {
           if (res?.data?.status === "Y") {
             setSalesData(res?.data);
-            setGrossTotal(res?.data?.linesAmount?.gross_Total);
-            setTaxAmount(res?.data?.linesAmount?.tax_Amount);
-            setDiscountAmt(res?.data?.linesAmount?.discount_Amount);
-            setAdditionalDisAmt(res?.data?.linesAmount?.additional_Discount);
-            setLotOfSaleDiscount(res?.data?.linesAmount?.lotOfSale_Discount);
-            setTdsAmount(res?.data?.linesAmount?.tds_Amount);
-            setNetTotal(res?.data?.linesAmount?.net_Amount);
-            setSalesLines(res?.data?.itemLines);
+            setGrossTotal(res?.data?.linesAmountDtls?.gross_Total);
+            setTaxAmount(res?.data?.linesAmountDtls?.tax_Amount);
+            setDiscountAmt(res?.data?.linesAmountDtls?.discount_Amount);
+            setAdditionalDisAmt(res?.data?.linesAmountDtls?.additional_Discount);
+            setLotOfSaleDiscount(res?.data?.linesAmountDtls?.lotOfSale_Discount);
+            setTdsAmount(res?.data?.linesAmountDtls?.tds_Amount);
+            setNetTotal(res?.data?.linesAmountDtls?.net_Amount);
+            setSalesLines(res?.data?.itemLinesDtls);
           } else {
             setNotificationMsg(
               "This POS_No is already return. Check the POS_No"
@@ -307,12 +307,12 @@ const SalesReturn = () => {
         formData.append("cheque", placeholderFile);
       }
       const data = {
-        itemLines: salesLines,
-        paymentLines,
-        salesHeader: {
+        itemLinesDtls: salesLines,
+        paymentLinesDtls: paymentLines,
+        salesHeaderDtls: {
           invoiceNo: invoiceNo,
         },
-        linesAmount: {
+        linesAmountDtls: {
           grossTotal: parseInt(grossTotal),
           taxAmount: parseInt(taxAmount),
           discountAmount: parseInt(discountAmt),
@@ -422,7 +422,7 @@ const SalesReturn = () => {
                     <TextField
                       label="Sales Type"
                       defaultValue="Sales Type"
-                      value={salesData?.salesHeader?.sales_Type}
+                      value={salesData?.salesHeaderDtls?.sales_Type}
                       disabled
                     />
                   </Grid>
@@ -430,7 +430,7 @@ const SalesReturn = () => {
                     <TextField
                       label="Product Type"
                       defaultValue="Product Type"
-                      value={salesData?.salesHeader?.product_Type}
+                      value={salesData?.salesHeaderDtls?.product_Type}
                       disabled
                     />
                   </Grid>
@@ -438,7 +438,7 @@ const SalesReturn = () => {
                     <TextField
                       label="Mobile No"
                       defaultValue="Mobile No"
-                      value={salesData?.salesHeader?.mobileNo}
+                      value={salesData?.salesHeaderDtls?.mobileNo}
                       disabled
                     />
                   </Grid>
@@ -446,7 +446,7 @@ const SalesReturn = () => {
                     <TextField
                       label="Customer No"
                       defaultValue="Customer No"
-                      value={salesData?.salesHeader?.customerNumber}
+                      value={salesData?.salesHeaderDtls?.customerNumber}
                       disabled
                     />
                   </Grid>
@@ -456,7 +456,7 @@ const SalesReturn = () => {
                     <TextField
                       label="Customer Name"
                       defaultValue="Customer Name"
-                      value={salesData?.salesHeader?.customerName}
+                      value={salesData?.salesHeaderDtls?.customerName}
                       disabled
                     />
                   </Grid>
@@ -464,7 +464,7 @@ const SalesReturn = () => {
                     <TextField
                       label="Address"
                       defaultValue="Address"
-                      value={salesData?.salesHeader?.address}
+                      value={salesData?.salesHeaderDtls?.address}
                       disabled
                     />
                   </Grid>
@@ -472,7 +472,7 @@ const SalesReturn = () => {
                     <TextField
                       label="Address 1"
                       defaultValue="Address1"
-                      value={salesData?.salesHeader?.address1}
+                      value={salesData?.salesHeaderDtls?.address1}
                       disabled
                     />
                   </Grid>
@@ -480,7 +480,7 @@ const SalesReturn = () => {
                     <TextField
                       label="City"
                       defaultValue="city"
-                      value={salesData?.salesHeader?.city}
+                      value={salesData?.salesHeaderDtls?.city}
                       disabled
                     />
                   </Grid>

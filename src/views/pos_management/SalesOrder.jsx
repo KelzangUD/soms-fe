@@ -569,10 +569,10 @@ const SalesOrder = () => {
         }
         formData?.append("storeName", userDetails?.regionName);
         const data = {
-          itemLines: lineItems,
-          paymentLines,
-          salesHeader: salesOrderDetails,
-          linesAmount: {
+          itemLinesDtls: lineItems,
+          paymentLinesDtls: paymentLines,
+          salesHeaderDtls: salesOrderDetails,
+          linesAmountDtls: {
             grossTotal: linesAmount?.grossTotal,
             taxAmount: linesAmount?.taxAmt,
             discountAmount: linesAmount?.discountedAmount,
