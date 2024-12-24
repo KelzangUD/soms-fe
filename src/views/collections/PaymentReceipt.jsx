@@ -87,6 +87,12 @@ const PaymentReceipt = () => {
         payment: "1",
       }));
   };
+  const paymentHandle = (e) => {
+    setPaymentReceiptDetails((prev) => ({
+      ...prev,
+      payment: e?.target?.value,
+    }));
+  };
   const mobileNoHandle = (e) => {
     setIncorrectFormat(false);
     setPaymentReceiptDetails((prev) => ({
@@ -97,6 +103,7 @@ const PaymentReceipt = () => {
   const fetchCustomerDetailsHandle = async () => {
     if (
       (paymentReceiptDetails?.serviceType === "1" &&
+        paymentReceiptDetails?.payment === "1" &&
         paymentReceiptDetails?.mobileNo?.length === 8) ||
       (paymentReceiptDetails?.serviceType === "1" &&
         paymentReceiptDetails?.mobileNo?.startsWith("77")) ||
@@ -149,6 +156,7 @@ const PaymentReceipt = () => {
     paymentReceiptDetails?.mobileNo,
     paymentReceiptDetails?.payment,
   ]);
+
   const postingDateHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
@@ -175,13 +183,6 @@ const PaymentReceipt = () => {
           chequeDateField: true,
           chequeCopyField: true,
         }));
-  };
-  const paymentHandle = (e) => {
-    setPaymentReceiptDetails((prev) => ({
-      ...prev,
-      bankId: null,
-      payment: e?.target?.value,
-    }));
   };
   const amountHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
