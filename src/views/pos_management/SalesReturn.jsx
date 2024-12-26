@@ -203,8 +203,12 @@ const SalesReturn = () => {
             setGrossTotal(res?.data?.linesAmountDtls?.gross_Total);
             setTaxAmount(res?.data?.linesAmountDtls?.tax_Amount);
             setDiscountAmt(res?.data?.linesAmountDtls?.discount_Amount);
-            setAdditionalDisAmt(res?.data?.linesAmountDtls?.additional_Discount);
-            setLotOfSaleDiscount(res?.data?.linesAmountDtls?.lotOfSale_Discount);
+            setAdditionalDisAmt(
+              res?.data?.linesAmountDtls?.additional_Discount
+            );
+            setLotOfSaleDiscount(
+              res?.data?.linesAmountDtls?.lotOfSale_Discount
+            );
             setTdsAmount(res?.data?.linesAmountDtls?.tds_Amount);
             setNetTotal(res?.data?.linesAmountDtls?.net_Amount);
             setSalesLines(res?.data?.itemLinesDtls);
@@ -232,7 +236,7 @@ const SalesReturn = () => {
     }
   };
 
-  const cancelHandle = () => {
+  const resetHandle = () => {
     setInoiceNo("");
     setSalesData(null);
     setPaymentLines([]);
@@ -343,6 +347,7 @@ const SalesReturn = () => {
         setSeverity("success");
         setNotificationMsg("Successfully Posted Sales Return");
         setShowNofication(true);
+        resetHandle();
       } else {
         setNotificationMsg(res?.response?.data?.message);
         setSeverity("error");
@@ -412,6 +417,7 @@ const SalesReturn = () => {
                         padding: "8px 0",
                       }}
                       endIcon={<GetAppIcon />}
+                      fullWidth
                     >
                       Fetch Details
                     </Button>
@@ -421,7 +427,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Sales Type"
-                      defaultValue="Sales Type"
                       value={salesData?.salesHeaderDtls?.sales_Type}
                       disabled
                     />
@@ -429,7 +434,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Product Type"
-                      defaultValue="Product Type"
                       value={salesData?.salesHeaderDtls?.product_Type}
                       disabled
                     />
@@ -437,7 +441,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Mobile No"
-                      defaultValue="Mobile No"
                       value={salesData?.salesHeaderDtls?.mobileNo}
                       disabled
                     />
@@ -445,7 +448,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Customer No"
-                      defaultValue="Customer No"
                       value={salesData?.salesHeaderDtls?.customerNumber}
                       disabled
                     />
@@ -455,7 +457,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
-                      defaultValue="Customer Name"
                       value={salesData?.salesHeaderDtls?.customerName}
                       disabled
                     />
@@ -463,7 +464,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Address"
-                      defaultValue="Address"
                       value={salesData?.salesHeaderDtls?.address}
                       disabled
                     />
@@ -471,7 +471,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
-                      defaultValue="Address1"
                       value={salesData?.salesHeaderDtls?.address1}
                       disabled
                     />
@@ -479,7 +478,6 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="City"
-                      defaultValue="city"
                       value={salesData?.salesHeaderDtls?.city}
                       disabled
                     />
@@ -679,7 +677,6 @@ const SalesReturn = () => {
                       label="Refund Amount"
                       type="number"
                       name="refund_amount"
-                      defaultValue="refund_amount"
                       value={paymentLinesItem?.paymentAmount}
                       required
                       onChange={paymentAmountHandle}
@@ -760,7 +757,6 @@ const SalesReturn = () => {
                         label={isFileUploaded ? "File" : ""}
                         InputLabelProps={{ shrink: true }}
                         onChange={chequeCopyHandle}
-                        fullWidth
                       />
                     </Grid>
                   )}
@@ -862,7 +858,7 @@ const SalesReturn = () => {
               variant="outlined"
               color="error"
               sx={{ ml: 2 }}
-              onClick={cancelHandle}
+              onClick={resetHandle}
             >
               Cancel
             </Button>

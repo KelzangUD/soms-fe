@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Box,
   Button,
   Grid,
@@ -53,9 +54,9 @@ const Recharge = () => {
     postingDate: dateFormatter(new Date().toISOString()),
     mobileNo: "",
     amount: "",
-    paymentType: null,
+    paymentType: "",
     payment: "",
-    bankId: null,
+    bankId: "",
     bank: "",
     cardOrChequeNo: "",
     userId: userID,
@@ -146,10 +147,7 @@ const Recharge = () => {
   };
 
   const uploadCSVFileHandle = (e) => {
-    if (
-      rechargeDetails?.paymentType === null ||
-      rechargeDetails?.bankId === null
-    ) {
+    if (rechargeDetails?.paymentType === "" || rechargeDetails?.bankId === "") {
       setNotificationMsg("Please select Payment Type and Bank");
       setSeverity("info");
       setShowNofication(true);
@@ -161,83 +159,15 @@ const Recharge = () => {
       setFile(e?.target?.files[0]);
     }
   };
-  const createHandle = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      let formData = new FormData();
-      if (chequeCopy && chequeCopy.length > 0) {
-        formData.append("cheque", chequeCopy);
-      } else {
-        const placeholderFile = new File([""], "cheque.png");
-        formData.append("cheque", placeholderFile);
-      }
-      if (file && file.length > 0) {
-        formData.append("rechargeFile ", file);
-      } else {
-        const placeholderFile = new File([""], "file.csv");
-        formData.append("rechargeFile ", placeholderFile);
-      }
-      const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
-        type: "application/json",
-      });
-      formData.append("recharge", jsonDataBlob, "data.json");
-      const res = await Route(
-        "POST",
-        `/Recharge/eTop_Up`,
-        access_token,
-        formData,
-        null,
-        "multipart/form-data"
-      );
-      if (res?.status === 201) {
-        setResponseData(res?.data);
-        setSeverity("success");
-        setNotificationMsg(res?.data?.status);
-        setShowNofication(true);
-        setRechargeDetails((prev) => ({
-          ...prev,
-          postingDate: new Date(),
-          mobileNo: "",
-          amount: "",
-          paymentType: null,
-          payment: "",
-          bankId: null,
-          bank: "",
-          cardOrChequeNo: "",
-          userId: userID,
-          type: "",
-          chequeDate: new Date(),
-        }));
-        setDisabledFields((prev) => ({
-          ...prev,
-          cardOrChequeNo: true,
-          chequeDate: true,
-          chequeCopy: true,
-        }));
-        setIsFileUploaded(false);
-      } else {
-        setNotificationMsg(res?.response?.data?.message);
-        setSeverity("error");
-        setShowNofication(true);
-      }
-    } catch (err) {
-      setNotificationMsg(`Recharge Failed: ${err}`);
-      setSeverity("error");
-      setShowNofication(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  const cancelHandle = () => {
+  const resetHandle = () => {
     setRechargeDetails((prev) => ({
       ...prev,
       postingDate: new Date(),
       mobileNo: "",
       amount: "",
-      paymentType: null,
+      paymentType: "",
       payment: "",
-      bankId: null,
+      bankId: "",
       bank: "",
       cardOrChequeNo: "",
       userId: userID,
@@ -252,6 +182,61 @@ const Recharge = () => {
     }));
     setIsFileUploaded(false);
   };
+  const createHandle = async (e) => {
+    e.preventDefault();
+    if (rechargeDetails?.amount < 10) {
+      setNotificationMsg(`Recharge Amount should be not be less than Nu.10`);
+      setSeverity("info");
+      setShowNofication(true);
+    } else {
+      setIsLoading(true);
+      try {
+        let formData = new FormData();
+        if (chequeCopy && chequeCopy.length > 0) {
+          formData.append("cheque", chequeCopy);
+        } else {
+          const placeholderFile = new File([""], "cheque.png");
+          formData.append("cheque", placeholderFile);
+        }
+        if (file && file.length > 0) {
+          formData.append("rechargeFile ", file);
+        } else {
+          const placeholderFile = new File([""], "file.csv");
+          formData.append("rechargeFile ", placeholderFile);
+        }
+        const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
+          type: "application/json",
+        });
+        formData.append("recharge", jsonDataBlob, "data.json");
+        const res = await Route(
+          "POST",
+          `/Recharge/eTop_Up`,
+          access_token,
+          formData,
+          null,
+          "multipart/form-data"
+        );
+        if (res?.status === 201) {
+          setResponseData(res?.data);
+          setSeverity("success");
+          setNotificationMsg(res?.data?.status);
+          setShowNofication(true);
+          resetHandle();
+        } else {
+          setNotificationMsg(res?.response?.data?.message);
+          setSeverity("error");
+          setShowNofication(true);
+        }
+      } catch (err) {
+        setNotificationMsg(`Recharge Failed: ${err}`);
+        setSeverity("error");
+        setShowNofication(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
   const openInNewTab = () => {
     const queryParams = new URLSearchParams(responseData).toString();
     const newWindow = window.open(
@@ -343,7 +328,6 @@ const Recharge = () => {
                     component="label"
                     role={undefined}
                     tabIndex={-1}
-                    fullWidth
                     variant="outlined"
                     style={{ border: "0 solid #B4B4B8", color: "#686D76" }}
                   >
@@ -366,11 +350,17 @@ const Recharge = () => {
                   </IconButton>
                 </Grid>
               </Grid>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Alert severity="info">
+                    The minimum recharge amount is Nu.10.
+                  </Alert>
+                </Grid>
+              </Grid>
               <Grid container padding={2} py={2} spacing={1}>
                 <Grid item xs={4}>
                   <TextField
                     label="Payment Amount"
-                    fullWidth
                     name="payment_amount"
                     onChange={amountHandle}
                     type="number"
@@ -379,7 +369,7 @@ const Recharge = () => {
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <FormControl fullWidth size="small">
+                  <FormControl>
                     <InputLabel id="payment-type-select-label">
                       Payment Type*
                     </InputLabel>
@@ -399,7 +389,7 @@ const Recharge = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={4}>
-                  <FormControl fullWidth size="small">
+                  <FormControl>
                     <InputLabel id="bank-ac-name-select-label">
                       Bank A/C Name*
                     </InputLabel>
@@ -422,17 +412,14 @@ const Recharge = () => {
                   <Grid item xs={4}>
                     <TextField
                       label="Card/Cheque Number"
-                      variant="outlined"
-                      fullWidth
                       name="cheque_no"
                       onChange={cardOrChequeNumberHandle}
                       value={rechargeDetails?.cardOrChequeNo}
                       disabled={disableFields?.cardOrChequeNo}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <FormControl fullWidth>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Cheque Date"
@@ -450,7 +437,6 @@ const Recharge = () => {
                       InputLabelProps={{ shrink: true }}
                       onChange={chequeCopyHandle}
                       disabled={disableFields?.chequeCopy}
-                      fullWidth
                     />
                   </Grid>
                 </Grid>
@@ -468,7 +454,7 @@ const Recharge = () => {
             <Button
               variant="outlined"
               color="error"
-              onClick={cancelHandle}
+              onClick={resetHandle}
               style={{ background: "#fff" }}
             >
               Cancel
@@ -477,7 +463,7 @@ const Recharge = () => {
         </Grid>
       </Box>
       {isLoading && <LoaderDialog opne={isLoading} />}
-      {showNotification && severity === "error" && (
+      {showNotification && (severity === "error" || severity === "info") && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}

@@ -322,7 +322,8 @@ const SalesOrder = () => {
     resetStateHandle();
     setSalesOrderDetails((prev) => ({
       ...prev,
-      salesType: parseInt(e.target.value),
+      salesType: parseInt(e?.target?.value),
+      adj_type: e?.target?.value === "4" ? "EMI" : "",
     }));
     e?.target?.value === "2" ? setBulkUpload(true) : setBulkUpload(false);
   };
@@ -600,6 +601,10 @@ const SalesOrder = () => {
           setResponseData(res?.data);
           setSeverity("success");
           setNotificationMsg("Successfully Created");
+          setShowNofication(true);
+        } else if (res?.status === 400) {
+          setNotificationMsg(res?.response?.data?.status);
+          setSeverity("info");
           setShowNofication(true);
         } else {
           setNotificationMsg("Failed to create the sales order. Try again!");

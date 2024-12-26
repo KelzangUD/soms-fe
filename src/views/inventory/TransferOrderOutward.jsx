@@ -10,6 +10,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewTransferOrder from "./ViewTransferOrder";
 import { RenderStatus } from "../../ui/index";
 import { CustomDataTable } from "../../component/common/index";
+import dayjs from "dayjs";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 import Route from "../../routes/Route";
 
 const TransferOrderOutward = () => {
@@ -18,6 +20,10 @@ const TransferOrderOutward = () => {
   const [transferOrderList, setTransferOrderList] = useState([]);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
   const [view, setView] = useState(false);
+  const [params, setParams] = useState({
+    fromDate: dateFormatterTwo(new Date()),
+    toDate: dateFormatterTwo(new Date()),
+  });
 
   const fetchViewTransferOrderDetails = async (transferOrderNo) => {
     const res = await Route(
@@ -73,7 +79,7 @@ const TransferOrderOutward = () => {
   const fetchTransferOrderOutward = async () => {
     const res = await Route(
       "GET",
-      `/transferOrder/viewTransferOrderOutwardList/${empID}`,
+      `/transferOrder/viewTransferOrderOutwardListWithDate?empID=${empID}&fromDate=${params?.fromDate}&toDate=${params?.toDate}`,
       access_token,
       null,
       null
@@ -96,6 +102,18 @@ const TransferOrderOutward = () => {
     fetchTransferOrderOutward();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const fromDateHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      fromDate: dateFormatterTwo(e?.$d),
+    }));
+  };
+  const toDateHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      toDate: dateFormatterTwo(e?.$d),
+    }));
+  };
 
   return (
     <>
@@ -110,6 +128,7 @@ const TransferOrderOutward = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid
                   item
+                  container
                   xs={12}
                   spacing={2}
                   sx={{ display: "flex", justifyContent: "space-between" }}
@@ -118,37 +137,34 @@ const TransferOrderOutward = () => {
                     <Grid item xs={2}>
                       <FormControl>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker label="From*" />
+                          <DatePicker
+                            label="From*"
+                            onChange={fromDateHandle}
+                            value={dayjs(params?.fromDate)}
+                          />
                         </LocalizationProvider>
                       </FormControl>
                     </Grid>
                     <Grid item xs={2}>
                       <FormControl>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker label="To*" />
+                          <DatePicker
+                            label="To*"
+                            onChange={toDateHandle}
+                            value={dayjs(params?.toDate)}
+                          />
                         </LocalizationProvider>
                       </FormControl>
                     </Grid>
                     <Grid item xs={2}>
-                      <Button variant="contained">Search</Button>
+                      <Button
+                        variant="contained"
+                        onClick={fetchTransferOrderOutward}
+                      >
+                        Search
+                      </Button>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  spacing={1}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <IconButton aria-label="pdf" color="error">
-                    <PictureAsPdfIcon />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="success">
-                    <FileDownloadIcon />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="primary">
-                    <PrintIcon />
-                  </IconButton>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
                   <CustomDataTable

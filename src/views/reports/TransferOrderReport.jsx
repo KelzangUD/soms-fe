@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   FormControl,
   MenuItem,
@@ -12,60 +10,148 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
 import PrintIcon from "@mui/icons-material/Print";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { RenderStatus } from "../../ui/index";
 import { CustomDataTable } from "../../component/common/index";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
 
 const TransferOrderReport = () => {
+  const { regionsOrExtensions } = useCommon();
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const [transferOrders, setTransferOrders] = useState([]);
+  const [params, setParams] = useState({
+    transferType: "Store to Store",
+    fromDate: dateFormatterTwo(new Date()),
+    toDate: dateFormatterTwo(new Date()),
+    fromStore: userDetails?.regionName,
+    toStore: "",
+    itemDesc: "",
+  });
   const transfer_order_report_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "sl", headerName: "Sl. No", width: 40 },
     {
-      field: "customer_name",
-      headerName: "Customer Name",
-      flex: 2.5,
+      field: "transferType",
+      headerName: "Transfer Type",
+      width: 100,
     },
-    { field: "date", headerName: "Date", flex: 1.0 },
+    { field: "transferDate", headerName: "Transfer Date", width: 130 },
     {
-      field: "invoice_no",
-      headerName: "Invoice No.",
-      flex: 1.5,
+      field: "transferOrderNo",
+      headerName: "Transfer Order Number",
+      width: 150,
     },
-    { field: "item_description", headerName: "Item Description", flex: 3.5 },
-    { field: "qty", headerName: "Quantity", flex: 1.5 },
-    { field: "amount", headerName: "Amount", flex: 1.5 },
+    { field: "transferFrom", headerName: "From Store Name", width: 200 },
+    { field: "transferTo", headerName: "To Store Name", width: 200 },
+    { field: "itemNumber", headerName: "Item Number", width: 180 },
     {
-      field: "store_name",
-      headerName: "Store Name",
-      flex: 1.5,
+      field: "itemDescription",
+      headerName: "Item Descripton",
+      width: 250,
     },
     {
-      field: "created_by",
-      headerName: "Created By",
-      flex: 1.5,
+      field: "uom",
+      headerName: "UOM",
+      width: 80,
+    },
+    {
+      field: "itemSerialNo",
+      headerName: "Item Serial Number",
+      width: 150,
+    },
+    {
+      field: "qnty",
+      headerName: "Qty Shifted",
+      width: 80,
+    },
+    {
+      field: "receivedQnty",
+      headerName: "Received Qty",
+      width: 90,
+    },
+    {
+      field: "receivedDate",
+      headerName: "Received Date",
+      width: 130,
+    },
+    // {
+    //   field: "created_by",
+    //   headerName: "Transfer To Locator",
+    //   flex: 1.5,
+    // },
+    {
+      field: "txnStatus",
+      headerName: "Transaction Status",
+      width: 150,
+      renderCell: (params) => <RenderStatus status={params?.row?.txnStatus} />,
     },
   ];
-  const transfer_order_report_rows = [];
 
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const access_token = localStorage.getItem("access_token");
+  const fetchTrasferOrdersReport = async () => {
+    const res = await Route(
+      "GET",
+      `/Report/transferOrderReport?transferType=${params?.transferType}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&fromStore=${params?.fromStore}&toStore=${params?.toStore}&itemDesc=${params?.itemDesc}`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferOrders(
+        res?.data?.map((item, index) => ({
+          ...item,
+          id: index,
+          sl: index + 1,
+        }))
+      );
+    }
+  };
+  useEffect(() => {
+    fetchTrasferOrdersReport();
+  }, []);
+  const transferTypeHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      transferType: e?.target?.value,
+    }));
+  };
+  const fromDateHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      fromDate: dateFormatterTwo(e?.$d),
+    }));
+  };
+  const toDateHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      toDate: dateFormatterTwo(e?.$d),
+    }));
+  };
+  const fromStoreHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      fromStore: e?.target?.value,
+    }));
+  };
+  const toStoreHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      toStore: e?.target?.value,
+    }));
+  };
+  const itemDesciptionHandle = (e) => {
+    setParams((prev) => ({
+      ...prev,
+      itemDesc: e?.target?.value,
+    }));
+  };
 
   return (
     <>
@@ -80,110 +166,97 @@ const TransferOrderReport = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={2}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="transfer-type-select-label">
                         Transfer Type
                       </InputLabel>
                       <Select
                         labelId="transfer-type-select-label"
                         id="transfer-type-select"
-                        // value={age}
+                        value={params?.transferType}
                         label="Transfer Type"
-                        // onChange={handleChange}
+                        onChange={transferTypeHandle}
                       >
-                        <MenuItem value={1}>Store to Store</MenuItem>
+                        <MenuItem value="Store to Store">
+                          Store to Store
+                        </MenuItem>
+                        <MenuItem value="With In Store">With In Store</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="From Date" />
+                        <DatePicker
+                          label="From Date"
+                          value={dayjs(params?.fromDate)}
+                          onChange={fromDateHandle}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2} style={{ background: "#fff" }}>
-                    <FormControl fullWidth>
+                  <Grid item xs={2}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To Date" />
+                        <DatePicker
+                          label="To Date"
+                          value={dayjs(params?.toDate)}
+                          onChange={toDateHandle}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="from-select-label">From Store</InputLabel>
                       <Select
                         labelId="from-select-label"
                         id="from-select"
-                        // value={age}
+                        value={params?.fromStore}
                         label="From Store"
-                        // onChange={handleChange}
+                        onChange={fromStoreHandle}
                       >
-                        <MenuItem value={1}>ALL</MenuItem>
+                        {regionsOrExtensions?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.id}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="to-select-label">To Store</InputLabel>
                       <Select
                         labelId="to-select-label"
                         id="to-select"
-                        // value={age}
+                        value={params?.toStore}
                         label="To Store"
-                        // onChange={handleChange}
+                        onChange={toStoreHandle}
                       >
-                        <MenuItem value={1}>ALL</MenuItem>
+                        {regionsOrExtensions?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.id}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
                       label="Item Description"
-                      variant="outlined"
-                      fullWidth
                       name="item_description"
                       required
-                      style={{ background: "#fff" }}
-                      // onChange={oldPasswordHandle}
-                      size="small"
+                      onChange={itemDesciptionHandle}
                     />
                   </Grid>
-                  <Grid item xs={4}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
-                      <InputLabel id="transaction-status-select-label">
-                        Transaction Status
-                      </InputLabel>
-                      <Select
-                        labelId="transaction-status--select-label"
-                        id="transaction-status-select"
-                        // value={age}
-                        label="Transaction Status"
-                        // onChange={handleChange}
-                      >
-                        <MenuItem value={1}>ALL</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-
                   <Grid item xs={2}>
-                    <Button variant="contained">Search</Button>
+                    <Button
+                      variant="contained"
+                      onClick={fetchTrasferOrdersReport}
+                    >
+                      Search
+                    </Button>
                   </Grid>
                 </Grid>
                 <Grid
@@ -206,7 +279,7 @@ const TransferOrderReport = () => {
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
                   <CustomDataTable
-                    rows={transfer_order_report_rows}
+                    rows={transferOrders}
                     cols={transfer_order_report_columns}
                   />
                 </Grid>

@@ -666,14 +666,26 @@ const CreateTransferOrder = ({
                   >
                     <DownloadIcon />
                   </IconButton>
-                  <FormControl>
-                    <input
+                  <FormControl
+                    sx={{
+                      backgroundColor: "#0277bd",
+                    }}
+                  >
+                    <TextField
                       type="file"
                       id="file-upload"
-                      style={{ display: "none" }}
+                      variant="outlined"
+                      style={{
+                        display: "none",
+                      }}
                       onChange={(e) => handleFileUpload(e)}
                     />
-                    <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
+                    <label
+                      htmlFor="file-upload"
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    >
                       <UploadIcon sx={{ mt: 0.9 }} />
                     </label>
                   </FormControl>
@@ -787,6 +799,8 @@ const CreateTransferOrder = ({
                   },
                 }}
                 getRowHeight={() => "auto"}
+                disableColumnFilter
+                disableColumnSelector
               />
             </Grid>
             <Grid
