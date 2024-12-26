@@ -74,13 +74,16 @@ const PaymentReceipt = () => {
     fetchBankAccountName(paymentMethod);
   }, [paymentMethod]);
   const serviceTypeHandle = (e) => {
+    setIncorrectFormat(false);
     e?.target?.value === "1"
       ? setDisablePaymentSelect(false)
       : setDisablePaymentSelect(true);
     setPaymentReceiptDetails((prev) => ({
       ...prev,
       serviceType: e?.target?.value,
+      mobileNo: "",
     }));
+
     e?.target?.value !== "1" &&
       setPaymentReceiptDetails((prev) => ({
         ...prev,
@@ -88,9 +91,11 @@ const PaymentReceipt = () => {
       }));
   };
   const paymentHandle = (e) => {
+    setIncorrectFormat(false);
     setPaymentReceiptDetails((prev) => ({
       ...prev,
       payment: e?.target?.value,
+      mobileNo: ""
     }));
   };
   const mobileNoHandle = (e) => {
@@ -101,55 +106,52 @@ const PaymentReceipt = () => {
     }));
   };
   const fetchCustomerDetailsHandle = async () => {
-    if (
-      (paymentReceiptDetails?.serviceType === "1" &&
-        paymentReceiptDetails?.payment === "1" &&
-        paymentReceiptDetails?.mobileNo?.length === 8) ||
-      (paymentReceiptDetails?.serviceType === "1" &&
-        paymentReceiptDetails?.mobileNo?.startsWith("77")) ||
-      (paymentReceiptDetails?.serviceType === "2" &&
-        paymentReceiptDetails?.mobileNo?.length === 9) ||
-      (paymentReceiptDetails?.serviceType === "3" &&
-        paymentReceiptDetails?.mobileNo?.length === 5)
-    ) {
-      const res = await Route(
-        "GET",
-        `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
-        access_token,
-        null,
-        null
-      );
-      if (res?.status === 200) {
-        setNotificationMsg("Customer Details Fetch Successfully");
-        setSeverity("success");
-        setShowNofication(true);
-        setPaymentReceiptDetails((prev) => ({
-          ...prev,
-          accountCode: res?.data?.accountCode,
-          name: res?.data?.name,
-          accountId: res?.data?.accountId,
-          acctKey: res?.data?.acctKey,
-          outstandingBalance: res?.data?.billAmount,
-          invoiceNo: res?.data?.invoiceNo,
-          amount: res?.data?.billAmount,
-        }));
-      } else {
-        setNotificationMsg("Customer Details not Found!");
-        setSeverity("error");
-        setShowNofication(true);
-      }
+    const res = await Route(
+      "GET",
+      `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setNotificationMsg("Customer Details Fetch Successfully");
+      setSeverity("success");
+      setShowNofication(true);
+      setPaymentReceiptDetails((prev) => ({
+        ...prev,
+        accountCode: res?.data?.accountCode,
+        name: res?.data?.name,
+        accountId: res?.data?.accountId,
+        acctKey: res?.data?.acctKey,
+        outstandingBalance: res?.data?.billAmount,
+        invoiceNo: res?.data?.invoiceNo,
+        amount: res?.data?.billAmount,
+      }));
     } else {
-      setIncorrectFormat(true);
+      setNotificationMsg("Customer Details not Found!");
+      setSeverity("error");
+      setShowNofication(true);
     }
   };
   useEffect(() => {
     if (
-      paymentReceiptDetails?.serviceType !== "" &&
-      paymentReceiptDetails?.mobileNo !== "" &&
-      paymentReceiptDetails?.payment !== ""
+      paymentReceiptDetails?.serviceType &&
+      paymentReceiptDetails?.payment &&
+      paymentReceiptDetails?.mobileNo
     ) {
-      fetchCustomerDetailsHandle();
+      const { serviceType, payment, mobileNo } = paymentReceiptDetails;
+      const isServiceType1Valid =
+        serviceType === "1" &&
+        ((payment === "1" && mobileNo.startsWith("77")) || payment === "2");
+      const isServiceType2Valid = serviceType === "2" && mobileNo.length === 9;
+      const isServiceType3Valid = serviceType === "3" && mobileNo.length === 5;
+      if (isServiceType1Valid || isServiceType2Valid || isServiceType3Valid) {
+        fetchCustomerDetailsHandle();
+      } else {
+        setIncorrectFormat(true);
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     paymentReceiptDetails?.serviceType,
@@ -374,7 +376,6 @@ const PaymentReceipt = () => {
                       <TextField
                         error={incorrectFormant}
                         label="Mobile Number/Account Code"
-                        fullWidth
                         name="mobile_no"
                         required
                         onChange={mobileNoHandle}
