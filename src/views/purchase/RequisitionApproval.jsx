@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Button, IconButton } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import Notification from "../../ui/Notification";
 import { RenderStatus } from "../../ui";
 import UpdateRequisition from "./UpdateRequisition";
@@ -22,6 +32,8 @@ const RequisitionApproval = () => {
   const [showViewDetails, setShowViewDetails] = useState(false);
   const [showApproveDetails, setShowApproveDetails] = useState(false);
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [params, setParams] = useState({});
+  const [showDialog, setShowDialog] = useState(false);
 
   const updateHandle = async (params) => {
     const res = await Route(
@@ -99,7 +111,10 @@ const RequisitionApproval = () => {
           <IconButton
             aria-label="reject"
             size="small"
-            onClick={() => rejectRequisitionHandle(params)}
+            onClick={() => {
+              setParams(params);
+              setShowDialog(true);
+            }}
             color="error"
           >
             <ClearIcon fontSize="inherit" />
@@ -125,7 +140,7 @@ const RequisitionApproval = () => {
     fetchRequisitionListByApprover();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const rejectRequisitionHandle = async (params) => {
+  const rejectRequisitionHandle = async () => {
     const res = await Route(
       "PUT",
       `/requisition/rejectRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
@@ -134,6 +149,7 @@ const RequisitionApproval = () => {
       null
     );
     if (res?.status === 200) {
+      setShowDialog(false);
       setNotificationMsg(res?.data?.responseText);
       setSeverity("success");
       setShowNofication(true);
@@ -243,21 +259,6 @@ const RequisitionApproval = () => {
                     checkboxSelection={true}
                     onRowSelectionModelChange={handleRowSelection}
                   />
-                  {/* <DataGrid
-                      rows={requisitionList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      columns={requisiton_approval_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
-                      checkboxSelection
-                      onRowSelectionModelChange={handleRowSelection}
-                    /> */}
                 </Grid>
               </Grid>
             </Box>
@@ -287,6 +288,45 @@ const RequisitionApproval = () => {
           details={itemDetails}
           fetchRequisitionListByApprover={fetchRequisitionListByApprover}
         />
+      )}
+      {showDialog && (
+        <Dialog
+          fullWidth
+          maxWidth="sm"
+          open={showDialog}
+          onClose={() => setShowDialog(false)}
+        >
+          <DialogTitle>Confirmation!</DialogTitle>
+          <DialogContent>
+            <Alert icon={false} severity="info">
+              Are you sure that you want to reject this Requisition?
+            </Alert>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              onClick={rejectRequisitionHandle}
+              sx={{
+                mt: -1,
+                mb: 2,
+              }}
+            >
+              Confirm
+            </Button>
+            <Button
+              onClick={() => setShowDialog(false)}
+              variant="outlined"
+              color="error"
+              sx={{
+                mr: 2,
+                mt: -1,
+                mb: 2,
+              }}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </>
   );
