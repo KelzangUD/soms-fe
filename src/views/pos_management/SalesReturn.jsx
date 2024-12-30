@@ -67,6 +67,16 @@ const SalesReturn = () => {
     emiRefrenceNo: "",
     chequeCopy: "",
   });
+  const [salesHeaderDtls, setSalesHeaderDtls] = useState({
+    sales_Type: "",
+    product_Type: "",
+    mobileNo: "",
+    customerNumber: "",
+    customerName: "",
+    address: "",
+    address1: "",
+    city: "",
+  });
 
   const setSalesInvoice = (e) => {
     setEmptyInvoiceNo(false);
@@ -200,6 +210,17 @@ const SalesReturn = () => {
         if (res?.status === 200) {
           if (res?.data?.status === "Y") {
             setSalesData(res?.data);
+            setSalesHeaderDtls((prev) => ({
+              ...prev,
+              sales_Type: res?.data?.salesHeaderDtls?.sales_Type,
+              product_Type: res?.data?.salesHeaderDtls?.product_Type,
+              mobileNo: res?.data?.salesHeaderDtls?.mobileNo,
+              customerNumber: res?.data?.salesHeaderDtls?.customerNumber,
+              customerName: res?.data?.salesHeaderDtls?.customerName,
+              address: res?.data?.salesHeaderDtls?.address,
+              address1: res?.data?.salesHeaderDtls?.address1,
+              city: res?.data?.salesHeaderDtls?.city,
+            }));
             setGrossTotal(res?.data?.linesAmountDtls?.gross_Total);
             setTaxAmount(res?.data?.linesAmountDtls?.tax_Amount);
             setDiscountAmt(res?.data?.linesAmountDtls?.discount_Amount);
@@ -259,6 +280,17 @@ const SalesReturn = () => {
       cardNumber: "",
       emiRefrenceNo: "",
       chequeCopy: "",
+    }));
+    setSalesHeaderDtls((prev) => ({
+      ...prev,
+      sales_Type: "",
+      product_Type: "",
+      mobileNo: "",
+      customerNumber: "",
+      customerName: "",
+      address: "",
+      address1: "",
+      city: "",
     }));
   };
 
@@ -427,28 +459,28 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Sales Type"
-                      value={salesData?.salesHeaderDtls?.sales_Type}
+                      value={salesHeaderDtls?.sales_Type}
                       disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Product Type"
-                      value={salesData?.salesHeaderDtls?.product_Type}
+                      value={salesHeaderDtls?.product_Type}
                       disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Mobile No"
-                      value={salesData?.salesHeaderDtls?.mobileNo}
+                      value={salesHeaderDtls?.mobileNo}
                       disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Customer No"
-                      value={salesData?.salesHeaderDtls?.customerNumber}
+                      value={salesHeaderDtls?.customerNumber}
                       disabled
                     />
                   </Grid>
@@ -457,28 +489,28 @@ const SalesReturn = () => {
                   <Grid item xs={3}>
                     <TextField
                       label="Customer Name"
-                      value={salesData?.salesHeaderDtls?.customerName}
+                      value={salesHeaderDtls?.customerName}
                       disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Address"
-                      value={salesData?.salesHeaderDtls?.address}
+                      value={salesHeaderDtls?.address}
                       disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="Address 1"
-                      value={salesData?.salesHeaderDtls?.address1}
+                      value={salesHeaderDtls?.address1}
                       disabled
                     />
                   </Grid>
                   <Grid item xs={3}>
                     <TextField
                       label="City"
-                      value={salesData?.salesHeaderDtls?.city}
+                      value={salesHeaderDtls?.city}
                       disabled
                     />
                   </Grid>
