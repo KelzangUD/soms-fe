@@ -10,12 +10,10 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Slide,
   TextField,
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Notification from "../../ui/Notification";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -24,13 +22,12 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import DownloadIcon from "@mui/icons-material/Download";
 import UploadIcon from "@mui/icons-material/Upload";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Notification from "../../ui/Notification";
 import TransferBulkUploader from "../../assets/files/TransferBulkUploader.csv";
+import { Transition } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { dateFormatterTwo } from "../../util/CommonUtil";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { useCommon } from "../../contexts/CommonContext";
 
 const UpdateTransferOrder = ({
   open,
@@ -39,16 +36,21 @@ const UpdateTransferOrder = ({
   transferOrderDetails,
 }) => {
   const empID = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const {
+    transferType,
+    modeOfTransport,
+    fromSubInventory,
+    validateSerialNumberWithLocator,
+  } = useCommon();
   const [showNotification, setShowNofication] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
-  const [transferType, setTransferType] = useState([]);
-  const [fromSubInventory, setFromSubInventory] = useState([]);
   const [fromLocator, setFromLocator] = useState([]);
   const [toStore, setToStore] = useState([]);
   const [toSubInventory, setToSubInventory] = useState([]);
   const [toLocator, setToLocator] = useState([]);
-  const [modeOfTransport, setModeOfTransport] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [file, setFile] = useState(null);
   const [parameters, setParameters] = useState({
@@ -56,7 +58,7 @@ const UpdateTransferOrder = ({
     transfer_Date: "",
     transfer_Type: "",
     transfer_From_Name: "",
-    transfer_From: "",
+    transfer_From: userDetails?.storeId,
     transfer_From_SubInventory: "",
     transfer_From_Locator: "",
     transfer_To_Name: "",
@@ -110,59 +112,6 @@ const UpdateTransferOrder = ({
   const [toSubInv, setToSubInv] = useState(
     transferOrderDetails?.transfer_To_SubInventory
   );
-
-  const fetchUserDetails = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/fetchUserDtls?userId=${empID}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setParameters((prev) => ({
-        ...prev,
-        transfer_From: res?.data?.storeId,
-      }));
-    }
-  };
-
-  const fetchTransferType = async () => {
-    const res = await Route(
-      "GET",
-      "/Common/FetchTransferType",
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setTransferType(res?.data);
-    }
-  };
-  const fetchModeOfTransport = async () => {
-    const res = await Route(
-      "GET",
-      "/Common/fetchTransferMode",
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setModeOfTransport(res?.data);
-    }
-  };
-  const fetchFromSubInventory = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchSubInventory?userId=${empID}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setFromSubInventory(res?.data);
-    }
-  };
   const fetchFromLocator = async () => {
     const res = await Route(
       "GET",
@@ -207,10 +156,6 @@ const UpdateTransferOrder = ({
   };
 
   useEffect(() => {
-    fetchUserDetails();
-    fetchTransferType();
-    fetchModeOfTransport();
-    fetchFromSubInventory();
     fetchToStore();
     fetchAllItems();
   }, []);
@@ -275,27 +220,36 @@ const UpdateTransferOrder = ({
       qty: e?.target?.value,
     }));
   };
-  const addHandle = () => {
+  const addHandle = async () => {
     if (transferOrderItemDTOList?.qty === "") {
       setNotificationMsg("Please Enter Quantity");
       setSeverity("info");
       setShowNofication(true);
     } else {
-      setParameters((prev) => ({
-        ...prev,
-        transferOrderItemDTOList: [
-          ...prev.transferOrderItemDTOList,
-          transferOrderItemDTOList,
-        ],
-      }));
-      setTransferOrderDTOList((prev) => ({
-        ...prev,
-        item_Description: "",
-        item_Number: "",
-        item_Serial_Number: "",
-        uom: "",
-        qty: "",
-      }));
+      const validation = await validateSerialNumberWithLocator(
+        transferOrderItemDTOList?.item_Serial_Number
+      );
+      if (validation === "False") {
+        setNotificationMsg("Please Valid Serial Number");
+        setSeverity("info");
+        setShowNofication(true);
+      } else {
+        setParameters((prev) => ({
+          ...prev,
+          transferOrderItemDTOList: [
+            ...prev.transferOrderItemDTOList,
+            transferOrderItemDTOList,
+          ],
+        }));
+        setTransferOrderDTOList((prev) => ({
+          ...prev,
+          item_Description: "",
+          item_Number: "",
+          item_Serial_Number: "",
+          uom: "",
+          qty: "",
+        }));
+      }
     }
   };
   const deleteHandle = (params) => {
@@ -354,7 +308,7 @@ const UpdateTransferOrder = ({
     const res = await Route(
       "PUT",
       `/transferOrder/updateTransferOrderDetails`,
-      null,
+      access_token,
       parameters,
       null
     );

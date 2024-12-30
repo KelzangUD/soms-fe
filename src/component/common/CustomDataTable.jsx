@@ -9,31 +9,7 @@ import CustomNoRowsOverlay from "./CustomNoRowsOverlay";
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <GridToolbarQuickFilter
-        debounceMs={500}
-        placeholder="Search..."
-        sx={{
-          width: "400px",
-          bgcolor: "#fff",
-          "& .MuiInputBase-root": {
-            padding: "0 12px",
-            height: "40px",
-          },
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "4px",
-          },
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#1976d2",
-          },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#1976d2",
-          },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#1976d2",
-            borderWidth: "2px",
-          },
-        }}
-      />
+      <GridToolbarQuickFilter debounceMs={500} placeholder="Search..." />
     </GridToolbarContainer>
   );
 }
@@ -60,9 +36,16 @@ const CustomDataTable = ({
           },
         }}
         pageSizeOptions={[10, 20, 50, 100]}
-        getRowHeight={() => "auto"}
+        // getRowHeight={() => "auto"}
         disableColumnFilter
         disableColumnSelector
+        treeData
+        getRowClassName={(params) => {
+          if (params.row.isTitle) return "title-row";
+          if (params.row.isSubTitle) return "subtitle-row";
+          return "";
+        }}
+        disableColumnMenu
       />
     </>
   );

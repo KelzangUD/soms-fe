@@ -64,7 +64,6 @@ const SalesOrderList = () => {
   ];
   const sales_order_list_rows = [];
   const regionOrExtensionHandle = (e) => {
-    console.log(e?.target?.value);
     setRegionOrExtension(e?.target?.value);
   };
 

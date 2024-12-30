@@ -1,35 +1,65 @@
 // ==================== Sales Report-All Headers =================================
 export const sales_report_all_columns = [
-  { field: "sl", headerName: "Sl. No", flex: 0.4 },
-  { field: "sales_type", headerName: "Sales Type", flex: 1.5 },
+  { field: "sl", headerName: "Sl. No", width: 60 },
   {
-    field: "customer_name",
-    headerName: "Customer Name",
-    flex: 2.5,
-  },
-  { field: "customer_no", headerName: "Customer Number", flex: 1 },
-  {
-    field: "sales_order_no",
-    headerName: "Sales Order No.",
-    flex: 1.5,
-  },
-  { field: "region", headerName: "Region", flex: 1.5 },
-  { field: "office", headerName: "Office", flex: 1.5 },
-  { field: "revenue_head", headerName: "Revenue Head", flex: 1.5 },
-  {
-    field: "posting_date",
-    headerName: "Posting Date",
-    flex: 1.5,
+    field: "sales_type",
+    headerName: "Sales Type",
+    width: 100,
+    valueGetter:(params) =>  (params?.row?.isTitle) ? null : params?.row?.sales_type || "---",
   },
   {
     field: "item_code",
     headerName: "Item Code",
-    flex: 1.5,
+    width: 150,
+    valueGetter: (params) =>  params?.row?.item_code || "---",
   },
   {
     field: "item_description",
     headerName: "Item Description",
-    flex: 1.5,
+    width: 300,
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.item_description || "---",
+  },
+  {
+    field: "gross_amount",
+    headerName: "Gross Amount",
+    width: 100,
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.gross_amount || "---",
+  },
+  {
+    field: "discount_Value",
+    headerName: "Discount/Commission",
+    width: 150,
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.discount_Value || "---",
+  },
+  {
+    field: "additional_Discount",
+    headerName: "Add. Dis",
+    width: 150,
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.additional_Discount || "---",
+  },
+  {
+    field: "line_Discount_Amount",
+    headerName: "Lots of Sale Dis",
+    width: 150,
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.line_Discount_Amount || "---",
+  },
+  {
+    field: "tds_Amount",
+    headerName: "TDS",
+    width: 80,
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.tds_Amount || "---",
+  },
+  {
+    field: "tax_Amount",
+    headerName: "Tax Amount",
+    width: 120,
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.tax_Amount || "---",
+  },
+  {
+    field: "selling_price",
+    headerName: "Net Amount",
+    width: 120,
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.selling_price || "---",
   },
 ];
 // ==================== Sales And Order Report Headers ===========================

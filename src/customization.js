@@ -94,7 +94,7 @@ export const customizedTheme = createTheme({
             backgroundColor: "#F5F7F8",
           },
           "& .MuiDataGrid-row": {
-            padding: "4px 0",
+            // padding: "4px 0 4px",
           },
           "& .MuiTablePagination-actions": {
             "& .MuiButtonBase-root": {
@@ -103,6 +103,15 @@ export const customizedTheme = createTheme({
               padding: "4px",
               margin: "0 4px",
             },
+          },
+          /* Styling the title rows */
+          "& .title-row": {
+            fontWeight: "bold",
+            background: "#cfd8dc",
+          },
+          "& .subtitle-row": {
+            fontWeight: "bold",
+            background: "#eceff1",
           },
         },
       },

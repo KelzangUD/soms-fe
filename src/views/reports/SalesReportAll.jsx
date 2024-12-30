@@ -13,6 +13,8 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import { LoaderDialog, Notification } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { sales_report_all_columns } from "../../data/static";
@@ -21,31 +23,40 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
 import { dateFormatterTwo } from "../../util/CommonUtil";
+import { useCommon } from "../../contexts/CommonContext";
+import { v4 as uuidv4 } from "uuid";
 
 const SalesReportAll = () => {
+  const { fetchLocatorsBasedOnExtension, locatorsList } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
-  const [regionOrExtension, setRegionOrExtension] = useState(
-    userDetails?.regionName
-  );
   const [salesType, setSalesType] = useState([]);
   const [reportsType, setReportsType] = useState([]);
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [params, setParams] = useState({
-    extension: userDetails?.storeId,
-    fromDate: "2024-10-01",
-    toDate: "2024-12-10",
+    extension: userDetails?.regionName,
+    fromDate: dateFormatterTwo(new Date()),
+    toDate: dateFormatterTwo(new Date()),
     itemNo: "",
     fieldAssistant: "",
-    reportType: 2,
-    roleId: 52,
+    fieldAssistantLabel: "ALL",
+    reportType: 0,
+    roleId: userDetails?.roleId,
     saleType: 1,
   });
   const [salesAllReport, setSalesAllReport] = useState([]);
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    fetchLocatorsBasedOnExtension(userDetails?.regionName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userDetails?.regionName]);
   const fetchSalesType = async () => {
     const res = await Route(
       "GET",
@@ -83,15 +94,444 @@ const SalesReportAll = () => {
     }
   };
   const fetchSalesAllReport = async () => {
-    const res = await Route(
-      "GET",
-      `/Report/getSalesAllReport?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&itemNo=${params?.itemNo}&fieldAssistant=${params?.fieldAssistant}&reportType=${params?.reportType}&roleId=${params?.roleId}&saleType=${params?.saleType}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      // setSalesAllReport(res?.data);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/Report/getSalesAllReport?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&itemNo=${params?.itemNo}&fieldAssistant=${params?.fieldAssistant}&reportType=${params?.reportType}&roleId=${params?.roleId}&saleType=${params?.saleType}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setPrintData([
+          ...(res?.data?.advanceCollection?.length > 0
+            ? [
+                {
+                  item_code: res?.data?.advanceCollectionTitle,
+                },
+                ...res?.data?.advanceCollection?.map((item, index) => ({
+                  sl: index + 1,
+                  ...item,
+                })),
+              ]
+            : []),
+          ...(res?.data?.bankCollection?.length > 0
+            ? [
+                {
+                  item_code: res?.data?.bankCollectionTitle,
+                },
+                ...res?.data?.bankCollection?.map((item, index) => ({
+                  sl: index + 1,
+                  ...item,
+                })),
+              ]
+            : []),
+
+          ...(res?.data?.paymentCollection?.length > 0
+            ? [
+                {
+                  item_code: res?.data?.paymentCollectionTitle,
+                },
+                ...res?.data?.paymentCollection?.map((item, index) => ({
+                  sl: index + 1,
+                  ...item,
+                })),
+              ]
+            : []),
+
+          ...(res?.data?.rechargeCollection?.length > 0
+            ? [
+                {
+                  item_code: res?.data?.rechargeCollectionTitle,
+                },
+                ...res?.data?.rechargeCollection?.map((item, index) => ({
+                  sl: index + 1,
+                  ...item,
+                })),
+              ]
+            : []),
+
+          ...(res?.data?.salesInvoice?.length > 0
+            ? [
+                {
+                  item_code: res?.data?.salesInvoiceTitle,
+                },
+                ...res?.data?.salesInvoice?.map((item, index) => ({
+                  sl: index + 1,
+                  ...item,
+                })),
+              ]
+            : []),
+
+          ...(res?.data?.vasServiceCollection?.length > 0
+            ? [
+                {
+                  item_code: res?.data?.vasServiceCollectionTitle,
+                },
+                ...res?.data?.vasServiceCollection?.map((item, index) => ({
+                  sl: index + 1,
+                  ...item,
+                })),
+              ]
+            : []),
+        ]);
+        setSalesAllReport([
+          ...(res?.data?.advanceCollection?.length > 0
+            ? [
+                {
+                  id: uuidv4(),
+                  item_code: res?.data?.advanceCollectionTitle,
+                  isTitle: true,
+                },
+                ...res?.data?.advanceCollection?.map((item, index) => ({
+                  ...item,
+                  id: uuidv4(),
+                  sl: index + 1,
+                  item_code: item?.inventory_item_Number,
+                  item_description: item?.description,
+                  gross_amount: item?.line_Item_Amount,
+                })),
+                {
+                  id: uuidv4(),
+                  item_description: "Total",
+                  isSubTitle: true,
+                  gross_amount: res?.data?.advanceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                    0
+                  ),
+                  discount_Value: res?.data?.advanceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.discount_Value, 10),
+                    0
+                  ),
+                  additional_Discount: res?.data?.advanceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.additional_Discount, 10),
+                    0
+                  ),
+                  line_Discount_Amount: res?.data?.advanceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                    0
+                  ),
+                  tds_Amount: res?.data?.advanceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tds_Amount, 10),
+                    0
+                  ),
+                  tax_Amount: res?.data?.advanceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tax_Amount, 10),
+                    0
+                  ),
+                  selling_price: res?.data?.advanceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.selling_price, 10),
+                    0
+                  ),
+                },
+              ]
+            : []),
+
+          ...(res?.data?.bankCollection?.length > 0
+            ? [
+                {
+                  id: uuidv4(),
+                  item_code: res?.data?.bankCollectionTitle,
+                  isTitle: true,
+                },
+                ...res?.data?.bankCollection?.map((item, index) => ({
+                  ...item,
+                  id: uuidv4(),
+                  sl: index + 1,
+                  item_code: item?.inventory_item_Number,
+                  item_description: item?.description,
+                  gross_amount: item?.line_Item_Amount,
+                })),
+                {
+                  id: uuidv4(),
+                  item_description: "Total",
+                  isSubTitle: true,
+                  gross_amount: res?.data?.bankCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                    0
+                  ),
+                  discount_Value: res?.data?.bankCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.discount_Value, 10),
+                    0
+                  ),
+                  additional_Discount: res?.data?.bankCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.additional_Discount, 10),
+                    0
+                  ),
+                  line_Discount_Amount: res?.data?.bankCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                    0
+                  ),
+                  tds_Amount: res?.data?.bankCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tds_Amount, 10),
+                    0
+                  ),
+                  tax_Amount: res?.data?.bankCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tax_Amount, 10),
+                    0
+                  ),
+                  selling_price: res?.data?.bankCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.selling_price, 10),
+                    0
+                  ),
+                },
+              ]
+            : []),
+
+          ...(res?.data?.paymentCollection?.length > 0
+            ? [
+                {
+                  id: uuidv4(),
+                  item_code: res?.data?.paymentCollectionTitle,
+                  isTitle: true,
+                },
+                ...res?.data?.paymentCollection?.map((item, index) => ({
+                  ...item,
+                  id: uuidv4(),
+                  sl: index + 1,
+                  item_code: item?.inventory_item_Number,
+                  item_description: item?.description,
+                  gross_amount: item?.line_Item_Amount,
+                })),
+                {
+                  id: uuidv4(),
+                  item_description: "Total",
+                  isSubTitle: true,
+                  gross_amount: res?.data?.paymentCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                    0
+                  ),
+                  discount_Value: res?.data?.paymentCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.discount_Value, 10),
+                    0
+                  ),
+                  additional_Discount: res?.data?.paymentCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.additional_Discount, 10),
+                    0
+                  ),
+                  line_Discount_Amount: res?.data?.paymentCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                    0
+                  ),
+                  tds_Amount: res?.data?.paymentCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tds_Amount, 10),
+                    0
+                  ),
+                  tax_Amount: res?.data?.paymentCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tax_Amount, 10),
+                    0
+                  ),
+                  selling_price: res?.data?.paymentCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.selling_price, 10),
+                    0
+                  ),
+                },
+              ]
+            : []),
+
+          ...(res?.data?.rechargeCollection?.length > 0
+            ? [
+                {
+                  id: uuidv4(),
+                  item_code: res?.data?.rechargeCollectionTitle,
+                  isTitle: true,
+                },
+                ...res?.data?.rechargeCollection?.map((item, index) => ({
+                  ...item,
+                  id: uuidv4(),
+                  sl: index + 1,
+                  item_code: item?.inventory_item_Number,
+                  item_description: item?.description,
+                  gross_amount: item?.line_Item_Amount,
+                })),
+                {
+                  id: uuidv4(),
+                  item_description: "Total",
+                  isSubTitle: true,
+                  gross_amount: res?.data?.rechargeCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                    0
+                  ),
+                  discount_Value: res?.data?.rechargeCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.discount_Value, 10),
+                    0
+                  ),
+                  additional_Discount: res?.data?.rechargeCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.additional_Discount, 10),
+                    0
+                  ),
+                  line_Discount_Amount: res?.data?.rechargeCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                    0
+                  ),
+                  tds_Amount: res?.data?.rechargeCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tds_Amount, 10),
+                    0
+                  ),
+                  tax_Amount: res?.data?.rechargeCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tax_Amount, 10),
+                    0
+                  ),
+                  selling_price: res?.data?.rechargeCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.selling_price, 10),
+                    0
+                  ),
+                },
+              ]
+            : []),
+
+          ...(res?.data?.salesInvoice?.length > 0
+            ? [
+                {
+                  id: uuidv4(),
+                  item_code: res?.data?.salesInvoiceTitle,
+                  isTitle: true,
+                },
+                ...res?.data?.salesInvoice?.map((item, index) => ({
+                  ...item,
+                  id: uuidv4(),
+                  sl: index + 1,
+                  item_code: item?.inventory_item_Number,
+                  item_description: item?.description,
+                  gross_amount: item?.line_Item_Amount,
+                })),
+                {
+                  id: uuidv4(),
+                  item_description: "Total",
+                  isSubTitle: true,
+                  gross_amount: res?.data?.salesInvoice?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                    0
+                  ),
+                  discount_Value: res?.data?.salesInvoice?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.discount_Value, 10),
+                    0
+                  ),
+                  additional_Discount: res?.data?.salesInvoice?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.additional_Discount, 10),
+                    0
+                  ),
+                  line_Discount_Amount: res?.data?.salesInvoice?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                    0
+                  ),
+                  tds_Amount: res?.data?.salesInvoice?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tds_Amount, 10),
+                    0
+                  ),
+                  tax_Amount: res?.data?.salesInvoice?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tax_Amount, 10),
+                    0
+                  ),
+                  selling_price: res?.data?.salesInvoice?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.selling_price, 10),
+                    0
+                  ),
+                },
+              ]
+            : []),
+
+          ...(res?.data?.vasServiceCollection?.length > 0
+            ? [
+                {
+                  id: uuidv4(),
+                  item_code: res?.data?.vasServiceCollectionTitle,
+                  isTitle: true,
+                },
+                ...res?.data?.vasServiceCollection?.map((item, index) => ({
+                  ...item,
+                  id: uuidv4(),
+                  sl: index + 1,
+                  item_code: item?.inventory_item_Number,
+                  item_description: item?.description,
+                  gross_amount: item?.line_Item_Amount,
+                })),
+                {
+                  id: uuidv4(),
+                  item_description: "Total",
+                  isSubTitle: true,
+                  gross_amount: res?.data?.vasServiceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                    0
+                  ),
+                  discount_Value: res?.data?.vasServiceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.discount_Value, 10),
+                    0
+                  ),
+                  additional_Discount: res?.data?.vasServiceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.additional_Discount, 10),
+                    0
+                  ),
+                  line_Discount_Amount: res?.data?.vasServiceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                    0
+                  ),
+                  tds_Amount: res?.data?.vasServiceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tds_Amount, 10),
+                    0
+                  ),
+                  tax_Amount: res?.data?.vasServiceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.tax_Amount, 10),
+                    0
+                  ),
+                  selling_price: res?.data?.vasServiceCollection?.reduce(
+                    (accumulator, item) =>
+                      accumulator + parseInt(item?.selling_price, 10),
+                    0
+                  ),
+                },
+              ]
+            : []),
+        ]);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -99,10 +539,8 @@ const SalesReportAll = () => {
     fetchReportsType();
     fetchRegionsOrExtensions();
     fetchItemsList();
-  }, []);
-  useEffect(() => {
     fetchSalesAllReport();
-  }, [params]);
+  }, []);
   const salesTypeHandle = (e) => {
     setParams((prev) => ({
       ...prev,
@@ -133,8 +571,55 @@ const SalesReportAll = () => {
       extension: e?.target?.value,
     }));
   };
-  const itemHandle = (e) => {
-    console.log(e?.target?.value);
+  const fieldAssistantHandle = (e, value) => {
+    setParams((prev) => ({
+      ...prev,
+      fieldAssistant: value?.id,
+      fieldAssistantLabel: value?.label,
+    }));
+  };
+  const itemHandle = (e, value) => {
+    setParams((prev) => ({
+      ...prev,
+      itemNo: value?.id,
+      itemNoLabel: value?.label,
+    }));
+  };
+  const exportJsonToPdfHandle = () => {
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [
+        [
+          "sl",
+          "Sales Type",
+          "Customer Name",
+          "Customer Number",
+          "Sales Order No.",
+          "Region",
+          "Office",
+          "Revenue Head",
+        ],
+      ],
+      body: printData?.map((item) => [
+        item?.sl,
+        item?.["sales_type"],
+        item?.["customer_name"],
+        item?.["customer_number"],
+        item?.["sales_order_no"],
+        item?.["region_Name"],
+        item?.["office"],
+        item?.["revenue_head"],
+      ]),
+      styles: {
+        fontSize: 8,
+      },
+      margin: { top: 35 },
+      didDrawPage: (data) => {
+        doc.setFontSize(12);
+        doc.text("Sales All-Report", data.settings.margin.left, 30);
+      },
+    });
+    doc.save("Sales All-Report");
   };
 
   return (
@@ -196,19 +681,24 @@ const SalesReportAll = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="From Date"
                           onChange={fromDateHandle}
+                          value={dayjs(params?.fromDate)}
                         />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To Date" onChange={toDateHandle} />
+                        <DatePicker
+                          label="To Date"
+                          onChange={toDateHandle}
+                          value={dayjs(params?.toDate)}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
@@ -221,55 +711,49 @@ const SalesReportAll = () => {
                         id: item?.id,
                         label: item?.id,
                       }))}
-                      size="small"
-                      sx={{
-                        background: "#fff",
-                      }}
                       renderInput={(params) => (
                         <TextField {...params} label="Region/Extension" />
                       )}
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl
-                      fullWidth
-                      size="small"
-                      sx={{ background: "#fff" }}
-                    >
-                      <InputLabel id="field-assistant-select-label">
-                        Field Assistant
-                      </InputLabel>
-                      <Select
-                        labelId="field-assistant-select-label"
-                        id="field-assistant-select"
-                        // value={age}
-                        label="Field Assistant"
-                        // onChange={handleChange}
-                      >
-                        <MenuItem value={1}>ALL</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      disablePortal
+                      options={[
+                        { label: "ALL", id: "" },
+                        ...(locatorsList?.map((item) => ({
+                          label: item?.locator,
+                          id: item?.locator,
+                        })) || []),
+                      ]}
+                      value={params?.fieldAssistantLabel}
+                      onChange={fieldAssistantHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Field Assistant" />
+                      )}
+                    />
                   </Grid>
                   <Grid item xs={4}>
                     <Autocomplete
                       disablePortal
-                      onChange={regionOrExtensionHandle}
-                      value={params?.itemNo}
-                      options={itemsList?.map((item) => ({
-                        id: item?.item_number,
-                        label: item?.description,
-                      }))}
-                      size="small"
-                      sx={{
-                        background: "#fff",
-                      }}
+                      options={[
+                        { label: "ALL", id: "" },
+                        ...(itemsList?.map((item) => ({
+                          label: item?.description,
+                          id: item?.item_number,
+                        })) || []),
+                      ]}
+                      value={params?.itemNoLabel}
+                      onChange={itemHandle}
                       renderInput={(params) => (
                         <TextField {...params} label="Item" />
                       )}
                     />
                   </Grid>
                   <Grid item xs={0.5}>
-                    <Button variant="contained">Search</Button>
+                    <Button variant="contained" onClick={fetchSalesAllReport}>
+                      Search
+                    </Button>
                   </Grid>
                 </Grid>
                 <Grid
@@ -277,7 +761,13 @@ const SalesReportAll = () => {
                   container
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <PrintSection />
+                  <PrintSection
+                    exportExcel={() =>
+                      exportToExcel(printData, "Sales All-Report")
+                    }
+                    exportPdf={exportJsonToPdfHandle}
+                    handlePrint={reactToPrintFn}
+                  />
                 </Grid>
                 <Grid
                   item
@@ -285,6 +775,7 @@ const SalesReportAll = () => {
                   alignItems="center"
                   xs={12}
                   ref={contentRef}
+                  mb={5}
                 >
                   <CustomDataTable
                     rows={salesAllReport}
@@ -296,6 +787,15 @@ const SalesReportAll = () => {
           </Grid>
         </Grid>
       </Box>
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };
