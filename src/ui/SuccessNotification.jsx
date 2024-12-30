@@ -58,6 +58,7 @@ const SuccessNotification = ({
             sx={{
               mr: 2,
               mb: 2,
+              mt: -1
             }}
           >
             Close

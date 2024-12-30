@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import React, { useState, useRef, useEffect, forwardRef } from "react";
-import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import {
   Autocomplete,
@@ -19,7 +18,7 @@ import { Formik } from "formik";
 import Route from "../../routes/Route";
 import * as Yup from "yup";
 import { FixedSizeList } from "react-window";
-import Notification from "../../ui/Notification";
+import { Notification, SuccessNotification } from "../../ui/index";
 import PermissionAccess from "../../component/roles_and_permission/PermissionAccess";
 
 const VirtualizedListboxComponent = forwardRef(function ListboxComponent(
@@ -32,12 +31,12 @@ const VirtualizedListboxComponent = forwardRef(function ListboxComponent(
   return (
     <div ref={ref} {...other}>
       <FixedSizeList
-        height={200} // Define the height of the listbox
-        width="100%" // Define the width of the listbox
-        itemSize={35} // Define the height of each item
+        height={200}
+        width="100%"
+        itemSize={35}
         itemCount={itemData.length}
-        outerElementType="ul" // Ensure it behaves as a list
-        innerElementType="ul" // Ensure the inner element behaves as a list
+        outerElementType="ul"
+        innerElementType="ul"
       >
         {({ index, style }) => (
           <li style={{ ...style, display: "block" }} key={index}>
@@ -49,19 +48,10 @@ const VirtualizedListboxComponent = forwardRef(function ListboxComponent(
   );
 });
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
-const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
+const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
   AddSystemUserDialog.prototype = {
     open: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func.isRequired,
+    setOpen: PropTypes.func.isRequired,
     fetchSystemUser: PropTypes.func.isRequired,
   };
   const ref = useRef(null);
@@ -166,8 +156,8 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
 
   return (
     <>
-      <BootstrapDialog
-        onClose={handleClose}
+      <Dialog
+        onClose={() => setOpen(false)}
         aria-labelledby="add_system_user"
         ref={ref}
         id="add_system_user"
@@ -176,14 +166,14 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
         maxWidth={"lg"}
       >
         <DialogTitle
-          sx={{ m: 0, p: 2, background: "#1976d2", color: "#eee" }}
+          sx={{ p: 2, pl: 3, background: "#1976d2", color: "#eee" }}
           id="add_system_user_dialog"
         >
           Add User
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={handleClose}
+          onClick={() => setOpen(false)}
           sx={{
             position: "absolute",
             right: 8,
@@ -239,20 +229,16 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                 );
                 if (res?.data?.responseCode === 0) {
                   setNotificationMsg(res.data.responseText);
-                  setSeverity("info");
+                  setSeverity("success");
                   setShowNofication(true);
-
                   setStatus({ success: true });
                   setSubmitting(false);
                   resetForm();
-
                   fetchSystemUser();
-                  handleClose();
                 } else {
                   setNotificationMsg(res.data.responseText);
                   setSeverity("error");
                   setShowNofication(true);
-
                   setStatus({ success: false });
                   setSubmitting(false);
                 }
@@ -283,11 +269,9 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                         employeeCode.find(
                           (option) => option.user_code === values.employee_code
                         ) || null
-                      } // Set value from Formik's values
+                      }
                       onChange={(e, newValue) => {
-                        setFieldValue(
-                          "empNo", newValue ?  newValue?.empNo: ""
-                        );
+                        setFieldValue("empNo", newValue ? newValue?.empNo : "");
                         setFieldValue(
                           "employee_code",
                           newValue ? newValue.user_code : ""
@@ -319,7 +303,7 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                           {option.employee_code}
                         </MenuItem>
                       )}
-                      ListboxComponent={VirtualizedListboxComponent} // Use the virtualized list with forwardRef
+                      ListboxComponent={VirtualizedListboxComponent}
                       fullWidth
                       style={{ width: "100%" }}
                       size="small"
@@ -335,42 +319,32 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="User Code(This will be used as login id)"
                       name="user_code"
-                      defaultValue="eg. E00001"
                       value={values?.employee_code}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Full Name"
                       name="full_name"
-                      defaultValue="eg. John"
                       value={values?.full_name}
                       disabled
-                      size="small"
                     />
                   </Grid>
                 </Grid>
                 <Grid container spacing={1} mb={2}>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Email Address"
                       name="email_address"
-                      defaultValue="eg. john@example.com"
                       value={values?.email_address}
                       disabled
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Role"
                       name="roleId"
                       type="text"
@@ -381,8 +355,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                         fetchModuleAccess(e.target.value);
                       }}
                       onBlur={handleBlur}
-                      variant="outlined"
-                      size="small"
                       select
                     >
                       {roleList.map((item) => (
@@ -402,7 +374,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Work Location"
                       name="storeId"
                       type="text"
@@ -412,8 +383,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                         fetchSubInventory(e.target.value);
                       }}
                       onBlur={handleBlur}
-                      variant="outlined"
-                      size="small"
                       select
                     >
                       {location.map((item) => (
@@ -435,7 +404,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                 <Grid container spacing={1} mb={2}>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Sub Inventory"
                       name="subInventoryId"
                       type="text"
@@ -445,8 +413,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                         fetchLocator(e.target.value, values.storeId);
                       }}
                       onBlur={handleBlur}
-                      variant="outlined"
-                      size="small"
                       select
                     >
                       {subInventory.map((item) => (
@@ -458,7 +424,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Locator"
                       name="locatorId"
                       type="text"
@@ -467,8 +432,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                         handleChange(e);
                       }}
                       onBlur={handleBlur}
-                      variant="outlined"
-                      size="small"
                       select
                     >
                       {values?.subInventoryId === "FA" ? (
@@ -482,11 +445,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                           </MenuItem>
                         ))
                       )}
-                      {/* {locator.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                          {item.id}
-                        </MenuItem>
-                      ))} */}
                     </TextField>
                   </Grid>
                 </Grid>
@@ -503,7 +461,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                     autoFocus
                     disableElevation
                     disabled={isSubmitting}
-                    size="small"
                     type="submit"
                     variant="contained"
                     color="primary"
@@ -516,7 +473,6 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
                       setRolePrivileges([]);
                       setModuleAccess([]);
                     }}
-                    size="small"
                     type="button"
                     variant="outlined"
                     color="error"
@@ -528,8 +484,19 @@ const AddSystemUserDialog = ({ open, handleClose, fetchSystemUser }) => {
             )}
           </Formik>
         </DialogContent>
-      </BootstrapDialog>
-      {showNotification && (
+      </Dialog>
+      {showNotification && severity === "success" && (
+        <SuccessNotification
+          showNotification={showNotification}
+          setShowNofication={() => {
+            setShowNofication(false);
+            setOpen(false);
+          }}
+          notificationMsg="Successfully Created!"
+          alertMessange={notificationMsg}
+        />
+      )}
+      {showNotification && severity === "error" &&(
         <Notification
           open={showNotification}
           setOpen={setShowNofication}
