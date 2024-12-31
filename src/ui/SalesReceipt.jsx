@@ -25,13 +25,13 @@ const SalesReceipt = () => {
     .map((item) => JSON.parse(item));
   return (
     <>
-      <div style={{ width: "400px", padding: "8px", lineHeight: "1.5" }}>
+      <div style={{ width: "250px", padding: "0", lineHeight: "1.7" }}>
         <div style={{ textAlign: "center" }}>
           <h3>{companyName}</h3>
           <p>{customerName}</p>
           <h4>{receiptType}</h4>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Receipt No: {applicationNo}</p>
           <p>Receipt Date: {rechargeDate}</p>
@@ -40,7 +40,7 @@ const SalesReceipt = () => {
           <p>Billing: {billing}</p>
           <p>Phone: {phone}</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         {itemDetails?.map((item) => (
           <>
             <div>
@@ -49,7 +49,7 @@ const SalesReceipt = () => {
               <p>Unit Rate: {parseFloat(item?.mrp).toFixed(2)}</p>
               <p align="right">Amount(Nu): {item?.selling_Price}</p>
             </div>
-            <hr />
+            <hr style={{ border: "1px dashed #000" }} />
           </>
         ))}
         <div>
@@ -69,15 +69,15 @@ const SalesReceipt = () => {
             Downpayment: {downPayment === "null" ? parseFloat(0).toFixed(2) : parseFloat(downPayment).toFixed(2)}
           </p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Total Payment: {parseFloat(totalAmount).toFixed(2)}</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Created By: {createdBy}</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p align="center">Address: P.O.Box No#1502, Norzin Lam, Thimphu</p>
           <p align="center">Phone: +975-77889977 www.tashicell.com</p>

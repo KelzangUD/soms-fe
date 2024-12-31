@@ -62,7 +62,12 @@ const UpdateTransferOrderInward = ({
       transfer_Mode: transferOrderDetails?.transfer_Mode,
       vehicle_Number: transferOrderDetails?.vehicle_Number,
       remarks: transferOrderDetails?.remarks,
-      transferOrderItemDTOList: transferOrderDetails?.transferOrderItemDTOList,
+      transferOrderItemDTOList:
+        transferOrderDetails?.transferOrderItemDTOList?.map((item) => ({
+          ...item,
+          received_Qty:
+            item?.received_Qty === null ? item?.qty : item?.received_Qty,
+        })),
       last_Updated_By: empID,
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,7 +89,10 @@ const UpdateTransferOrderInward = ({
         ...prev,
         transferOrderItemDTOList: prev.transferOrderItemDTOList.map((item) =>
           item?.transaction_Item_No === params?.row?.transaction_Item_No
-            ? { ...item, received_Qty: parseInt(e?.target?.value) }
+            ? {
+                ...item,
+                received_Qty: parseInt(e?.target?.value),
+              }
             : item
         ),
       }));
@@ -124,9 +132,8 @@ const UpdateTransferOrderInward = ({
         <>
           <TextField
             id="outlined-basic"
-            variant="outlined"
             required
-            defaultValue={params?.row?.qty}
+            defaultValue={params?.row?.received_Qty}
             type="number"
             onChange={(e) => receivedQtyHandle(e, params)}
           />
@@ -141,10 +148,7 @@ const UpdateTransferOrderInward = ({
         <>
           <TextField
             id="outlined-basic"
-            variant="outlined"
             required
-            fullWidth
-            size="small"
             onChange={(e) => descriptionHandle(e, params)}
           />
         </>
@@ -154,7 +158,7 @@ const UpdateTransferOrderInward = ({
 
   const validateTransferOrderItems = () => {
     if (!parameters?.transferOrderItemDTOList) return false;
-    const hasValidQuantities = parameters.transferOrderItemDTOList.every(
+    const hasValidQuantities = parameters?.transferOrderItemDTOList.every(
       (item) => item?.received_Qty !== null
     );
     if (!hasValidQuantities) {

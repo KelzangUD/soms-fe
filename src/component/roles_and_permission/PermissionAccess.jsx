@@ -124,7 +124,7 @@ const PermissionAccess = ({
         alignItems="center"
         style={{ height: "100%" }}
       >
-        <CircularProgress /> {/* Loader while data is loading */}
+        <CircularProgress />
       </Grid>
     );
   }

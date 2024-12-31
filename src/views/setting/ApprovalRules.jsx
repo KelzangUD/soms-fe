@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Grid,
-  Button,
-  IconButton,
-  Tabs,
-  Tab,
-} from "@mui/material";
+import { Box, Grid, Button, IconButton, Tabs, Tab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -95,7 +88,7 @@ const ApprovalRules = () => {
             aria-label="view"
             size="small"
             onClick={() => handleViewApprovalRule(params?.row?.approvalId)}
-            color="secondary"
+            color="success"
           >
             <VisibilityIcon fontSize="inherit" />
           </IconButton>
@@ -140,7 +133,7 @@ const ApprovalRules = () => {
               variant="contained"
               color="primary"
               endIcon={<AddIcon />}
-              sx={{ mr: 2 }}
+              sx={{ mr: 1 }}
               onClick={handleAddNewRule}
             >
               Add New
@@ -166,37 +159,31 @@ const ApprovalRules = () => {
                 </Tabs>
               </Box>
               <CustomTabPanel value={value} index={0}>
-                <Grid container>
-                  <CustomDataTable
-                    rows={ruleList?.map((row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                    }))}
-                    cols={approval_rules_columns}
-                  />
-                </Grid>
+                <CustomDataTable
+                  rows={ruleList?.map((row, index) => ({
+                    ...row,
+                    sl: index + 1,
+                  }))}
+                  cols={approval_rules_columns}
+                />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
-                <Grid container>
-                  <CustomDataTable
-                    rows={ruleList?.map((row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                    }))}
-                    cols={approval_rules_columns}
-                  />
-                </Grid>
+                <CustomDataTable
+                  rows={ruleList?.map((row, index) => ({
+                    ...row,
+                    sl: index + 1,
+                  }))}
+                  cols={approval_rules_columns}
+                />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
-                <Grid container>
-                  <CustomDataTable
-                    rows={ruleList?.map((row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                    }))}
-                    cols={approval_rules_columns}
-                  />
-                </Grid>
+                <CustomDataTable
+                  rows={ruleList?.map((row, index) => ({
+                    ...row,
+                    sl: index + 1,
+                  }))}
+                  cols={approval_rules_columns}
+                />
               </CustomTabPanel>
             </Box>
           </Grid>

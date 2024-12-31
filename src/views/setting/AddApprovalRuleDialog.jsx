@@ -178,7 +178,7 @@ const AddApprovalRuleDialog = ({
         <DialogTitle
           sx={{
             px: 4,
-            background: (theme) => theme.palette.bg.light,
+            backgroundColor: "bg.light",
             color: "#eee",
           }}
           id="add_new_role_dialog"

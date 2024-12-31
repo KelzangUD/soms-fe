@@ -332,7 +332,7 @@ const PaymentReceipt = () => {
                   </Grid>
                   <Grid container spacing={1} mt={1} mb={2} paddingX={2}>
                     <Grid item xs={3}>
-                      <FormControl fullWidth size="small">
+                      <FormControl>
                         <InputLabel id="service-type-select-label">
                           Service Type*
                         </InputLabel>
@@ -352,7 +352,7 @@ const PaymentReceipt = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={3}>
-                      <FormControl fullWidth size="small">
+                      <FormControl>
                         <InputLabel id="payment-select-label">
                           Payment
                         </InputLabel>
@@ -399,7 +399,7 @@ const PaymentReceipt = () => {
                   </Grid>
                   <Grid container spacing={1} marginY={1} paddingX={2}>
                     <Grid item xs={3}>
-                      <FormControl fullWidth>
+                      <FormControl>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             label="Posting Date"
@@ -410,7 +410,7 @@ const PaymentReceipt = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={3}>
-                      <FormControl fullWidth size="small">
+                      <FormControl>
                         <InputLabel id="payment-method-select-label">
                           Payment Method
                         </InputLabel>
@@ -432,7 +432,6 @@ const PaymentReceipt = () => {
                     <Grid item xs={3}>
                       <TextField
                         label="Amount"
-                        fullWidth
                         name="amount"
                         required
                         onChange={amountHandle}
@@ -440,7 +439,7 @@ const PaymentReceipt = () => {
                       />
                     </Grid>
                     <Grid item xs={3}>
-                      <FormControl fullWidth size="small">
+                      <FormControl>
                         <InputLabel id="bank-acc-select-label">
                           Bank Account
                         </InputLabel>
@@ -464,7 +463,6 @@ const PaymentReceipt = () => {
                     <Grid item xs={3}>
                       <TextField
                         label="Cheque No"
-                        fullWidth
                         name="cheque_no"
                         onChange={chequeNoHandle}
                         disabled={disableFields?.chequeNoField}
@@ -472,18 +470,13 @@ const PaymentReceipt = () => {
                       />
                     </Grid>
                     <Grid item xs={3}>
-                      <FormControl fullWidth>
+                      <FormControl>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             label="Cheque Date"
                             value={dayjs(paymentReceiptDetails?.chequeDate)}
                             onChange={chequeDateHandle}
                             disabled={disableFields?.chequeDateField}
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                              },
-                            }}
                           />
                         </LocalizationProvider>
                       </FormControl>
@@ -501,7 +494,6 @@ const PaymentReceipt = () => {
                   <Grid item xs={12} marginY={2} paddingX={2}>
                     <TextField
                       label="Remarks"
-                      fullWidth
                       name="remarks"
                       required
                       onChange={remarksHandle}

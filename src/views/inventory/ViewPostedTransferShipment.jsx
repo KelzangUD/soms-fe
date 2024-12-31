@@ -20,7 +20,7 @@ const ViewPostedTransferShipment = ({
   transferOrderDetails,
 }) => {
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.3 },
+    { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "item_Number", headerName: "Item Number", flex: 1.8 },
     {
       field: "item_Description",
@@ -57,22 +57,15 @@ const ViewPostedTransferShipment = ({
                 container
                 padding={2}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
                   color: "#eee",
                 }}
               >
-                <Grid item paddingX={2}>
-                  <Typography variant="subtitle1">
-                    View Transfer Order
-                  </Typography>
-                </Grid>
+                <Typography variant="subtitle1">View Transfer Order</Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item container xs={12} paddingX={4}>
+          <Grid item container xs={12} paddingX={2}>
             <Grid item container xs={12} paddingTop={2} spacing={1}>
               <Grid item xs={3}>
                 <TextField

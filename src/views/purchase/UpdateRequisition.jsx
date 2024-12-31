@@ -36,7 +36,6 @@ const UpdateRequisition = ({
     })),
   });
   useEffect(() => {
-    console.log(details);
     setItemDTOList(
       details?.itemDTOList?.map((item) => ({
         id: item?.req_Item_No,

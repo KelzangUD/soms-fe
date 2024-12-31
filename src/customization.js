@@ -9,6 +9,7 @@ export const customizedTheme = createTheme({
     },
     addBtnColor: {
       light: "#009688",
+      dark: "#4db6ac",
     },
   },
   components: {
@@ -138,6 +139,13 @@ export const customizedTheme = createTheme({
             borderColor: "#1976d2", // Border color when focused
             borderWidth: "2px", // Focused border width
           },
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#f5f5f5",
         },
       },
     },

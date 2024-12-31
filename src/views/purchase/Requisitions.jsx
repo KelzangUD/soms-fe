@@ -178,9 +178,7 @@ const Requisitions = () => {
                 container
                 p={2}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  backgroundColor: (theme) => theme.palette.bg.light,
+                  backgroundColor: "bg.light",
                   color: "#eee",
                 }}
               >
@@ -196,7 +194,7 @@ const Requisitions = () => {
                   />
                 </Grid>
                 <Grid item xs={3}>
-                  <FormControl fullWidth size="small">
+                  <FormControl>
                     <InputLabel id="requisition-type-select-label">
                       Requisition Type*
                     </InputLabel>
@@ -228,7 +226,7 @@ const Requisitions = () => {
                     </LocalizationProvider>
                   </FormControl>
                 </Grid>
-                <Grid item xs={3} display="flex">
+                <Grid item xs={3}>
                   <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
@@ -267,9 +265,7 @@ const Requisitions = () => {
                   container
                   padding={2}
                   sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    backgroundColor: (theme) => theme.palette.bg.light,
+                    backgroundColor: "bg.light",
                     color: "#eee",
                   }}
                 >
@@ -387,27 +383,20 @@ const Requisitions = () => {
             >
               Create
             </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => resetStates()}
-            >
+            <Button variant="outlined" color="error" onClick={resetStates}>
               Cancel
             </Button>
           </Grid>
         </Grid>
       </Box>
-      {showNotification && severity === "success" && (
+      {showNotification && severity === "success" ? (
         <SuccessNotification
           showNotification={showNotification}
-          setShowNofication={() => {
-            setShowNofication(false);
-          }}
+          setShowNofication={setShowNofication}
           notificationMsg="Successfully Requested"
           alertMessange={notificationMsg}
         />
-      )}
-      {showNotification && severity !== "success" && (
+      ) : (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}

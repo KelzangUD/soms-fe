@@ -392,21 +392,16 @@ const CreateTransferOrder = ({
                 container
                 padding={2}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
                   color: "#eee",
                 }}
               >
-                <Grid item paddingX={2}>
-                  <Typography variant="subtitle1">Transfer Order</Typography>
-                </Grid>
+                <Typography variant="subtitle1">Transfer Order</Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item container xs={12} paddingX={4}>
-            <Grid item container xs={12} paddingTop={2} spacing={1}>
+          <Grid item container xs={12} paddingX={2}>
+            <Grid item container xs={12} mt={1} spacing={1}>
               <Grid item xs={3}>
                 <TextField
                   id="outlined-basic"
@@ -646,50 +641,43 @@ const CreateTransferOrder = ({
                   justifyContent: "flex-end",
                   alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#eee",
                 }}
               >
-                <Grid
-                  item
-                  px={2}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
+                <IconButton
+                  aria-label="download"
+                  onClick={fileDownloadHandle}
+                  style={{
+                    color: "#fff",
                   }}
                 >
-                  <IconButton
-                    aria-label="download"
-                    onClick={fileDownloadHandle}
+                  <DownloadIcon />
+                </IconButton>
+                <FormControl
+                  sx={{
+                    backgroundColor: "#0277bd",
+                    width: "2%",
+                    color: "#eee"
+                  }}
+                >
+                  <TextField
+                    type="file"
+                    id="file-upload"
+                    variant="outlined"
                     style={{
-                      color: "#fff",
+                      display: "none",
+                    }}
+                    onChange={(e) => handleFileUpload(e)}
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    style={{
+                      cursor: "pointer",
+                      marginTop: 1
                     }}
                   >
-                    <DownloadIcon />
-                  </IconButton>
-                  <FormControl
-                    sx={{
-                      backgroundColor: "#0277bd",
-                    }}
-                  >
-                    <TextField
-                      type="file"
-                      id="file-upload"
-                      variant="outlined"
-                      style={{
-                        display: "none",
-                      }}
-                      onChange={(e) => handleFileUpload(e)}
-                    />
-                    <label
-                      htmlFor="file-upload"
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      <UploadIcon sx={{ mt: 0.9 }} />
-                    </label>
-                  </FormControl>
-                </Grid>
+                    <UploadIcon />
+                  </label>
+                </FormControl>
               </Grid>
             </Grid>
             <Grid item container xs={12} paddingY={2} spacing={1}>
