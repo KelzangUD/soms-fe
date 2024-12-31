@@ -49,6 +49,8 @@ const CreateTransferOrder = ({
     onHandsTransferOrderItems,
     fetchAllItems,
     validateSerialNumberWithLocator,
+    fetchTrasnferOrderToLocator,
+      transferOrderToLocator,
   } = useCommon();
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
@@ -110,7 +112,7 @@ const CreateTransferOrder = ({
       : setDisabledToSubInv(true);
   };
   const fromSubInventoryHandle = (e) => {
-    fetchFromLocator(e?.target?.value);
+    fetchTrasnferOrderToLocator(e?.target?.value);
     fetchToLocator(e?.target.value);
     setParameters((prev) => ({
       ...prev,
@@ -656,7 +658,7 @@ const CreateTransferOrder = ({
                   sx={{
                     backgroundColor: "#0277bd",
                     width: "2%",
-                    color: "#eee"
+                    color: "#eee",
                   }}
                 >
                   <TextField
@@ -672,7 +674,7 @@ const CreateTransferOrder = ({
                     htmlFor="file-upload"
                     style={{
                       cursor: "pointer",
-                      marginTop: 1
+                      marginTop: 1,
                     }}
                   >
                     <UploadIcon />
@@ -760,37 +762,40 @@ const CreateTransferOrder = ({
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item container alignItems="center" xs={12} paddingY={2}>
-              <DataGrid
-                rows={parameters?.transferOrderItemDTOList?.map(
-                  (row, index) => ({
-                    ...row,
-                    sl: index + 1,
-                    id: index,
-                  })
-                )}
-                columns={item_columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 5 },
-                  },
-                }}
-                pageSizeOptions={[5, 10]}
-                sx={{
-                  background: "#fff",
-                  "--DataGrid-overlayHeight": "300px",
-                  "& .MuiDataGrid-columnHeaders": {
-                    backgroundColor: "#F5F7F8",
-                  },
-                  "& .MuiDataGrid-row": {
-                    padding: "4px 0",
-                  },
-                }}
-                getRowHeight={() => "auto"}
-                disableColumnFilter
-                disableColumnSelector
-              />
-            </Grid>
+            {parameters?.transferOrderItemDTOList?.length > 0 && (
+              <Grid item container alignItems="center" xs={12} paddingY={2}>
+                <DataGrid
+                  rows={parameters?.transferOrderItemDTOList?.map(
+                    (row, index) => ({
+                      ...row,
+                      sl: index + 1,
+                      id: index,
+                    })
+                  )}
+                  columns={item_columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 5 },
+                    },
+                  }}
+                  pageSizeOptions={[5, 10]}
+                  sx={{
+                    background: "#fff",
+                    "--DataGrid-overlayHeight": "300px",
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: "#F5F7F8",
+                    },
+                    "& .MuiDataGrid-row": {
+                      padding: "4px 0",
+                    },
+                  }}
+                  getRowHeight={() => "auto"}
+                  disableColumnFilter
+                  disableColumnSelector
+                />
+              </Grid>
+            )}
+
             <Grid
               item
               xs={12}

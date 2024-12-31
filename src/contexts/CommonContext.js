@@ -22,6 +22,7 @@ export const CommonProvider = ({ children }) => {
   const [fromSubInventory, setFromSubInventory] = useState([]);
   const [fromLocator, setFromLocator] = useState([]);
   const [toLocator, setToLocator] = useState([]);
+  const [transferOrderToLocator, setTransferOrderToLocator] = useState([]);
   const [faToLocator, setFaToLocator] = useState([]);
   const [toStore, setToStore] = useState([]);
   const [onHandsTransferOrderItems, setOnHandsTransferOrderItems] = useState([]);
@@ -185,6 +186,18 @@ export const CommonProvider = ({ children }) => {
       setToLocator(res?.data);
     }
   };
+  const fetchTrasnferOrderToLocator = async (id) => {
+    const res = await Route(
+      "GET",
+      `/Common/Fetch_Locator?workLocation=${userDetails?.storeId}&subInventory=${id}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setTransferOrderToLocator(res?.data);
+    }
+  };
   const fetchLocatorBasedOExtension = async (extension) => {
     const res = await Route(
       "GET",
@@ -315,7 +328,9 @@ export const CommonProvider = ({ children }) => {
         fetchLocatorsBasedOnExtension,
         locatorsList,
         fetchAllItems,
-        validateSerialNumberWithLocator
+        validateSerialNumberWithLocator,
+        fetchTrasnferOrderToLocator,
+        transferOrderToLocator,
       }}
     >
       {children}
