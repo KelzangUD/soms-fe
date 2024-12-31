@@ -643,14 +643,14 @@ const CreateTransferOrder = ({
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  backgroundColor: (theme) => theme.palette.bg.light,
+                  backgroundColor: "bg.light",
                 }}
               >
                 <IconButton
                   aria-label="download"
                   onClick={fileDownloadHandle}
                   style={{
-                    color: "#fff",
+                    color: "#eee",
                   }}
                 >
                   <DownloadIcon />
