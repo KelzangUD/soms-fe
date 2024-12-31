@@ -50,8 +50,9 @@ const CreateTransferOrder = ({
     fetchAllItems,
     validateSerialNumberWithLocator,
     fetchTrasnferOrderToLocator,
-      transferOrderToLocator,
+    transferOrderToLocator,
   } = useCommon();
+
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
@@ -112,8 +113,8 @@ const CreateTransferOrder = ({
       : setDisabledToSubInv(true);
   };
   const fromSubInventoryHandle = (e) => {
-    fetchTrasnferOrderToLocator(e?.target?.value);
-    fetchToLocator(e?.target.value);
+    fetchFromLocator(e?.target?.value);
+    fetchTrasnferOrderToLocator(e?.target.value);
     setParameters((prev) => ({
       ...prev,
       transfer_From_SubInventory: e?.target?.value,
@@ -566,7 +567,7 @@ const CreateTransferOrder = ({
                               {item?.name}
                             </MenuItem>
                           ))
-                        : toLocator?.map((item) => (
+                        : transferOrderToLocator?.map((item) => (
                             <MenuItem value={item?.name} key={item?.id}>
                               {item?.name}
                             </MenuItem>
