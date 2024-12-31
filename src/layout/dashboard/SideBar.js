@@ -17,7 +17,7 @@ export const MenuItems = [
       <DashboardIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -29,7 +29,7 @@ export const MenuItems = [
       <ManageAccountsIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -71,7 +71,7 @@ export const MenuItems = [
       <PeopleIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -93,7 +93,7 @@ export const MenuItems = [
       <PointOfSaleIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -127,7 +127,7 @@ export const MenuItems = [
       <CollectionsIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -169,7 +169,7 @@ export const MenuItems = [
       <ShoppingCartIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -195,7 +195,7 @@ export const MenuItems = [
       <InventoryIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -229,7 +229,7 @@ export const MenuItems = [
       <AssessmentIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -299,7 +299,7 @@ export const MenuItems = [
       <DescriptionIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -349,7 +349,7 @@ export const MenuItems = [
       <SettingsIcon
         fontSize="small"
         sx={{
-          color: "#fff",
+          color: "#eee",
         }}
       />
     ),
@@ -375,10 +375,10 @@ export const MenuItems = [
         page: "Hierarchy",
         route: "setting/hierarchy",
       },
-      {
-        page: "Delegation",
-        route: "setting/delegation",
-      },
+      // {
+      //   page: "Delegation",
+      //   route: "setting/delegation",
+      // },
     ],
   },
 ];

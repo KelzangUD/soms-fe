@@ -256,51 +256,42 @@ const Recharge = () => {
                 container
                 padding={2}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
                 }}
               >
-                <Grid item>
-                  <Typography variant="subtitle1" color="#eee">
-                    Recharge Details
-                  </Typography>
-                </Grid>
+                <Typography variant="subtitle1" color="#eee">
+                  Recharge Details
+                </Typography>
               </Grid>
-              <Grid container padding={2} py={2}>
-                <Grid container spacing={1}>
-                  <Grid item xs={4}>
-                    <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Posting Date"
-                          value={dayjs(rechargeDetails?.postingDate)}
-                          onChange={postingDateHandle}
-                        />
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Recharge Type"
-                      fullWidth
-                      name="payment_type"
-                      defaultValue="E-Top Up"
-                      required
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      label="Prepaid Number"
-                      fullWidth
-                      name="prepaid_no"
-                      onChange={prepaidNumberHandle}
-                      required
-                      value={rechargeDetails?.mobileNo}
-                    />
-                  </Grid>
+              <Grid container padding={2} py={2} spacing={1}>
+                <Grid item xs={4}>
+                  <FormControl>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Posting Date"
+                        value={dayjs(rechargeDetails?.postingDate)}
+                        onChange={postingDateHandle}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    label="Recharge Type"
+                    name="payment_type"
+                    defaultValue="E-Top Up"
+                    required
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    label="Prepaid Number"
+                    name="prepaid_no"
+                    onChange={prepaidNumberHandle}
+                    required
+                    value={rechargeDetails?.mobileNo}
+                  />
                 </Grid>
               </Grid>
             </Card>
@@ -351,11 +342,9 @@ const Recharge = () => {
                 </Grid>
               </Grid>
               <Grid container>
-                <Grid item xs={12}>
-                  <Alert severity="info">
-                    The minimum recharge amount is Nu.10.
-                  </Alert>
-                </Grid>
+                <Alert severity="info" sx={{ width: "100%" }}>
+                  The minimum recharge amount is Nu.10.
+                </Alert>
               </Grid>
               <Grid container padding={2} py={2} spacing={1}>
                 <Grid item xs={4}>
@@ -455,7 +444,6 @@ const Recharge = () => {
               variant="outlined"
               color="error"
               onClick={resetHandle}
-              style={{ background: "#fff" }}
             >
               Cancel
             </Button>

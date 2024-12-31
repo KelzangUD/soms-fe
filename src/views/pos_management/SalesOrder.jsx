@@ -664,7 +664,7 @@ const SalesOrder = () => {
               <Grid
                 container
                 sx={{
-                  backgroundColor: (theme) => theme.palette.bg.light,
+                  backgroundColor: "bg.light",
                   padding: 2,
                 }}
               >
@@ -909,16 +909,17 @@ const SalesOrder = () => {
               <Grid
                 container
                 px={2}
-                py={1.5}
+                py={1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: (theme) => theme.palette.bg.light,
+                  backgroundColor: "bg.light",
+                  color: "#eee"
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1" color="#fff">
+                  <Typography variant="subtitle1">
                     Line
                   </Typography>
                 </Grid>
@@ -933,7 +934,7 @@ const SalesOrder = () => {
                     >
                       <FileUploadIcon
                         sx={{
-                          color: "#fff",
+                          color: "#eee",
                         }}
                       />
                       <VisuallyHiddentInputComponent
@@ -948,7 +949,7 @@ const SalesOrder = () => {
                     >
                       <FileDownloadIcon
                         sx={{
-                          color: "#fff",
+                          color: "#eee",
                         }}
                       />
                     </IconButton>
@@ -956,7 +957,7 @@ const SalesOrder = () => {
                   <IconButton aria-label="add-line" onClick={addButtonHandle}>
                     <AddBoxIcon
                       sx={{
-                        color: "#fff",
+                        color: "#eee",
                       }}
                     />
                   </IconButton>
@@ -981,8 +982,8 @@ const SalesOrder = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#fff",
+                  backgroundColor: "bg.light",
+                  color: "#eee",
                 }}
               >
                 <Grid item>
@@ -1090,7 +1091,7 @@ const SalesOrder = () => {
                     <IconButton aria-label="add" onClick={addPaymentItemHandle}>
                       <AddBoxIcon
                         sx={{
-                          color: (theme) => theme.palette.addBtnColor.light,
+                          color: "addBtnColor.light",
                         }}
                       />
                     </IconButton>

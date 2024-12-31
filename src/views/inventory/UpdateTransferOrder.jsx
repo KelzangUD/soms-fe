@@ -269,7 +269,7 @@ const UpdateTransferOrder = ({
       width: 300,
     },
     {
-      field: "serial_no",
+      field: "item_Serial_Number",
       headerName: "Serial No",
       width: 250,
     },

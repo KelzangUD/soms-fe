@@ -57,20 +57,20 @@ const SystemUsers = () => {
       renderCell: (params) => (
         <>
           <IconButton
-            aria-label="view"
-            size="small"
-            onClick={() => handleAction(params.row.user_code, "view")}
-            color="primary"
-          >
-            <VisibilityIcon fontSize="inherit" />
-          </IconButton>
-          <IconButton
             aria-label="edit"
             size="small"
             onClick={() => handleAction(params?.row?.user_code, "edit")}
-            color="success"
+            color="primary"
           >
             <EditIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => handleAction(params.row.user_code, "view")}
+            color="success"
+          >
+            <VisibilityIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
@@ -113,23 +113,21 @@ const SystemUsers = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
+        <Grid container spacing={2} alignItems="center" sx={{ px: 2 }}>
           <Grid
             item
             xs={12}
             sx={{ display: "flex", justifyContent: "flex-end" }}
           >
-            <Grid item alignContent="center">
-              <Button
-                variant="contained"
-                aria-label="add"
-                color="primary"
-                onClick={handleAddUser}
-                endIcon={<AddIcon />}
-              >
-                Add New
-              </Button>
-            </Grid>
+            <Button
+              variant="contained"
+              aria-label="add"
+              color="primary"
+              onClick={handleAddUser}
+              endIcon={<AddIcon />}
+            >
+              Add New
+            </Button>
           </Grid>
           <Grid item container alignItems="center" xs={12}>
             <CustomDataTable

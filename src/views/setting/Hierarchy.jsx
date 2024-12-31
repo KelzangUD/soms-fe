@@ -110,16 +110,14 @@ const Hierarchy = () => {
             xs={12}
             sx={{ display: "flex", justifyContent: "flex-end" }}
           >
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                endIcon={<AddIcon />}
-                onClick={handleAddHierarchy}
-              >
-                Add New
-              </Button>
-            </Grid>
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<AddIcon />}
+              onClick={handleAddHierarchy}
+            >
+              Add New
+            </Button>
           </Grid>
           <Grid item container alignItems="center" xs={12}>
             <CustomDataTable rows={hierarchyList} cols={columns} />

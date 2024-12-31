@@ -90,29 +90,27 @@ const RequisitionList = () => {
 
   return (
     <>
-      <>
-        <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <Grid
-            item
-            xs={12}
-            sx={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <Box sx={{ width: "100%" }}>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item container alignItems="center" xs={12}>
-                  <CustomDataTable
-                    rows={requisitionList?.map((row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                    }))}
-                    cols={requisiton_list_columns}
-                  />
-                </Grid>
+      <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
+        <Grid
+          item
+          xs={12}
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Box sx={{ width: "100%" }}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item container alignItems="center" xs={12}>
+                <CustomDataTable
+                  rows={requisitionList?.map((row, index) => ({
+                    ...row,
+                    sl: index + 1,
+                  }))}
+                  cols={requisiton_list_columns}
+                />
               </Grid>
-            </Box>
-          </Grid>
+            </Grid>
+          </Box>
         </Grid>
-      </>
+      </Grid>
       {showNotification && (
         <Notification
           open={showNotification}

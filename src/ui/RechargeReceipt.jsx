@@ -16,13 +16,13 @@ const RechargeReceipt = () => {
   const receiptType = query.get("receiptType");
   return (
     <>
-      <div style={{ width: "400px", padding: "8px", lineHeight: "1.5" }}>
+      <div style={{ width: "250px", padding: "0", lineHeight: "1.7"}}>
         <div style={{ textAlign: "center" }}>
           <h3>{companyName}</h3>
           <p>{customerName}</p>
           <h4>{receiptType}</h4>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Receipt No: {applicationNo}</p>
           <p>Receipt Date: {rechargeDate}</p>
@@ -31,27 +31,27 @@ const RechargeReceipt = () => {
           <p>Billing: {billing}</p>
           <p>Phone:</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Description: {description}</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p align="right">Amount(Nu): {amount}</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Cash: {amount}</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Total Payment: {amount}</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Created By: {createdBy}</p>
         </div>
-        <hr />
+        <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p align="center">
             Address: P.O.Box No#1502, Norzin Lam, Thimphu

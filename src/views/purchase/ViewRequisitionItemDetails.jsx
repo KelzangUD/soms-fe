@@ -62,20 +62,13 @@ const ViewRequisitionItemDetails = ({
             <Grid item xs={12}>
               <Grid
                 container
-                padding={2}
+                p={2}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  backgroundColor: theme => theme?.palette?.bg?.light,
-                  color: "#fff",
+                  backgroundColor: (theme) => theme?.palette?.bg?.light,
+                  color: "#eee",
                 }}
               >
-                <Grid item>
-                  <Typography variant="subtitle1">
-                    Requisition Details
-                  </Typography>
-                </Grid>
+                <Typography variant="subtitle1">Requisition Details</Typography>
               </Grid>
               <Grid container spacing={1} paddingX={2} paddingY={1}>
                 <Grid item xs={4}>

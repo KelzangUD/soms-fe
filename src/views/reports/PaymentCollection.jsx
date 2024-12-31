@@ -43,7 +43,7 @@ const PaymentCollection = () => {
     {
       field: "recharge_type",
       headerName: "Payment Type",
-      width: 90,
+      flex: 0.9,
     },
     { field: "payment_ref_number", headerName: "Reference Number", flex: 1.2 },
     {
@@ -62,7 +62,7 @@ const PaymentCollection = () => {
       flex: 0.9,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small" color="primary">
+          <IconButton aria-label="old_print" size="small" color="primary">
             <PrintIcon fontSize="inherit" />
           </IconButton>
         </>
@@ -74,7 +74,7 @@ const PaymentCollection = () => {
       flex: 0.9,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small" color="primary">
+          <IconButton aria-label="print" size="small" color="primary">
             <PrintIcon fontSize="inherit" />
           </IconButton>
         </>
