@@ -96,7 +96,11 @@ const AddConditionModal = ({
         maxWidth={"lg"}
       >
         <DialogTitle
-          sx={{ px: 3, background: "#1976d2", color: "#eee" }}
+          sx={{
+            px: 3,
+            background: (theme) => theme.palette.bg.light,
+            color: "#eee",
+          }}
           id="add_new_role_dialog"
         >
           Conditions
@@ -151,7 +155,6 @@ const AddConditionModal = ({
                 <Grid container mb={1}>
                   <Grid item xs={12} sm={12}>
                     <TextField
-                      fullWidth
                       label="Type"
                       name="type"
                       value={type}
@@ -190,10 +193,8 @@ const AddConditionModal = ({
                   <Grid container mt={1} spacing={1}>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        fullWidth
                         label="Name"
                         name="hierarchyId"
-                        size="small"
                         type="text"
                         value={values.hierarchyId}
                         onChange={(e) => {
@@ -231,15 +232,12 @@ const AddConditionModal = ({
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        fullWidth
                         label="Level"
-                        size="small"
                         name="hierarchyLevel"
                         type="text"
                         value={values?.hierarchyLevel}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        variant="outlined"
                         select
                       >
                         {hierarchyLevelList.map((item) => (
@@ -266,9 +264,7 @@ const AddConditionModal = ({
                   <Grid container spacing={1} mt={1}>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        fullWidth
                         label="Employee"
-                        size="small"
                         name="employeeId"
                         type="text"
                         value={values?.employeeId}
@@ -331,15 +327,12 @@ const AddConditionModal = ({
                 <Grid container spacing={1} mt={1}>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Frequency"
-                      size="small"
                       name="frequency"
                       type="text"
                       value={values?.frequency}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      variant="outlined"
                       select
                       disabled={!values?.fyiChecked} // Disable when checkbox is unchecked
                     >
@@ -359,9 +352,7 @@ const AddConditionModal = ({
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Email"
-                      size="small"
                       name="fyiEmail"
                       value={values.fyiEmail}
                       onChange={handleChange}
@@ -371,15 +362,12 @@ const AddConditionModal = ({
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Employee"
-                      size="small"
                       name="fyiEmployeeId"
                       type="text"
                       value={values?.fyiEmployeeId}
                       onChange={(e) => {
                         handleChange(e);
-
                         const selectedItem = systemUser.find(
                           (item) => item?.user_code === e?.target?.value
                         );
@@ -422,7 +410,6 @@ const AddConditionModal = ({
                     autoFocus
                     disableElevation
                     disabled={isSubmitting}
-                    size="small"
                     type="submit"
                     variant="contained"
                     color="primary"
@@ -431,7 +418,6 @@ const AddConditionModal = ({
                   </Button>
                   <Button
                     onClick={handleClose}
-                    size="small"
                     type="button"
                     variant="outlined"
                     color="error"

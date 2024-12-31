@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Paper,
   Grid,
   Button,
-  InputBase,
   IconButton,
   Tabs,
   Tab,
 } from "@mui/material";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -151,7 +147,7 @@ const ApprovalRules = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
+        <Grid container>
           <Grid
             item
             xs={12}
@@ -170,144 +166,36 @@ const ApprovalRules = () => {
                 </Tabs>
               </Box>
               <CustomTabPanel value={value} index={0}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Grid item>
-                      <Paper
-                        sx={{
-                          p: "2px 0",
-                          display: "flex",
-                          alignItems: "center",
-                          width: 400,
-                        }}
-                      >
-                        <InputBase
-                          sx={{ ml: 1, flex: 1 }}
-                          placeholder="Search"
-                          inputProps={{ "aria-label": "search" }}
-                        />
-                        <IconButton
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </Paper>
-                    </Grid>
-                    <Grid item alignContent="center">
-                      <IconButton aria-label="export" color="success">
-                        <FileDownloadIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                  <Grid item container alignItems="center" xs={12}>
-                    <CustomDataTable
-                      rows={ruleList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      cols={approval_rules_columns}
-                    />
-                  </Grid>
+                <Grid container>
+                  <CustomDataTable
+                    rows={ruleList?.map((row, index) => ({
+                      ...row,
+                      sl: index + 1,
+                    }))}
+                    cols={approval_rules_columns}
+                  />
                 </Grid>
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Grid item>
-                      <Paper
-                        sx={{
-                          p: "2px 0",
-                          display: "flex",
-                          alignItems: "center",
-                          width: 400,
-                        }}
-                      >
-                        <InputBase
-                          sx={{ ml: 1, flex: 1 }}
-                          placeholder="Search"
-                          inputProps={{ "aria-label": "search" }}
-                        />
-                        <IconButton
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </Paper>
-                    </Grid>
-                    <Grid item>
-                      <IconButton aria-label="export" color="success">
-                        <FileDownloadIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                  <Grid item container alignItems="center" xs={12}>
-                    <CustomDataTable
-                      rows={ruleList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      cols={approval_rules_columns}
-                    />
-                  </Grid>
+                <Grid container>
+                  <CustomDataTable
+                    rows={ruleList?.map((row, index) => ({
+                      ...row,
+                      sl: index + 1,
+                    }))}
+                    cols={approval_rules_columns}
+                  />
                 </Grid>
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Grid item>
-                      <Paper
-                        sx={{
-                          p: "2px 0",
-                          display: "flex",
-                          alignItems: "center",
-                          width: 400,
-                        }}
-                      >
-                        <InputBase
-                          sx={{ ml: 1, flex: 1 }}
-                          placeholder="Search"
-                          inputProps={{ "aria-label": "search" }}
-                        />
-                        <IconButton
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </Paper>
-                    </Grid>
-                    <Grid item>
-                      <IconButton aria-label="export" color="success">
-                        <FileDownloadIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                  <Grid item container alignItems="center" xs={12}>
-                    <CustomDataTable
-                      rows={ruleList?.map((row, index) => ({
-                        ...row,
-                        sl: index + 1,
-                      }))}
-                      cols={approval_rules_columns}
-                    />
-                  </Grid>
+                <Grid container>
+                  <CustomDataTable
+                    rows={ruleList?.map((row, index) => ({
+                      ...row,
+                      sl: index + 1,
+                    }))}
+                    cols={approval_rules_columns}
+                  />
                 </Grid>
               </CustomTabPanel>
             </Box>

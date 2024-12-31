@@ -107,18 +107,18 @@ export const MenuItems = [
         page: "Sales Return",
         route: "pos-management/sales-return",
       },
-      {
-        page: "Apply EMI",
-        route: "pos-management/apply-emi",
-      },
-      {
-        page: "EMI History",
-        route: "pos-management/emi-history",
-      },
-      {
-        page: "EMI Approval",
-        route: "pos-management/emi-approval",
-      },
+      // {
+      //   page: "Apply EMI",
+      //   route: "pos-management/apply-emi",
+      // },
+      // {
+      //   page: "EMI History",
+      //   route: "pos-management/emi-history",
+      // },
+      // {
+      //   page: "EMI Approval",
+      //   route: "pos-management/emi-approval",
+      // },
     ],
   },
   {
@@ -141,26 +141,26 @@ export const MenuItems = [
         page: "Recharge",
         route: "collections/recharge",
       },
-      {
-        page: "Credit/EMI Collection",
-        route: "collections/credit-or-emi-collection",
-      },
-      {
-        page: "Advance Collection",
-        route: "collections/advance-collection",
-      },
-      {
-        page: "Advance Collection History",
-        route: "collections/advance-collection-history",
-      },
-      {
-        page: "Advance Refund",
-        route: "collections/advance-refund",
-      },
-      {
-        page: "Advance Refund History",
-        route: "collections/advance-refund-history",
-      },
+      // {
+      //   page: "Credit/EMI Collection",
+      //   route: "collections/credit-or-emi-collection",
+      // },
+      // {
+      //   page: "Advance Collection",
+      //   route: "collections/advance-collection",
+      // },
+      // {
+      //   page: "Advance Collection History",
+      //   route: "collections/advance-collection-history",
+      // },
+      // {
+      //   page: "Advance Refund",
+      //   route: "collections/advance-refund",
+      // },
+      // {
+      //   page: "Advance Refund History",
+      //   route: "collections/advance-refund-history",
+      // },
     ],
   },
   {
@@ -287,10 +287,10 @@ export const MenuItems = [
         page: "Samsung Warranty Report",
         route: "reports/samsung-warranty-report",
       },
-      {
-        page: "Service Log Report",
-        route: "report/ebsservicelog",
-      },
+      // {
+      //   page: "Service Log Report",
+      //   route: "report/ebsservicelog",
+      // },
     ],
   },
   {

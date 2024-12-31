@@ -166,7 +166,7 @@ const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
         maxWidth={"lg"}
       >
         <DialogTitle
-          sx={{ p: 2, pl: 3, background: "#1976d2", color: "#eee" }}
+          sx={{ p: 2, pl: 3, background: theme => theme.palette.bg.light, color: "#eee" }}
           id="add_system_user_dialog"
         >
           Add User

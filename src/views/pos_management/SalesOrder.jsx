@@ -257,7 +257,7 @@ const SalesOrder = () => {
       if (res?.status === 200) {
         const foundItems = [];
         const notFoundItems = [];
-        res.data.forEach((item) => {
+        res?.data?.forEach((item) => {
           if (item?.remarks !== "Not-Available") {
             foundItems.push({
               priceLocator: item?.priceLocator,
@@ -405,7 +405,7 @@ const SalesOrder = () => {
   const bankHandle = (e) => {
     setPaymentLinesItem((prev) => ({
       ...prev,
-      bankItem: e?.target.value,
+      bankItem: e?.target?.value,
       bankAccountNumber: e?.target?.value?.bankName,
     }));
   };
@@ -663,19 +663,14 @@ const SalesOrder = () => {
             <Card>
               <Grid
                 container
-                padding={2}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
                   backgroundColor: (theme) => theme.palette.bg.light,
+                  padding: 2,
                 }}
               >
-                <Grid item>
-                  <Typography variant="subtitle1" color="#fff">
-                    Header
-                  </Typography>
-                </Grid>
+                <Typography variant="subtitle1" color="#eee">
+                  Header
+                </Typography>
               </Grid>
               <Grid container p={2}>
                 <Grid container spacing={1} mb={1}>
@@ -1047,25 +1042,22 @@ const SalesOrder = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {paymentLinesItem?.paymentType === "3" && (
-                    <Grid item sx={3}>
+                  {paymentLinesItem?.paymentType === "2" && (
+                    <Grid item sx={2}>
                       <TextField
                         label="Card No"
-                        variant="outlined"
                         name="card_no"
                         onChange={cardNoHandle}
-                        size="small"
                       />
                     </Grid>
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
                     <>
-                      <Grid item sx={3}>
+                      <Grid item sx={2}>
                         <TextField
                           label="Cheque No"
                           name="cheque_no"
                           onChange={chequeNoHandle}
-                          size="small"
                         />
                       </Grid>
                       <Grid item sx={1}>

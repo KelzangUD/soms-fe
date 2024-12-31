@@ -21,15 +21,6 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import Route from "../../routes/Route";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
 const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
   const ref = useRef(null);
   const access_token = localStorage.getItem("access_token");
@@ -56,7 +47,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
 
   return (
     <>
-      <BootstrapDialog
+      <Dialog
         onClose={handleClose}
         aria-labelledby="view-approval_rule"
         ref={ref}
@@ -66,7 +57,13 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
         maxWidth={"lg"}
       >
         <DialogTitle
-          sx={{ m: 0, p: 2, background: "#1976d2", color: "#eee" }}
+          sx={{
+            m: 0,
+            p: 2,
+            pl: 4,
+            background: (theme) => theme.palette.bg.light,
+            color: "#eee",
+          }}
           id="view_approval_rule_dialog"
         >
           View Approval Rules
@@ -88,34 +85,28 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
             <Grid container spacing={1}>
               <Grid item xs={4}>
                 <TextField
-                  fullWidth
                   label="For"
                   name="approvalFor"
                   type="text"
                   value={ruleDetails?.approvalForName}
-                  size="small"
                   disabled
                 ></TextField>
               </Grid>
               <Grid item xs={4}>
                 <TextField
-                  fullWidth
                   label="Type"
                   name="type"
                   type="text"
                   value={ruleDetails?.approvalTypeName}
-                  size="small"
                   disabled
                 ></TextField>
               </Grid>
               <Grid item xs={4}>
                 <TextField
-                  fullWidth
                   label="Role"
                   name="role"
                   type="text"
                   value={ruleDetails?.approvalUserRoleName}
-                  size="small"
                   disabled
                 ></TextField>
               </Grid>
@@ -123,23 +114,19 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
             <Grid container spacing={1} style={{ marginTop: "2px" }}>
               <Grid item xs={4}>
                 <TextField
-                  fullWidth
                   label="Rule Name"
                   name="rule_name"
                   type="text"
                   value={ruleDetails?.approvalRuleName}
-                  size="small"
                   disabled
                 ></TextField>
               </Grid>
               <Grid item xs={4}>
                 <TextField
-                  fullWidth
                   label="Status"
                   name="rule_name"
                   type="text"
                   value={ruleDetails?.approvalStatus}
-                  size="small"
                   disabled
                 ></TextField>
               </Grid>
@@ -175,7 +162,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
             </TableContainer>
           </Box>
         </DialogContent>
-      </BootstrapDialog>
+      </Dialog>
     </>
   );
 };
