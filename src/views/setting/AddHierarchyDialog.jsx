@@ -115,7 +115,6 @@ const AddHierarchyDialog = ({
         setNotificationMsg(res.data.responseText);
         setSeverity("info");
         setShowNofication(true);
-
         fetchHierarchyList();
         handleClose();
       } else {

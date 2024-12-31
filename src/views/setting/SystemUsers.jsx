@@ -145,14 +145,14 @@ const SystemUsers = () => {
       {showAddModal && (
         <AddSystemUserDialog
           open={showAddModal}
-          handleClose={handleCloseAddModal}
+          setOpen={setShowAddModal}
           fetchSystemUser={fetchSystemUsers}
         />
       )}
       {showViewModal && (
         <ViewEditSystemUserModal
           open={showViewModal}
-          handleClose={handleCloseViewModal}
+          setOpen={setShowViewModal}
           fetchSystemUser={fetchSystemUsers}
           data={userDtls}
           actionType={actionType}

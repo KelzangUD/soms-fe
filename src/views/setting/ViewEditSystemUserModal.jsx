@@ -16,19 +16,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import Route from "../../routes/Route";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Notification } from "../../ui/index";
+import { Notification, SuccessNotification } from "../../ui/index";
 import PermissionAccess from "../../component/roles_and_permission/PermissionAccess";
 
 const ViewEditSystemUserModal = ({
   open,
-  handleClose,
+  setOpen,
   fetchSystemUser,
   data,
   actionType,
 }) => {
   ViewEditSystemUserModal.prototype = {
     open: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func.isRequired,
+    setOpen: PropTypes.func.isRequired,
     fetchSystemUser: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
     actionType: PropTypes.object.isRequired,
@@ -128,7 +128,7 @@ const ViewEditSystemUserModal = ({
   return (
     <>
       <Dialog
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         aria-labelledby="view_system_user"
         ref={ref}
         id="view_system_user"
@@ -140,6 +140,7 @@ const ViewEditSystemUserModal = ({
           sx={{
             m: 0,
             p: 2,
+            pl: 3,
             background: (theme) => theme.palette.bg.light,
             color: "#eee",
           }}
@@ -149,7 +150,7 @@ const ViewEditSystemUserModal = ({
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={handleClose}
+          onClick={() => setOpen(false)}
           sx={{
             position: "absolute",
             right: 8,
@@ -163,37 +164,28 @@ const ViewEditSystemUserModal = ({
           <Grid container spacing={1}>
             <Grid item xs={12} sm={4}>
               <TextField
-                fullWidth
                 label="Employee Code"
                 margin="normal"
-                defaultValue="eg. E00001"
                 value={data?.employee_code}
                 disabled
-                size="small"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
-                fullWidth
                 label="User Code(This will be used as login id)"
                 margin="normal"
                 name="user_code"
-                defaultValue="eg. E00001"
                 value={data?.user_code}
                 disabled
-                size="small"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
-                fullWidth
                 label="Full Name"
                 margin="normal"
                 name="user_code"
-                defaultValue="eg. John"
                 value={data?.full_name}
                 disabled
-                size="small"
               />
             </Grid>
           </Grid>
@@ -202,76 +194,63 @@ const ViewEditSystemUserModal = ({
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={4}>
                   <TextField
-                    fullWidth
                     label="Email Address"
                     margin="normal"
                     name="email_address"
-                    defaultValue="eg. john@example.com"
                     value={data?.email_address}
                     disabled
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
-                    fullWidth
                     label="Role"
                     margin="normal"
                     name="roleId"
                     type="text"
                     value={data?.roleName}
                     disabled
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
-                    fullWidth
                     label="Work Location"
                     margin="normal"
                     name="storeId"
                     type="text"
                     value={data?.storeName}
                     disabled
-                    size="small"
                   />
                 </Grid>
               </Grid>
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={4}>
                   <TextField
-                    fullWidth
                     label="Sub Inventory"
                     margin="normal"
                     name="subInventoryId"
                     type="text"
                     value={data?.subInventoryId}
                     disabled
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
-                    fullWidth
                     label="Locator"
                     margin="normal"
                     name="locatorId"
                     type="text"
                     value={data?.locatorId}
                     disabled
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
-                    fullWidth
                     label="Status"
                     margin="normal"
                     name="status"
                     type="text"
                     value={data?.status}
                     disabled
-                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -290,11 +269,10 @@ const ViewEditSystemUserModal = ({
               </Grid>
               <DialogActions sx={{ justifyContent: "flex-end" }}>
                 <Button
-                  onClick={handleClose}
+                  onClick={() => setOpen(false)}
                   type="button"
                   variant="outlined"
                   color="error"
-                  size="small"
                 >
                   close
                 </Button>
@@ -330,8 +308,8 @@ const ViewEditSystemUserModal = ({
                       "Passwords must match",
                       function (value) {
                         return (
-                          !this.parent.password ||
-                          value === this.parent.password
+                          !this?.parent?.password ||
+                          value === this?.parent?.password
                         );
                       }
                     ),
@@ -339,14 +317,14 @@ const ViewEditSystemUserModal = ({
                 onSubmit={async (values, { setStatus, setSubmitting }) => {
                   try {
                     let data = {
-                      person_id: values.person_id,
-                      roleId: values.roleId,
-                      storeId: values.storeId,
-                      subInventoryId: values.subInventoryId,
-                      locatorId: values.locatorId,
+                      person_id: values?.person_id,
+                      roleId: values?.roleId,
+                      storeId: values?.storeId,
+                      subInventoryId: values?.subInventoryId,
+                      locatorId: values?.locatorId,
                       updatedBy: user,
-                      status: values.status,
-                      password: values.password,
+                      status: values?.status,
+                      password: values?.password,
                       roleAndPermissionDtos: newPermission,
                     };
 
@@ -358,20 +336,16 @@ const ViewEditSystemUserModal = ({
                       null
                     );
                     if (res.data.responseCode === 0) {
-                      setNotificationMsg(res.data.responseText);
-                      setSeverity("info");
+                      setNotificationMsg(res?.data?.responseText);
+                      setSeverity("success");
                       setShowNofication(true);
-
                       setStatus({ success: true });
                       setSubmitting(false);
-
                       fetchSystemUser();
-                      // handleClose();
                     } else {
-                      setNotificationMsg(res.data.responseText);
+                      setNotificationMsg(res?.data?.responseText);
                       setSeverity("error");
                       setShowNofication(true);
-
                       setStatus({ success: false });
                       setSubmitting(false);
                     }
@@ -393,80 +367,71 @@ const ViewEditSystemUserModal = ({
                     <Grid container spacing={1}>
                       <Grid item xs={12} sm={4}>
                         <TextField
-                          fullWidth
                           label="Email Address"
                           margin="normal"
                           name="email_address"
-                          defaultValue="eg. john@example.com"
-                          value={values.email_address}
+                          value={values?.email_address}
                           disabled
-                          size="small"
                         />
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <TextField
-                          fullWidth
                           label="Role"
                           margin="normal"
                           name="roleId"
                           type="text"
-                          value={values.roleId}
+                          value={values?.roleId}
                           onChange={(e) => {
                             handleChange(e);
                             fetchUserPriviledges(
-                              e.target.value,
+                              e?.target?.value,
                               data?.user_code
                             );
-                            fetchModuleAccess(e.target.value);
+                            fetchModuleAccess(e?.target?.value);
                           }}
                           onBlur={handleBlur}
-                          variant="outlined"
                           select
-                          size="small"
                         >
                           {roleList.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                              {item.type}
+                            <MenuItem key={item?.id} value={item?.id}>
+                              {item?.type}
                             </MenuItem>
                           ))}
                         </TextField>
-                        {touched.roleId && errors.roleId && (
+                        {touched?.roleId && errors?.roleId && (
                           <FormHelperText
                             error
                             id="standard-weight-helper-text--register"
                           >
-                            {errors.roleId}
+                            {errors?.roleId}
                           </FormHelperText>
                         )}
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <TextField
-                          fullWidth
                           label="Work Location"
                           margin="normal"
                           name="storeId"
                           type="text"
-                          value={values.storeId}
+                          value={values?.storeId}
                           onChange={(e) => {
                             handleChange(e);
                           }}
                           onBlur={handleBlur}
-                          variant="outlined"
                           select
-                          size="small"
                         >
                           {location.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                              {item.name}
+                            <MenuItem key={item?.id} value={item?.id}>
+                              {item?.name}
                             </MenuItem>
                           ))}
                         </TextField>
-                        {touched.storeId && errors.storeId && (
+                        {touched?.storeId && errors?.storeId && (
                           <FormHelperText
                             error
                             id="standard-weight-helper-text--register"
                           >
-                            {errors.storeId}
+                            {errors?.storeId}
                           </FormHelperText>
                         )}
                       </Grid>
@@ -474,7 +439,6 @@ const ViewEditSystemUserModal = ({
                     <Grid container spacing={1}>
                       <Grid item xs={12} sm={4}>
                         <TextField
-                          fullWidth
                           label="Sub Inventory"
                           margin="normal"
                           name="subInventoryId"
@@ -482,35 +446,30 @@ const ViewEditSystemUserModal = ({
                           value={values.subInventoryId}
                           onChange={(e) => {
                             handleChange(e);
-                            fetchLocator(e.target.value);
+                            fetchLocator(e?.target?.value);
                           }}
                           onBlur={handleBlur}
-                          variant="outlined"
                           select
-                          size="small"
                         >
                           {subInventory.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                              {item.id}
+                            <MenuItem key={item?.id} value={item?.id}>
+                              {item?.id}
                             </MenuItem>
                           ))}
                         </TextField>
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <TextField
-                          fullWidth
                           label="Locator"
                           margin="normal"
                           name="locatorId"
                           type="text"
-                          value={values.locatorId}
+                          value={values?.locatorId}
                           onChange={(e) => {
                             handleChange(e);
                           }}
                           onBlur={handleBlur}
-                          variant="outlined"
                           select
-                          size="small"
                         >
                           {values?.subInventoryId === "FA" ? (
                             <MenuItem value={data?.full_name}>
@@ -518,21 +477,15 @@ const ViewEditSystemUserModal = ({
                             </MenuItem>
                           ) : (
                             locator.map((item) => (
-                              <MenuItem key={item.id} value={item.id}>
-                                {item.id}
+                              <MenuItem key={item?.id} value={item?.id}>
+                                {item?.id}
                               </MenuItem>
                             ))
                           )}
-                          {/* {locator.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                              {item.id}
-                            </MenuItem>
-                          ))} */}
                         </TextField>
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <TextField
-                          fullWidth
                           label="Status"
                           margin="normal"
                           name="status"
@@ -542,19 +495,17 @@ const ViewEditSystemUserModal = ({
                             handleChange(e);
                           }}
                           onBlur={handleBlur}
-                          variant="outlined"
                           select
-                          size="small"
                         >
                           <MenuItem value="Active">Active</MenuItem>
                           <MenuItem value="In_Active">In_Active</MenuItem>
                         </TextField>
-                        {touched.status && errors.status && (
+                        {touched?.status && errors?.status && (
                           <FormHelperText
                             error
                             id="standard-weight-helper-text--register"
                           >
-                            {errors.status}
+                            {errors?.status}
                           </FormHelperText>
                         )}
                       </Grid>
@@ -562,45 +513,42 @@ const ViewEditSystemUserModal = ({
                     <Grid container spacing={1}>
                       <Grid item xs={12} sm={4}>
                         <TextField
-                          fullWidth
                           label="Password"
                           margin="normal"
                           name="password"
                           type="text"
-                          value={values.password}
+                          value={values?.password}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          size="small"
                         />
-                        {touched.password && errors.password && (
+                        {touched?.password && errors?.password && (
                           <FormHelperText
                             error
                             id="standard-weight-helper-text--register"
                           >
-                            {errors.password}
+                            {errors?.password}
                           </FormHelperText>
                         )}
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <TextField
-                          fullWidth
                           label="Confirm Password "
                           margin="normal"
                           name="confirmPassword"
                           type="text"
-                          value={values.confirmPassword}
+                          value={values?.confirmPassword}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          size="small"
                         />
-                        {touched.confirmPassword && errors.confirmPassword && (
-                          <FormHelperText
-                            error
-                            id="standard-weight-helper-text--register"
-                          >
-                            {errors.confirmPassword}
-                          </FormHelperText>
-                        )}
+                        {touched?.confirmPassword &&
+                          errors?.confirmPassword && (
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
+                              {errors?.confirmPassword}
+                            </FormHelperText>
+                          )}
                       </Grid>
                     </Grid>
                     <Grid item xs={12} sx={{ my: 1, ml: 4, marginTop: "3%" }}>
@@ -616,7 +564,6 @@ const ViewEditSystemUserModal = ({
                         autoFocus
                         disableElevation
                         disabled={isSubmitting}
-                        size="small"
                         type="submit"
                         variant="contained"
                         color="primary"
@@ -624,8 +571,7 @@ const ViewEditSystemUserModal = ({
                         Update
                       </Button>
                       <Button
-                        onClick={handleClose}
-                        size="small"
+                        onClick={() => setOpen(false)}
                         type="button"
                         variant="outlined"
                         color="error"
@@ -640,12 +586,23 @@ const ViewEditSystemUserModal = ({
           )}
         </DialogContent>
       </Dialog>
-      {showNotification && (
+      {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}
           message={notificationMsg}
           severity={severity}
+        />
+      )}
+      {showNotification && severity === "success" && (
+        <SuccessNotification
+          showNotification={showNotification}
+          setShowNofication={() => {
+            setShowNofication(false);
+            setOpen(false);
+          }}
+          notificationMsg="Successfully Updated!"
+          alertMessange={notificationMsg}
         />
       )}
     </>

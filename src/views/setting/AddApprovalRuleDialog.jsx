@@ -28,7 +28,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ViewConditionModal from "./ViewConditionModal";
 
-const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }) => {
+const AddApprovalRuleDialog = ({
+  handleClose,
+  open,
+  ruleId,
+  fetchApprovalRules,
+}) => {
   const ref = useRef(null);
   const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
@@ -171,7 +176,11 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
         maxWidth={"lg"}
       >
         <DialogTitle
-          sx={{ px: 3, background: "#1976d2", color: "#eee" }}
+          sx={{
+            px: 4,
+            background: (theme) => theme.palette.bg.light,
+            color: "#eee",
+          }}
           id="add_new_role_dialog"
         >
           {ruleId ? "Edit Approval Rule" : "Add Approval Rule"}
@@ -278,7 +287,6 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                     setNotificationMsg(res?.data?.responseText);
                     setSeverity("info");
                     setShowNofication(true);
-
                     setStatus({ success: true });
                     setSubmitting(false);
                     resetForm();
@@ -311,12 +319,10 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                 <Grid container spacing={1}>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="For"
                       name="approvalFor"
                       type="text"
                       value={values?.approvalFor}
-                      size="small"
                       onChange={(e) => {
                         handleChange(e);
                         const selectedItem = approvalFor.find(
@@ -330,7 +336,6 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                         fetchApprovalType(e?.target?.value);
                       }}
                       onBlur={handleBlur}
-                      variant="outlined"
                       select
                       required
                     >
@@ -351,9 +356,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Type"
-                      size="small"
                       name="approvalTypeId"
                       type="text"
                       value={values?.approvalTypeId || ""}
@@ -368,7 +371,6 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                         }
                       }}
                       onBlur={handleBlur}
-                      variant="outlined"
                       select
                       required
                     >
@@ -389,9 +391,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Approval For"
-                      size="small"
                       name="approvalRoleId"
                       type="text"
                       value={values?.approvalRoleId || ""}
@@ -399,7 +399,6 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                         handleChange(e);
                       }}
                       onBlur={handleBlur}
-                      variant="outlined"
                       select
                       required
                     >
@@ -422,29 +421,23 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                 <Grid container spacing={1} mt={1}>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Rule Name"
-                      size="small"
                       name="approvalRuleName"
                       value={values?.approvalRuleName}
                       onChange={(e) => {
                         handleChange(e);
                       }}
                       onBlur={handleBlur}
-                      variant="outlined"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      fullWidth
                       label="Status"
-                      size="small"
                       name="approvalStatus"
                       type="text"
                       value={values?.approvalStatus}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      variant="outlined"
                       select
                     >
                       <MenuItem value="Active">Active</MenuItem>
@@ -462,11 +455,7 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                   </Grid>
                 </Grid>
                 <Grid container mt={2}>
-                  <Button
-                    variant="contained"
-                    onClick={handleAddCondition}
-                    size="small"
-                  >
+                  <Button variant="contained" onClick={handleAddCondition}>
                     Conditions
                   </Button>
                 </Grid>
@@ -526,7 +515,6 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                     autoFocus
                     disableElevation
                     disabled={isSubmitting}
-                    size="small"
                     type="submit"
                     variant="contained"
                     color="primary"
@@ -538,7 +526,6 @@ const AddApprovalRuleDialog = ({ handleClose, open, ruleId, fetchApprovalRules }
                       resetForm();
                       setConditions([]);
                     }}
-                    size="small"
                     type="button"
                     variant="outlined"
                     color="error"

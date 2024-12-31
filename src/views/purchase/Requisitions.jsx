@@ -98,7 +98,7 @@ const Requisitions = () => {
       uom: "",
       amount: "",
     });
-  }
+  };
   const addItemListButtonHandle = () => {
     if (!itemDTOList?.item_Description || !itemDTOList?.amount) {
       setNotificationMsg("Please complete the item details before adding.");
@@ -181,25 +181,18 @@ const Requisitions = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#fff",
+                  color: "#eee",
                 }}
               >
-                <Grid item>
-                  <Typography variant="subtitle1">
-                    Requsition Details
-                  </Typography>
-                </Grid>
+                <Typography variant="subtitle1">Requsition Details</Typography>
               </Grid>
               <Grid container spacing={1} my={1} px={2}>
                 <Grid item xs={3}>
                   <TextField
                     label="Requisiton Number"
-                    variant="outlined"
-                    fullWidth
                     name="requisition_number"
                     disabled
                     required
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -224,7 +217,7 @@ const Requisitions = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={3}>
-                  <FormControl fullWidth>
+                  <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         label="Requisition Date*"
@@ -236,7 +229,7 @@ const Requisitions = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={3} display="flex">
-                  <FormControl fullWidth>
+                  <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         label="Need By Date*"
@@ -251,25 +244,19 @@ const Requisitions = () => {
                 <Grid item xs={3}>
                   <TextField
                     label="Employee Name"
-                    variant="outlined"
-                    fullWidth
                     name="employee_name"
                     value={userDetails?.userName}
                     required
                     disabled
-                    size="small"
                   />
                 </Grid>
                 <Grid item xs={3} display="flex">
                   <TextField
                     label="Region"
-                    variant="outlined"
-                    fullWidth
                     name="region"
                     disabled
                     value={userDetails?.region}
                     required
-                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -283,83 +270,66 @@ const Requisitions = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     backgroundColor: (theme) => theme.palette.bg.light,
-                    color: "#fff",
+                    color: "#eee",
                   }}
                 >
-                  <Grid item>
-                    <Typography variant="subtitle1">Item Details</Typography>
-                  </Grid>
+                  <Typography variant="subtitle1">Item Details</Typography>
                 </Grid>
-                <Grid container padding={2}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={3}>
-                      <Autocomplete
-                        disablePortal
-                        options={itemsList?.map((item) => ({
-                          label: item?.description,
-                          value: item?.item_number,
-                          item_Number: item?.item_number,
-                          uom: item?.uom,
-                        }))}
-                        onChange={selectItemHandle}
-                        value={itemDTOList?.item_Description}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Description"
-                            size="small"
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={3}>
+                <Grid container padding={2} spacing={1}>
+                  <Grid item xs={3}>
+                    <Autocomplete
+                      disablePortal
+                      options={itemsList?.map((item) => ({
+                        label: item?.description,
+                        value: item?.item_number,
+                        item_Number: item?.item_number,
+                        uom: item?.uom,
+                      }))}
+                      onChange={selectItemHandle}
+                      value={itemDTOList?.item_Description}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Description" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      label="Item Number"
+                      name="item_number"
+                      disabled
+                      value={itemDTOList?.item_Number}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      label="UOM"
+                      name="uom"
+                      disabled
+                      value={itemDTOList?.uom}
+                    />
+                  </Grid>
+                  <Grid item xs={3} display="flex">
+                    <Grid>
                       <TextField
-                        label="Item Number"
-                        variant="outlined"
-                        fullWidth
-                        name="item_number"
-                        disabled
-                        value={itemDTOList?.item_Number}
-                        size="small"
+                        label={isETop ? "Amount" : "Required Quantity"}
+                        name="amount"
+                        type="number"
+                        onChange={itemDTOListAmountHandle}
+                        value={itemDTOList?.amount}
                       />
                     </Grid>
-                    <Grid item xs={3}>
-                      <TextField
-                        label="UOM"
-                        variant="outlined"
-                        fullWidth
-                        name="uom"
-                        disabled
-                        value={itemDTOList?.uom}
-                        size="small"
-                      />
-                    </Grid>
-                    <Grid item xs={3} display="flex">
-                      <Grid>
-                        <TextField
-                          label={isETop ? "Amount" : "Required Quantity"}
-                          variant="outlined"
-                          fullWidth
-                          name="amount"
-                          type="number"
-                          onChange={itemDTOListAmountHandle}
-                          value={itemDTOList?.amount}
-                          size="small"
+                    <Grid alignContent="center">
+                      <IconButton
+                        aria-label="add"
+                        onClick={addItemListButtonHandle}
+                      >
+                        <AddBoxIcon
+                          sx={{
+                            color: (theme) =>
+                              theme?.palette?.addBtnColor?.light,
+                          }}
                         />
-                      </Grid>
-                      <Grid alignContent="center">
-                        <IconButton
-                          aria-label="add"
-                          onClick={addItemListButtonHandle}
-                        >
-                          <AddBoxIcon
-                            sx={{
-                              color: (theme) =>
-                                theme?.palette?.addBtnColor?.light,
-                            }}
-                          />
-                        </IconButton>
-                      </Grid>
+                      </IconButton>
                     </Grid>
                   </Grid>
                 </Grid>
