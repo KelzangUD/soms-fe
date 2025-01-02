@@ -37,7 +37,6 @@ const OnHandReport = () => {
   });
   const [onHandReports, setOnHandReports] = useState([]);
   const fetchOnHandReports = async () => {
-    console.log(details)
     const res = await Route(
       "GET",
       `/OnHand/Fetch_OnHand_Items?storeName=${details?.storeName}&item=${details?.item}&locator_id=${details?.locator_id}&serialNo=${details?.serialNo}&imei_no=${details?.imei_no}`,
@@ -180,7 +179,12 @@ const OnHandReport = () => {
                         <TextField {...params} label="Region/Extension" />
                       )}
                       disabled={
-                        userDetails?.roleName === "Administrator" ? false : true
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager" ||
+                        userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "Regional Accountant"
+                          ? false
+                          : true
                       }
                     />
                   </Grid>

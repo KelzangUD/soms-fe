@@ -245,7 +245,7 @@ export const CommonProvider = ({ children }) => {
     );
     if (res?.status === 200) {
       setRegionsOrExtensions(res?.data);
-    }
+    };
   };
   const fetchItemsList = async () => {
     const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);

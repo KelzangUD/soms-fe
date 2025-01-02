@@ -204,7 +204,10 @@ const PaymentCollection = () => {
                       )}
                       style={{ background: "#fff" }}
                       disabled={
-                        userDetails?.roleName === "Administrator" ? false : true
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager"
+                          ? false
+                          : true
                       }
                     />
                   </Grid>
