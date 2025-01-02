@@ -26,6 +26,9 @@ import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const RechargeCollection = () => {
   const { regionsOrExtensions } = useCommon();
+  useEffect(() => {
+    console.log(regionsOrExtensions)
+  },[])
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -180,11 +183,7 @@ const RechargeCollection = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
+                    <FormControl>
                       <InputLabel id="region-or-extension-select-label">
                         Region/Extension
                       </InputLabel>
@@ -204,7 +203,7 @@ const RechargeCollection = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="From Date"
@@ -215,7 +214,7 @@ const RechargeCollection = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="To Date"

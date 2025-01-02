@@ -12,19 +12,19 @@ const Dashboard = () => {
   const status = [
     {
       title: "Stores",
-      qty: 52,
+      qty: 31,
     },
     {
       title: "Customers",
-      qty: 21193,
+      qty: 15178,
     },
     {
       title: "Invoices",
-      qty: 213,
+      qty: 0,
     },
     {
       title: "Employees",
-      qty: 176,
+      qty: 149,
     },
   ];
   return (

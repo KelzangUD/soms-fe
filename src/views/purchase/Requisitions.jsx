@@ -29,6 +29,7 @@ import {
   Notification,
   LoaderDialog,
   SuccessNotification,
+  Title,
 } from "../../ui/index";
 import dayjs from "dayjs";
 import { dateFormatterTwo } from "../../util/CommonUtil";
@@ -174,16 +175,7 @@ const Requisitions = () => {
         <Grid container>
           <Grid item container xs={12}>
             <Card sx={{ width: "100%" }}>
-              <Grid
-                container
-                p={2}
-                sx={{
-                  backgroundColor: "bg.light",
-                  color: "#eee",
-                }}
-              >
-                <Typography variant="subtitle1">Requsition Details</Typography>
-              </Grid>
+              <Title title="Requsition Details" />
               <Grid container spacing={1} my={1} px={2}>
                 <Grid item xs={3}>
                   <TextField
@@ -261,16 +253,7 @@ const Requisitions = () => {
             </Card>
             <Grid item xs={12} marginTop={2}>
               <Card>
-                <Grid
-                  container
-                  padding={2}
-                  sx={{
-                    backgroundColor: "bg.light",
-                    color: "#eee",
-                  }}
-                >
-                  <Typography variant="subtitle1">Item Details</Typography>
-                </Grid>
+                <Title title="Item Details" />
                 <Grid container padding={2} spacing={1}>
                   <Grid item xs={3}>
                     <Autocomplete

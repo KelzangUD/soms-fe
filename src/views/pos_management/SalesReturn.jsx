@@ -29,7 +29,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ImageIcon from "@mui/icons-material/Image";
 import GetAppIcon from "@mui/icons-material/GetApp";
 // import dayjs from "dayjs";
-import { Notification, LoaderDialog } from "../../ui/index";
+import { Notification, LoaderDialog, Title } from "../../ui/index";
 import AddLineItem from "./AddLineItem";
 import { useCommon } from "../../contexts/CommonContext";
 
@@ -400,422 +400,359 @@ const SalesReturn = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Card>
-              <Grid
-                container
-                padding={2}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  backgroundColor: (theme) => theme.palette.bg.light,
-                }}
-              >
-                <Grid item>
-                  <Typography variant="subtitle1" color="#eee">
-                    Header
-                  </Typography>
+              <Title title="Header" />
+              <Grid container spacing={1} p={2}>
+                <Grid item xs={3}>
+                  <TextField label="POS No" name="pos_no" disabled />
                 </Grid>
-              </Grid>
-              <Grid container paddingX={2} paddingTop={2} paddingBottom={1.5}>
-                <Grid container spacing={1}>
-                  <Grid item xs={3}>
-                    <TextField label="POS No" name="pos_no" disabled />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Posting Date"
-                      name="posting_date"
-                      defaultValue={new Date().toDateString()}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      error={emptyInvoiceNo}
-                      label="Invoice No"
-                      name="invoice_no"
-                      onChange={setSalesInvoice}
-                      value={invoiceNo}
-                      required
-                      helperText={emptyInvoiceNo ? "Invoice No is Empty" : null}
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Button
-                      variant="contained"
-                      onClick={fetchSalesInvoice}
-                      disabled={loading}
-                      sx={{
-                        padding: "8px 0",
-                      }}
-                      endIcon={<GetAppIcon />}
-                      fullWidth
-                    >
-                      Fetch Details
-                    </Button>
-                  </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    label="Posting Date"
+                    name="posting_date"
+                    defaultValue={new Date().toDateString()}
+                    disabled
+                  />
                 </Grid>
-                <Grid container spacing={1} sx={{ mt: 1 }}>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Sales Type"
-                      value={salesHeaderDtls?.sales_Type}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Product Type"
-                      value={salesHeaderDtls?.product_Type}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Mobile No"
-                      value={salesHeaderDtls?.mobileNo}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Customer No"
-                      value={salesHeaderDtls?.customerNumber}
-                      disabled
-                    />
-                  </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    error={emptyInvoiceNo}
+                    label="Invoice No"
+                    name="invoice_no"
+                    onChange={setSalesInvoice}
+                    value={invoiceNo}
+                    required
+                    helperText={emptyInvoiceNo ? "Invoice No is Empty" : null}
+                  />
                 </Grid>
-                <Grid container spacing={1} sx={{ my: 1 }}>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Customer Name"
-                      value={salesHeaderDtls?.customerName}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Address"
-                      value={salesHeaderDtls?.address}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="Address 1"
-                      value={salesHeaderDtls?.address1}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      label="City"
-                      value={salesHeaderDtls?.city}
-                      disabled
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <Grid
-                container
-                padding={2}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  backgroundColor: (theme) => theme.palette.bg.light,
-                }}
-              >
-                <Grid item>
-                  <Typography variant="subtitle1" color="#eee">
-                    Line
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid container>
-                  <TableContainer>
-                    <Table
-                      sx={{ minWidth: 650 }}
-                      aria-label="simple table"
-                      size="small"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Description
-                          </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>
-                            Quantity
-                          </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>
-                            Selling Price
-                          </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>
-                            Tax Amount
-                          </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>
-                            Disc/Comm Amount
-                          </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>
-                            Additional Discount
-                          </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>
-                            TDS Amount
-                          </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>
-                            Line Item Amount
-                          </TableCell>
-                          <TableCell align="right" sx={{ fontSize: "13px" }}>
-                            Action
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {salesLines?.length > 0 &&
-                          salesLines?.map((item, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{item?.description}</TableCell>
-                              <TableCell align="right">
-                                {item?.quantity}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.selling_Price}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.tax_Amt}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.discounted_Amount}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.additional_Discount}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.tdsAmount}
-                              </TableCell>
-                              <TableCell align="right">
-                                {item?.line_ItmAmt}
-                              </TableCell>
-                              <TableCell align="right">
-                                <IconButton
-                                  aria-label="delete"
-                                  onClick={(e) =>
-                                    deleteLineItemHandle(e, item?.salesId)
-                                  }
-                                  color="error"
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        <TableRow>
-                          <TableCell colSpan={6} />
-                          <TableCell colSpan={2} align="right">
-                            Gross Total
-                          </TableCell>
-                          <TableCell align="right" colSpan={2}>
-                            {grossTotal}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={6} />
-                          <TableCell colSpan={2} align="right">
-                            Tax Amount
-                          </TableCell>
-                          <TableCell align="right" colSpan={2}>
-                            {taxAmount}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={6} />
-                          <TableCell colSpan={2} align="right">
-                            Disc/Comm Amount
-                          </TableCell>
-                          <TableCell align="right" colSpan={2}>
-                            {discountAmt}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={6} />
-                          <TableCell colSpan={2} align="right">
-                            Additional Discount
-                          </TableCell>
-                          <TableCell align="right" colSpan={2}>
-                            {additionalDisAmt}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={6} />
-                          <TableCell colSpan={2} align="right">
-                            Lots of Sales Discount
-                          </TableCell>
-                          <TableCell align="right" colSpan={2}>
-                            {lotOfSaleDiscount}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={6} />
-                          <TableCell colSpan={2} align="right">
-                            TDS Amount
-                          </TableCell>
-                          <TableCell align="right" colSpan={2}>
-                            {tdsAmount}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={6} />
-                          <TableCell colSpan={2} align="right">
-                            Net Total (Nu)
-                          </TableCell>
-                          <TableCell align="right" colSpan={2}>
-                            {netTotal}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Grid>
-              </Grid>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <Grid
-                container
-                padding={2}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  backgroundColor: (theme) => theme.palette.bg.light,
-                }}
-              >
-                <Grid item>
-                  <Typography variant="subtitle1" color="#eee">
-                    Refund Details
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid container padding={2}>
-                <Grid container spacing={1}>
-                  <Grid item xs={2}>
-                    <TextField
-                      label="Refund Amount"
-                      type="number"
-                      name="refund_amount"
-                      value={paymentLinesItem?.paymentAmount}
-                      required
-                      onChange={paymentAmountHandle}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <FormControl>
-                      <InputLabel id="refund-type-select-label">
-                        Refund Type
-                      </InputLabel>
-                      <Select
-                        labelId="refund-type-select-label"
-                        id="refund-type-select"
-                        label="refund Type"
-                        onChange={paymentHandle}
-                      >
-                        {paymentType?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <FormControl>
-                      <InputLabel id="bank-ac-name-select-label">
-                        Bank A/C Name
-                      </InputLabel>
-                      <Select
-                        labelId="bank-ac-name-select-label"
-                        id="bank-ac-name-select"
-                        label="Bank A/C Name"
-                        onChange={bankHandle}
-                      >
-                        {banks?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
-                            {item?.bankName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  {paymentLinesItem?.paymentType === "3" && (
-                    <Grid item sx={2}>
-                      <TextField
-                        label="Card No"
-                        name="card_no"
-                        onChange={cardNoHandle}
-                      />
-                    </Grid>
-                  )}
-                  {paymentLinesItem?.paymentType === "2" && (
-                    <Grid item sx={2}>
-                      <TextField
-                        label="Cheque No"
-                        name="cheque_no"
-                        onChange={chequeNoHandle}
-                      />
-                    </Grid>
-                  )}
-                  {paymentLinesItem?.paymentType === "2" && (
-                    <Grid item sx={1}>
-                      <FormControl fullWidth>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            label="Cheque Date"
-                            onChange={chequeDateHandle}
-                          />
-                        </LocalizationProvider>
-                      </FormControl>
-                    </Grid>
-                  )}
-                  {paymentLinesItem?.paymentType === "2" && (
-                    <Grid item sx={1}>
-                      <TextField
-                        type="file"
-                        label={isFileUploaded ? "File" : ""}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={chequeCopyHandle}
-                      />
-                    </Grid>
-                  )}
-                  <Grid
-                    item
-                    container
-                    xs={1}
-                    display="flex"
-                    alignItems="center"
+                <Grid item xs={3}>
+                  <Button
+                    variant="contained"
+                    onClick={fetchSalesInvoice}
+                    disabled={loading}
+                    sx={{
+                      padding: "8px 0",
+                    }}
+                    endIcon={<GetAppIcon />}
+                    fullWidth
                   >
-                    <Grid item xs={1}>
-                      <IconButton
-                        aria-label="add"
-                        onClick={addPaymentItemHandle}
-                      >
-                        <AddBoxIcon
-                          sx={{
-                            color: (theme) =>
-                              theme?.palette?.addBtnColor?.light,
-                          }}
+                    Fetch Details
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid container spacing={1} px={2}>
+                <Grid item xs={3}>
+                  <TextField
+                    label="Sales Type"
+                    value={salesHeaderDtls?.sales_Type}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    label="Product Type"
+                    value={salesHeaderDtls?.product_Type}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    label="Mobile No"
+                    value={salesHeaderDtls?.mobileNo}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    label="Customer No"
+                    value={salesHeaderDtls?.customerNumber}
+                    disabled
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={1} p={2}>
+                <Grid item xs={3}>
+                  <TextField
+                    label="Customer Name"
+                    value={salesHeaderDtls?.customerName}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    label="Address"
+                    value={salesHeaderDtls?.address}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    label="Address 1"
+                    value={salesHeaderDtls?.address1}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    label="City"
+                    value={salesHeaderDtls?.city}
+                    disabled
+                  />
+                </Grid>
+              </Grid>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card>
+              <Title title="Line" />
+              <Grid container>
+                <TableContainer>
+                  <Table
+                    sx={{ minWidth: 650 }}
+                    aria-label="simple table"
+                    size="small"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          Description
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                          Quantity
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                          Selling Price
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                          Tax Amount
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                          Disc/Comm Amount
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                          Additional Discount
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                          TDS Amount
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                          Line Item Amount
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                          Action
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {salesLines?.length > 0 &&
+                        salesLines?.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item?.description}</TableCell>
+                            <TableCell align="right">
+                              {item?.quantity}
+                            </TableCell>
+                            <TableCell align="right">
+                              {item?.selling_Price}
+                            </TableCell>
+                            <TableCell align="right">{item?.tax_Amt}</TableCell>
+                            <TableCell align="right">
+                              {item?.discounted_Amount}
+                            </TableCell>
+                            <TableCell align="right">
+                              {item?.additional_Discount}
+                            </TableCell>
+                            <TableCell align="right">
+                              {item?.tdsAmount}
+                            </TableCell>
+                            <TableCell align="right">
+                              {item?.line_ItmAmt}
+                            </TableCell>
+                            <TableCell align="right">
+                              <IconButton
+                                aria-label="delete"
+                                onClick={(e) =>
+                                  deleteLineItemHandle(e, item?.salesId)
+                                }
+                                color="error"
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      <TableRow>
+                        <TableCell colSpan={6} />
+                        <TableCell colSpan={2} align="right">
+                          Gross Total
+                        </TableCell>
+                        <TableCell align="right" colSpan={2}>
+                          {grossTotal}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell colSpan={6} />
+                        <TableCell colSpan={2} align="right">
+                          Tax Amount
+                        </TableCell>
+                        <TableCell align="right" colSpan={2}>
+                          {taxAmount}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell colSpan={6} />
+                        <TableCell colSpan={2} align="right">
+                          Disc/Comm Amount
+                        </TableCell>
+                        <TableCell align="right" colSpan={2}>
+                          {discountAmt}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell colSpan={6} />
+                        <TableCell colSpan={2} align="right">
+                          Additional Discount
+                        </TableCell>
+                        <TableCell align="right" colSpan={2}>
+                          {additionalDisAmt}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell colSpan={6} />
+                        <TableCell colSpan={2} align="right">
+                          Lots of Sales Discount
+                        </TableCell>
+                        <TableCell align="right" colSpan={2}>
+                          {lotOfSaleDiscount}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell colSpan={6} />
+                        <TableCell colSpan={2} align="right">
+                          TDS Amount
+                        </TableCell>
+                        <TableCell align="right" colSpan={2}>
+                          {tdsAmount}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell colSpan={6} />
+                        <TableCell colSpan={2} align="right">
+                          Net Total (Nu)
+                        </TableCell>
+                        <TableCell align="right" colSpan={2}>
+                          {netTotal}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card>
+              <Title title="Refund Details" />
+              <Grid container spacing={1} padding={2}>
+                <Grid item xs={2}>
+                  <TextField
+                    label="Refund Amount"
+                    type="number"
+                    name="refund_amount"
+                    value={paymentLinesItem?.paymentAmount}
+                    required
+                    onChange={paymentAmountHandle}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <FormControl>
+                    <InputLabel id="refund-type-select-label">
+                      Refund Type
+                    </InputLabel>
+                    <Select
+                      labelId="refund-type-select-label"
+                      id="refund-type-select"
+                      label="refund Type"
+                      onChange={paymentHandle}
+                    >
+                      {paymentType?.map((item) => (
+                        <MenuItem value={item} key={item?.id}>
+                          {item?.type}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                  <FormControl>
+                    <InputLabel id="bank-ac-name-select-label">
+                      Bank A/C Name
+                    </InputLabel>
+                    <Select
+                      labelId="bank-ac-name-select-label"
+                      id="bank-ac-name-select"
+                      label="Bank A/C Name"
+                      onChange={bankHandle}
+                    >
+                      {banks?.map((item) => (
+                        <MenuItem value={item} key={item?.id}>
+                          {item?.bankName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                {paymentLinesItem?.paymentType === "3" && (
+                  <Grid item sx={2}>
+                    <TextField
+                      label="Card No"
+                      name="card_no"
+                      onChange={cardNoHandle}
+                    />
+                  </Grid>
+                )}
+                {paymentLinesItem?.paymentType === "2" && (
+                  <Grid item sx={2}>
+                    <TextField
+                      label="Cheque No"
+                      name="cheque_no"
+                      onChange={chequeNoHandle}
+                    />
+                  </Grid>
+                )}
+                {paymentLinesItem?.paymentType === "2" && (
+                  <Grid item sx={1}>
+                    <FormControl fullWidth>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="Cheque Date"
+                          onChange={chequeDateHandle}
                         />
-                      </IconButton>
-                    </Grid>
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                )}
+                {paymentLinesItem?.paymentType === "2" && (
+                  <Grid item sx={1}>
+                    <TextField
+                      type="file"
+                      label={isFileUploaded ? "File" : ""}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={chequeCopyHandle}
+                    />
+                  </Grid>
+                )}
+                <Grid item container xs={1} display="flex" alignItems="center">
+                  <Grid item xs={1}>
+                    <IconButton aria-label="add" onClick={addPaymentItemHandle}>
+                      <AddBoxIcon
+                        sx={{
+                          color: (theme) => theme?.palette?.addBtnColor?.light,
+                        }}
+                      />
+                    </IconButton>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid container p={2}>
+              <Grid container px={2} mb={2}>
                 <TableContainer component={Paper}>
                   <Table
                     sx={{ minWidth: 650 }}

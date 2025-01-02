@@ -14,7 +14,7 @@ const Footer = () => {
         >
           <Grid item xs={6}>
             <Typography variant="body1" sx={{ color: "text.secondary", textAlign: "right" }}>
-              © 2024 Software & Application Section. All Right Reserved.
+              © {new Date().getFullYear()} Software & Application Section. All Right Reserved.
             </Typography>
           </Grid>
         </Grid>

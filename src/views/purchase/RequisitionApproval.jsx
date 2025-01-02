@@ -217,51 +217,43 @@ const RequisitionApproval = () => {
         <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
           <Grid
             item
+            container
             xs={12}
             sx={{ display: "flex", justifyContent: "space-between" }}
           >
-            <Box sx={{ width: "100%" }}>
-              <Grid container spacing={2} alignItems="center">
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Grid item alignContent="center">
-                    <Button
-                      variant="contained"
-                      sx={{ mr: 2 }}
-                      onClick={approveHandle}
-                      endIcon={<DoneIcon />}
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={rejectHandle}
-                      endIcon={<ClearIcon />}
-                      style={{
-                        background: "#fff",
-                      }}
-                    >
-                      Reject
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Grid item container alignItems="center" xs={12}>
-                  <CustomDataTable
-                    rows={requisitionList?.map((row, index) => ({
-                      ...row,
-                      sl: index + 1,
-                    }))}
-                    cols={requisiton_approval_columns}
-                    checkboxSelection={true}
-                    onRowSelectionModelChange={handleRowSelection}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <Button
+                variant="contained"
+                sx={{ mr: 2 }}
+                onClick={approveHandle}
+                endIcon={<DoneIcon />}
+              >
+                Approve
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={rejectHandle}
+                endIcon={<ClearIcon />}
+              >
+                Reject
+              </Button>
+            </Grid>
+            <Grid item container alignItems="center" xs={12} mt={2}>
+              <CustomDataTable
+                rows={requisitionList?.map((row, index) => ({
+                  ...row,
+                  sl: index + 1,
+                }))}
+                cols={requisiton_approval_columns}
+                checkboxSelection={true}
+                onRowSelectionModelChange={handleRowSelection}
+              />
+            </Grid>
           </Grid>
         </Grid>
       </Box>

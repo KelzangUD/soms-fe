@@ -431,13 +431,16 @@ const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
                       select
                     >
                       {values?.subInventoryId === "FA" ? (
-                        <MenuItem value={values?.full_name}>
-                          {values?.full_name}
+                        <MenuItem value={values?.full_name?.toUpperCase()}>
+                          {values?.full_name?.toUpperCase()}
                         </MenuItem>
                       ) : (
                         locator.map((item) => (
-                          <MenuItem key={item.id} value={item.id}>
-                            {item.id}
+                          <MenuItem
+                            key={item.id.toUpperCase()}
+                            value={item.id?.toUpperCase()}
+                          >
+                            {item.id?.toUpperCase()}
                           </MenuItem>
                         ))
                       )}

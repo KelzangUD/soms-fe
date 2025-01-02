@@ -19,6 +19,7 @@ import {
   Notification,
   LoaderDialog,
   SuccessNotification,
+  Title,
 } from "../../ui/index";
 import { PaymentReceiptCustomerDetails } from "../../component/collections/index";
 import Route from "../../routes/Route";
@@ -95,7 +96,7 @@ const PaymentReceipt = () => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
       payment: e?.target?.value,
-      mobileNo: ""
+      mobileNo: "",
     }));
   };
   const mobileNoHandle = (e) => {
@@ -316,199 +317,176 @@ const PaymentReceipt = () => {
     <>
       <Box sx={{ px: 2 }}>
         <Grid container alignItems="center">
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item container xs={9}>
-                <Card sx={{ width: "100%" }}>
-                  <Grid
-                    padding={2}
-                    sx={{
-                      background: (theme) => theme.palette.bg.light,
-                    }}
-                  >
-                    <Typography variant="subtitle1" color="#eee">
-                      Service Details
-                    </Typography>
+          <Grid item container xs={12} spacing={2}>
+            <Grid item container xs={9}>
+              <Card sx={{ width: "100%" }}>
+                <Title title="Service Details" />
+                <Grid container spacing={1} padding={2}>
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <InputLabel id="service-type-select-label">
+                        Service Type*
+                      </InputLabel>
+                      <Select
+                        labelId="service-type-select-label"
+                        id="service-type-select"
+                        label="Service Type*"
+                        onChange={serviceTypeHandle}
+                        value={paymentReceiptDetails?.serviceType}
+                      >
+                        {serviceType?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.type}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
-                  <Grid container spacing={1} mt={1} mb={2} paddingX={2}>
-                    <Grid item xs={3}>
-                      <FormControl>
-                        <InputLabel id="service-type-select-label">
-                          Service Type*
-                        </InputLabel>
-                        <Select
-                          labelId="service-type-select-label"
-                          id="service-type-select"
-                          label="Service Type*"
-                          onChange={serviceTypeHandle}
-                          value={paymentReceiptDetails?.serviceType}
-                        >
-                          {serviceType?.map((item) => (
-                            <MenuItem value={item?.id} key={item?.id}>
-                              {item?.type}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <FormControl>
-                        <InputLabel id="payment-select-label">
-                          Payment
-                        </InputLabel>
-                        <Select
-                          labelId="payment-select-label"
-                          id="payment-select"
-                          value={paymentReceiptDetails?.payment}
-                          label="Payment"
-                          onChange={paymentHandle}
-                          disabled={disablePaymentSelect}
-                        >
-                          {paymentOptions?.map((item) => (
-                            <MenuItem value={item?.id} key={item?.id}>
-                              {item?.type}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        error={incorrectFormant}
-                        label="Mobile Number/Account Code"
-                        name="mobile_no"
-                        required
-                        onChange={mobileNoHandle}
-                        value={paymentReceiptDetails?.mobileNo}
-                        helperText={incorrectFormant && "Incorrect Entry"}
-                      />
-                    </Grid>
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <InputLabel id="payment-select-label">Payment</InputLabel>
+                      <Select
+                        labelId="payment-select-label"
+                        id="payment-select"
+                        value={paymentReceiptDetails?.payment}
+                        label="Payment"
+                        onChange={paymentHandle}
+                        disabled={disablePaymentSelect}
+                      >
+                        {paymentOptions?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.type}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
-                </Card>
-                <Card sx={{ width: "100%", marginTop: 2 }}>
-                  <Grid
-                    container
-                    padding={2}
-                    sx={{
-                      background: (theme) => theme.palette.bg.light,
-                    }}
-                  >
-                    <Typography variant="subtitle1" color="#eee">
-                      Payment Details
-                    </Typography>
-                  </Grid>
-                  <Grid container spacing={1} marginY={1} paddingX={2}>
-                    <Grid item xs={3}>
-                      <FormControl>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            label="Posting Date"
-                            value={dayjs(paymentReceiptDetails?.postingDate)}
-                            onChange={postingDateHandle}
-                          />
-                        </LocalizationProvider>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <FormControl>
-                        <InputLabel id="payment-method-select-label">
-                          Payment Method
-                        </InputLabel>
-                        <Select
-                          labelId="payment-method-select-label"
-                          id="payment-method-select"
-                          label="Payment Type"
-                          onChange={paymentMethodHandle}
-                          value={paymentReceiptDetails?.paymentType}
-                        >
-                          {paymentType?.map((item) => (
-                            <MenuItem value={item?.id} key={item?.id}>
-                              {item?.type}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <TextField
-                        label="Amount"
-                        name="amount"
-                        required
-                        onChange={amountHandle}
-                        value={paymentReceiptDetails?.amount}
-                      />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <FormControl>
-                        <InputLabel id="bank-acc-select-label">
-                          Bank Account
-                        </InputLabel>
-                        <Select
-                          labelId="bank-acc-select-label"
-                          id="bank-acc-select"
-                          value={paymentReceiptDetails?.bankId}
-                          label="Bank Account"
-                          onChange={bankHandle}
-                        >
-                          {bankAccountNames?.map((item) => (
-                            <MenuItem value={item?.id} key={item?.id}>
-                              {item?.bankName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={1} marginY={1} paddingX={2}>
-                    <Grid item xs={3}>
-                      <TextField
-                        label="Cheque No"
-                        name="cheque_no"
-                        onChange={chequeNoHandle}
-                        disabled={disableFields?.chequeNoField}
-                        value={paymentReceiptDetails?.chequeNo}
-                      />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <FormControl>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            label="Cheque Date"
-                            value={dayjs(paymentReceiptDetails?.chequeDate)}
-                            onChange={chequeDateHandle}
-                            disabled={disableFields?.chequeDateField}
-                          />
-                        </LocalizationProvider>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <TextField
-                        type="file"
-                        label={isFileUploaded ? "File" : ""}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={chequeCopyHandle}
-                        disabled={disableFields?.chequeNoField}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12} marginY={2} paddingX={2}>
+                  <Grid item xs={6}>
                     <TextField
-                      label="Remarks"
-                      name="remarks"
+                      error={incorrectFormant}
+                      label="Mobile Number/Account Code"
+                      name="mobile_no"
                       required
-                      onChange={remarksHandle}
-                      value={paymentReceiptDetails?.remarks}
-                      multiline
-                      rows={1}
+                      onChange={mobileNoHandle}
+                      value={paymentReceiptDetails?.mobileNo}
+                      helperText={incorrectFormant && "Incorrect Entry"}
                     />
                   </Grid>
-                </Card>
-              </Grid>
-              <Grid item xs={3} container>
-                <PaymentReceiptCustomerDetails
-                  paymentReceiptDetails={paymentReceiptDetails}
-                />
-              </Grid>
+                </Grid>
+              </Card>
+              <Card sx={{ width: "100%", marginTop: 2 }}>
+                <Title title="Payment Details" />
+                <Grid container spacing={1} marginY={1} paddingX={2}>
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="Posting Date"
+                          value={dayjs(paymentReceiptDetails?.postingDate)}
+                          onChange={postingDateHandle}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <InputLabel id="payment-method-select-label">
+                        Payment Method
+                      </InputLabel>
+                      <Select
+                        labelId="payment-method-select-label"
+                        id="payment-method-select"
+                        label="Payment Type"
+                        onChange={paymentMethodHandle}
+                        value={paymentReceiptDetails?.paymentType}
+                      >
+                        {paymentType?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.type}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      label="Amount"
+                      name="amount"
+                      required
+                      onChange={amountHandle}
+                      value={paymentReceiptDetails?.amount}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <InputLabel id="bank-acc-select-label">
+                        Bank Account
+                      </InputLabel>
+                      <Select
+                        labelId="bank-acc-select-label"
+                        id="bank-acc-select"
+                        value={paymentReceiptDetails?.bankId}
+                        label="Bank Account"
+                        onChange={bankHandle}
+                      >
+                        {bankAccountNames?.map((item) => (
+                          <MenuItem value={item?.id} key={item?.id}>
+                            {item?.bankName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={1} marginY={1} paddingX={2}>
+                  <Grid item xs={3}>
+                    <TextField
+                      label="Cheque No"
+                      name="cheque_no"
+                      onChange={chequeNoHandle}
+                      disabled={disableFields?.chequeNoField}
+                      value={paymentReceiptDetails?.chequeNo}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="Cheque Date"
+                          value={dayjs(paymentReceiptDetails?.chequeDate)}
+                          onChange={chequeDateHandle}
+                          disabled={disableFields?.chequeDateField}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      type="file"
+                      label={isFileUploaded ? "File" : ""}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={chequeCopyHandle}
+                      disabled={disableFields?.chequeNoField}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} marginY={2} paddingX={2}>
+                  <TextField
+                    label="Remarks"
+                    name="remarks"
+                    required
+                    onChange={remarksHandle}
+                    value={paymentReceiptDetails?.remarks}
+                    multiline
+                    rows={1}
+                  />
+                </Grid>
+              </Card>
+            </Grid>
+            <Grid item xs={3} container>
+              <PaymentReceiptCustomerDetails
+                paymentReceiptDetails={paymentReceiptDetails}
+              />
             </Grid>
           </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>

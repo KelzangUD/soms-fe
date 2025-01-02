@@ -223,6 +223,7 @@ export const CommonProvider = ({ children }) => {
     }
   };
   const fetchAllItems = async (regionName, subInventory, locator) => {
+    setOnHandsTransferOrderItems([]);
     const res = await Route(
       "GET",
       `/Common/FetchOnHandsTransferOrderItems?StoreName=${regionName}&SubInventoryID=${subInventory}&LocatorID=${locator}`,

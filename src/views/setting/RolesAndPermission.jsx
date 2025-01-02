@@ -122,6 +122,8 @@ const RolesAndPermission = () => {
                   moduleAccess={moduleAccess}
                   roleId={selectedId}
                   modulePermission={modulePermission}
+                  fetchModuleAccess={() => fetchModuleAccess(selectedId)}
+                  fetchModulePermission={() => fetchModulePermission(selectedId)}
                 />
               </Grid>
             </Grid>

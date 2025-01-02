@@ -43,7 +43,13 @@ const iconList = [
   { role: "Settings", icon: <SettingsIcon /> },
 ];
 
-const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
+const ModuleAccess = ({
+  moduleAccess,
+  roleId,
+  modulePermission,
+  fetchModuleAccess,
+  fetchModulePermission,
+}) => {
   const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [moduleList, setModuleList] = useState([]);
@@ -188,6 +194,8 @@ const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
       null
     );
     if (res?.status === 200) {
+      fetchModuleAccess();
+      fetchModulePermission();
       setNotificationMsg("Role Permission has been successfully updated.");
       setSeverity("info");
       setShowNofication(true);
@@ -332,15 +340,9 @@ const ModuleAccess = ({ moduleAccess, roleId, modulePermission }) => {
               </Grid>
             </Grid>
             <Grid item container sx={{ justifyContent: "flex-end" }}>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  size="large"
-                  onClick={updateRolePermission}
-                >
-                  Save/Update
-                </Button>
-              </Grid>
+              <Button variant="contained" onClick={updateRolePermission}>
+                Save/Update
+              </Button>
             </Grid>
           </Grid>
         </Grid>

@@ -27,7 +27,7 @@ import TransferBulkUploader from "../../assets/files/TransferBulkUploader.xls";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
 import { dateFormatterTwo } from "../../util/CommonUtil";
-import { SuccessNotification } from "../../ui/index";
+import { SuccessNotification, Title } from "../../ui/index";
 
 const CreateTransferOrder = ({
   open,
@@ -389,20 +389,7 @@ const CreateTransferOrder = ({
         TransitionComponent={Transition}
       >
         <Box sx={{ width: "100%" }}>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12}>
-              <Grid
-                container
-                padding={2}
-                sx={{
-                  backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#eee",
-                }}
-              >
-                <Typography variant="subtitle1">Transfer Order</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
+          <Title title="Transfer Order" />
           <Grid item container xs={12} paddingX={2}>
             <Grid item container xs={12} mt={1} spacing={1}>
               <Grid item xs={3}>

@@ -25,12 +25,19 @@ const OnHandReport = () => {
   const [details, setDetails] = useState({
     storeName: userDetails?.regionName,
     item: "ALL",
-    locator_id: "ALL",
+    locator_id:
+      userDetails?.roleId === 37 ||
+      userDetails?.roleId === 53 ||
+      userDetails?.roleId === 54 ||
+      userDetails?.roleId === 55
+        ? "ALL"
+        : userDetails?.locator,
     serialNo: "ALL",
     imei_no: "ALL",
   });
   const [onHandReports, setOnHandReports] = useState([]);
   const fetchOnHandReports = async () => {
+    console.log(details)
     const res = await Route(
       "GET",
       `/OnHand/Fetch_OnHand_Items?storeName=${details?.storeName}&item=${details?.item}&locator_id=${details?.locator_id}&serialNo=${details?.serialNo}&imei_no=${details?.imei_no}`,
@@ -209,6 +216,14 @@ const OnHandReport = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="Locator" />
                       )}
+                      disabled={
+                        userDetails?.roleId === 37 ||
+                        userDetails?.roleId === 53 ||
+                        userDetails?.roleId === 54 ||
+                        userDetails?.roleId === 55
+                          ? false
+                          : true
+                      }
                     />
                   </Grid>
                   <Grid item xs={2}>

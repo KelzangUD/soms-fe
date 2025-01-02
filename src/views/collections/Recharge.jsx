@@ -23,6 +23,7 @@ import {
   Notification,
   LoaderDialog,
   SuccessNotification,
+  Title,
 } from "../../ui/index";
 import dayjs from "dayjs";
 import Route from "../../routes/Route";
@@ -216,12 +217,17 @@ const Recharge = () => {
           null,
           "multipart/form-data"
         );
-        if (res?.status === 201) {
+        if (res?.data?.status === "SUCCESS") {
           setResponseData(res?.data);
           setSeverity("success");
           setNotificationMsg(res?.data?.status);
           setShowNofication(true);
           resetHandle();
+        } else if (res?.data?.status === "FAILED") {
+          setResponseData(res?.data);
+          setSeverity("error");
+          setNotificationMsg(res?.data?.message);
+          setShowNofication(true);
         } else {
           setNotificationMsg(res?.response?.data?.message);
           setSeverity("error");
@@ -252,18 +258,8 @@ const Recharge = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Card>
-              <Grid
-                container
-                padding={2}
-                sx={{
-                  backgroundColor: (theme) => theme.palette.bg.light,
-                }}
-              >
-                <Typography variant="subtitle1" color="#eee">
-                  Recharge Details
-                </Typography>
-              </Grid>
-              <Grid container padding={2} py={2} spacing={1}>
+              <Title title="Recharge Details" />
+              <Grid container padding={2} spacing={1}>
                 <Grid item xs={4}>
                   <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -440,17 +436,13 @@ const Recharge = () => {
             >
               Create & Post
             </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={resetHandle}
-            >
+            <Button variant="outlined" color="error" onClick={resetHandle}>
               Cancel
             </Button>
           </Grid>
         </Grid>
       </Box>
-      {isLoading && <LoaderDialog opne={isLoading} />}
+      {isLoading && <LoaderDialog open={isLoading} />}
       {showNotification && (severity === "error" || severity === "info") && (
         <Notification
           open={showNotification}

@@ -472,8 +472,8 @@ const ViewEditSystemUserModal = ({
                           select
                         >
                           {values?.subInventoryId === "FA" ? (
-                            <MenuItem value={data?.full_name}>
-                              {data?.full_name}
+                            <MenuItem value={data?.full_name?.toUpperCase()}>
+                              {data?.full_name?.toUpperCase()}
                             </MenuItem>
                           ) : (
                             locator.map((item) => (

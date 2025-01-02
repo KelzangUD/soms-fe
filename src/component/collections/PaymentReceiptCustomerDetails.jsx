@@ -1,21 +1,12 @@
 import React from "react";
 import { Card, Grid, TextField, Typography } from "@mui/material";
+import { Title } from "../../ui/index";
 
 const PaymentReceiptCustomerDetails = ({ paymentReceiptDetails }) => {
   return (
     <Card sx={{ width: "100%" }}>
       <Grid item xs={12}>
-        <Grid
-          container
-          padding={2}
-          sx={{
-            background: (theme) => theme.palette.bg.light,
-          }}
-        >
-          <Typography variant="subtitle1" color="#eee">
-            Customer Details
-          </Typography>
-        </Grid>
+        <Title title="Customer Details" />
         <Grid
           container
           paddingY={2}

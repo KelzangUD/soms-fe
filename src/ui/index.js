@@ -12,3 +12,4 @@ export { default as VisuallyHiddentInputComponent } from "./VisuallyHiddenInputC
 export { default as ResetPassword } from "./ResetPassword";
 export { default as RenderStatus } from "./RenderStatus";
 export { default as SuccessNotification } from "./SuccessNotification";
+export { default as Title } from "./Title";

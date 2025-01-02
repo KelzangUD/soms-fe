@@ -178,16 +178,14 @@ const TransferOrders = () => {
                   xs={12}
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      endIcon={<AddIcon />}
-                      onClick={() => setOpen(true)}
-                    >
-                      Add New
-                    </Button>
-                  </Grid>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    endIcon={<AddIcon />}
+                    onClick={() => setOpen(true)}
+                  >
+                    Add New
+                  </Button>
                 </Grid>
                 <Grid item container alignItems="center" xs={12}>
                   <CustomDataTable

@@ -96,19 +96,13 @@ const RequisitionList = () => {
           xs={12}
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Box sx={{ width: "100%" }}>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item container alignItems="center" xs={12}>
-                <CustomDataTable
-                  rows={requisitionList?.map((row, index) => ({
-                    ...row,
-                    sl: index + 1,
-                  }))}
-                  cols={requisiton_list_columns}
-                />
-              </Grid>
-            </Grid>
-          </Box>
+          <CustomDataTable
+            rows={requisitionList?.map((row, index) => ({
+              ...row,
+              sl: index + 1,
+            }))}
+            cols={requisiton_list_columns}
+          />
         </Grid>
       </Grid>
       {showNotification && (

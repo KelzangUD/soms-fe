@@ -10,39 +10,39 @@ import {
 } from "@mui/material";
 import Route from "../../routes/Route";
 import { Formik } from "formik";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import Notification from "../../ui/Notification";
 
 const CompanySetting = () => {
-  const user = localStorage.getItem('username');
+  const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [companyDtls, setCompanyDtls] = useState({
-    shortName: '',
-    mobileNo: '',
-    companyName: '',
-    companyId: '',
-    companyPhoneNo: '',
-    tpn: '',
-    contactPerson: '',
-    contactEmail: '',
-    postalCode: '',
-    incorporateDate: '',
-    companyAddress: '',
-    region_id: '',
-    country_id: '',
-    dzongkhag_id: '',
-    location_id: '',
+    shortName: "",
+    mobileNo: "",
+    companyName: "",
+    companyId: "",
+    companyPhoneNo: "",
+    tpn: "",
+    contactPerson: "",
+    contactEmail: "",
+    postalCode: "",
+    incorporateDate: "",
+    companyAddress: "",
+    region_id: "",
+    country_id: "",
+    dzongkhag_id: "",
+    location_id: "",
     updatedBy: user,
-    companyEmail: '',
-    website: ''
+    companyEmail: "",
+    website: "",
   });
   const [country, setCountry] = useState([]);
   const [dzongkhag, setDzongkhag] = useState([]);
   const [location, setlocation] = useState([]);
   const [region, setRegion] = useState([]);
-  const [notificationMsg, setNotificationMsg] = useState('');
+  const [notificationMsg, setNotificationMsg] = useState("");
   const [showNotification, setShowNofication] = useState(false);
-  const [severity, setSeverity] = useState('');
+  const [severity, setSeverity] = useState("");
 
   const fetchCountry = async () => {
     const res = await Route("GET", `/Common/getCountry`, null, null, null);
@@ -66,19 +66,31 @@ const CompanySetting = () => {
   };
 
   const fetchLocation = async () => {
-    const res = await Route("GET", `/Common/FetchAllRegionOrExtension`, null, null, null);
+    const res = await Route(
+      "GET",
+      `/Common/FetchAllRegionOrExtension`,
+      null,
+      null,
+      null
+    );
     if (res?.status === 200) {
       setlocation(res?.data);
     }
   };
 
   const fetchCompanyDtls = async () => {
-    const res = await Route("GET", `/UserDtls/getCompanyDetail`, access_token, null, null);
+    const res = await Route(
+      "GET",
+      `/UserDtls/getCompanyDetail`,
+      access_token,
+      null,
+      null
+    );
     if (res?.status === 200) {
-      setCompanyDtls(prevState => ({
+      setCompanyDtls((prevState) => ({
         ...prevState,
         ...res?.data,
-        updatedBy: user
+        updatedBy: user,
       }));
     }
   };
@@ -98,25 +110,33 @@ const CompanySetting = () => {
           enableReinitialize
           initialValues={companyDtls}
           validationSchema={Yup.object().shape({
-            shortName: Yup.string().required('Company short name is required.'),
-            companyName: Yup.string().required('Company Name is required'),
-            tpn: Yup.string().required('TPN is required'),
-            companyPhoneNo: Yup.string().required('Phone No. is required'),
-            companyAddress: Yup.string().required('Company Address is required'),
-            country_id: Yup.string().required('Country is required'),
-            dzongkhag_id: Yup.string().required('State is required'),
-            region_id: Yup.string().required('Region is required'),
-            location_id: Yup.string().required('Location is required'),
-            postalCode: Yup.string().required('Post code is required'),
-            contactPerson: Yup.string().required('Contact Person is required'),
-            contactEmail: Yup.string().required('Contact Email is required'),
-            mobileNo: Yup.string().required('Contact No. is required'),
-            website: Yup.string().required('Website is required')
+            shortName: Yup.string().required("Company short name is required."),
+            companyName: Yup.string().required("Company Name is required"),
+            tpn: Yup.string().required("TPN is required"),
+            companyPhoneNo: Yup.string().required("Phone No. is required"),
+            companyAddress: Yup.string().required(
+              "Company Address is required"
+            ),
+            country_id: Yup.string().required("Country is required"),
+            dzongkhag_id: Yup.string().required("State is required"),
+            region_id: Yup.string().required("Region is required"),
+            location_id: Yup.string().required("Location is required"),
+            postalCode: Yup.string().required("Post code is required"),
+            contactPerson: Yup.string().required("Contact Person is required"),
+            contactEmail: Yup.string().required("Contact Email is required"),
+            mobileNo: Yup.string().required("Contact No. is required"),
+            website: Yup.string().required("Website is required"),
           })}
           onSubmit={async (values, { setStatus, setSubmitting, resetForm }) => {
             try {
               let data = { ...values };
-              const res = await Route("PUT", `/UserDtls/updateCompanyDetail`, null, data, null);
+              const res = await Route(
+                "PUT",
+                `/UserDtls/updateCompanyDetail`,
+                null,
+                data,
+                null
+              );
               if (res.data.responseCode === 0) {
                 setNotificationMsg(res.data.responseText);
                 setSeverity("info");
@@ -140,26 +160,35 @@ const CompanySetting = () => {
             }
           }}
         >
-          {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue, resetForm }) => (
+          {({
+            errors,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            touched,
+            values,
+            setFieldValue,
+            resetForm,
+          }) => (
             <form noValidate onSubmit={handleSubmit}>
               <Grid container spacing={4} alignItems="center">
-                {/* <SubHeader text="Company Setting" /> */}
                 <Grid item xs={12}>
                   <Paper elevation={1} sx={{ px: 2 }}>
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <TextField
                           label="Company Name"
-                          variant="outlined"
-                          fullWidth
                           name="companyName"
                           onChange={handleChange}
                           value={values?.companyName}
                           onBlur={handleBlur}
-                          size="small"
                         />
                         {touched?.companyName && errors?.companyName && (
-                          <FormHelperText error id="standard-weight-helper-text--register">
+                          <FormHelperText
+                            error
+                            id="standard-weight-helper-text--register"
+                          >
                             {errors?.companyName}
                           </FormHelperText>
                         )}
@@ -168,17 +197,16 @@ const CompanySetting = () => {
                         <Grid item xs={4}>
                           <TextField
                             label="Company Short Name"
-                            variant="outlined"
-                            fullWidth
                             name="shortName"
                             onChange={handleChange}
                             value={values.shortName}
                             onBlur={handleBlur}
-                            defaultValue='shortName'
-                            size="small"
                           />
                           {touched.shortName && errors.shortName && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors.shortName}
                             </FormHelperText>
                           )}
@@ -186,29 +214,24 @@ const CompanySetting = () => {
                         <Grid item xs={4}>
                           <TextField
                             label="Incorporation Date"
-                            variant="outlined"
-                            fullWidth
                             name="incorporateDate"
                             value={values.incorporateDate}
-                            defaultValue='shortName'
-                            disabled='true'
-                            size="small"
+                            disabled
                           />
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
                             label="TPN Number"
-                            variant="outlined"
-                            fullWidth
                             name="tpn"
                             onChange={handleChange}
                             value={values.tpn}
                             onBlur={handleBlur}
-                            defaultValue='tpn'
-                            size="small"
                           />
                           {touched.tpn && errors.tpn && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors.tpn}
                             </FormHelperText>
                           )}
@@ -217,17 +240,16 @@ const CompanySetting = () => {
                       <Grid item container>
                         <TextField
                           label="Address"
-                          variant="outlined"
-                          fullWidth
                           name="companyAddress"
                           onChange={handleChange}
                           value={values?.companyAddress}
                           onBlur={handleBlur}
-                          defaultValue='companyAddress'
-                          size="small"
                         />
                         {touched?.companyAddress && errors?.companyAddress && (
-                          <FormHelperText error id="standard-weight-helper-text--register">
+                          <FormHelperText
+                            error
+                            id="standard-weight-helper-text--register"
+                          >
                             {errors?.companyAddress}
                           </FormHelperText>
                         )}
@@ -235,7 +257,6 @@ const CompanySetting = () => {
                       <Grid item container spacing={1} sx={{ mt: -3 }}>
                         <Grid item xs={3}>
                           <TextField
-                            fullWidth
                             label="Country"
                             margin="normal"
                             name="country_id"
@@ -243,25 +264,28 @@ const CompanySetting = () => {
                             value={values?.country_id}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            variant="outlined"
                             select
-                            size="small"
                           >
                             {country.map((item) => (
-                              <MenuItem key={item?.country_id} value={item?.country_id}>
+                              <MenuItem
+                                key={item?.country_id}
+                                value={item?.country_id}
+                              >
                                 {item?.country_name}
                               </MenuItem>
                             ))}
                           </TextField>
                           {touched?.country_id && errors?.country_id && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors?.country_id}
                             </FormHelperText>
                           )}
                         </Grid>
                         <Grid item xs={3}>
                           <TextField
-                            fullWidth
                             label="Region"
                             margin="normal"
                             name="region_id"
@@ -269,25 +293,28 @@ const CompanySetting = () => {
                             value={values?.region_id}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            variant="outlined"
                             select
-                            size="small"
                           >
                             {region.map((item) => (
-                              <MenuItem key={item?.region_id} value={item?.region_id}>
+                              <MenuItem
+                                key={item?.region_id}
+                                value={item?.region_id}
+                              >
                                 {item?.region_name}
                               </MenuItem>
                             ))}
                           </TextField>
                           {touched?.region_id && errors?.region_id && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors?.region_id}
                             </FormHelperText>
                           )}
                         </Grid>
                         <Grid item xs={3}>
                           <TextField
-                            fullWidth
                             label="Dzongkhag"
                             margin="normal"
                             name="dzongkhag_id"
@@ -295,25 +322,28 @@ const CompanySetting = () => {
                             value={values?.dzongkhag_id}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            variant="outlined"
                             select
-                            size="small"
                           >
                             {dzongkhag.map((item) => (
-                              <MenuItem key={item?.state_id} value={item?.state_id}>
+                              <MenuItem
+                                key={item?.state_id}
+                                value={item?.state_id}
+                              >
                                 {item?.state_name}
                               </MenuItem>
                             ))}
                           </TextField>
                           {touched?.dzongkhag_id && errors?.dzongkhag_id && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors?.dzongkhag_id}
                             </FormHelperText>
                           )}
                         </Grid>
                         <Grid item xs={3}>
                           <TextField
-                            fullWidth
                             label="Location"
                             margin="normal"
                             name="location_id"
@@ -321,18 +351,22 @@ const CompanySetting = () => {
                             value={values?.location_id}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            variant="outlined"
                             select
-                            size="small"
                           >
                             {location.map((item) => (
-                              <MenuItem key={item?.locationId} value={item?.locationId}>
+                              <MenuItem
+                                key={item?.locationId}
+                                value={item?.locationId}
+                              >
                                 {item?.extensionName}
                               </MenuItem>
                             ))}
                           </TextField>
                           {touched?.location_id && errors?.location_id && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors?.location_id}
                             </FormHelperText>
                           )}
@@ -342,17 +376,16 @@ const CompanySetting = () => {
                         <Grid item xs={3}>
                           <TextField
                             label="Postal Code"
-                            variant="outlined"
-                            fullWidth
                             name="postalCode"
                             onChange={handleChange}
                             value={values?.postalCode}
                             onBlur={handleBlur}
-                            defaultValue='postalCode'
-                            size="small"
                           />
                           {touched?.postalCode && errors?.postalCode && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors?.postalCode}
                             </FormHelperText>
                           )}
@@ -360,50 +393,45 @@ const CompanySetting = () => {
                         <Grid item xs={6}>
                           <TextField
                             label="Company Email"
-                            variant="outlined"
-                            fullWidth
                             name="companyEmail"
                             onChange={handleChange}
                             value={values?.companyEmail}
                             onBlur={handleBlur}
-                            defaultValue='companyEmail'
-                            size="small"
                           />
                         </Grid>
                         <Grid item xs={3}>
                           <TextField
                             label="Phone Number"
-                            variant="outlined"
-                            fullWidth
                             name="companyPhoneNo"
                             onChange={handleChange}
                             value={values?.companyPhoneNo}
                             onBlur={handleBlur}
-                            defaultValue='companyPhoneNo'
-                            size="small"
                           />
-                          {touched?.companyPhoneNo && errors?.companyPhoneNo && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
-                              {errors?.companyPhoneNo}
-                            </FormHelperText>
-                          )}
+                          {touched?.companyPhoneNo &&
+                            errors?.companyPhoneNo && (
+                              <FormHelperText
+                                error
+                                id="standard-weight-helper-text--register"
+                              >
+                                {errors?.companyPhoneNo}
+                              </FormHelperText>
+                            )}
                         </Grid>
                       </Grid>
                       <Grid item container spacing={1}>
                         <Grid item xs={3}>
                           <TextField
                             label="Contact Person"
-                            variant="outlined"
-                            fullWidth
                             name="contactPerson"
                             onChange={handleChange}
                             value={values?.contactPerson}
                             onBlur={handleBlur}
-                            defaultValue='contactPerson'
-                            size="small"
                           />
                           {touched?.contactPerson && errors?.contactPerson && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors?.contactPerson}
                             </FormHelperText>
                           )}
@@ -411,17 +439,16 @@ const CompanySetting = () => {
                         <Grid item xs={6}>
                           <TextField
                             label="Contact Email"
-                            variant="outlined"
-                            fullWidth
                             name="contactEmail"
                             onChange={handleChange}
                             value={values?.contactEmail}
                             onBlur={handleBlur}
-                            defaultValue='contactEmail'
-                            size="small"
                           />
                           {touched?.contactEmail && errors?.contactEmail && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors?.contactEmail}
                             </FormHelperText>
                           )}
@@ -429,17 +456,16 @@ const CompanySetting = () => {
                         <Grid item xs={3}>
                           <TextField
                             label="Mobile Number"
-                            variant="outlined"
-                            fullWidth
                             name="mobileNo"
                             onChange={handleChange}
                             value={values?.mobileNo}
                             onBlur={handleBlur}
-                            defaultValue='mobileNo'
-                            size="small"
                           />
                           {touched?.mobileNo && errors?.mobileNo && (
-                            <FormHelperText error id="standard-weight-helper-text--register">
+                            <FormHelperText
+                              error
+                              id="standard-weight-helper-text--register"
+                            >
                               {errors?.mobileNo}
                             </FormHelperText>
                           )}
@@ -448,17 +474,16 @@ const CompanySetting = () => {
                       <Grid item xs={12}>
                         <TextField
                           label="Website"
-                          variant="outlined"
-                          fullWidth
                           name="website"
                           onChange={handleChange}
                           value={values?.website}
                           onBlur={handleBlur}
-                          defaultValue='website'
-                          size="small"
                         />
                         {touched?.website && errors?.website && (
-                          <FormHelperText error id="standard-weight-helper-text--register">
+                          <FormHelperText
+                            error
+                            id="standard-weight-helper-text--register"
+                          >
                             {errors?.website}
                           </FormHelperText>
                         )}
@@ -466,7 +491,12 @@ const CompanySetting = () => {
                       <Grid
                         container
                         spacing={2}
-                        sx={{ mt: 0.5, mb: 2, display: "flex", justifyContent: "flex-end" }}
+                        sx={{
+                          mt: 0.5,
+                          mb: 2,
+                          display: "flex",
+                          justifyContent: "flex-end",
+                        }}
                       >
                         <Grid item>
                           <Button
@@ -476,7 +506,6 @@ const CompanySetting = () => {
                             type="submit"
                             variant="contained"
                             color="primary"
-                            size="small"
                           >
                             Save & Update
                           </Button>
@@ -484,7 +513,7 @@ const CompanySetting = () => {
                             variant="outlined"
                             color="error"
                             onClick={resetForm}
-                            style={{ marginLeft: '10px'}}
+                            style={{ marginLeft: "10px" }}
                             size="small"
                           >
                             Reset

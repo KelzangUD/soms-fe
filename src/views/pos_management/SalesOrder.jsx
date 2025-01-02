@@ -27,6 +27,7 @@ import {
   ItemsNotFoundDialog,
   VisuallyHiddentInputComponent,
   SuccessNotification,
+  Title,
 } from "../../ui/index";
 import {
   LineItemsTable,
@@ -661,17 +662,7 @@ const SalesOrder = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12}>
             <Card>
-              <Grid
-                container
-                sx={{
-                  backgroundColor: "bg.light",
-                  padding: 2,
-                }}
-              >
-                <Typography variant="subtitle1" color="#eee">
-                  Header
-                </Typography>
-              </Grid>
+              <Title title="Header" />
               <Grid container p={2}>
                 <Grid container spacing={1} mb={1}>
                   <Grid item xs={3}>
@@ -915,13 +906,11 @@ const SalesOrder = () => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   backgroundColor: "bg.light",
-                  color: "#eee"
+                  color: "#eee",
                 }}
               >
                 <Grid item>
-                  <Typography variant="subtitle1">
-                    Line
-                  </Typography>
+                  <Typography variant="subtitle1">Line</Typography>
                 </Grid>
                 <Grid item>
                   {bulkUpload && (
@@ -975,21 +964,7 @@ const SalesOrder = () => {
           </Grid>
           <Grid item xs={12}>
             <Card>
-              <Grid
-                container
-                padding={2}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  backgroundColor: "bg.light",
-                  color: "#eee",
-                }}
-              >
-                <Grid item>
-                  <Typography variant="subtitle1">Payment Details</Typography>
-                </Grid>
-              </Grid>
+              <Title title="Payment Details" />
               <Grid container p={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={2}>

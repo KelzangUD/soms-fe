@@ -30,7 +30,7 @@ const Profile = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Avatar sx={{ width: 100, height: 100 }}>
+                  <Avatar sx={{ width: 90, height: 90 }}>
                     {userDetails?.userName !== "" &&
                       userDetails?.userName[0].toUpperCase()}
                   </Avatar>
@@ -38,23 +38,22 @@ const Profile = () => {
                 <Grid item xs={10}>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: "800", fontSize: "24px" }}
-                    gutterBottom
+                    sx={{
+                      fontWeight: "800",
+                      fontSize: "24px",
+                      color: "#263238",
+                    }}
                   >
                     {userDetails?.userName}
                   </Typography>
                   <Typography
-                    variant="subtitle1"
+                    variant="subtitle2"
+                    sx={{ color: "#607d8b" }}
                     gutterBottom
-                    sx={{ color: "#424242" }}
                   >
                     {empID}
                   </Typography>
-                  <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    sx={{ color: "#424242" }}
-                  >
+                  <Typography variant="subtitle2" sx={{ color: "#607d8b" }}>
                     {userDetails?.subInventory !== "" &&
                     userDetails?.locator !== "Select"
                       ? `${userDetails?.subInventory}, ${userDetails?.locator},`
@@ -66,7 +65,7 @@ const Profile = () => {
               <Divider />
               <Grid sx={{ my: 2 }}>
                 <Typography
-                  variant="subtitle1"
+                  variant="h6"
                   gutterBottom
                   sx={{ fontWeight: "600" }}
                 >
@@ -74,23 +73,43 @@ const Profile = () => {
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={3} display="flex">
-                    <CakeIcon />
+                    <CakeIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      Birthday: {userDetails?.dob}
+                      <span style={{ color: "#607d8b" }}>Birthday:</span>{" "}
+                      {userDetails?.dob}
                     </Typography>
                   </Grid>
                   <Grid item xs={3} display="flex">
-                    <WcIcon />
+                    <WcIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      Gender: {userDetails?.gender}
+                      <span style={{ color: "#607d8b" }}>Gender:</span>{" "}
+                      {userDetails?.gender}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -98,7 +117,7 @@ const Profile = () => {
               <Divider />
               <Grid sx={{ my: 2 }}>
                 <Typography
-                  variant="subtitle1"
+                  variant="h6"
                   gutterBottom
                   sx={{ fontWeight: "600" }}
                 >
@@ -106,77 +125,147 @@ const Profile = () => {
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={4} display="flex">
-                    <WorkIcon />
+                    <LaptopIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      Role: {userDetails?.roleName}
+                      <span style={{ color: "#607d8b" }}>Role:</span>{" "}
+                      {userDetails?.roleName}
                     </Typography>
                   </Grid>
                   <Grid item xs={4} display="flex">
-                    <BorderInnerIcon />
+                    <BorderInnerIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      Section: {userDetails?.section}
+                      <span style={{ color: "#607d8b" }}>Section:</span>{" "}
+                      {userDetails?.section}
                     </Typography>
                   </Grid>
                   <Grid item xs={4} display="flex">
-                    <BadgeIcon />
+                    <BadgeIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      Designation: {userDetails?.designation}
+                      <span style={{ color: "#607d8b" }}>Designation:</span>{" "}
+                      {userDetails?.designation}
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item xs={4} display="flex">
-                    <CalendarMonthIcon />
+                    <CalendarMonthIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      DOJ: {userDetails?.doj}
+                      <span style={{ color: "#607d8b" }}>DOJ:</span>{" "}
+                      {userDetails?.doj}
                     </Typography>
                   </Grid>
                   <Grid item xs={4} display="flex">
-                    <LaptopIcon />
+                    <WorkIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      Employment: {userDetails?.empType}
+                      <span style={{ color: "#607d8b" }}>Employment:</span>{" "}
+                      {userDetails?.empType}
                     </Typography>
                   </Grid>
                   <Grid item xs={4} display="flex">
-                    <GradingIcon />
+                    <GradingIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      Grade: {userDetails?.grade}
+                      <span style={{ color: "#607d8b" }}>Grade:</span>{" "}
+                      {userDetails?.grade}
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item xs={6} display="flex">
-                    <MailIcon />
+                    <MailIcon
+                      sx={{
+                        color: "#607d8b",
+                      }}
+                    />
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       gutterBottom
-                      sx={{ color: "#424242", ml: 2 }}
+                      sx={{
+                        color: "#263238",
+                        ml: 2,
+                        alignContent: "center",
+                        fontSize: 14,
+                      }}
                     >
-                      Email: {userDetails?.email}
+                      <span style={{ color: "#607d8b" }}>Email:</span>{" "}
+                      {userDetails?.email}
                     </Typography>
                   </Grid>
                 </Grid>
