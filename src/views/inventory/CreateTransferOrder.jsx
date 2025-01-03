@@ -141,7 +141,7 @@ const CreateTransferOrder = ({
         transfer_To_Locator: e?.target?.value,
       }));
     setWithinStoreLocator(
-      toLocator?.filter((item) => item?.name !== e?.target?.value)
+      transferOrderToLocator?.filter((item) => item?.name !== e?.target?.value)
     );
   };
   const toStoreHandle = (value) => {
@@ -550,8 +550,8 @@ const CreateTransferOrder = ({
                       {parameters?.transfer_From_SubInventory ===
                       parameters?.transfer_To_SubInventory
                         ? withinStoreLocator?.map((item) => (
-                            <MenuItem value={item?.name} key={item?.id}>
-                              {item?.name}
+                            <MenuItem value={item?.id} key={item?.id}>
+                              {item?.id}
                             </MenuItem>
                           ))
                         : transferOrderToLocator?.map((item) => (
