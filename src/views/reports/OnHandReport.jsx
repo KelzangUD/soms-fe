@@ -51,15 +51,15 @@ const OnHandReport = () => {
       res?.data?.map((item, index) => ({
         sl: index + 1,
         Item: item?.item,
-        "Locator ID": item?.locator_id,
         "Item Description": item?.item_description,
         UOM: item?.uom,
-        "Serial Controlled": item?.serial_controlled,
         "Transaction Quantity": parseInt(item?.transaction_quantity),
+        "Serial Controlled": item?.serial_controlled,
+        "Imei Number": item?.imei_number,
         "Serial Number": item?.serial_number,
         "Sub-inventory ID": item?.sub_inventory_id,
+        "Locator ID": item?.locator_id,
         "Store Name": item?.store_name,
-        "Imei Number": item?.imei_number,
       }))
     );
   };
@@ -109,15 +109,15 @@ const OnHandReport = () => {
         [
           "sl",
           "Item",
-          "Locator ID",
           "Item Description",
           "UOM",
-          "Serial Controlled",
           "Transaction Quantity",
           "Serial Number",
-          "Sub-inventory ID",
-          "Store Name",
           "Imei Number",
+          "Sub-inventory ID",
+          "Locator ID",
+          "Store Name",
+          "Serial Controlled",
         ],
       ],
       body: printData?.map((item) => [

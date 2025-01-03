@@ -14,6 +14,7 @@ const RechargeReceipt = () => {
   const description = query.get("description");
   const rechargeDate = query.get("rechargeDate");
   const receiptType = query.get("receiptType");
+  const phone = query.get("phone");
   return (
     <>
       <div style={{ width: "250px", padding: "0", lineHeight: "1.7"}}>
@@ -29,7 +30,7 @@ const RechargeReceipt = () => {
           <p>Customer Name: {customerName}</p>
           <p>Customer No: {customerNo}</p>
           <p>Billing: {billing}</p>
-          <p>Phone:</p>
+          <p>Phone: {phone}</p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
