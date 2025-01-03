@@ -108,12 +108,12 @@ const CreateTransferOrder = ({
     fetchToStore();
   }, [userDetails, parameters?.transfer_Type]);
 
-  // useEffect(() => {
-  //   fetchTrasnferOrderToLocator(
-  //     parameters?.transfer_To,
-  //     parameters.transfer_To_SubInventory
-  //   );
-  // }, [parameters?.transfer_To, parameters.transfer_To_SubInventory]);
+  useEffect(() => {
+    fetchTrasnferOrderToLocator(
+      parameters?.transfer_To,
+      parameters.transfer_To_SubInventory
+    );
+  }, [parameters?.transfer_To, parameters.transfer_To_SubInventory]);
 
   const transferOrderDateHandle = (e) => {
     setParameters((prev) => ({
@@ -144,7 +144,7 @@ const CreateTransferOrder = ({
   };
   const fromSubInventoryHandle = (e) => {
     fetchFromLocator(e?.target?.value);
-    fetchTrasnferOrderToLocator(e?.target.value);
+    // fetchTrasnferOrderToLocator(e?.target.value);
     setParameters((prev) => ({
       ...prev,
       transfer_From_SubInventory: e?.target?.value,
@@ -185,7 +185,7 @@ const CreateTransferOrder = ({
     fetchLocatorBasedOExtension(toStoreName);
   };
   const transferToSubInvHandle = (e) => {
-    fetchTrasnferOrderToLocator(e?.target?.value);
+    // fetchTrasnferOrderToLocator(e?.target?.value);
     setParameters((prev) => ({
       ...prev,
       transfer_To_SubInventory: e?.target?.value,

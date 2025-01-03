@@ -186,22 +186,10 @@ export const CommonProvider = ({ children }) => {
       setToLocator(res?.data);
     }
   };
-  // const fetchTrasnferOrderToLocator = async (storeId, subinv) => {
-  //   const res = await Route(
-  //     "GET",
-  //     `/Common/Fetch_Locator?workLocation=${storeId}&subInventory=${subinv}`,
-  //     null,
-  //     null,
-  //     null
-  //   );
-  //   if (res?.status === 200) {
-  //     setTransferOrderToLocator(res?.data);
-  //   }
-  // };
-  const fetchTrasnferOrderToLocator = async (subinv) => {
+  const fetchTrasnferOrderToLocator = async (storeId, subinv) => {
     const res = await Route(
       "GET",
-      `/Common/Fetch_Locator?workLocation=${userDetails?.storeId}&subInventory=${subinv}`,
+      `/Common/Fetch_Locator?workLocation=${storeId}&subInventory=${subinv}`,
       null,
       null,
       null
@@ -210,6 +198,18 @@ export const CommonProvider = ({ children }) => {
       setTransferOrderToLocator(res?.data);
     }
   };
+  // const fetchTrasnferOrderToLocator = async (subinv) => {
+  //   const res = await Route(
+  //     "GET",
+  //     `/Common/Fetch_Locator?workLocation=${userDetails?.storeId}&subInventory=${subinv}`,
+  //     null,
+  //     null,
+  //     null
+  //   );
+  //   if (res?.status === 200) {
+  //     setTransferOrderToLocator(res?.data);
+  //   }
+  // };
   const fetchLocatorBasedOExtension = async (extension) => {
     const res = await Route(
       "GET",
