@@ -80,7 +80,7 @@ const AddLineItem = ({
       setOnHandItems(
         res?.data?.map((item) => ({
           item: item?.item,
-          label: item?.item_Description,
+          label: item?.item_description,
           serial_controlled: item?.serial_controlled,
         }))
       );

@@ -305,6 +305,7 @@ const PaymentReceipt = () => {
     }
   };
   const openInNewTab = () => {
+    console.log(responseData);
     const queryParams = new URLSearchParams(responseData).toString();
     const newWindow = window.open(
       `/bank-receipt?${queryParams}`,
