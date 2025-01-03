@@ -1018,7 +1018,7 @@ const SalesOrder = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {paymentLinesItem?.paymentType === "2" && (
+                  {paymentLinesItem?.paymentType === "3" && (
                     <Grid item sx={2}>
                       <TextField
                         label="Card No"
