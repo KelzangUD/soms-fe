@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -52,7 +52,9 @@ const CreateTransferOrder = ({
     fetchTrasnferOrderToLocator,
     transferOrderToLocator,
   } = useCommon();
-
+  useEffect(() => {
+    console.log(toStore);
+  },[])
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
@@ -489,7 +491,7 @@ const CreateTransferOrder = ({
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                {parameters?.transfer_Type === "With In Store" ? (
+                {/* {parameters?.transfer_Type === "With In Store" ? (
                   <TextField
                     id="outlined-basic"
                     label="To Store"
@@ -514,7 +516,23 @@ const CreateTransferOrder = ({
                       ))}
                     </Select>
                   </FormControl>
-                )}
+                )} */}
+                <FormControl>
+                    <InputLabel id="to-store-select-label">To Store</InputLabel>
+                    <Select
+                      labelId="to-store-select-label"
+                      id="to-store-select"
+                      label="To Store"
+                      onChange={(event) => toStoreHandle(event.target.value)}
+                      value={parameters?.selectedStore}
+                    >
+                      {toStore?.map((item) => (
+                        <MenuItem value={item} key={item?.id}>
+                          {item?.toStoreName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
               </Grid>
               <Grid item xs={3}>
                 <FormControl>

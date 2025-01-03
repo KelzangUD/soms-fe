@@ -565,10 +565,10 @@ const SalesReportAll = () => {
       toDate: dateFormatterTwo(e.$d),
     }));
   };
-  const regionOrExtensionHandle = (e) => {
+  const regionOrExtensionHandle = (e, value) => {
     setParams((prev) => ({
       ...prev,
-      extension: e?.target?.value,
+      extension: value?.id,
     }));
   };
   const fieldAssistantHandle = (e, value) => {
