@@ -681,13 +681,13 @@ const CreateTransferOrder = ({
                 <Autocomplete
                   disablePortal
                   options={onHandsTransferOrderItems?.map((item) => ({
-                    label: item?.item_Description,
-                    value: item?.item_Description,
+                    label: item?.item_description,
+                    value: item?.item_description,
                     item_Number: item?.item,
                     serial_controlled: item?.serial_controlled,
                     uom: item?.uom,
                     id: item?.id,
-                    availaibleQty: parseInt(item?.transaction_Quantity),
+                    availaibleQty: parseInt(item?.transaction_quantity),
                   }))}
                   sx={{
                     zIndex: 1500,
