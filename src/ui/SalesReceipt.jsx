@@ -38,7 +38,7 @@ const SalesReceipt = () => {
           <p>Customer Name: {customerName}</p>
           <p>Customer No: {customerNo}</p>
           <p>Billing: {billing}</p>
-          <p>Phone: {phone}</p>
+          <p>Phone: 77889977</p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         {itemDetails?.map((item) => (
