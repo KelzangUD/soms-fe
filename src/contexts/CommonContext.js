@@ -186,10 +186,22 @@ export const CommonProvider = ({ children }) => {
       setToLocator(res?.data);
     }
   };
-  const fetchTrasnferOrderToLocator = async (id) => {
+  // const fetchTrasnferOrderToLocator = async (storeId, subinv) => {
+  //   const res = await Route(
+  //     "GET",
+  //     `/Common/Fetch_Locator?workLocation=${storeId}&subInventory=${subinv}`,
+  //     null,
+  //     null,
+  //     null
+  //   );
+  //   if (res?.status === 200) {
+  //     setTransferOrderToLocator(res?.data);
+  //   }
+  // };
+  const fetchTrasnferOrderToLocator = async (subinv) => {
     const res = await Route(
       "GET",
-      `/Common/Fetch_Locator?workLocation=${userDetails?.storeId}&subInventory=${id}`,
+      `/Common/Fetch_Locator?workLocation=${userDetails?.storeId}&subInventory=${subinv}`,
       null,
       null,
       null

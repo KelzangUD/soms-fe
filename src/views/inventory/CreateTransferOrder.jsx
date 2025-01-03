@@ -45,16 +45,14 @@ const CreateTransferOrder = ({
     toLocator,
     fetchLocatorBasedOExtension,
     faToLocator,
-    toStore,
+    // toStore,
     onHandsTransferOrderItems,
     fetchAllItems,
     validateSerialNumberWithLocator,
     fetchTrasnferOrderToLocator,
     transferOrderToLocator,
   } = useCommon();
-  useEffect(() => {
-    console.log(toStore);
-  },[])
+
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNofication] = useState(false);
@@ -92,6 +90,30 @@ const CreateTransferOrder = ({
   });
   const [serialInputDisabled, setSerialInputDisabled] = useState(true);
   const [disabledToSubInv, setDisabledToSubInv] = useState(true);
+  const [toStore, setToStore] = useState([]);
+  const fetchToStore = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchTransferToStore?StoreID=${userDetails?.storeId}&storeName=${userDetails?.regionName}&transferType=${parameters?.transfer_Type}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setToStore(res?.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchToStore();
+  }, [userDetails, parameters?.transfer_Type]);
+
+  // useEffect(() => {
+  //   fetchTrasnferOrderToLocator(
+  //     parameters?.transfer_To,
+  //     parameters.transfer_To_SubInventory
+  //   );
+  // }, [parameters?.transfer_To, parameters.transfer_To_SubInventory]);
 
   const transferOrderDateHandle = (e) => {
     setParameters((prev) => ({
@@ -518,21 +540,21 @@ const CreateTransferOrder = ({
                   </FormControl>
                 )} */}
                 <FormControl>
-                    <InputLabel id="to-store-select-label">To Store</InputLabel>
-                    <Select
-                      labelId="to-store-select-label"
-                      id="to-store-select"
-                      label="To Store"
-                      onChange={(event) => toStoreHandle(event.target.value)}
-                      value={parameters?.selectedStore}
-                    >
-                      {toStore?.map((item) => (
-                        <MenuItem value={item} key={item?.id}>
-                          {item?.toStoreName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <InputLabel id="to-store-select-label">To Store</InputLabel>
+                  <Select
+                    labelId="to-store-select-label"
+                    id="to-store-select"
+                    label="To Store"
+                    onChange={(event) => toStoreHandle(event.target.value)}
+                    value={parameters?.selectedStore}
+                  >
+                    {toStore?.map((item) => (
+                      <MenuItem value={item} key={item?.id}>
+                        {item?.toStoreName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={3}>
                 <FormControl>

@@ -254,6 +254,7 @@ const PaymentReceipt = () => {
     e.preventDefault();
     if (
       (paymentReceiptDetails?.serviceType === "1" &&
+        mobileNo.startsWith("77") &&
         paymentReceiptDetails?.mobileNo?.length !== 8) ||
       (paymentReceiptDetails?.serviceType === "2" &&
         paymentReceiptDetails?.mobileNo?.length !== 9)
