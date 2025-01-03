@@ -101,12 +101,18 @@ const CreateTransferOrder = ({
     setParameters((prev) => ({
       ...prev,
       transfer_Type: e?.target?.value,
+      transfer_From_SubInventory: "",
+      transfer_From_Locator: "",
+      transfer_To_SubInventory: "",
+      transfer_To_Locator: "",
     }));
     e?.target?.value === "With In Store" &&
       setParameters((prev) => ({
         ...prev,
         transfer_To: userDetails?.storeId,
         transfer_To_Store: userDetails?.region_NAME,
+        transfer_From_Locator: "",
+        transfer_To_Locator: "",
       }));
     e?.target?.value === "With In Store"
       ? setDisabledToSubInv(false)
@@ -155,7 +161,7 @@ const CreateTransferOrder = ({
     fetchLocatorBasedOExtension(toStoreName);
   };
   const transferToSubInvHandle = (e) => {
-    fetchToLocator(e?.target?.value);
+    fetchTrasnferOrderToLocator(e?.target?.value);
     setParameters((prev) => ({
       ...prev,
       transfer_To_SubInventory: e?.target?.value,
@@ -555,8 +561,8 @@ const CreateTransferOrder = ({
                             </MenuItem>
                           ))
                         : transferOrderToLocator?.map((item) => (
-                            <MenuItem value={item?.name} key={item?.id}>
-                              {item?.name}
+                            <MenuItem value={item?.id} key={item?.id}>
+                              {item?.id}
                             </MenuItem>
                           ))}
                     </Select>
