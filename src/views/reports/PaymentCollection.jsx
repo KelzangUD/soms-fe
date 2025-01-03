@@ -199,10 +199,8 @@ const PaymentCollection = () => {
                         <TextField
                           {...params}
                           label="Region/Extension"
-                          size="small"
                         />
                       )}
-                      style={{ background: "#fff" }}
                       disabled={
                         userDetails?.roleName === "Administrator" ||
                         userDetails?.roleName === "General Manager"
@@ -212,7 +210,7 @@ const PaymentCollection = () => {
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="From Date"
@@ -223,7 +221,7 @@ const PaymentCollection = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl fullWidth sx={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="To Date"

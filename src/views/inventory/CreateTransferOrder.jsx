@@ -576,14 +576,14 @@ const CreateTransferOrder = ({
                       disabled={!enableToLocator}
                     >
                       {parameters?.transfer_From_SubInventory !== "FA"
-                        ? toLocator?.map((item) => (
-                            <MenuItem value={item?.name} key={item?.id}>
-                              {item?.name}
+                        ? transferOrderToLocator?.map((item) => (
+                            <MenuItem value={item?.id} key={item?.id}>
+                              {item?.id}
                             </MenuItem>
                           ))
-                        : faToLocator?.map((item) => (
-                            <MenuItem value={item?.locator} key={item?.id}>
-                              {item?.locator}
+                        : transferOrderToLocator?.map((item) => (
+                            <MenuItem value={item?.id} key={item?.id}>
+                              {item?.id}
                             </MenuItem>
                           ))}
                     </Select>

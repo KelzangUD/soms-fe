@@ -74,13 +74,9 @@ const SalesOrderReport = () => {
                   <Grid item xs={2}>
                     <TextField
                       label="Store Name"
-                      variant="outlined"
-                      fullWidth
                       name="store_name"
                       required
                       disabled
-                      style={{ background: "#fff" }}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>

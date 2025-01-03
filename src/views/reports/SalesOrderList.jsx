@@ -15,6 +15,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { exportToExcel } from "react-json-to-excel";
@@ -22,6 +23,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
 import { useCommon } from "../../contexts/CommonContext";
+import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const SalesOrderList = () => {
   const { regionsOrExtensions } = useCommon();
@@ -34,7 +36,11 @@ const SalesOrderList = () => {
   const [regionOrExtension, setRegionOrExtension] = useState(
     userDetails?.regionName
   );
+  const [fromDate, setFromDate] = useState(dateFormatterTwo(new Date()));
+  const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
+
   const [salesOrderList, setSalesOrderList] = useState([]);
+
   const sales_order_list_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "pos_no", headerName: "POS No", flex: 1.5 },
@@ -66,6 +72,12 @@ const SalesOrderList = () => {
   const regionOrExtensionHandle = (e) => {
     setRegionOrExtension(e?.target?.value);
   };
+  const fromDateHandle = (e) => {
+    setFromDate(dateFormatterTwo(e?.$d));
+  };
+  const toDateHandle = (e) => {
+    setToDate(dateFormatterTwo(e?.$d));
+  };
 
   return (
     <>
@@ -87,56 +99,54 @@ const SalesOrderList = () => {
                         id: item?.id,
                       }))}
                       value={regionOrExtension}
-                      // onChange={storeHandle}
+                      onChange={regionOrExtensionHandle}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Region/Extension"
-                          size="small"
-                        />
+                        <TextField {...params} label="Region/Extension" />
                       )}
-                      style={{ background: "#fff" }}
                       disabled={
-                        userDetails?.roleName === "Administrator" ? false : true
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager"
+                          ? false
+                          : true
                       }
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="From*" />
+                        <DatePicker
+                          label="From Date*"
+                          value={dayjs(fromDate)}
+                          onChange={fromDateHandle}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl fullWidth style={{ background: "#fff" }}>
+                    <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To*" />
+                        <DatePicker
+                          label="To Date*"
+                          value={dayjs(toDate)}
+                          onChange={toDateHandle}
+                        />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
                     <TextField
                       label="Customer Name"
-                      variant="outlined"
-                      fullWidth
                       name="customer_name"
                       required
                       // onChange={oldPasswordHandle}
-                      style={{ background: "#fff" }}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={2}>
                     <TextField
                       label="POS No."
-                      variant="outlined"
-                      fullWidth
                       name="pos_no"
                       required
                       // onChange={oldPasswordHandle}
-                      style={{ background: "#fff" }}
-                      size="small"
                     />
                   </Grid>
                   <Grid item xs={1}>
