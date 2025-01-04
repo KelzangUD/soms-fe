@@ -549,7 +549,7 @@ const CreateTransferOrder = ({
                     value={parameters?.selectedStore}
                   >
                     {toStore?.map((item) => (
-                      <MenuItem value={item} key={item?.id}>
+                      <MenuItem value={item} key={item?.toStoreId}>
                         {item?.toStoreName}
                       </MenuItem>
                     ))}

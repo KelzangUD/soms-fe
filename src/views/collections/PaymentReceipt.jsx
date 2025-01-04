@@ -145,8 +145,7 @@ const PaymentReceipt = () => {
         serviceType === "1" &&
         ((payment === "1" && mobileNo.startsWith("77")) || payment === "2");
       const isServiceType2Valid = serviceType === "2" && mobileNo.length === 9;
-      const isServiceType3Valid = serviceType === "3" && mobileNo.length === 5;
-      if (isServiceType1Valid || isServiceType2Valid || isServiceType3Valid) {
+      if (isServiceType1Valid || isServiceType2Valid) {
         fetchCustomerDetailsHandle();
       } else {
         setIncorrectFormat(true);
@@ -306,7 +305,6 @@ const PaymentReceipt = () => {
     }
   };
   const openInNewTab = () => {
-    console.log(responseData);
     const queryParams = new URLSearchParams(responseData).toString();
     const newWindow = window.open(
       `/bank-receipt?${queryParams}`,

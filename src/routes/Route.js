@@ -24,7 +24,6 @@ const Route = async (
   // Handle JSON or FormData content types
   if (contentType === "application/json") {
     requestOptions.data = JSON.stringify(data);
-    // headers["Content-Type"] = "application/json";
   } else if (contentType === "multipart/form-data") {
     requestOptions.data = data;
   } else {
