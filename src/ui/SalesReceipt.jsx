@@ -47,6 +47,7 @@ const SalesReceipt = () => {
               <p>Description: {item?.description}</p>
               <p>Quantity: {item?.qty}</p>
               <p>Unit Rate: {parseFloat(item?.mrp).toFixed(2)}</p>
+              <p>Serial No: {item?.serialNo}</p>
               <p align="right">Amount(Nu): {item?.selling_Price}</p>
             </div>
             <hr style={{ border: "1px dashed #000" }} />
