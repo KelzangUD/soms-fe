@@ -145,7 +145,8 @@ const PaymentReceipt = () => {
         serviceType === "1" &&
         ((payment === "1" && mobileNo.startsWith("77")) || payment === "2");
       const isServiceType2Valid = serviceType === "2" && mobileNo.length === 9;
-      if (isServiceType1Valid || isServiceType2Valid) {
+      const isServiceType3Valid = serviceType === "3";
+      if (isServiceType1Valid || isServiceType2Valid || isServiceType3Valid) {
         fetchCustomerDetailsHandle();
       } else {
         setIncorrectFormat(true);
