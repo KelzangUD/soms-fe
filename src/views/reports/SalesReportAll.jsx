@@ -198,37 +198,37 @@ const SalesReportAll = () => {
                   isSubTitle: true,
                   gross_amount: res?.data?.advanceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                      accumulator + parseFloat(item?.line_Item_Amount, 10),
                     0
                   ),
                   discount_Value: res?.data?.advanceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.discount_Value, 10),
+                      accumulator + parseFloat(item?.discount_Value, 10),
                     0
                   ),
                   additional_Discount: res?.data?.advanceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.additional_Discount, 10),
+                      accumulator + parseFloat(item?.additional_Discount, 10),
                     0
                   ),
                   line_Discount_Amount: res?.data?.advanceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                      accumulator + parseFloat(item?.line_Discount_Amount, 10),
                     0
                   ),
                   tds_Amount: res?.data?.advanceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tds_Amount, 10),
+                      accumulator + parseFloat(item?.tds_Amount, 10),
                     0
                   ),
                   tax_Amount: res?.data?.advanceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tax_Amount, 10),
+                      accumulator + parseFloat(item?.tax_Amount, 10),
                     0
                   ),
                   selling_price: res?.data?.advanceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.selling_price, 10),
+                      accumulator + parseFloat(item?.selling_price, 10),
                     0
                   ),
                 },
@@ -256,37 +256,37 @@ const SalesReportAll = () => {
                   isSubTitle: true,
                   gross_amount: res?.data?.bankCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                      accumulator + parseFloat(item?.line_Item_Amount, 10),
                     0
                   ),
                   discount_Value: res?.data?.bankCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.discount_Value, 10),
+                      accumulator + parseFloat(item?.discount_Value, 10),
                     0
                   ),
                   additional_Discount: res?.data?.bankCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.additional_Discount, 10),
+                      accumulator + parseFloat(item?.additional_Discount, 10),
                     0
                   ),
                   line_Discount_Amount: res?.data?.bankCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                      accumulator + parseFloat(item?.line_Discount_Amount, 10),
                     0
                   ),
                   tds_Amount: res?.data?.bankCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tds_Amount, 10),
+                      accumulator + parseFloat(item?.tds_Amount, 10),
                     0
                   ),
                   tax_Amount: res?.data?.bankCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tax_Amount, 10),
+                      accumulator + parseFloat(item?.tax_Amount, 10),
                     0
                   ),
                   selling_price: res?.data?.bankCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.selling_price, 10),
+                      accumulator + parseFloat(item?.selling_price, 10),
                     0
                   ),
                 },
@@ -314,37 +314,37 @@ const SalesReportAll = () => {
                   isSubTitle: true,
                   gross_amount: res?.data?.paymentCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                      accumulator + parseFloat(item?.line_Item_Amount, 10),
                     0
                   ),
                   discount_Value: res?.data?.paymentCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.discount_Value, 10),
+                      accumulator + parseFloat(item?.discount_Value, 10),
                     0
                   ),
                   additional_Discount: res?.data?.paymentCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.additional_Discount, 10),
+                      accumulator + parseFloat(item?.additional_Discount, 10),
                     0
                   ),
                   line_Discount_Amount: res?.data?.paymentCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                      accumulator + parseFloat(item?.line_Discount_Amount, 10),
                     0
                   ),
                   tds_Amount: res?.data?.paymentCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tds_Amount, 10),
+                      accumulator + parseFloat(item?.tds_Amount, 10),
                     0
                   ),
                   tax_Amount: res?.data?.paymentCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tax_Amount, 10),
+                      accumulator + parseFloat(item?.tax_Amount, 10),
                     0
                   ),
                   selling_price: res?.data?.paymentCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.selling_price, 10),
+                      accumulator + parseFloat(item?.selling_price, 10),
                     0
                   ),
                 },
@@ -372,37 +372,37 @@ const SalesReportAll = () => {
                   isSubTitle: true,
                   gross_amount: res?.data?.rechargeCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                      accumulator + parseFloat(item?.line_Item_Amount, 10),
                     0
                   ),
                   discount_Value: res?.data?.rechargeCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.discount_Value, 10),
+                      accumulator + parseFloat(item?.discount_Value, 10),
                     0
                   ),
                   additional_Discount: res?.data?.rechargeCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.additional_Discount, 10),
+                      accumulator + parseFloat(item?.additional_Discount, 10),
                     0
                   ),
                   line_Discount_Amount: res?.data?.rechargeCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                      accumulator + parseFloat(item?.line_Discount_Amount, 10),
                     0
                   ),
                   tds_Amount: res?.data?.rechargeCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tds_Amount, 10),
+                      accumulator + parseFloat(item?.tds_Amount, 10),
                     0
                   ),
                   tax_Amount: res?.data?.rechargeCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tax_Amount, 10),
+                      accumulator + parseFloat(item?.tax_Amount, 10),
                     0
                   ),
                   selling_price: res?.data?.rechargeCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.selling_price, 10),
+                      accumulator + parseFloat(item?.selling_price, 10),
                     0
                   ),
                 },
@@ -430,37 +430,37 @@ const SalesReportAll = () => {
                   isSubTitle: true,
                   gross_amount: res?.data?.salesInvoice?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                      accumulator + parseFloat(item?.line_Item_Amount, 10),
                     0
                   ),
                   discount_Value: res?.data?.salesInvoice?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.discount_Value, 10),
+                      accumulator + parseFloat(item?.discount_Value, 10),
                     0
                   ),
                   additional_Discount: res?.data?.salesInvoice?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.additional_Discount, 10),
+                      accumulator + parseFloat(item?.additional_Discount, 10),
                     0
                   ),
                   line_Discount_Amount: res?.data?.salesInvoice?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                      accumulator + parseFloat(item?.line_Discount_Amount, 10),
                     0
                   ),
                   tds_Amount: res?.data?.salesInvoice?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tds_Amount, 10),
+                      accumulator + parseFloat(item?.tds_Amount, 10),
                     0
                   ),
                   tax_Amount: res?.data?.salesInvoice?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tax_Amount, 10),
+                      accumulator + parseFloat(item?.tax_Amount, 10),
                     0
                   ),
                   selling_price: res?.data?.salesInvoice?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.selling_price, 10),
+                      accumulator + parseFloat(item?.selling_price, 10),
                     0
                   ),
                 },
