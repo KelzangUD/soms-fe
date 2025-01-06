@@ -488,37 +488,37 @@ const SalesReportAll = () => {
                   isSubTitle: true,
                   gross_amount: res?.data?.vasServiceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Item_Amount, 10),
+                      accumulator + parseFloat(item?.line_Item_Amount, 10),
                     0
                   ),
                   discount_Value: res?.data?.vasServiceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.discount_Value, 10),
+                      accumulator + parseFloat(item?.discount_Value, 10),
                     0
                   ),
                   additional_Discount: res?.data?.vasServiceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.additional_Discount, 10),
+                      accumulator + parseFloat(item?.additional_Discount, 10),
                     0
                   ),
                   line_Discount_Amount: res?.data?.vasServiceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.line_Discount_Amount, 10),
+                      accumulator + parseFloat(item?.line_Discount_Amount, 10),
                     0
                   ),
                   tds_Amount: res?.data?.vasServiceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tds_Amount, 10),
+                      accumulator + parseFloat(item?.tds_Amount, 10),
                     0
                   ),
                   tax_Amount: res?.data?.vasServiceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.tax_Amount, 10),
+                      accumulator + parseFloat(item?.tax_Amount, 10),
                     0
                   ),
                   selling_price: res?.data?.vasServiceCollection?.reduce(
                     (accumulator, item) =>
-                      accumulator + parseInt(item?.selling_price, 10),
+                      accumulator + parseFloat(item?.selling_price, 10),
                     0
                   ),
                 },
