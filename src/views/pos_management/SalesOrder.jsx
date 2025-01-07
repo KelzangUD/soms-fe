@@ -258,6 +258,7 @@ const SalesOrder = () => {
       if (res?.status === 200) {
         const foundItems = [];
         const notFoundItems = [];
+        console.log(res?.data);
         res?.data?.forEach((item) => {
           if (item?.remarks !== "Not-Available") {
             foundItems.push({
@@ -265,7 +266,7 @@ const SalesOrder = () => {
               mrp: item?.mrp,
               discPercentage: item?.discPercentage,
               tdsAmount: parseInt(item?.tdsAmount),
-              discountedAmount: 0,
+              discountedAmount: parseInt(item?.discountAmt),
               sellingPrice: item?.sellingPrice,
               taxPercentage: parseInt(item?.taxPercentage),
               additionalDiscount: parseInt(item?.additionalDiscount),
@@ -324,7 +325,6 @@ const SalesOrder = () => {
     setSalesOrderDetails((prev) => ({
       ...prev,
       salesType: parseInt(e?.target?.value),
-      adj_type: e?.target?.value === "4" ? "EMI" : "",
     }));
     e?.target?.value === "2" ? setBulkUpload(true) : setBulkUpload(false);
   };
@@ -457,6 +457,7 @@ const SalesOrder = () => {
     );
   };
   useEffect(() => {
+    console.log(lineItems);
     const totals = lineItems?.reduce(
       (accumulator, currentObject) => {
         accumulator.grossTotal +=
@@ -465,12 +466,13 @@ const SalesOrder = () => {
         accumulator.discountedAmount += currentObject?.discountedAmount || 0;
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
-        accumulator.netAmount +=
-          currentObject?.mrp * parseInt(currentObject?.qty) -
-            (currentObject?.taxAmt +
-              currentObject?.discountedAmount +
-              currentObject?.advanceTaxAmount +
-              currentObject?.tdsAmount) || 0;
+        // accumulator.netAmount +=
+        //   currentObject?.mrp * parseInt(currentObject?.qty) -
+        //     (currentObject?.taxAmt +
+        //       currentObject?.discountedAmount +
+        //       currentObject?.advanceTaxAmount +
+        //       currentObject?.tdsAmount) || 0;
+        accumulator.netAmount += currentObject?.sellingPrice || 0;
         return accumulator;
       },
       {
@@ -889,7 +891,6 @@ const SalesOrder = () => {
                       name="remarks"
                       onChange={remarksHandle}
                       value={salesOrderDetails?.serviceRemarks}
-                      size="small"
                     />
                   </Grid>
                 </Grid>

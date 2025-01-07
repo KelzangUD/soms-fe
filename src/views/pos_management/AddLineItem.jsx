@@ -466,7 +466,6 @@ const AddLineItem = ({
                   <TextField
                     id="tds_amount"
                     label="TDS Amount"
-                    variant="outlined"
                     disabled
                     value={lineItemDetail?.tdsAmount}
                   />

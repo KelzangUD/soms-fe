@@ -31,7 +31,7 @@ const Nav = () => {
   useEffect(() => {
     setCurrentLocation(location?.pathname?.split("/").pop());
   }, [location]);
- 
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -127,16 +127,22 @@ const Nav = () => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <PersonIcon />
-        </IconButton>
-        <p>Profile</p>
+        <ListItemIcon>
+          <PersonIcon fontSize="small" />
+        </ListItemIcon>
+        My Profile
+      </MenuItem>
+      <MenuItem onClick={changePasswordHandle}>
+        <ListItemIcon>
+          <KeyIcon fontSize="small" />
+        </ListItemIcon>
+        Change Password
+      </MenuItem>
+      <MenuItem onClick={logoutHandle}>
+        <ListItemIcon>
+          <Logout fontSize="small" />
+        </ListItemIcon>
+        Logout
       </MenuItem>
     </Menu>
   );
@@ -148,8 +154,8 @@ const Nav = () => {
           boxShadow: "none",
           paddingY: "21px",
           marginBottom: 4,
-          background: (theme) => theme.palette.bg.light,
-          color: "#fff"
+          background: theme => theme.palette.bg.light,
+          color: "#fff",
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>

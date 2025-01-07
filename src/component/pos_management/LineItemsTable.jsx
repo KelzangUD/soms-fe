@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ButtonGroup,
   IconButton,
@@ -56,7 +56,7 @@ const LineItemsTable = ({
                   <TableCell align="right">{item?.qty}</TableCell>
                   <TableCell align="right">{item?.mrp}</TableCell>
                   <TableCell align="right">{item?.taxAmt}</TableCell>
-                  <TableCell align="right">{item?.discountedAmount}</TableCell>
+                  <TableCell align="right">0</TableCell>
                   <TableCell align="right">
                     {item?.additionalDiscount}
                   </TableCell>
@@ -88,7 +88,7 @@ const LineItemsTable = ({
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Gross Total</TableCell>
               <TableCell align="right">
-                {Math.round((linesAmount?.grossTotal)* 100) / 100}
+                {Math.round(linesAmount?.grossTotal * 100) / 100}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -99,9 +99,7 @@ const LineItemsTable = ({
             <TableRow>
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Disc/Comm Amount</TableCell>
-              <TableCell align="right">
-                {Math.round((linesAmount?.discountedAmount)* 100) / 100}
-              </TableCell>
+              <TableCell align="right">0</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
@@ -130,6 +128,13 @@ const LineItemsTable = ({
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
+              <TableCell colSpan={1}>Discounted Amount</TableCell>
+              <TableCell align="right">
+                {Math.round(linesAmount?.discountedAmount * 100) / 100}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell colSpan={9} />
               <TableCell colSpan={1}>Advance Tax Amount</TableCell>
               <TableCell align="right">
                 {linesAmount?.advanceTaxAmount}
@@ -144,7 +149,7 @@ const LineItemsTable = ({
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Net Total (Nu)</TableCell>
               <TableCell align="right">
-                {Math.round((linesAmount?.netAmount)* 100) / 100}
+                {Math.round(linesAmount?.netAmount * 100) / 100}
               </TableCell>
             </TableRow>
           </TableBody>
