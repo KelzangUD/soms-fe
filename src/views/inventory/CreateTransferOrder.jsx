@@ -22,12 +22,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DownloadIcon from "@mui/icons-material/Download";
+import DeleteIcon from "@mui/icons-material/Delete";
 import UploadIcon from "@mui/icons-material/Upload";
 import TransferBulkUploader from "../../assets/files/TransferBulkUploader.xls";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 import { SuccessNotification, Title } from "../../ui/index";
+import { v4 as uuidv4 } from "uuid";
 
 const CreateTransferOrder = ({
   open,
@@ -230,6 +232,7 @@ const CreateTransferOrder = ({
         item_Description: value?.label,
         item_Number: value?.item_Number,
         uom: value?.uom,
+        id: value?.id,
         availaibleQty: value?.availaibleQty,
       }));
       setSerialInputDisabled(value?.serial_controlled === "N" ? true : false);
@@ -298,6 +301,14 @@ const CreateTransferOrder = ({
       }
     }
   };
+  const removeItemHandle = (params) => {
+    setParameters((prev) => ({
+      ...prev,
+      transferOrderItemDTOList: prev.transferOrderItemDTOList.filter(
+        (item) => item?.id !== params?.row?.id
+      ),
+    }));
+  };
   const item_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "item_Number", headerName: "Item Number", flex: 2 },
@@ -313,6 +324,21 @@ const CreateTransferOrder = ({
     },
     { field: "uom", headerName: "UOM", flex: 1 },
     { field: "qty", headerName: "Quantity", flex: 1 },
+    {
+      field: "action",
+      headerName: "Delete",
+      flex: 1,
+      renderCell: (params) => (
+        <>
+          <IconButton>
+            <DeleteIcon
+              color="error"
+              onClick={() => removeItemHandle(params)}
+            />
+          </IconButton>
+        </>
+      ),
+    },
   ];
   const fileDownloadHandle = () => {
     const fileUrl = TransferBulkUploader;
@@ -726,7 +752,7 @@ const CreateTransferOrder = ({
                     item_Number: item?.item,
                     serial_controlled: item?.serial_controlled,
                     uom: item?.uom,
-                    id: item?.id,
+                    id: uuidv4(),
                     availaibleQty: parseInt(item?.transaction_quantity),
                   }))}
                   sx={{
@@ -803,7 +829,6 @@ const CreateTransferOrder = ({
                     (row, index) => ({
                       ...row,
                       sl: index + 1,
-                      id: index,
                     })
                   )}
                   columns={item_columns}
