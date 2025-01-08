@@ -407,7 +407,7 @@ const SalesOrder = () => {
     setPaymentLinesItem((prev) => ({
       ...prev,
       bankItem: e?.target?.value,
-      bankAccountNumber: e?.target?.value?.bankName,
+      bankAccountNumber: e?.target?.value?.id,
     }));
   };
   const cardNoHandle = (e) => {

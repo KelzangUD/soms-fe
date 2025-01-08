@@ -106,7 +106,6 @@ const PostedSalesInvoice = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const regionOrExtensionHandle = (e, value) => {
-    console.log(value);
     setParams((prev) => ({
       ...prev,
       extension: value?.id,
