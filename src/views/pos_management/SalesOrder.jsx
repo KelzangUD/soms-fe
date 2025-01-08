@@ -457,7 +457,6 @@ const SalesOrder = () => {
     );
   };
   useEffect(() => {
-    console.log(lineItems);
     const totals = lineItems?.reduce(
       (accumulator, currentObject) => {
         accumulator.grossTotal +=
@@ -466,12 +465,6 @@ const SalesOrder = () => {
         accumulator.discountedAmount += currentObject?.discountedAmount || 0;
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
-        // accumulator.netAmount +=
-        //   currentObject?.mrp * parseInt(currentObject?.qty) -
-        //     (currentObject?.taxAmt +
-        //       currentObject?.discountedAmount +
-        //       currentObject?.advanceTaxAmount +
-        //       currentObject?.tdsAmount) || 0;
         accumulator.netAmount += currentObject?.sellingPrice || 0;
         return accumulator;
       },

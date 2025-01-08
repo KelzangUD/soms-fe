@@ -344,7 +344,7 @@ const CreateTransferOrder = ({
     const fileUrl = TransferBulkUploader;
     const link = document.createElement("a");
     link.href = fileUrl;
-    link.download = "TransferBulkUploader.csv";
+    link.download = "TransferBulkUploader.xls";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

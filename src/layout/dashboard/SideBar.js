@@ -236,7 +236,7 @@ export const MenuItems = [
     // itemNumber: 7,
     nestedItems: [
       {
-        page: "Posted Sales Report",
+        page: "Posted Sales Invoice",
         route: "reports/posted-sales-invoice",
       },
       {
