@@ -43,11 +43,7 @@ const CreateTransferOrder = ({
     fromSubInventory,
     fetchFromLocator,
     fromLocator,
-    fetchToLocator,
-    toLocator,
     fetchLocatorBasedOExtension,
-    faToLocator,
-    // toStore,
     onHandsTransferOrderItems,
     fetchAllItems,
     validateSerialNumberWithLocator,
@@ -145,9 +141,7 @@ const CreateTransferOrder = ({
       : setDisabledToSubInv(true);
   };
   const fromSubInventoryHandle = (e) => {
-    console.log(e?.target?.value);
     fetchFromLocator(e?.target?.value);
-    // fetchTrasnferOrderToLocator(e?.target.value);
     setParameters((prev) => ({
       ...prev,
       transfer_From_SubInventory: e?.target?.value,
@@ -367,7 +361,8 @@ const CreateTransferOrder = ({
         ...prev,
         transferOrderItemDTOList: [
           ...(prev.transferOrderItemDTOList || []),
-          ...res?.data?.map((item) => ({
+          ...res?.data?.map((item, index) => ({
+            id: uuidv4(),
             item_Description: item?.item_Description,
             item_Number: item?.item_Number,
             item_Serial_Number: item?.item_Serial_Number,
@@ -829,7 +824,6 @@ const CreateTransferOrder = ({
                   rows={parameters?.transferOrderItemDTOList?.map(
                     (row, index) => ({
                       ...row,
-                      id: index,
                       sl: index + 1,
                     })
                   )}
