@@ -145,6 +145,7 @@ const CreateTransferOrder = ({
       : setDisabledToSubInv(true);
   };
   const fromSubInventoryHandle = (e) => {
+    console.log(e?.target?.value)
     fetchFromLocator(e?.target?.value);
     // fetchTrasnferOrderToLocator(e?.target.value);
     setParameters((prev) => ({
