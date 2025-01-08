@@ -145,7 +145,7 @@ const CreateTransferOrder = ({
       : setDisabledToSubInv(true);
   };
   const fromSubInventoryHandle = (e) => {
-    console.log(e?.target?.value)
+    console.log(e?.target?.value);
     fetchFromLocator(e?.target?.value);
     // fetchTrasnferOrderToLocator(e?.target.value);
     setParameters((prev) => ({
@@ -829,6 +829,7 @@ const CreateTransferOrder = ({
                   rows={parameters?.transferOrderItemDTOList?.map(
                     (row, index) => ({
                       ...row,
+                      id: index,
                       sl: index + 1,
                     })
                   )}
