@@ -128,6 +128,7 @@ const SalesOrder = () => {
     serialNoStatus: "",
     taxAmt: "",
     priceLocatorDTOs: "",
+    pricedIdForVarientCode: "",
   });
 
   const fetchCustomersList = async () => {
@@ -211,6 +212,7 @@ const SalesOrder = () => {
         serialNoStatus: res?.data?.serialNoStatus,
         taxAmt: res?.data?.taxAmount,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+        pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
       }));
     }
   };
@@ -258,7 +260,6 @@ const SalesOrder = () => {
       if (res?.status === 200) {
         const foundItems = [];
         const notFoundItems = [];
-        console.log(res?.data);
         res?.data?.forEach((item) => {
           if (item?.remarks !== "Not-Available") {
             foundItems.push({
@@ -285,6 +286,7 @@ const SalesOrder = () => {
               serialNo: item?.serialNo,
               subInventoryId: item?.sub_Inventory,
               locatorId: item?.locator,
+              pricedIdForVarientCode: item?.pricedIdForVarientCode,
             });
           } else {
             notFoundItems.push({
@@ -540,6 +542,7 @@ const SalesOrder = () => {
       serialNoStatus: "",
       taxAmt: "",
       priceLocatorDTOs: "",
+      pricedIdForVarientCode: "",
     }));
   };
 

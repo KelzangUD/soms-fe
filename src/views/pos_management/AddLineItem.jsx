@@ -118,6 +118,7 @@ const AddLineItem = ({
           priceLocatorDTOs: res?.data?.priceLocatorDTOs,
           description: res?.data?.description,
           itemNo: res?.data?.itemNo,
+          pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
         }));
       } else if (res?.status === 200 && res?.data?.available === "N") {
         setNotificationMsg("Item Not Avaliable");
@@ -164,6 +165,7 @@ const AddLineItem = ({
         serialNoStatus: res?.data?.serialNoStatus,
         taxAmt: res?.data?.taxAmount,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+        pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
       }));
     }
   };
@@ -190,6 +192,7 @@ const AddLineItem = ({
         taxAmount: res?.data?.taxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
+        pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
       }));
     }
   };
@@ -310,6 +313,10 @@ const AddLineItem = ({
   };
   const priceLocatorHandle = (e, value) => {
     setPricingID(value?.id);
+    setLineItemDetail((prev) => ({
+      ...prev,
+      pricedIdForVarientCode: e?.target?.value,
+    }));
   };
   const submitHandle = () => {
     setLineItems((prev) => [...prev, lineItemDetail]);
