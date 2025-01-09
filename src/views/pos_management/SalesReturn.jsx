@@ -331,6 +331,12 @@ const SalesReturn = () => {
   };
 
   const postSalesReturn = async () => {
+      if (paymentLinesItem?.paymentAmount === "" || paymentLinesItem?.paymentAmount === 0) {
+        setSeverity("info");
+        setNotificationMsg("Please Enter Refund Amount");
+        setShowNofication(true);
+        return;
+      }
     setLoading(true);
     try {
       let formData = new FormData();
