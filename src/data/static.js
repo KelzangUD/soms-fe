@@ -56,10 +56,10 @@ export const sales_report_all_columns = [
     valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.tax_Amount || "---",
   },
   {
-    field: "selling_price",
+    field: "net_amount",
     headerName: "Net Amount",
     width: 120,
-    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.selling_price || "---",
+    valueGetter: (params) =>  (params?.row?.isTitle) ? null : params?.row?.net_amount || "---",
   },
 ];
 // ==================== Sales And Order Report Headers ===========================
