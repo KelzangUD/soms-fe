@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Paper,
   IconButton,
@@ -19,13 +20,13 @@ const PaymentDetailsTable = ({ paymentLines, deletePaymentItemHandle}) => {
           <TableHead>
             <TableRow>
               <TableCell>Payment Amount</TableCell>
-              <TableCell align="right">Payment Type</TableCell>
-              <TableCell align="right">Bank A/C Name</TableCell>
-              <TableCell align="right">Cheque Number</TableCell>
-              <TableCell align="right">Cheque Date</TableCell>
-              <TableCell align="right">Cheque Copy</TableCell>
-              <TableCell align="right">Card Number</TableCell>
-              <TableCell align="right">Action</TableCell>
+              <TableCell>Payment Type</TableCell>
+              <TableCell>Bank A/C Name</TableCell>
+              <TableCell>Cheque Number</TableCell>
+              <TableCell>Cheque Date</TableCell>
+              <TableCell>Cheque Copy</TableCell>
+              <TableCell>Card Number</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -33,19 +34,19 @@ const PaymentDetailsTable = ({ paymentLines, deletePaymentItemHandle}) => {
               paymentLines?.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell>{item?.paymentAmount}</TableCell>
-                  <TableCell align="right">{item?.paymentTypeName}</TableCell>
-                  <TableCell align="right">{item?.bankAccountNumber}</TableCell>
-                  <TableCell align="right">{item?.chequeNumber}</TableCell>
-                  <TableCell align="right">{item?.chequeDate}</TableCell>
-                  <TableCell align="right">
+                  <TableCell>{item?.paymentTypeName}</TableCell>
+                  <TableCell>{item?.bankItem?.bankName}</TableCell>
+                  <TableCell>{item?.chequeNumber}</TableCell>
+                  <TableCell>{item?.chequeDate}</TableCell>
+                  <TableCell>
                     {item?.paymentType === "2" && (
                       <IconButton aria-label="image">
                         <ImageIcon />
                       </IconButton>
                     )}
                   </TableCell>
-                  <TableCell align="right">{item?.cardNumber}</TableCell>
-                  <TableCell align="right">
+                  <TableCell>{item?.cardNumber}</TableCell>
+                  <TableCell>
                     {" "}
                     <IconButton
                       aria-label="delete"
