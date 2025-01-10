@@ -91,7 +91,7 @@ const SalesOrder = () => {
   });
   const [paymentLines, setPaymentLines] = useState([]);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
-    paymentAmount: "",
+    paymentAmount: 0,
     paymentTypeItem: "",
     paymentType: "",
     paymentTypeName: "",
@@ -440,7 +440,7 @@ const SalesOrder = () => {
   const addPaymentItemHandle = () => {
     setPaymentLines((prev) => [...prev, paymentLinesItem]);
     setPaymentLinesItem({
-      paymentAmount: "",
+      paymentAmount: 0,
       paymentTypeItem: "",
       paymentType: "",
       paymentTypeName: "",
@@ -511,7 +511,7 @@ const SalesOrder = () => {
     setPaymentLines([]);
     setPaymentLinesItem((prev) => ({
       ...prev,
-      paymentAmount: "",
+      paymentAmount: 0,
       paymentType: "",
       paymentTypeName: "",
       bankAccountNumber: "",
