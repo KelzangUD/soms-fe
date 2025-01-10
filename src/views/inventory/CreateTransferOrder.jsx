@@ -305,24 +305,24 @@ const CreateTransferOrder = ({
     }));
   };
   const item_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "item_Number", headerName: "Item Number", flex: 2 },
+    { field: "sl", headerName: "Sl. No", width: 40 },
+    { field: "item_Number", headerName: "Item Number", width: 200 },
     {
       field: "item_Description",
       headerName: "Description",
-      flex: 4,
+      width: 350,
     },
     {
       field: "item_Serial_Number",
       headerName: "Serial No",
-      flex: 2,
+      width: 300,
     },
-    { field: "uom", headerName: "UOM", flex: 1 },
-    { field: "qty", headerName: "Quantity", flex: 1 },
+    { field: "uom", headerName: "UOM", width: 100 },
+    { field: "qty", headerName: "Quantity", width: 100 },
     {
       field: "action",
       headerName: "Delete",
-      flex: 1,
+      width: 100,
       renderCell: (params) => (
         <>
           <IconButton>
