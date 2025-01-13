@@ -13,7 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { RenderStatus } from "../../ui/index";
+import { RenderStatus, LoaderDialog } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
@@ -36,6 +36,7 @@ const RechargeCollection = () => {
   const [fromDate, setFromDate] = useState(dateFormatterTwo(new Date()));
   const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
   const [rechargeCollection, setRechargeCollection] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const recharge_collection_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     {
@@ -85,6 +86,7 @@ const RechargeCollection = () => {
     },
   ];
   const fetchRechargeCollection = async () => {
+    setIsLoading(true);
     const res = await Route(
       "GET",
       `/Report/rechargeCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
@@ -121,6 +123,7 @@ const RechargeCollection = () => {
           "Created User": item?.created_by,
         }))
       );
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -264,6 +267,7 @@ const RechargeCollection = () => {
           </Grid>
         </Grid>
       </Box>
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

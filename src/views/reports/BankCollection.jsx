@@ -6,9 +6,6 @@ import {
   Button,
   IconButton,
   FormControl,
-  MenuItem,
-  InputLabel,
-  Select,
   TextField,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
@@ -16,7 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { RenderStatus } from "../../ui/index";
+import { RenderStatus, LoaderDialog } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { exportToExcel } from "react-json-to-excel";
@@ -39,6 +36,7 @@ const BankCollection = () => {
   const [fromDate, setFromDate] = useState(dateFormatterTwo(new Date()));
   const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
   const [bankCollection, setBankCollection] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const bank_collection_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "payment_amount", headerName: "Payment Amount", flex: 1.1 },
@@ -76,6 +74,7 @@ const BankCollection = () => {
   ];
 
   const fetchBankCollection = async () => {
+    setIsLoading(true);
     const res = await Route(
       "GET",
       `/Report/bankCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
@@ -114,6 +113,7 @@ const BankCollection = () => {
           "Created User": item?.created_by,
         }))
       );
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -265,6 +265,7 @@ const BankCollection = () => {
           </Grid>
         </Grid>
       </Box>
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

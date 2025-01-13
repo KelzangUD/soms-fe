@@ -9,6 +9,7 @@ import { exportToExcel } from "react-json-to-excel";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
+import { LoaderDialog } from "../../ui/index";
 
 const OnHandReport = () => {
   const {
@@ -36,7 +37,9 @@ const OnHandReport = () => {
     imei_no: "ALL",
   });
   const [onHandReports, setOnHandReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const fetchOnHandReports = async () => {
+    setIsLoading(true);
     const res = await Route(
       "GET",
       `/OnHand/Fetch_OnHand_Items?storeName=${details?.storeName}&item=${details?.item}&locator_id=${details?.locator_id}&serialNo=${details?.serialNo}&imei_no=${details?.imei_no}`,
@@ -62,6 +65,7 @@ const OnHandReport = () => {
         "Store Name": item?.store_name,
       }))
     );
+    setIsLoading(false);
   };
   useEffect(() => {
     fetchOnHandReports();
@@ -280,6 +284,7 @@ const OnHandReport = () => {
           </Grid>
         </Grid>
       </Box>
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

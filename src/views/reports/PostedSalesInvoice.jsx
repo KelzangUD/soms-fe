@@ -21,6 +21,7 @@ import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 import { useCommon } from "../../contexts/CommonContext";
+import { LoaderDialog } from "../../ui";
 
 const PostedSalesInvoice = () => {
   const { regionsOrExtensions } = useCommon();
@@ -37,6 +38,7 @@ const PostedSalesInvoice = () => {
     posNo: "",
   });
   const [postedSales, setPostedSales] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const posted_sales_invoice_columns = [
     { field: "sl", headerName: "Sl. No", flex: 40 },
@@ -70,6 +72,7 @@ const PostedSalesInvoice = () => {
   ];
 
   const fetchPostedSalesReport = async () => {
+    setIsLoading(true);
     const res = await Route(
       "GET",
       `/Report/PostedSalesInvoice?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&customerName=${params?.customerName}&posNo=${params?.posNo}`,
@@ -99,6 +102,7 @@ const PostedSalesInvoice = () => {
         "Cheque Date": item?.paymentDate,
       }))
     );
+    setIsLoading(false);
   };
   useEffect(() => {
     fetchPostedSalesReport();
@@ -286,6 +290,7 @@ const PostedSalesInvoice = () => {
           </Grid>
         </Grid>
       </Box>
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };
