@@ -121,8 +121,8 @@ const PaymentCollection = () => {
       );
     }
   };
-  const regionOrExtensionHandle = (e) => {
-    setRegionOrExtension(e?.target?.value);
+  const regionOrExtensionHandle = (e, value) => {
+    setRegionOrExtension(value?.id);
   };
   const fromDateHandle = (e) => {
     setFromDate(dateFormatterTwo(e?.$d));
@@ -196,14 +196,13 @@ const PaymentCollection = () => {
                       value={regionOrExtension}
                       onChange={regionOrExtensionHandle}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Region/Extension"
-                        />
+                        <TextField {...params} label="Region/Extension" />
                       )}
                       disabled={
                         userDetails?.roleName === "Administrator" ||
-                        userDetails?.roleName === "General Manager"
+                        userDetails?.roleName === "General Manager" ||
+                        userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "Regional Accountant"
                           ? false
                           : true
                       }

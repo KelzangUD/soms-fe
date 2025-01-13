@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Autocomplete,
   Box,
   Grid,
   Button,
@@ -8,6 +9,7 @@ import {
   MenuItem,
   InputLabel,
   Select,
+  TextField,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -118,8 +120,8 @@ const BankCollection = () => {
     fetchBankCollection();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const regionOrExtensionHandle = (e) => {
-    setRegionOrExtension(e?.target?.value);
+  const regionOrExtensionHandle = (e, value) => {
+    setRegionOrExtension(value?.id);
   };
   const fromDateHandle = (e) => {
     setFromDate(dateFormatterTwo(e?.$d));
@@ -181,24 +183,26 @@ const BankCollection = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
                   <Grid item xs={3}>
-                    <FormControl>
-                      <InputLabel id="region-or-extension-select-label">
-                        Region/Extension
-                      </InputLabel>
-                      <Select
-                        labelId="region-or-extension--select-label"
-                        id="region-or-extension--select"
-                        value={regionOrExtension}
-                        label="Region/Extension"
-                        onChange={regionOrExtensionHandle}
-                      >
-                        {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.extensionName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      disablePortal
+                      options={regionsOrExtensions?.map((item) => ({
+                        label: item?.extensionName,
+                        id: item?.id,
+                      }))}
+                      value={regionOrExtension}
+                      onChange={regionOrExtensionHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Region/Extension" />
+                      )}
+                      disabled={
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager" ||
+                        userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "Regional Accountant"
+                          ? false
+                          : true
+                      }
+                    />
                   </Grid>
                   <Grid item xs={3}>
                     <FormControl>

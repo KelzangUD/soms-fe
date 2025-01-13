@@ -77,7 +77,6 @@ const PostedSalesInvoice = () => {
       null,
       null
     );
-    console.log(res);
     if (res?.status === 200) {
       setPostedSales(
         res?.data?.map((item, index) => ({
