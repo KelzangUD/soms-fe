@@ -41,26 +41,26 @@ const PostedSalesInvoice = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const posted_sales_invoice_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 40 },
-    { field: "pos_no", headerName: "POS No", flex: 150 },
+    { field: "sl", headerName: "Sl.No", width: 40 },
+    { field: "pos_no", headerName: "POS No", width: 150 },
     {
       field: "posting_date",
       headerName: "POS Date",
-      flex: 150,
+      width: 100,
     },
-    { field: "customer_name", headerName: "Customer Name", flex: 250 },
-    { field: "mobile_number", headerName: "Mobile No", flex: 150 },
-    { field: "type", headerName: "Payment Terms", flex: 150 },
-    { field: "bank_account_number", headerName: "Bank Name", flex: 150 },
-    { field: "cheque_number", headerName: "Cheque No", flex: 150 },
-    { field: "paymentDate", headerName: "Cheque Date", flex: 150 },
-    { field: "payment_amount", headerName: "Payment Amount (Nu)", flex: 150 },
-    { field: "created_by", headerName: "Created User", flex: 150 },
-    { field: "invoice_type", headerName: "Invoice Type", flex: 150 },
+    { field: "customer_name", headerName: "Customer Name", width: 250 },
+    { field: "mobile_number", headerName: "Mobile No", width: 150 },
+    { field: "type", headerName: "Payment Terms", width: 120 },
+    { field: "bank_account_number", headerName: "Bank Name", width: 300 },
+    { field: "cheque_number", headerName: "Cheque No", width: 90 },
+    { field: "paymentDate", headerName: "Cheque Date", width: 100 },
+    { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 150 },
+    { field: "created_by", headerName: "Created User", width: 150 },
+    { field: "invoice_type", headerName: "Invoice Type", width: 100 },
     {
       field: "action",
       headerName: "Action",
-      flex: 150,
+      width: 80,
       renderCell: (params) => (
         <>
           <IconButton aria-label="view" size="small" color="primary">
@@ -229,6 +229,7 @@ const PostedSalesInvoice = () => {
                           label="To Date"
                           value={dayjs(params?.toDate)}
                           onChange={toDateHandle}
+                          minDate={dayjs(params?.fromDate)}
                         />
                       </LocalizationProvider>
                     </FormControl>

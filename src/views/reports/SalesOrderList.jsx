@@ -69,8 +69,8 @@ const SalesOrderList = () => {
     },
   ];
   const sales_order_list_rows = [];
-  const regionOrExtensionHandle = (e) => {
-    setRegionOrExtension(e?.target?.value);
+  const regionOrExtensionHandle = (e, value) => {
+    setRegionOrExtension(value?.id);
   };
   const fromDateHandle = (e) => {
     setFromDate(dateFormatterTwo(e?.$d));
@@ -129,6 +129,7 @@ const SalesOrderList = () => {
                           label="To Date*"
                           value={dayjs(toDate)}
                           onChange={toDateHandle}
+                          minDate={dayjs(fromDate)}
                         />
                       </LocalizationProvider>
                     </FormControl>

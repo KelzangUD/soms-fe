@@ -44,44 +44,46 @@ const Route = async (
   } catch (error) {
     return error;
   }
-  // const makeRequest = async () => {
-  //   try {
-  //     if (id !== null) {
-  //       const response = await axios(
-  //         `${apiUrl}${endpoint}/${id}`,
-  //         requestOptions
-  //       );
-  //       return response;
-  //     } else {
-  //       const response = await axios(`${apiUrl}${endpoint}`, requestOptions);
-  //       return response;
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error)
-  //     if (error?.response?.status === 403) {
-  //       // localStorage.removeItem("access_token");
-  //       console.log("Yes")
-  //       try {
-  //         headers.Authorization = `Bearer ${refresh_token}`;
-  //         requestOptions.headers = headers;
-  //         const refreshResponse = await axios.post(
-  //           `${apiUrl}/refresh-token`,
+  //   const makeRequest = async () => {
+  //     try {
+  //       if (id !== null) {
+  //         const response = await axios(
+  //           `${apiUrl}${endpoint}/${id}`,
   //           requestOptions
   //         );
-  //         // console.log(refreshResponse)
-  //         if (refreshResponse?.status === 200) {
-  //           localStorage.setItem("access_token", refreshResponse?.data?.access_token);
-  //         }
-  //       } catch (refreshError) {
-  //         console.error("Failed to refresh token:", refreshError);
-  //         throw refreshError;
+  //         return response;
+  //       } else {
+  //         const response = await axios(`${apiUrl}${endpoint}`, requestOptions);
+  //         return response;
   //       }
+  //     } catch (error) {
+  //       if (error?.response?.status === 403) {
+  //         console.log(error)
+  //         try {
+  //           headers.Authorization = `Bearer ${refresh_token}`;
+  //           requestOptions.headers = headers;
+  //           const refreshResponse = await axios.post(
+  //             `${apiUrl}/api/v1/auth/refresh-token`,
+  //             requestOptions
+  //           );
+  //           console.log(refreshResponse)
+  //           if (refreshResponse?.status === 200) {
+  //             console.log(refreshResponse)
+  //             // localStorage.removeItem("access_token");
+  //             // localStorage.removeItem("refresh_token");
+  //             // localStorage.setItem("access_token", refreshResponse?.data?.access_token);
+  //             // localStorage.setItem("refresh_token", refreshResponse?.data?.refresh_token);
+  //           }
+  //         } catch (refreshError) {
+  //           console.error("Failed to refresh token:", refreshError);
+  //           throw refreshError;
+  //         }
+  //       }
+  //       throw error;
   //     }
-  //     throw error;
-  //   }
-  // };
+  //   };
 
-  // return makeRequest();
+  //   return makeRequest();
 };
 
 export default Route;

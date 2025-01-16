@@ -210,29 +210,45 @@ const OnHandReport = () => {
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <Autocomplete
-                      disablePortal
-                      options={[
-                        { label: "ALL", id: "ALL" },
-                        ...(locatorsList?.map((item) => ({
-                          label: item?.locator,
-                          id: item?.locator,
-                        })) || []),
-                      ]}
-                      value={details?.locator_id}
-                      onChange={locatorHandle}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Locator" />
-                      )}
-                      disabled={
-                        userDetails?.roleId === 37 ||
-                        userDetails?.roleId === 53 ||
-                        userDetails?.roleId === 54 ||
-                        userDetails?.roleId === 55
-                          ? false
-                          : true
-                      }
-                    />
+                    {userDetails?.subInventory === "WAREH" ? (
+                      <Autocomplete
+                        disablePortal
+                        options={[
+                          { label: "ALL", id: "ALL" },
+                          { label: "FRESHS", id: "FRESHS" },
+                          { label: "DAMNRP", id: "DAMNRP" },
+                        ]}
+                        value={details?.locator_id}
+                        onChange={locatorHandle}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Locator" />
+                        )}
+                      />
+                    ) : (
+                      <Autocomplete
+                        disablePortal
+                        options={[
+                          { label: "ALL", id: "ALL" },
+                          ...(locatorsList?.map((item) => ({
+                            label: item?.locator,
+                            id: item?.locator,
+                          })) || []),
+                        ]}
+                        value={details?.locator_id}
+                        onChange={locatorHandle}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Locator" />
+                        )}
+                        disabled={
+                          userDetails?.roleId === 37 ||
+                          userDetails?.roleId === 53 ||
+                          userDetails?.roleId === 54 ||
+                          userDetails?.roleId === 55
+                            ? false
+                            : true
+                        }
+                      />
+                    )}
                   </Grid>
                   <Grid item xs={2}>
                     <TextField
