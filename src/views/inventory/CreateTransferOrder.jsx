@@ -841,7 +841,7 @@ const CreateTransferOrder = ({
                 disabled={parameters?.transferOrderItemDTOList?.some(
                   (item) =>
                     item?.item_Description ===
-                    "Wrong Serial No, Please check before submitting"
+                    "Wrong Serial No, Please check before submitting."
                 )}
               >
                 Create
