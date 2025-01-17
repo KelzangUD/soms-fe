@@ -535,32 +535,6 @@ const CreateTransferOrder = ({
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                {/* {parameters?.transfer_Type === "With In Store" ? (
-                  <TextField
-                    id="outlined-basic"
-                    label="To Store"
-                    required
-                    value={parameters?.transfer_To_Store}
-                    disabled
-                  />
-                ) : (
-                  <FormControl>
-                    <InputLabel id="to-store-select-label">To Store</InputLabel>
-                    <Select
-                      labelId="to-store-select-label"
-                      id="to-store-select"
-                      label="To Store"
-                      onChange={(event) => toStoreHandle(event.target.value)}
-                      value={parameters?.selectedStore}
-                    >
-                      {toStore?.map((item) => (
-                        <MenuItem value={item} key={item?.id}>
-                          {item?.toStoreName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )} */}
                 <FormControl>
                   <InputLabel id="to-store-select-label">To Store</InputLabel>
                   <Select
@@ -850,7 +824,6 @@ const CreateTransferOrder = ({
                 />
               </Grid>
             )}
-
             <Grid
               item
               xs={12}
@@ -862,7 +835,15 @@ const CreateTransferOrder = ({
                 mb: 2,
               }}
             >
-              <Button variant="contained" onClick={createHandle}>
+              <Button
+                variant="contained"
+                onClick={createHandle}
+                disabled={parameters?.transferOrderItemDTOList?.some(
+                  (item) =>
+                    item?.item_Description ===
+                    "Wrong Serial No, Please check before submitting"
+                )}
+              >
                 Create
               </Button>
               <Button
