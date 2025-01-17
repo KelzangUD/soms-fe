@@ -28,7 +28,7 @@ const ViewPostedTransferShipment = ({
       flex: 3,
     },
     {
-      field: "serial_no",
+      field: "item_Serial_Number",
       headerName: "Serial No",
       flex: 2.5,
     },

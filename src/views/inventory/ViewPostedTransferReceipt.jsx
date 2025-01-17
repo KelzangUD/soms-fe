@@ -28,7 +28,7 @@ const ViewPostedTransferOrderReceipt = ({
       flex: 4.5,
     },
     {
-      field: "serial_no",
+      field: "item_Serial_Number",
       headerName: "Serial No",
       flex: 3,
     },
