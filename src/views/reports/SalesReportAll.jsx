@@ -186,6 +186,46 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
+                {
+                  description: "Grand Total",
+                  gross_amount:
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
+                },
               ]
             : []),
           ...(res?.data?.bankCollection?.length > 0
@@ -268,6 +308,46 @@ const SalesReportAll = () => {
                       0
                     )
                     .toFixed(2),
+                },
+                {
+                  description: "Grand Total",
+                  gross_amount:
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
                 },
               ]
             : []),
@@ -353,6 +433,46 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
+                {
+                  description: "Grand Total",
+                  gross_amount:
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
+                },
               ]
             : []),
 
@@ -436,6 +556,46 @@ const SalesReportAll = () => {
                       0
                     )
                     .toFixed(2),
+                },
+                {
+                  description: "Grand Total",
+                  gross_amount:
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
                 },
               ]
             : []),
@@ -521,6 +681,46 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
+                {
+                  description: "Grand Total",
+                  gross_amount:
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
+                },
               ]
             : []),
 
@@ -605,6 +805,46 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
+                {
+                  description: "Total",
+                  gross_amount:
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
+                },
               ]
             : []),
         ]);
@@ -680,6 +920,48 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
+                {
+                  id: uuidv4(),
+                  item_description: "Grand Total",
+                  isSubTitle: true,
+                  gross_amount:
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.advanceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
+                },
               ]
             : []),
 
@@ -753,6 +1035,48 @@ const SalesReportAll = () => {
                       0
                     )
                     .toFixed(2),
+                },
+                {
+                  id: uuidv4(),
+                  item_description: "Grand Total",
+                  isSubTitle: true,
+                  gross_amount:
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.bankCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
                 },
               ]
             : []),
@@ -828,6 +1152,48 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
+                {
+                  id: uuidv4(),
+                  item_description: "Grand Total",
+                  isSubTitle: true,
+                  gross_amount:
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.paymentCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
+                },
               ]
             : []),
 
@@ -901,6 +1267,48 @@ const SalesReportAll = () => {
                       0
                     )
                     .toFixed(2),
+                },
+                {
+                  id: uuidv4(),
+                  item_description: "Grand Total",
+                  isSubTitle: true,
+                  gross_amount:
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.rechargeCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
                 },
               ]
             : []),
@@ -976,6 +1384,48 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
+                {
+                  id: uuidv4(),
+                  item_description: "Grand Total",
+                  isSubTitle: true,
+                  gross_amount:
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.salesInvoice?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
+                },
               ]
             : []),
 
@@ -1049,6 +1499,48 @@ const SalesReportAll = () => {
                       0
                     )
                     .toFixed(2),
+                },
+                {
+                  id: uuidv4(),
+                  item_description: "Grand Total",
+                  isSubTitle: true,
+                  gross_amount:
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.vasServiceCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
                 },
               ]
             : []),
@@ -1228,6 +1720,7 @@ const SalesReportAll = () => {
                           label="To Date"
                           onChange={toDateHandle}
                           value={dayjs(params?.toDate)}
+                          minDate={dayjs(params?.fromDate)}
                         />
                       </LocalizationProvider>
                     </FormControl>

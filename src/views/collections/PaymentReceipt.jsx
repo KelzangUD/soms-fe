@@ -385,6 +385,7 @@ const PaymentReceipt = () => {
                           label="Posting Date"
                           value={dayjs(paymentReceiptDetails?.postingDate)}
                           onChange={postingDateHandle}
+                          disabled
                         />
                       </LocalizationProvider>
                     </FormControl>
