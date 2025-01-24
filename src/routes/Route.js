@@ -58,24 +58,25 @@ const Route = async (
       }
     } catch (error) {
       if (error?.response?.status === 403) {
-        console.log(error);
         try {
           headers.Authorization = `Bearer ${refresh_token}`;
           requestOptions.headers = headers;
-          requestOptions.method = "POST"
+          requestOptions.method = "POST";
           const refreshResponse = await axios(
             `${apiUrl}/api/v1/auth/refresh-token`,
             requestOptions
           );
-          console.log(`${apiUrl}/api/v1/auth/refresh-token`);
-          console.log(requestOptions)
-          console.log(refreshResponse);
           if (refreshResponse?.status === 200) {
-            console.log("200");
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            localStorage.setItem("access_token", refreshResponse?.data?.access_token);
-            localStorage.setItem("refresh_token", refreshResponse?.data?.refresh_token);
+            localStorage.setItem(
+              "access_token",
+              refreshResponse?.data?.access_token
+            );
+            localStorage.setItem(
+              "refresh_token",
+              refreshResponse?.data?.refresh_token
+            );
           }
         } catch (refreshError) {
           console.error("Failed to refresh token:", refreshError);
