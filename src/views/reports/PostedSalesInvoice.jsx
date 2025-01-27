@@ -21,7 +21,7 @@ import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 import { useCommon } from "../../contexts/CommonContext";
-import { LoaderDialog } from "../../ui";
+import { LoaderDialog, Notification } from "../../ui";
 
 const PostedSalesInvoice = () => {
   const { regionsOrExtensions } = useCommon();
@@ -39,6 +39,9 @@ const PostedSalesInvoice = () => {
   });
   const [postedSales, setPostedSales] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
 
   const posted_sales_invoice_columns = [
     { field: "sl", headerName: "Sl.No", width: 40 },
@@ -73,36 +76,43 @@ const PostedSalesInvoice = () => {
 
   const fetchPostedSalesReport = async () => {
     setIsLoading(true);
-    const res = await Route(
-      "GET",
-      `/Report/PostedSalesInvoice?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&customerName=${params?.customerName}&posNo=${params?.posNo}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setPostedSales(
+    try {
+      const res = await Route(
+        "GET",
+        `/Report/PostedSalesInvoice?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&customerName=${params?.customerName}&posNo=${params?.posNo}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setPostedSales(
+          res?.data?.map((item, index) => ({
+            id: index,
+            sl: index + 1,
+            ...item,
+          }))
+        );
+      }
+      setPrintData(
         res?.data?.map((item, index) => ({
-          id: index,
           sl: index + 1,
-          ...item,
+          "POS No": item?.pos_no,
+          "POS Date": item?.paymentDate,
+          "Customer Name": item?.customer_name,
+          "Mobile No": item?.mobile_number,
+          "Payment Terms": item?.type,
+          "Bank Name": item?.bank_account_number,
+          "Cheque No": item?.cheque_number,
+          "Cheque Date": item?.paymentDate,
         }))
       );
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
     }
-    setPrintData(
-      res?.data?.map((item, index) => ({
-        sl: index + 1,
-        "POS No": item?.pos_no,
-        "POS Date": item?.paymentDate,
-        "Customer Name": item?.customer_name,
-        "Mobile No": item?.mobile_number,
-        "Payment Terms": item?.type,
-        "Bank Name": item?.bank_account_number,
-        "Cheque No": item?.cheque_number,
-        "Cheque Date": item?.paymentDate,
-      }))
-    );
-    setIsLoading(false);
   };
   useEffect(() => {
     fetchPostedSalesReport();
@@ -292,6 +302,14 @@ const PostedSalesInvoice = () => {
         </Grid>
       </Box>
       {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

@@ -9,7 +9,7 @@ import { exportToExcel } from "react-json-to-excel";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
-import { LoaderDialog } from "../../ui/index";
+import { LoaderDialog, Notification } from "../../ui/index";
 
 const OnHandReport = () => {
   const {
@@ -38,34 +38,44 @@ const OnHandReport = () => {
   });
   const [onHandReports, setOnHandReports] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
   const fetchOnHandReports = async () => {
     setIsLoading(true);
-    const res = await Route(
-      "GET",
-      `/OnHand/Fetch_OnHand_Items?storeName=${details?.storeName}&item=${details?.item}&locator_id=${details?.locator_id}&serialNo=${details?.serialNo}&imei_no=${details?.imei_no}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setOnHandReports(res?.data);
+    try {
+      const res = await Route(
+        "GET",
+        `/OnHand/Fetch_OnHand_Items?storeName=${details?.storeName}&item=${details?.item}&locator_id=${details?.locator_id}&serialNo=${details?.serialNo}&imei_no=${details?.imei_no}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setOnHandReports(res?.data);
+      }
+      setPrintData(
+        res?.data?.map((item, index) => ({
+          sl: index + 1,
+          Item: item?.item,
+          "Item Description": item?.item_description,
+          UOM: item?.uom,
+          "Transaction Quantity": parseInt(item?.transaction_quantity),
+          "Serial Controlled": item?.serial_controlled,
+          "Imei Number": item?.imei_number,
+          "Serial Number": item?.serial_number,
+          "Sub-inventory ID": item?.sub_inventory_id,
+          "Locator ID": item?.locator_id,
+          "Store Name": item?.store_name,
+        }))
+      );
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
     }
-    setPrintData(
-      res?.data?.map((item, index) => ({
-        sl: index + 1,
-        Item: item?.item,
-        "Item Description": item?.item_description,
-        UOM: item?.uom,
-        "Transaction Quantity": parseInt(item?.transaction_quantity),
-        "Serial Controlled": item?.serial_controlled,
-        "Imei Number": item?.imei_number,
-        "Serial Number": item?.serial_number,
-        "Sub-inventory ID": item?.sub_inventory_id,
-        "Locator ID": item?.locator_id,
-        "Store Name": item?.store_name,
-      }))
-    );
-    setIsLoading(false);
   };
   useEffect(() => {
     fetchOnHandReports();
@@ -301,6 +311,14 @@ const OnHandReport = () => {
         </Grid>
       </Box>
       {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

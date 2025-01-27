@@ -120,10 +120,10 @@ const SalesAndStockReport = () => {
       toDate: dateFormatterTwo(e?.$d),
     }));
   };
-  const regionOrExtensionHandle = (e) => {
+  const regionOrExtensionHandle = (e, value) => {
     setParams((prev) => ({
       ...prev,
-      store: e?.target?.value,
+      store: value?.id,
     }));
   };
   const fieldAssistantHandle = (e, value) => {
@@ -211,34 +211,27 @@ const SalesAndStockReport = () => {
                           label="To Date"
                           value={dayjs(params?.toDate)}
                           onChange={toDateHandle}
+                          minDate={dayjs(params?.fromDate)}
                         />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <FormControl>
-                      <InputLabel id="region-or-extension-select-label">
-                        Region/Extension
-                      </InputLabel>
-                      <Select
-                        labelId="region-or-extension-select-label"
-                        id="region-or-extension-select"
-                        value={params?.store}
-                        label="Region/Extension"
-                        onChange={regionOrExtensionHandle}
-                        disabled={
-                          userDetails?.roleName === "Administrator"
-                            ? false
-                            : true
-                        }
-                      >
-                        {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.extensionName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      disablePortal
+                      options={[
+                        { label: "ALL", id: "" },
+                        ...(regionsOrExtensions?.map((item) => ({
+                          label: item?.extensionName,
+                          id: item?.id,
+                        })) || []),
+                      ]}
+                      value={params?.store}
+                      onChange={regionOrExtensionHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Region/Extension" />
+                      )}
+                    />
                   </Grid>
                   <Grid item xs={2}>
                     <Autocomplete
@@ -316,7 +309,7 @@ const SalesAndStockReport = () => {
       {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
-          setOpen={setNotificationMessage}
+          setOpen={setShowNotification}
           message={notificationMessage}
           severity={severity}
         />

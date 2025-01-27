@@ -14,8 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import Notification from "../../ui/Notification";
-import { RenderStatus } from "../../ui";
+import { RenderStatus, LoaderDialog, Notification } from "../../ui";
 import UpdateRequisition from "./UpdateRequisition";
 import ApproveRequisition from "./ApproveRequisition";
 import { CustomDataTable } from "../../component/common/index";
@@ -34,22 +33,32 @@ const RequisitionApproval = () => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [params, setParams] = useState({});
   const [showDialog, setShowDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateHandle = async (params) => {
-    const res = await Route(
-      "GET",
-      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setItemDetails(res?.data);
-      setShowViewDetails(true);
-    } else {
-      setNotificationMsg(res?.data?.message);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setItemDetails(res?.data);
+        setShowViewDetails(true);
+      } else {
+        setNotificationMsg(res?.data?.message);
+        setSeverity("error");
+        setShowNofication(true);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   const viewDetailsHandle = async (params) => {
@@ -141,23 +150,32 @@ const RequisitionApproval = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const rejectRequisitionHandle = async () => {
-    const res = await Route(
-      "PUT",
-      `/requisition/rejectRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setShowDialog(false);
-      setNotificationMsg(res?.data?.responseText);
-      setSeverity("success");
-      setShowNofication(true);
-      fetchRequisitionListByApprover();
-    } else {
-      setNotificationMsg(res?.data?.message);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "PUT",
+        `/requisition/rejectRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empID}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setShowDialog(false);
+        setNotificationMsg(res?.data?.responseText);
+        setSeverity("success");
+        setShowNofication(true);
+        fetchRequisitionListByApprover();
+      } else {
+        setNotificationMsg(res?.data?.message);
+        setSeverity("error");
+        setShowNofication(true);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleRowSelection = (selectionModel) => {
@@ -170,44 +188,62 @@ const RequisitionApproval = () => {
     const data = selectedRows?.map((item) => ({
       requisitionNo: item?.requisitionNo,
     }));
-    const res = await Route(
-      "PUT",
-      `/requisition/bulkApproveRequisitionDetails?empID=${empID}`,
-      access_token,
-      data,
-      null
-    );
-    if (res?.status === 200) {
-      setNotificationMsg(res?.data?.responseText);
-      setSeverity("success");
-      setShowNofication(true);
-      fetchRequisitionListByApprover();
-    } else {
-      setNotificationMsg(res?.data?.message);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "PUT",
+        `/requisition/bulkApproveRequisitionDetails?empID=${empID}`,
+        access_token,
+        data,
+        null
+      );
+      if (res?.status === 200) {
+        setNotificationMsg(res?.data?.responseText);
+        setSeverity("success");
+        setShowNofication(true);
+        fetchRequisitionListByApprover();
+      } else {
+        setNotificationMsg(res?.data?.message);
+        setSeverity("error");
+        setShowNofication(true);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch");
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   const rejectHandle = async () => {
     const data = selectedRows?.map((item) => ({
       requisitionNo: item?.requisitionNo,
     }));
-    const res = await Route(
-      "PUT",
-      `/requisition/bulkRejectRequisitionDetails?empID=${empID}`,
-      access_token,
-      data,
-      null
-    );
-    if (res?.status === 200) {
-      setNotificationMsg(res?.data?.responseText);
-      setSeverity("success");
-      setShowNofication(true);
-      fetchRequisitionListByApprover();
-    } else {
-      setNotificationMsg(res?.data?.message);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "PUT",
+        `/requisition/bulkRejectRequisitionDetails?empID=${empID}`,
+        access_token,
+        data,
+        null
+      );
+      if (res?.status === 200) {
+        setNotificationMsg(res?.data?.responseText);
+        setSeverity("success");
+        setShowNofication(true);
+        fetchRequisitionListByApprover();
+      } else {
+        setNotificationMsg(res?.data?.message);
+        setSeverity("error");
+        setShowNofication(true);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed to fetch");
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -320,6 +356,15 @@ const RequisitionApproval = () => {
           </DialogActions>
         </Dialog>
       )}
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

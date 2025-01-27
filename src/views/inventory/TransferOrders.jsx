@@ -7,7 +7,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CreateTransferOrder from "./CreateTransferOrder";
 import ViewTransferOrder from "./ViewTransferOrder";
 import UpdateTransferOrder from "./UpdateTransferOrder";
-import { Notification, RenderStatus } from "../../ui/index";
+import { LoaderDialog, Notification, RenderStatus } from "../../ui/index";
 import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
 
@@ -23,27 +23,37 @@ const TransferOrders = () => {
   const [edit, setEdit] = useState(false);
   const [view, setView] = useState(false);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchTransferOrderList = async () => {
-    const res = await Route(
-      "GET",
-      `/transferOrder/viewTransferOrderList/${empID}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setViewTransferOrderList(
-        res?.data?.map((item, index) => ({
-          id: index,
-          sl: index + 1,
-          transfer_order_no: item?.transfer_Order_Number,
-          transfer_from_code: item?.transfer_From_Name,
-          transfer_to_code: item?.transfer_To_Name,
-          posted_date: item?.stringTransferDate,
-          status: item?.status,
-        }))
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/transferOrder/viewTransferOrderList/${empID}`,
+        access_token,
+        null,
+        null
       );
+      if (res?.status === 200) {
+        setViewTransferOrderList(
+          res?.data?.map((item, index) => ({
+            id: index,
+            sl: index + 1,
+            transfer_order_no: item?.transfer_Order_Number,
+            transfer_from_code: item?.transfer_From_Name,
+            transfer_to_code: item?.transfer_To_Name,
+            posted_date: item?.stringTransferDate,
+            status: item?.status,
+          }))
+        );
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -229,6 +239,7 @@ const TransferOrders = () => {
           severity={severity}
         />
       )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

@@ -13,7 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { RenderStatus, LoaderDialog } from "../../ui/index";
+import { RenderStatus, LoaderDialog, Notification } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { exportToExcel } from "react-json-to-excel";
@@ -37,6 +37,9 @@ const PaymentCollection = () => {
   const [fromDate, setFromDate] = useState(dateFormatterTwo(new Date()));
   const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
   const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
 
   const payment_collection_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
@@ -84,43 +87,51 @@ const PaymentCollection = () => {
   ];
   const fetchPaymentCollection = async () => {
     setIsLoading(true);
-    const res = await Route(
-      "GET",
-      `/Report/paymentCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setPaymentCollection(
-        res?.data?.map((item, index) => ({
-          id: index,
-          sl: index + 1,
-          created_date: item?.created_date,
-          payment_amount: item?.payment_amount,
-          result_code: item?.result_code,
-          created_by: item?.created_by,
-          payment_ref_number: item?.payment_ref_number,
-          cheque: item?.cheque,
-          cheque_date: item?.cheque_date,
-          bank_name: item?.bank_name,
-          recharge_type: item?.recharge_type,
-        }))
+    try {
+      const res = await Route(
+        "GET",
+        `/Report/paymentCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
+        access_token,
+        null,
+        null
       );
-      setPrintData(
-        res?.data?.map((item, index) => ({
-          sl: index + 1,
-          "Payment Amount": item?.payment_amount,
-          "Recharge Type": item?.recharge_type,
-          "Ref No.": item?.payment_ref_number,
-          Status: item?.result_code,
-          "Created Date": item?.created_date,
-          "Created By": item?.created_by,
-          Cheque: item?.cheque,
-          "Cheque Date": item?.cheque_date,
-          "Bank Name": item?.bank_name,
-        }))
-      );
+      if (res?.status === 200) {
+        setPaymentCollection(
+          res?.data?.map((item, index) => ({
+            id: index,
+            sl: index + 1,
+            created_date: item?.created_date,
+            payment_amount: item?.payment_amount,
+            result_code: item?.result_code,
+            created_by: item?.created_by,
+            payment_ref_number: item?.payment_ref_number,
+            cheque: item?.cheque,
+            cheque_date: item?.cheque_date,
+            bank_name: item?.bank_name,
+            recharge_type: item?.recharge_type,
+          }))
+        );
+        setPrintData(
+          res?.data?.map((item, index) => ({
+            sl: index + 1,
+            "Payment Amount": item?.payment_amount,
+            "Recharge Type": item?.recharge_type,
+            "Ref No.": item?.payment_ref_number,
+            Status: item?.result_code,
+            "Created Date": item?.created_date,
+            "Created By": item?.created_by,
+            Cheque: item?.cheque,
+            "Cheque Date": item?.cheque_date,
+            "Bank Name": item?.bank_name,
+          }))
+        );
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -277,6 +288,14 @@ const PaymentCollection = () => {
         </Grid>
       </Box>
       {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

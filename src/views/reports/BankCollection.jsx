@@ -13,7 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { RenderStatus, LoaderDialog } from "../../ui/index";
+import { RenderStatus, LoaderDialog, Notification } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { exportToExcel } from "react-json-to-excel";
@@ -37,6 +37,9 @@ const BankCollection = () => {
   const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
   const [bankCollection, setBankCollection] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
   const bank_collection_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "payment_amount", headerName: "Payment Amount", flex: 1.1 },
@@ -75,44 +78,51 @@ const BankCollection = () => {
 
   const fetchBankCollection = async () => {
     setIsLoading(true);
-    const res = await Route(
-      "GET",
-      `/Report/bankCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setBankCollection(
-        res?.data?.map((item, index) => ({
-          id: index,
-          sl: index + 1,
-          payment_amount: item?.payment_amount,
-          type: item?.type,
-          result_code: item?.result_code,
-          created_date: item?.created_date,
-          payment_ref_number: item?.payment_ref_number,
-          created_by: item?.created_by,
-          cheque: item?.cheque,
-          cheque_date: item?.cheque_date,
-          bank_name: item?.bank_name,
-          filePath: item?.filePath,
-        }))
+    try {
+      const res = await Route(
+        "GET",
+        `/Report/bankCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
+        access_token,
+        null,
+        null
       );
-      setPrintData(
-        res?.data?.map((item, index) => ({
-          sl: index + 1,
-          "Payment Amount": item?.payment_amount,
-          "Payment Type": item?.type,
-          "Ref No.": item?.payment_ref_number,
-          Status: item?.result_code,
-          "Bank Name": item?.bank_name,
-          "Cheque No": item?.cheque,
-          "Cheque Date": item?.cheque_date,
-          "Creation Date": item?.created_date,
-          "Created User": item?.created_by,
-        }))
-      );
+      if (res?.status === 200) {
+        setBankCollection(
+          res?.data?.map((item, index) => ({
+            id: index,
+            sl: index + 1,
+            payment_amount: item?.payment_amount,
+            type: item?.type,
+            result_code: item?.result_code,
+            created_date: item?.created_date,
+            payment_ref_number: item?.payment_ref_number,
+            created_by: item?.created_by,
+            cheque: item?.cheque,
+            cheque_date: item?.cheque_date,
+            bank_name: item?.bank_name,
+            filePath: item?.filePath,
+          }))
+        );
+        setPrintData(
+          res?.data?.map((item, index) => ({
+            sl: index + 1,
+            "Payment Amount": item?.payment_amount,
+            "Payment Type": item?.type,
+            "Ref No.": item?.payment_ref_number,
+            Status: item?.result_code,
+            "Bank Name": item?.bank_name,
+            "Cheque No": item?.cheque,
+            "Cheque Date": item?.cheque_date,
+            "Creation Date": item?.created_date,
+            "Created User": item?.created_by,
+          }))
+        );
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -266,6 +276,14 @@ const BankCollection = () => {
         </Grid>
       </Box>
       {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Button, IconButton, FormControl } from "@mui/material";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import PrintIcon from "@mui/icons-material/Print";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewTransferOrder from "./ViewTransferOrder";
-import { RenderStatus } from "../../ui/index";
+import { RenderStatus, LoaderDialog, Notification } from "../../ui/index";
 import { CustomDataTable } from "../../component/common/index";
 import dayjs from "dayjs";
 import { dateFormatterTwo } from "../../util/CommonUtil";
@@ -24,18 +21,32 @@ const TransferOrderOutward = () => {
     fromDate: dateFormatterTwo(new Date()),
     toDate: dateFormatterTwo(new Date()),
   });
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchViewTransferOrderDetails = async (transferOrderNo) => {
-    const res = await Route(
-      "GET",
-      `/transferOrder/viewInTransitTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setTransferOrderDetails(res?.data);
-      setView(true);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/transferOrder/viewInTransitTransferOrderDetails?transferOrderNo=${transferOrderNo}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setTransferOrderDetails(res?.data);
+        setView(true);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(true);
     }
   };
   const viewHandle = (params) => {
@@ -77,25 +88,34 @@ const TransferOrderOutward = () => {
   ];
 
   const fetchTransferOrderOutward = async () => {
-    const res = await Route(
-      "GET",
-      `/transferOrder/viewTransferOrderOutwardListWithDate?empID=${empID}&fromDate=${params?.fromDate}&toDate=${params?.toDate}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setTransferOrderList(
-        res?.data?.map((item, index) => ({
-          id: index,
-          sl: index + 1,
-          transfer_order_no: item?.transfer_Order_Number,
-          transfer_from_code: item?.transfer_From_Name,
-          transfer_to_code: item?.transfer_To_Name,
-          posted_date: item?.stringTransferDate,
-          status: item?.status,
-        }))
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/transferOrder/viewTransferOrderOutwardListWithDate?empID=${empID}&fromDate=${params?.fromDate}&toDate=${params?.toDate}`,
+        access_token,
+        null,
+        null
       );
+      if (res?.status === 200) {
+        setTransferOrderList(
+          res?.data?.map((item, index) => ({
+            id: index,
+            sl: index + 1,
+            transfer_order_no: item?.transfer_Order_Number,
+            transfer_from_code: item?.transfer_From_Name,
+            transfer_to_code: item?.transfer_To_Name,
+            posted_date: item?.stringTransferDate,
+            status: item?.status,
+          }))
+        );
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -184,6 +204,15 @@ const TransferOrderOutward = () => {
           transferOrderDetails={transferOrderDetails}
         />
       )}
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

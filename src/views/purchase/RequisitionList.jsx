@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, IconButton } from "@mui/material";
+import { Grid, IconButton } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Route from "../../routes/Route";
-import { Notification, RenderStatus } from "../../ui/index";
+import { Notification, LoaderDialog, RenderStatus } from "../../ui/index";
 import ViewRequisitionItemDetails from "./ViewRequisitionItemDetails";
 import { CustomDataTable } from "../../component/common/index";
 
@@ -16,23 +16,33 @@ const RequisitionList = () => {
   const [itemDetails, setItemDetails] = useState([]);
   const [showViewDetails, setShowViewDetails] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState("Submitted");
+  const [isLoading, setIsLoading] = useState(false);
 
   const viewDetailsHandle = async (params) => {
-    const res = await Route(
-      "GET",
-      `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empId}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setApprovalStatus(params?.row?.approvalStatus);
-      setItemDetails(res?.data);
-      setShowViewDetails(true);
-    } else {
-      setNotificationMsg(res?.response?.data?.message);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/requisition/viewRequisitionDetails?requisitionNo=${params?.row?.requisitionNo}&empID=${empId}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setApprovalStatus(params?.row?.approvalStatus);
+        setItemDetails(res?.data);
+        setShowViewDetails(true);
+      } else {
+        setNotificationMsg(res?.response?.data?.message);
+        setSeverity("error");
+        setShowNofication(true);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -73,15 +83,24 @@ const RequisitionList = () => {
   ];
 
   const fetchRequisitionList = async (access_token, empId) => {
-    const res = await Route(
-      "GET",
-      `/requisition/viewRequisitionListByCreator/${empId}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRequisitionList(res?.data);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/requisition/viewRequisitionListByCreator/${empId}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setRequisitionList(res?.data);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -121,6 +140,7 @@ const RequisitionList = () => {
           approvalStatus={approvalStatus}
         />
       )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };

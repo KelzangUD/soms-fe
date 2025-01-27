@@ -13,7 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { RenderStatus, LoaderDialog } from "../../ui/index";
+import { RenderStatus, LoaderDialog, Notification } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
@@ -37,6 +37,9 @@ const RechargeCollection = () => {
   const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
   const [rechargeCollection, setRechargeCollection] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
   const recharge_collection_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     {
@@ -87,42 +90,50 @@ const RechargeCollection = () => {
   ];
   const fetchRechargeCollection = async () => {
     setIsLoading(true);
-    const res = await Route(
-      "GET",
-      `/Report/rechargeCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setRechargeCollection(
-        res?.data?.map((item, index) => ({
-          id: index,
-          sl: index + 1,
-          type: item?.type,
-          created_date: item?.created_date,
-          message_seq: item?.message_seq,
-          payment_amount: item?.payment_amount,
-          result_code: item?.result_code,
-          created_by: item?.created_by,
-          payment_ref_number: item?.payment_ref_number,
-          cheque: item?.cheque,
-          cheque_date: item?.cheque_date,
-          bank_name: item?.bank_name,
-          recharge_type: item?.recharge_type,
-        }))
+    try {
+      const res = await Route(
+        "GET",
+        `/Report/rechargeCollection?extension=${regionOrExtension}&fromDate=${fromDate}&toDate=${toDate}`,
+        access_token,
+        null,
+        null
       );
-      setPrintData(
-        res?.data?.map((item, index) => ({
-          sl: index + 1,
-          "Recharge Amount": item?.payment_amount,
-          "Payment Type": item?.recharge_type,
-          "Ref No.": item?.payment_ref_number,
-          Status: item?.result_code,
-          "Creation Date": item?.created_date,
-          "Created User": item?.created_by,
-        }))
-      );
+      if (res?.status === 200) {
+        setRechargeCollection(
+          res?.data?.map((item, index) => ({
+            id: index,
+            sl: index + 1,
+            type: item?.type,
+            created_date: item?.created_date,
+            message_seq: item?.message_seq,
+            payment_amount: item?.payment_amount,
+            result_code: item?.result_code,
+            created_by: item?.created_by,
+            payment_ref_number: item?.payment_ref_number,
+            cheque: item?.cheque,
+            cheque_date: item?.cheque_date,
+            bank_name: item?.bank_name,
+            recharge_type: item?.recharge_type,
+          }))
+        );
+        setPrintData(
+          res?.data?.map((item, index) => ({
+            sl: index + 1,
+            "Recharge Amount": item?.payment_amount,
+            "Payment Type": item?.recharge_type,
+            "Ref No.": item?.payment_ref_number,
+            Status: item?.result_code,
+            "Creation Date": item?.created_date,
+            "Created User": item?.created_by,
+          }))
+        );
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -269,6 +280,14 @@ const RechargeCollection = () => {
         </Grid>
       </Box>
       {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

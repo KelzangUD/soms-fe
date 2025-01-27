@@ -5,7 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ViewPostedTransferOrderReceipt from "./ViewPostedTransferReceipt";
-import { RenderStatus } from "../../ui/index";
+import { LoaderDialog, Notification, RenderStatus } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { exportToExcel } from "react-json-to-excel";
@@ -25,18 +25,32 @@ const PostedTransferReceipt = () => {
     {}
   );
   const [view, setView] = useState(false);
+  const [showNotification, setShowNofication] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchViewPostedTransferOrderDetails = async (trasnferOrderNo) => {
-    const res = await Route(
-      "GET",
-      `/transferOrder/viewPostedTransferOrderDetails?transferOrderNo=${trasnferOrderNo}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setPostedTransferOrderDetails(res?.data);
-      setView(true);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/transferOrder/viewPostedTransferOrderDetails?transferOrderNo=${trasnferOrderNo}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setPostedTransferOrderDetails(res?.data);
+        setView(true);
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,35 +93,44 @@ const PostedTransferReceipt = () => {
   ];
 
   const fetchPostedTransferReceipt = async () => {
-    const res = await Route(
-      "GET",
-      `/transferOrder/viewPostedInwardTransferOrderList/${empID}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setPostedInward(
-        res?.data?.map((item, index) => ({
-          id: item?.transfer_Order_Id,
-          sl: index + 1,
-          transfer_order_no: item?.transfer_Order_Number,
-          transfer_from_code: item?.transfer_From_Name,
-          transfer_to_code: item?.transfer_To_Name,
-          posted_date: item?.stringTransferDate,
-          status: item?.status,
-        }))
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/transferOrder/viewPostedInwardTransferOrderList/${empID}`,
+        access_token,
+        null,
+        null
       );
-      setPrintData(
-        res?.data?.map((item, index) => ({
-          sl: index + 1,
-          "Transfer Order No": item?.transfer_Order_Number,
-          "Transfer From Code": item?.transfer_From_Name,
-          "Transfer To Code": item?.transfer_To_Name,
-          "Posted Date": item?.stringTransferDate,
-          Status: item?.status,
-        }))
-      );
+      if (res?.status === 200) {
+        setPostedInward(
+          res?.data?.map((item, index) => ({
+            id: item?.transfer_Order_Id,
+            sl: index + 1,
+            transfer_order_no: item?.transfer_Order_Number,
+            transfer_from_code: item?.transfer_From_Name,
+            transfer_to_code: item?.transfer_To_Name,
+            posted_date: item?.stringTransferDate,
+            status: item?.status,
+          }))
+        );
+        setPrintData(
+          res?.data?.map((item, index) => ({
+            sl: index + 1,
+            "Transfer Order No": item?.transfer_Order_Number,
+            "Transfer From Code": item?.transfer_From_Name,
+            "Transfer To Code": item?.transfer_To_Name,
+            "Posted Date": item?.stringTransferDate,
+            Status: item?.status,
+          }))
+        );
+      }
+    } catch (err) {
+      setNotificationMsg("Failed To Fetch Sales All Report");
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -218,6 +241,15 @@ const PostedTransferReceipt = () => {
           transferOrderDetails={postedTransferOrderDetails}
         />
       )}
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNofication}
+          message={notificationMsg}
+          severity={severity}
+        />
+      )}
+      {isLoading && <LoaderDialog open={isLoading} />}
     </>
   );
 };
