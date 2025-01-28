@@ -43,6 +43,38 @@ const PostedSalesInvoice = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [severity, setSeverity] = useState("info");
 
+  const receiptHandle = (params) => {
+    console.log(params);
+    const queryParams = new URLSearchParams();
+    queryParams.append("advance", params?.row?.advance);
+    queryParams.append("amount", params?.row?.amount);
+    queryParams.append("applicationNo", params?.row?.pos_no);
+    queryParams.append("billing", params?.row?.billing);
+    queryParams.append("companyName", params?.row?.companyName);
+    queryParams.append("createdBy", params?.row?.createdBy);
+    queryParams.append("customerName", params?.row?.customerName);
+    queryParams.append("customerNo", params?.row?.customerNo);
+    queryParams.append("discount", params?.row?.discount);
+    queryParams.append("downPayment", params?.row?.downPayment);
+    queryParams.append("grossTotal", params?.row?.grossTotal);
+    queryParams.append("paymentDate", params?.row?.paymentDate);
+    queryParams.append("phone", params?.row?.phone);
+    queryParams.append("receiptType", params?.row?.receiptType);
+    queryParams.append("rechargeDate", params?.row?.rechargeDate);
+    queryParams.append("tax", params?.row?.tax);
+    queryParams.append("totalAmount", params?.row?.totalAmount);
+    params?.row?.itemDetails?.forEach((item) =>
+      queryParams.append("itemDetails", JSON.stringify(item))
+    );
+    const queryString = queryParams.toString();
+    const newWindow = window.open(
+      `/sales-order-receipt?${queryString}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+    if (newWindow) newWindow.opener = null;
+  };
+
   const posted_sales_invoice_columns = [
     { field: "sl", headerName: "Sl.No", width: 40 },
     { field: "pos_no", headerName: "POS No", width: 150 },
@@ -66,7 +98,12 @@ const PostedSalesInvoice = () => {
       width: 80,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small" color="primary">
+          <IconButton
+            aria-label="view"
+            size="small"
+            color="primary"
+            onClick={() => receiptHandle(params)}
+          >
             <PrintIcon fontSize="inherit" />
           </IconButton>
         </>

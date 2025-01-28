@@ -17,15 +17,17 @@ export const CommonProvider = ({ children }) => {
   const [bankAccountNames, setBankAccountNames] = useState([]);
   const [requisitionType, setRequisitionType] = useState([]);
   const [requisitionItems, setRequisitionItems] = useState([]);
-  const [transferType, setTransferType]= useState([]);
+  const [transferType, setTransferType] = useState([]);
   const [modeOfTransport, setModeOfTransport] = useState([]);
   const [fromSubInventory, setFromSubInventory] = useState([]);
   const [fromLocator, setFromLocator] = useState([]);
   const [toLocator, setToLocator] = useState([]);
   const [transferOrderToLocator, setTransferOrderToLocator] = useState([]);
   const [faToLocator, setFaToLocator] = useState([]);
-  const [toStore, setToStore] = useState([]);
-  const [onHandsTransferOrderItems, setOnHandsTransferOrderItems] = useState([]);
+  // const [toStore, setToStore] = useState([]);
+  const [onHandsTransferOrderItems, setOnHandsTransferOrderItems] = useState(
+    []
+  );
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [locatorsList, setLocatorsList] = useState([]);
@@ -222,18 +224,20 @@ export const CommonProvider = ({ children }) => {
       setFaToLocator(res?.data);
     }
   };
-  const fetchToStore = async () => {
-    const res = await Route(
-      "GET",
-      `/Common/FetchToStore?StoreID=${userDetails?.storeId}&storeName=${userDetails?.regionName}`,
-      null,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setToStore(res?.data);
-    }
-  };
+  // const fetchToStore = async () => {
+  //   if (userDetails !== null) {
+  //     const res = await Route(
+  //       "GET",
+  //       `/Common/FetchToStore?StoreID=${userDetails?.storeId}&storeName=${userDetails?.regionName}`,
+  //       null,
+  //       null,
+  //       null
+  //     );
+  //     if (res?.status === 200) {
+  //       setToStore(res?.data);
+  //     }
+  //   }
+  // };
   const fetchAllItems = async (regionName, subInventory, locator) => {
     setOnHandsTransferOrderItems([]);
     const res = await Route(
@@ -257,7 +261,7 @@ export const CommonProvider = ({ children }) => {
     );
     if (res?.status === 200) {
       setRegionsOrExtensions(res?.data);
-    };
+    }
   };
   const fetchItemsList = async () => {
     const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
@@ -302,7 +306,7 @@ export const CommonProvider = ({ children }) => {
     fetchModeOfTransport();
     fetchFromSubInventory();
     fetchFromLocator();
-    fetchToStore();
+    // fetchToStore();
     fetchRegionsOrExtensions();
     fetchItemsList();
   }, []);
@@ -334,7 +338,7 @@ export const CommonProvider = ({ children }) => {
         toLocator,
         fetchLocatorBasedOExtension,
         faToLocator,
-        toStore,
+        // toStore,
         onHandsTransferOrderItems,
         regionsOrExtensions,
         itemsList,

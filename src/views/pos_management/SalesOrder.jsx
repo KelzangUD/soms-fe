@@ -626,7 +626,6 @@ const SalesOrder = () => {
 
   const openInNewTab = () => {
     const queryParams = new URLSearchParams();
-    // console.log(responseData);
     queryParams.append("advance", responseData?.advance);
     queryParams.append("amount", responseData?.amount);
     queryParams.append("applicationNo", responseData?.applicationNo);
