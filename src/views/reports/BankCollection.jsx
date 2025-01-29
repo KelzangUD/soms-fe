@@ -40,24 +40,87 @@ const BankCollection = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [severity, setSeverity] = useState("info");
+  const printReceiptHandle = async (params) => {
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/Receipt/fetchPaymentDetails?receiptNo=${params?.row?.message_seq}`,
+        null,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        const queryParams = new URLSearchParams();
+        queryParams.append(
+          "advance",
+          res?.data?.advance === null ? 0 : res?.data?.advance
+        );
+        queryParams.append("amount", res?.data?.amount);
+        queryParams.append("applicationNo", res?.data?.applicationNo);
+        queryParams.append("billing", res?.data?.billing);
+        queryParams.append("companyName", res?.data?.companyName);
+        queryParams.append("createdBy", res?.data?.createdBy);
+        queryParams.append("customerName", res?.data?.customerName);
+        queryParams.append("customerNo", res?.data?.customerNo);
+        queryParams.append(
+          "discount",
+          res?.data?.discount === null ? 0 : res?.data?.discount
+        );
+        queryParams.append(
+          "downPayment",
+          res?.data?.downPayment === null ? 0 : res?.data?.downPayment
+        );
+        queryParams.append(
+          "grossTotal",
+          res?.data?.grossTotal === null ? 0 : res?.data?.grossTotal
+        );
+        queryParams.append("paymentDate", res?.data?.posting_date);
+        queryParams.append("phone", res?.data?.phone);
+        queryParams.append("receiptType", res?.data?.receiptType);
+        queryParams.append("rechargeDate", res?.data?.rechargeDate);
+        queryParams.append("tax", res?.data?.tax);
+        queryParams.append(
+          "totalAmount",
+          res?.data?.totalAmount === null ? 0 : res?.data?.totalAmount
+        );
+        res?.data?.itemDetails?.forEach((item) =>
+          queryParams.append("itemDetails", JSON.stringify(item))
+        );
+        const queryString = queryParams.toString();
+        const newWindow = window.open(
+          `/sales-order-receipt?${queryString}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+        if (newWindow) newWindow.opener = null;
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const bank_collection_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "payment_amount", headerName: "Payment Amount", flex: 1.1 },
+    { field: "sl", headerName: "Sl.No", width: 60 },
+    { field: "payment_amount", headerName: "Payment Amount", width: 130 },
     {
       field: "type",
       headerName: "Payment Type",
-      flex: 1,
+      width: 100,
     },
-    { field: "payment_ref_number", headerName: "Reference Number", flex: 1.3 },
-    { field: "bank_name", headerName: "Bank Name", flex: 1.5 },
-    { field: "cheque", headerName: "Cheque No", flex: 0.8 },
-    { field: "cheque_date", headerName: "Cheque Date", flex: 1 },
-    { field: "created_date", headerName: "Created Date", flex: 1 },
-    { field: "created_by", headerName: "Created User", flex: 1.6 },
+    { field: "payment_ref_number", headerName: "Reference Number", width: 150 },
+    { field: "bank_name", headerName: "Bank Name", width: 300 },
+    { field: "cheque", headerName: "Cheque No", width: 100 },
+    { field: "cheque_date", headerName: "Cheque Date", width: 100 },
+    { field: "created_date", headerName: "Created Date", width: 100 },
+    { field: "created_by", headerName: "Created User", width: 160 },
     {
       field: "result_code",
       headerName: "Status",
-      flex: 1,
+      width: 100,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.result_code} />
       ),
@@ -65,10 +128,15 @@ const BankCollection = () => {
     {
       field: "action",
       headerName: "Action",
-      flex: 0.6,
+      width: 60,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small" color="primary">
+          <IconButton
+            aria-label="view"
+            size="small"
+            color="primary"
+            onClick={() => printReceiptHandle(params)}
+          >
             <PrintIcon fontSize="inherit" />
           </IconButton>
         </>
@@ -91,6 +159,7 @@ const BankCollection = () => {
           res?.data?.map((item, index) => ({
             id: index,
             sl: index + 1,
+            message_seq: item?.message_seq,
             payment_amount: item?.payment_amount,
             type: item?.type,
             result_code: item?.result_code,

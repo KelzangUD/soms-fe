@@ -25,7 +25,7 @@ const SalesReceipt = () => {
     .map((item) => JSON.parse(item));
   return (
     <>
-      <div style={{ width: "250px", padding: "0", lineHeight: "1.7" }}>
+      <div style={{ width: "300px", padding: "0", lineHeight: "1.7" }}>
         <div style={{ textAlign: "center" }}>
           <h3>{companyName}</h3>
           <p>{customerName}</p>

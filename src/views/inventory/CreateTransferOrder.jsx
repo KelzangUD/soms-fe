@@ -103,7 +103,9 @@ const CreateTransferOrder = ({
   };
 
   useEffect(() => {
-    fetchToStore();
+    if (parameters?.transfer_Type !== "") {
+      fetchToStore();
+    }
   }, [userDetails, parameters?.transfer_Type]);
 
   useEffect(() => {

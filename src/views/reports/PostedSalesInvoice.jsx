@@ -43,36 +43,53 @@ const PostedSalesInvoice = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [severity, setSeverity] = useState("info");
 
-  const receiptHandle = (params) => {
-    console.log(params);
-    const queryParams = new URLSearchParams();
-    queryParams.append("advance", params?.row?.advance);
-    queryParams.append("amount", params?.row?.amount);
-    queryParams.append("applicationNo", params?.row?.pos_no);
-    queryParams.append("billing", params?.row?.billing);
-    queryParams.append("companyName", params?.row?.companyName);
-    queryParams.append("createdBy", params?.row?.createdBy);
-    queryParams.append("customerName", params?.row?.customerName);
-    queryParams.append("customerNo", params?.row?.customerNo);
-    queryParams.append("discount", params?.row?.discount);
-    queryParams.append("downPayment", params?.row?.downPayment);
-    queryParams.append("grossTotal", params?.row?.grossTotal);
-    queryParams.append("paymentDate", params?.row?.paymentDate);
-    queryParams.append("phone", params?.row?.phone);
-    queryParams.append("receiptType", params?.row?.receiptType);
-    queryParams.append("rechargeDate", params?.row?.rechargeDate);
-    queryParams.append("tax", params?.row?.tax);
-    queryParams.append("totalAmount", params?.row?.totalAmount);
-    params?.row?.itemDetails?.forEach((item) =>
-      queryParams.append("itemDetails", JSON.stringify(item))
-    );
-    const queryString = queryParams.toString();
-    const newWindow = window.open(
-      `/sales-order-receipt?${queryString}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-    if (newWindow) newWindow.opener = null;
+  const receiptHandle = async (params) => {
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/Receipt/fetchPaymentDetails?receiptNo=${params?.row?.pos_no}`,
+        null,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        const queryParams = new URLSearchParams();
+        queryParams.append("advance", res?.data?.advance);
+        queryParams.append("amount", res?.data?.amount);
+        queryParams.append("applicationNo", res?.data?.applicationNo);
+        queryParams.append("billing", res?.data?.billing);
+        queryParams.append("companyName", res?.data?.companyName);
+        queryParams.append("createdBy", res?.data?.createdBy);
+        queryParams.append("customerName", res?.data?.customerName);
+        queryParams.append("customerNo", res?.data?.customerNo);
+        queryParams.append("discount", res?.data?.discount);
+        queryParams.append("downPayment", res?.data?.downPayment);
+        queryParams.append("grossTotal", res?.data?.grossTotal);
+        queryParams.append("paymentDate", res?.data?.posting_date);
+        queryParams.append("phone", res?.data?.phone);
+        queryParams.append("receiptType", res?.data?.receiptType);
+        queryParams.append("rechargeDate", res?.data?.rechargeDate);
+        queryParams.append("tax", res?.data?.tax);
+        queryParams.append("totalAmount", res?.data?.totalAmount);
+        res?.data?.itemDetails?.forEach((item) =>
+          queryParams.append("itemDetails", JSON.stringify(item))
+        );
+        const queryString = queryParams.toString();
+        const newWindow = window.open(
+          `/sales-order-receipt?${queryString}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+        if (newWindow) newWindow.opener = null;
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const posted_sales_invoice_columns = [

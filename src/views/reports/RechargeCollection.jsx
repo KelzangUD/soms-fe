@@ -40,6 +40,69 @@ const RechargeCollection = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [severity, setSeverity] = useState("info");
+  const printReceiptHandle = async (params) => {
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/Receipt/fetchPaymentDetails?receiptNo=${params?.row?.message_seq}`,
+        null,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        const queryParams = new URLSearchParams();
+        queryParams.append(
+          "advance",
+          res?.data?.advance === null ? 0 : res?.data?.advance
+        );
+        queryParams.append("amount", res?.data?.amount);
+        queryParams.append("applicationNo", res?.data?.applicationNo);
+        queryParams.append("billing", res?.data?.billing);
+        queryParams.append("companyName", res?.data?.companyName);
+        queryParams.append("createdBy", res?.data?.createdBy);
+        queryParams.append("customerName", res?.data?.customerName);
+        queryParams.append("customerNo", res?.data?.customerNo);
+        queryParams.append(
+          "discount",
+          res?.data?.discount === null ? 0 : res?.data?.discount
+        );
+        queryParams.append(
+          "downPayment",
+          res?.data?.downPayment === null ? 0 : res?.data?.downPayment
+        );
+        queryParams.append(
+          "grossTotal",
+          res?.data?.grossTotal === null ? 0 : res?.data?.grossTotal
+        );
+        queryParams.append("paymentDate", res?.data?.posting_date);
+        queryParams.append("phone", res?.data?.phone);
+        queryParams.append("receiptType", res?.data?.receiptType);
+        queryParams.append("rechargeDate", res?.data?.rechargeDate);
+        queryParams.append("tax", res?.data?.tax);
+        queryParams.append(
+          "totalAmount",
+          res?.data?.totalAmount === null ? 0 : res?.data?.totalAmount
+        );
+        res?.data?.itemDetails?.forEach((item) =>
+          queryParams.append("itemDetails", JSON.stringify(item))
+        );
+        const queryString = queryParams.toString();
+        const newWindow = window.open(
+          `/sales-order-receipt?${queryString}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+        if (newWindow) newWindow.opener = null;
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const recharge_collection_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     {
@@ -81,7 +144,12 @@ const RechargeCollection = () => {
       flex: 1,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="view" size="small" color="primary">
+          <IconButton
+            aria-label="view"
+            size="small"
+            color="primary"
+            onClick={() => printReceiptHandle(params)}
+          >
             <PrintIcon fontSize="inherit" />
           </IconButton>
         </>
