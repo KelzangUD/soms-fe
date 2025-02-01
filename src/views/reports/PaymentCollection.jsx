@@ -91,14 +91,14 @@ const PaymentCollection = () => {
   };
 
   const payment_collection_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    { field: "sl", headerName: "Sl.No", flex: 0.4 },
     { field: "payment_amount", headerName: "Payment Amount", flex: 1.1 },
     {
       field: "recharge_type",
       headerName: "Payment Type",
       flex: 0.9,
     },
-    { field: "payment_ref_number", headerName: "Reference Number", flex: 1.2 },
+    { field: "payment_ref_number", headerName: "Reference Number", flex: 1.5 },
     {
       field: "result_code",
       headerName: "Status",
@@ -109,18 +109,18 @@ const PaymentCollection = () => {
     },
     { field: "created_date", headerName: "Created Date", flex: 0.9 },
     { field: "created_by", headerName: "Created User", flex: 1.5 },
-    {
-      field: "old_print",
-      headerName: "Old Print",
-      flex: 0.9,
-      renderCell: (params) => (
-        <>
-          <IconButton aria-label="old_print" size="small" color="primary">
-            <PrintIcon fontSize="inherit" />
-          </IconButton>
-        </>
-      ),
-    },
+    // {
+    //   field: "old_print",
+    //   headerName: "Old Print",
+    //   flex: 0.9,
+    //   renderCell: (params) => (
+    //     <>
+    //       <IconButton aria-label="old_print" size="small" color="primary">
+    //         <PrintIcon fontSize="inherit" />
+    //       </IconButton>
+    //     </>
+    //   ),
+    // },
     {
       field: "action",
       headerName: "Action",

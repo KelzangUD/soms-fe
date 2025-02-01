@@ -107,31 +107,40 @@ const PaymentReceipt = () => {
     }));
   };
   const fetchCustomerDetailsHandle = async () => {
-    const res = await Route(
-      "GET",
-      `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setNotificationMsg("Customer Details Fetch Successfully");
-      setSeverity("success");
-      setShowNofication(true);
-      setPaymentReceiptDetails((prev) => ({
-        ...prev,
-        accountCode: res?.data?.accountCode,
-        name: res?.data?.name,
-        accountId: res?.data?.accountId,
-        acctKey: res?.data?.acctKey,
-        outstandingBalance: res?.data?.billAmount,
-        invoiceNo: res?.data?.invoiceNo,
-        amount: res?.data?.billAmount,
-      }));
-    } else {
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setNotificationMsg("Customer Details Fetch Successfully");
+        setSeverity("success");
+        setShowNofication(true);
+        setPaymentReceiptDetails((prev) => ({
+          ...prev,
+          accountCode: res?.data?.accountCode,
+          name: res?.data?.name,
+          accountId: res?.data?.accountId,
+          acctKey: res?.data?.acctKey,
+          outstandingBalance: res?.data?.billAmount,
+          invoiceNo: res?.data?.invoiceNo,
+          amount: res?.data?.billAmount,
+        }));
+      } else {
+        setNotificationMsg("Customer Details not Found!");
+        setSeverity("error");
+        setShowNofication(true);
+      }
+    } catch (err) {
       setNotificationMsg("Customer Details not Found!");
       setSeverity("error");
       setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -152,7 +161,6 @@ const PaymentReceipt = () => {
         setIncorrectFormat(true);
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     paymentReceiptDetails?.serviceType,
@@ -250,8 +258,43 @@ const PaymentReceipt = () => {
     }));
     setIsFileUploaded(false);
   };
+  const validationRules = [
+    { key: "serviceType", message: "Please Select Service Type!" },
+    {
+      key: "mobileNo",
+      message: "Mobile Number/Account Code can not be empty!",
+    },
+    { key: "paymentType", message: "Please Select Payment Method!" },
+    { key: "bankId", message: "Please Select Bank Account" },
+  ];
   const createHandle = async (e) => {
     e.preventDefault();
+    if (
+      paymentReceiptDetails?.serviceType == "1" &&
+      paymentReceiptDetails?.payment === ""
+    ) {
+      setNotificationMsg("Please Select Payment Type!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
+    for (const rule of validationRules) {
+      if (!paymentReceiptDetails?.[rule.key]) {
+        setNotificationMsg(rule.message);
+        setSeverity("info");
+        setShowNofication(true);
+        return;
+      }
+    }
+    if (
+      paymentReceiptDetails?.paymentType === "2" &&
+      paymentReceiptDetails?.chequeNo === ""
+    ) {
+      setNotificationMsg("Please Enter Cheque No!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
     if (
       (paymentReceiptDetails?.serviceType === "1" &&
         paymentReceiptDetails?.mobileNo.startsWith("77") &&
@@ -506,7 +549,7 @@ const PaymentReceipt = () => {
         </Grid>
       </Box>
       {isLoading && <LoaderDialog open={isLoading} />}
-      {showNotification && severity === "error" && (
+      {showNotification && (severity === "error" || severity === "info") && (
         <Notification
           open={showNotification}
           setOpen={setShowNofication}

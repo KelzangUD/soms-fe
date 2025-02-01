@@ -99,7 +99,12 @@ const Recharge = () => {
       ...prev,
       paymentType: e?.target?.value,
       payment: e?.target?.value,
+      bankId: "",
+      bank: "",
+      cardOrChequeNo: "",
     }));
+    setIsFileUploaded(false);
+    setChequeCopy(null);
     if (e?.target?.value === "1") {
       setDisabledFields((prev) => ({
         ...prev,
@@ -183,63 +188,89 @@ const Recharge = () => {
     }));
     setIsFileUploaded(false);
   };
+  const validationRules = [
+    { key: "mobileNo", message: "Please Enter Prepaid Number!" },
+    { key: "amount", message: "Please Enter Recharge Amount!" },
+    { key: "paymentType", message: "Please Select Payment Type!" },
+    { key: "bank", message: "Please Select Bank A/C Name!" },
+  ];
   const createHandle = async (e) => {
     e.preventDefault();
+    // Loop through validation rules
+    for (const rule of validationRules) {
+      if (!rechargeDetails?.[rule.key]) {
+        setNotificationMsg(rule.message);
+        setSeverity("info");
+        setShowNofication(true);
+        return;
+      }
+    }
+    // Additional validation for amount
     if (rechargeDetails?.amount < 10) {
-      setNotificationMsg(`Recharge Amount should be not be less than Nu.10`);
+      setNotificationMsg("Recharge Amount should not be less than Nu.10");
       setSeverity("info");
       setShowNofication(true);
-    } else {
-      setIsLoading(true);
-      try {
-        let formData = new FormData();
-        if (chequeCopy && chequeCopy.length > 0) {
-          formData.append("cheque", chequeCopy);
-        } else {
-          const placeholderFile = new File([""], "cheque.png");
-          formData.append("cheque", placeholderFile);
-        }
-        if (file && file.length > 0) {
-          formData.append("rechargeFile ", file);
-        } else {
-          const placeholderFile = new File([""], "file.csv");
-          formData.append("rechargeFile ", placeholderFile);
-        }
-        const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
-          type: "application/json",
-        });
-        formData.append("recharge", jsonDataBlob, "data.json");
-        const res = await Route(
-          "POST",
-          `/Recharge/eTop_Up`,
-          access_token,
-          formData,
-          null,
-          "multipart/form-data"
-        );
-        if (res?.data?.status === "SUCCESS") {
-          setResponseData(res?.data);
-          setSeverity("success");
-          setNotificationMsg(res?.data?.status);
-          setShowNofication(true);
-          resetHandle();
-        } else if (res?.data?.status === "FAILED") {
-          setResponseData(res?.data);
-          setSeverity("error");
-          setNotificationMsg(res?.data?.message);
-          setShowNofication(true);
-        } else {
-          setNotificationMsg(res?.response?.data?.message);
-          setSeverity("error");
-          setShowNofication(true);
-        }
-      } catch (err) {
-        setNotificationMsg(`Recharge Failed: ${err}`);
+      return;
+    }
+    // Special condition for Card/Cheque Number
+    if (
+      ["2", "3"].includes(rechargeDetails?.paymentType) &&
+      !rechargeDetails?.cardOrChequeNo
+    ) {
+      setNotificationMsg("Please Enter Card/Cheque Number!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
+    setIsLoading(true);
+    try {
+      let formData = new FormData();
+      if (chequeCopy && chequeCopy.length > 0) {
+        formData.append("cheque", chequeCopy);
+      } else {
+        const placeholderFile = new File([""], "cheque.png");
+        formData.append("cheque", placeholderFile);
+      }
+      if (file && file.length > 0) {
+        formData.append("rechargeFile ", file);
+      } else {
+        const placeholderFile = new File([""], "file.csv");
+        formData.append("rechargeFile ", placeholderFile);
+      }
+      const jsonDataBlob = new Blob([JSON.stringify(rechargeDetails)], {
+        type: "application/json",
+      });
+      formData.append("recharge", jsonDataBlob, "data.json");
+      const res = await Route(
+        "POST",
+        `/Recharge/eTop_Up`,
+        access_token,
+        formData,
+        null,
+        "multipart/form-data"
+      );
+      if (res?.data?.status === "SUCCESS") {
+        setResponseData(res?.data);
+        setSeverity("success");
+        setNotificationMsg(res?.data?.status);
+        setShowNofication(true);
+        resetHandle();
+      } else if (res?.data?.status === "FAILED") {
+        setResponseData(res?.data);
+        setSeverity("error");
+        setNotificationMsg(res?.data?.message);
+        setShowNofication(true);
+      } else {
+        setNotificationMsg(res?.response?.data?.message);
         setSeverity("error");
         setShowNofication(true);
-      } finally {
-        setIsLoading(false);
       }
+    } catch (err) {
+      setNotificationMsg(`Recharge Failed: ${err}`);
+      setSeverity("error");
+      setShowNofication(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 

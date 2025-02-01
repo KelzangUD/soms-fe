@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
@@ -661,6 +662,11 @@ const SalesOrder = () => {
           <Grid item xs={12}>
             <Card>
               <Title title="Header" />
+              <Grid container>
+                <Alert severity="info" sx={{ width: "100%" }}>
+                  For Staff EMI, Please Select EMI Number.
+                </Alert>
+              </Grid>
               <Grid container p={2}>
                 <Grid container spacing={1} mb={1}>
                   <Grid item xs={3}>

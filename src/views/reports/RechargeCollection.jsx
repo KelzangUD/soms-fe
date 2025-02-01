@@ -126,18 +126,18 @@ const RechargeCollection = () => {
         <RenderStatus status={params?.row?.result_code} />
       ),
     },
-    {
-      field: "old_print",
-      headerName: "Old Print",
-      flex: 1,
-      renderCell: (params) => (
-        <>
-          <IconButton aria-label="view" size="small" color="primary">
-            <PrintIcon fontSize="inherit" />
-          </IconButton>
-        </>
-      ),
-    },
+    // {
+    //   field: "old_print",
+    //   headerName: "Old Print",
+    //   flex: 1,
+    //   renderCell: (params) => (
+    //     <>
+    //       <IconButton aria-label="view" size="small" color="primary">
+    //         <PrintIcon fontSize="inherit" />
+    //       </IconButton>
+    //     </>
+    //   ),
+    // },
     {
       field: "action",
       headerName: "Action",

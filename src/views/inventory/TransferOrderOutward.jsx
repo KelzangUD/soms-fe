@@ -46,7 +46,7 @@ const TransferOrderOutward = () => {
       setSeverity("error");
       setShowNofication(true);
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
   const viewHandle = (params) => {
@@ -172,6 +172,7 @@ const TransferOrderOutward = () => {
                             label="To*"
                             onChange={toDateHandle}
                             value={dayjs(params?.toDate)}
+                            minDate={dayjs(params?.fromDate)}
                           />
                         </LocalizationProvider>
                       </FormControl>
