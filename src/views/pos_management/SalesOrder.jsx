@@ -626,33 +626,47 @@ const SalesOrder = () => {
   };
 
   const openInNewTab = () => {
+    // const queryParams = new URLSearchParams();
+    // queryParams.append("advance", responseData?.advance);
+    // queryParams.append("amount", responseData?.amount);
+    // queryParams.append("applicationNo", responseData?.applicationNo);
+    // queryParams.append("billing", responseData?.billing);
+    // queryParams.append("companyName", responseData?.companyName);
+    // queryParams.append("createdBy", responseData?.createdBy);
+    // queryParams.append("customerName", responseData?.customerName);
+    // queryParams.append("customerNo", responseData?.customerNo);
+    // queryParams.append("discount", responseData?.discount);
+    // queryParams.append("downPayment", responseData?.downPayment);
+    // queryParams.append("grossTotal", responseData?.grossTotal);
+    // queryParams.append("paymentDate", responseData?.paymentDate);
+    // queryParams.append("phone", responseData?.phone);
+    // queryParams.append("receiptType", responseData?.receiptType);
+    // queryParams.append("rechargeDate", responseData?.rechargeDate);
+    // queryParams.append("tax", responseData?.tax);
+    // queryParams.append("totalAmount", responseData?.totalAmount);
+    // responseData?.itemDetails.forEach((item) =>
+    //   queryParams.append("itemDetails", JSON.stringify(item))
+    // );
+    // const queryString = queryParams.toString();
+    // const newWindow = window.open(
+    //   `/sales-order-receipt?${queryString}`,
+    //   "_blank",
+    //   "noopener,noreferrer"
+    // );
+    // if (newWindow) newWindow.opener = null;
+    // Store full data in localStorage
+    localStorage.setItem("salesOrderData", JSON.stringify(res?.data));
+    // Pass only an identifier in the URL (e.g., applicationNo)
     const queryParams = new URLSearchParams();
-    queryParams.append("advance", responseData?.advance);
-    queryParams.append("amount", responseData?.amount);
-    queryParams.append("applicationNo", responseData?.applicationNo);
-    queryParams.append("billing", responseData?.billing);
-    queryParams.append("companyName", responseData?.companyName);
-    queryParams.append("createdBy", responseData?.createdBy);
-    queryParams.append("customerName", responseData?.customerName);
-    queryParams.append("customerNo", responseData?.customerNo);
-    queryParams.append("discount", responseData?.discount);
-    queryParams.append("downPayment", responseData?.downPayment);
-    queryParams.append("grossTotal", responseData?.grossTotal);
-    queryParams.append("paymentDate", responseData?.paymentDate);
-    queryParams.append("phone", responseData?.phone);
-    queryParams.append("receiptType", responseData?.receiptType);
-    queryParams.append("rechargeDate", responseData?.rechargeDate);
-    queryParams.append("tax", responseData?.tax);
-    queryParams.append("totalAmount", responseData?.totalAmount);
-    responseData?.itemDetails.forEach((item) =>
-      queryParams.append("itemDetails", JSON.stringify(item))
-    );
-    const queryString = queryParams.toString();
+    queryParams.append("applicationNo", res?.data?.applicationNo);
+
+    // Open new window with minimized URL
     const newWindow = window.open(
-      `/sales-order-receipt?${queryString}`,
+      `/posted-sales-receipt?${queryParams.toString()}`,
       "_blank",
       "noopener,noreferrer"
     );
+
     if (newWindow) newWindow.opener = null;
   };
   return (
