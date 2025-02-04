@@ -655,10 +655,10 @@ const SalesOrder = () => {
     // );
     // if (newWindow) newWindow.opener = null;
     // Store full data in localStorage
-    localStorage.setItem("salesOrderData", JSON.stringify(res?.data));
+    localStorage.setItem("salesOrderData", JSON.stringify(responseData));
     // Pass only an identifier in the URL (e.g., applicationNo)
     const queryParams = new URLSearchParams();
-    queryParams.append("applicationNo", res?.data?.applicationNo);
+    queryParams.append("applicationNo", responseData?.applicationNo);
 
     // Open new window with minimized URL
     const newWindow = window.open(
