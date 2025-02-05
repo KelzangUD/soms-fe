@@ -1775,7 +1775,7 @@ const SalesReportAll = () => {
                       onChange={regionOrExtensionHandle}
                       value={params?.extension}
                       options={[
-                        { label: "ALL", id: "" },
+                        { label: "ALL", id: "ALL" },
                         ...(regionsOrExtensions?.map((item) => ({
                           id: item?.id,
                           label: item?.id,
