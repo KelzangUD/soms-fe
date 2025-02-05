@@ -382,6 +382,48 @@ const CreateTransferOrder = ({
 
   const createHandle = async (e) => {
     e.preventDefault();
+    if (parameters?.transfer_Type === "") {
+      setNotificationMsg("Please Select Transfer Type!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
+    if (parameters?.transfer_From_SubInventory === "") {
+      setNotificationMsg("Please Select From Sub-Inventory!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
+    if (parameters?.transfer_From_Locator === "") {
+      setNotificationMsg("Please Select From Locator!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
+    if (parameters?.transfer_To_Store === "") {
+      setNotificationMsg("Please Select Transfer To Store!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
+    if (parameters?.transfer_To_SubInventory === "") {
+      setNotificationMsg("Please Select Transfer To Sub-Inventory!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
+    if (parameters?.transfer_To_Locator === "") {
+      setNotificationMsg("Please Select Transfer To Locator!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
+    if (parameters?.transferOrderItemDTOList.length === 0) {
+      setNotificationMsg("Please Add Items to be Transfered!");
+      setSeverity("info");
+      setShowNofication(true);
+      return;
+    }
     let formData = new FormData();
     if (file && file.length > 0) {
       formData.append("File", file);
@@ -394,6 +436,7 @@ const CreateTransferOrder = ({
     });
 
     formData.append("data", jsonDataBlob, "data.json");
+    console.log(parameters);
     const res = await Route(
       "POST",
       `/transferOrder/createTransferOrder`,
@@ -499,7 +542,7 @@ const CreateTransferOrder = ({
               <Grid item xs={3}>
                 <FormControl>
                   <InputLabel id="from-sub-inventory-select-label">
-                    From Sub-inventoy
+                    From Sub-inventoy*
                   </InputLabel>
                   <Select
                     labelId="from-sub-inventory-select-label"
@@ -519,7 +562,7 @@ const CreateTransferOrder = ({
               <Grid item xs={3}>
                 <FormControl>
                   <InputLabel id="from-locator-select-label">
-                    From Locator
+                    From Locator*
                   </InputLabel>
                   <Select
                     labelId="from-locator-select-label"
@@ -538,7 +581,7 @@ const CreateTransferOrder = ({
               </Grid>
               <Grid item xs={3}>
                 <FormControl>
-                  <InputLabel id="to-store-select-label">To Store</InputLabel>
+                  <InputLabel id="to-store-select-label">To Store*</InputLabel>
                   <Select
                     labelId="to-store-select-label"
                     id="to-store-select"
@@ -557,7 +600,7 @@ const CreateTransferOrder = ({
               <Grid item xs={3}>
                 <FormControl>
                   <InputLabel id="to-sub-inventory-select-label">
-                    To Sub-Inventry
+                    To Sub-Inventry*
                   </InputLabel>
                   <Select
                     labelId="to-sub-inventory-select-label"
@@ -580,7 +623,7 @@ const CreateTransferOrder = ({
               <Grid item xs={3}>
                 <FormControl>
                   <InputLabel id="to-locator-select-label">
-                    To Locator
+                    To Locator*
                   </InputLabel>
                   {parameters?.transfer_Type === "With In Store" ? (
                     <Select
@@ -652,7 +695,6 @@ const CreateTransferOrder = ({
                 <TextField
                   id="outlined-basic"
                   label="Vehicle No."
-                  required
                   onChange={vehicleNoHandle}
                   value={parameters?.vehicle_Number}
                 />

@@ -183,10 +183,13 @@ const OnHandReport = () => {
                   <Grid item xs={3}>
                     <Autocomplete
                       disablePortal
-                      options={regionsOrExtensions?.map((item) => ({
-                        label: item?.extensionName,
-                        id: item?.id,
-                      }))}
+                      options={[
+                        {label: "ALL", id: "ALL" },
+                        ...(regionsOrExtensions?.map((item) => ({
+                          label: item?.extensionName,
+                          id: item?.id,
+                        })) || []),
+                      ]}
                       value={details?.storeName}
                       onChange={storeHandle}
                       renderInput={(params) => (

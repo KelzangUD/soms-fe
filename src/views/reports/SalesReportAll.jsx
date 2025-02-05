@@ -38,7 +38,7 @@ const SalesReportAll = () => {
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [params, setParams] = useState({
-    extension: userDetails?.regionName,
+    extension: 'ALL',
     fromDate: dateFormatterTwo(new Date()),
     toDate: dateFormatterTwo(new Date()),
     itemNo: "",
@@ -1774,10 +1774,12 @@ const SalesReportAll = () => {
                       disablePortal
                       onChange={regionOrExtensionHandle}
                       value={params?.extension}
-                      options={regionsOrExtensions?.map((item) => ({
+                      options={[
+                        { label: "ALL", id: "" },
+                        ...(regionsOrExtensions?.map((item) => ({
                         id: item?.id,
                         label: item?.id,
-                      }))}
+                      })) || [])]}
                       renderInput={(params) => (
                         <TextField {...params} label="Region/Extension" />
                       )}
