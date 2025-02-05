@@ -38,7 +38,7 @@ const SalesReportAll = () => {
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [params, setParams] = useState({
-    extension: 'ALL',
+    extension: userDetails?.regionName,
     fromDate: dateFormatterTwo(new Date()),
     toDate: dateFormatterTwo(new Date()),
     itemNo: "",
@@ -1777,12 +1777,21 @@ const SalesReportAll = () => {
                       options={[
                         { label: "ALL", id: "" },
                         ...(regionsOrExtensions?.map((item) => ({
-                        id: item?.id,
-                        label: item?.id,
-                      })) || [])]}
+                          id: item?.id,
+                          label: item?.id,
+                        })) || []),
+                      ]}
                       renderInput={(params) => (
                         <TextField {...params} label="Region/Extension" />
                       )}
+                      disabled={
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager" ||
+                        userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "Regional Accountant"
+                          ? false
+                          : true
+                      }
                     />
                   </Grid>
                   <Grid item xs={2}>

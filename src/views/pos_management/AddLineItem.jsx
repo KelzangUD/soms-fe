@@ -40,7 +40,7 @@ const AddLineItem = ({
     description: "",
     serialNo: "",
     imeiNo: "",
-    qty: productType === 3 ? 1 : "",
+    qty: productType === 3 || productType === 2 ? 1 : "",
     priceLocator: "N",
     discPercentage: "",
     tdsAmount: "",
