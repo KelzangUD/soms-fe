@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Autocomplete,
   Box,
   Grid,
   Button,
   IconButton,
   FormControl,
-  MenuItem,
-  InputLabel,
-  Select,
   TextField,
 } from "@mui/material";
 import FindReplaceIcon from "@mui/icons-material/FindReplace";
@@ -23,6 +21,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
 import { useCommon } from "../../contexts/CommonContext";
+import { LoaderDialog, Notification } from "../../ui/index";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const SamsungWarrantyReport = () => {
@@ -40,6 +39,10 @@ const SamsungWarrantyReport = () => {
     posNo: "",
     serialNo: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
   const samsung_warranty_columns = [
     { field: "sl", headerName: "Sl.No", width: 40 },
     { field: "pos_no", headerName: "POS No", width: 140 },
@@ -47,9 +50,9 @@ const SamsungWarrantyReport = () => {
     {
       field: "customer_name",
       headerName: "Customer Name",
-      width: 150,
+      width: 250,
     },
-    { field: "store_name", headerName: "Store Name", width: 170 },
+    { field: "store_name", headerName: "Store Name", width: 250 },
     { field: "mobile_number", headerName: "Mobile Number", width: 110 },
     {
       field: "region_name",
@@ -59,14 +62,14 @@ const SamsungWarrantyReport = () => {
     {
       field: "bank_account_number",
       headerName: "Bank Account",
-      width: 100,
+      width: 300,
     },
     { field: "payment_type", headerName: "Payment Type", width: 100 },
     { field: "cheque_number", headerName: "Cheque Number", width: 110 },
     { field: "cheque_date", headerName: "Cheque Date", width: 100 },
     { field: "payment_amount", headerName: "Payment Amount", width: 120 },
     { field: "serial_number", headerName: "Serial Number", width: 130 },
-    { field: "created_by", headerName: "Created User", width: 100 },
+    { field: "created_by", headerName: "Created User", width: 200 },
     { field: "warranty", headerName: "Warranty", width: 80 },
     { field: "battery_warranty", headerName: "Battery Warranty", width: 120 },
     {
@@ -95,65 +98,74 @@ const SamsungWarrantyReport = () => {
     },
   ];
   const fetchSamsungWarrantyReport = async () => {
-    const res = await Route(
-      "GET",
-      `/Report/samsungWarranty?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&posNo=${params?.posNo}&serialNo=${params?.serialNo}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setReports(
-        res?.data?.map((item, index) => ({
-          id: index,
-          sl: index + 1,
-          pos_no: item?.pos_No,
-          posting_date: item?.posting_date,
-          customer_name: item?.customer_NAME,
-          store_name: item?.store_name,
-          mobile_number: item?.mobile_NUMBER,
-          region_name: item?.region_NAME,
-          bank_account_number: item?.bank_ACCOUNT_NUMBER,
-          payment_type: item?.payment_TYPE,
-          cheque_number: item?.cheque_NUMBER,
-          cheque_date: item?.cheque_DATE,
-          payment_amount: item?.payment_AMOUNT,
-          serial_number: item?.serial_NUMBER,
-          created_by: item?.created_by,
-          warranty: item?.warranty,
-          battery_warranty: item?.battery_Warranty,
-        }))
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/Report/samsungWarranty?extension=${params?.extension}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&posNo=${params?.posNo}&serialNo=${params?.serialNo}`,
+        access_token,
+        null,
+        null
       );
-      setPrintData(
-        res?.data?.map((item, index) => ({
-          sl: index + 1,
-          "POS No": item?.pos_No,
-          "Posting Date": item?.posting_date,
-          "Customer Name": item?.customer_NAME,
-          "Store Name": item?.store_name,
-          "Mobile Number": item?.mobile_NUMBER,
-          "Region Name": item?.region_NAME,
-          "Bank Account Number": item?.bank_ACCOUNT_NUMBER,
-          "Payment Type": item?.payment_TYPE,
-          "Cheque Number": item?.cheque_NUMBER,
-          "Cheque Date": item?.cheque_DATE,
-          "Payment Amount": item?.payment_AMOUNT,
-          "Serial Number": item?.serial_NUMBER,
-          "Created By": item?.created_by,
-          Warranty: item?.warranty,
-          "Battery Warranty": item?.battery_Warranty,
-        }))
-      );
+      if (res?.status === 200) {
+        setReports(
+          res?.data?.map((item, index) => ({
+            id: index,
+            sl: index + 1,
+            pos_no: item?.pos_No,
+            posting_date: item?.posting_date,
+            customer_name: item?.customer_NAME,
+            store_name: item?.store_name,
+            mobile_number: item?.mobile_NUMBER,
+            region_name: item?.region_NAME,
+            bank_account_number: item?.bank_ACCOUNT_NUMBER,
+            payment_type: item?.payment_TYPE,
+            cheque_number: item?.cheque_NUMBER,
+            cheque_date: item?.cheque_DATE,
+            payment_amount: item?.payment_AMOUNT,
+            serial_number: item?.serial_NUMBER,
+            created_by: item?.created_by,
+            warranty: item?.warranty,
+            battery_warranty: item?.battery_Warranty,
+          }))
+        );
+        setPrintData(
+          res?.data?.map((item, index) => ({
+            sl: index + 1,
+            "POS No": item?.pos_No,
+            "Posting Date": item?.posting_date,
+            "Customer Name": item?.customer_NAME,
+            "Store Name": item?.store_name,
+            "Mobile Number": item?.mobile_NUMBER,
+            "Region Name": item?.region_NAME,
+            "Bank Account Number": item?.bank_ACCOUNT_NUMBER,
+            "Payment Type": item?.payment_TYPE,
+            "Cheque Number": item?.cheque_NUMBER,
+            "Cheque Date": item?.cheque_DATE,
+            "Payment Amount": item?.payment_AMOUNT,
+            "Serial Number": item?.serial_NUMBER,
+            "Created By": item?.created_by,
+            Warranty: item?.warranty,
+            "Battery Warranty": item?.battery_Warranty,
+          }))
+        );
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
     fetchSamsungWarrantyReport();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const regionOrExtensionHandle = (e) => {
+  const regionOrExtensionHandle = (e, value) => {
     setParams((prev) => ({
       ...prev,
-      extension: e?.target?.value,
+      extension: value?.id,
     }));
   };
   const fromDateHandle = (e) => {
@@ -273,34 +285,34 @@ const SamsungWarrantyReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl
-                      fullWidth
-                      style={{ background: "#fff" }}
-                      size="small"
-                    >
-                      <InputLabel id="region-or-extension-select-label">
-                        Region/Extension
-                      </InputLabel>
-                      <Select
-                        labelId="region-or-extension--select-label"
-                        id="region-or-extension--select"
-                        value={params?.extension}
-                        label="Region/Extension"
-                        onChange={regionOrExtensionHandle}
-                      >
-                        {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.extensionName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      disablePortal
+                      options={[
+                        // { label: "ALL", id: "ALL" },
+                        ...(regionsOrExtensions?.map((item) => ({
+                          label: item?.extensionName,
+                          id: item?.id,
+                        })) || []),
+                      ]}
+                      value={params?.extension}
+                      onChange={regionOrExtensionHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Region/Extension" />
+                      )}
+                      disabled={
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager" ||
+                        userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "Regional Accountant"
+                          ? false
+                          : true
+                      }
+                    />
                   </Grid>
                   <Grid item xs={2}>
                     <TextField
                       label="Pos No"
                       name="pos_no"
-                      required
                       value={params?.posNo}
                       onChange={posNoHandle}
                     />
@@ -309,7 +321,6 @@ const SamsungWarrantyReport = () => {
                     <TextField
                       label="Serial No"
                       name="serial_no"
-                      required
                       value={params?.serialNo}
                       onChange={serialNoHandle}
                     />
@@ -357,6 +368,15 @@ const SamsungWarrantyReport = () => {
           </Grid>
         </Grid>
       </Box>
+      {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

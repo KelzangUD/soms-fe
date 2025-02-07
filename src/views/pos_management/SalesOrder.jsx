@@ -83,12 +83,12 @@ const SalesOrder = () => {
     interest: "",
   });
   const [linesAmount, setLinesAmount] = useState({
-    grossTotal: 0,
-    taxAmt: 0,
-    discountedAmount: 0,
-    advanceTaxAmount: 0,
-    tdsAmount: 0,
-    netAmount: 0,
+    grossTotal: 0.00,
+    taxAmt: 0.00,
+    discountedAmount: 0.00,
+    advanceTaxAmount: 0.00,
+    tdsAmount: 0.00,
+    netAmount: 0.00,
   });
   const [paymentLines, setPaymentLines] = useState([]);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
@@ -265,18 +265,18 @@ const SalesOrder = () => {
           if (item?.remarks !== "Not-Available") {
             foundItems.push({
               priceLocator: item?.priceLocator,
-              mrp: item?.mrp,
-              discPercentage: item?.discPercentage,
-              tdsAmount: parseInt(item?.tdsAmount),
-              discountedAmount: parseInt(item?.discountAmt),
+              mrp: parseFloat(item?.mrp),
+              discPercentage: parseFloat(item?.discPercentage),
+              tdsAmount: parseFloat(item?.tdsAmount),
+              discountedAmount: parseFloat(item?.discountAmt),
               sellingPrice: item?.sellingPrice,
-              taxPercentage: parseInt(item?.taxPercentage),
-              additionalDiscount: parseInt(item?.additionalDiscount),
+              taxPercentage: parseFloat(item?.taxPercentage),
+              additionalDiscount: parseFloat(item?.additionalDiscount),
               amountExclTax: item?.amountExclTax,
               advanceTaxAmount: item?.advanceTaxAmount,
               volumeDiscount: item?.volumeDiscount,
               itemTotalAddedQty: item?.itemTotlaAddedQty,
-              lineItemAmt: item?.sellingPrice,
+              lineItemAmt: parseFloat(item?.sellingPrice),
               available: item?.available,
               serialNoStatus: item?.serialNoStatus,
               taxAmt: item?.taxAmount,
@@ -656,11 +656,8 @@ const SalesOrder = () => {
     // if (newWindow) newWindow.opener = null;
     // Store full data in localStorage
     localStorage.setItem("salesOrderData", JSON.stringify(responseData));
-    // Pass only an identifier in the URL (e.g., applicationNo)
     const queryParams = new URLSearchParams();
     queryParams.append("applicationNo", responseData?.applicationNo);
-
-    // Open new window with minimized URL
     const newWindow = window.open(
       `/posted-sales-receipt?${queryParams.toString()}`,
       "_blank",
@@ -935,7 +932,6 @@ const SalesOrder = () => {
                       component="label"
                       role={undefined}
                       tabIndex={-1}
-                      fullWidth
                       variant="outlined"
                     >
                       <FileUploadIcon

@@ -244,6 +244,10 @@ export const MenuItems = [
         route: "reports/sales-order-list",
       },
       {
+        page: "Sales Return List",
+        route: "reports/sales-return-list",
+      },
+      {
         page: "Return Sale Invoice",
         route: "reports/return-sale-invoice",
       },
@@ -274,6 +278,10 @@ export const MenuItems = [
       {
         page: "Sales Report - All",
         route: "reports/sales-report-all",
+      },
+      {
+        page: "Sales Return Report",
+        route: "reports/sales-return-report",
       },
       {
         page: "Credit Sale Report",

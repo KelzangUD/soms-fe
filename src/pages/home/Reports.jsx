@@ -13,7 +13,9 @@ import {
   SalesReportAll,
   CreditSalesReport,
   TransferOrderReport,
-  SamsungWarrantyReport
+  SamsungWarrantyReport,
+  SalesReturnList,
+  SalesReturnReport,
 } from "../../views/reports/index";
 
 const Reports = () => {
@@ -22,17 +24,28 @@ const Reports = () => {
       <Routes>
         <Route path="/posted-sales-invoice" element={<PostedSalesInvoice />} />
         <Route path="/sales-order-list" element={<SalesOrderList />} />
+        <Route path="/sales-return-list" element={<SalesReturnList />} />
         <Route path="/return-sale-invoice" element={<ReturnSaleInvoice />} />
         <Route path="/payment-collection" element={<PaymentCollection />} />
         <Route path="/recharge-collection" element={<RechargeCollection />} />
         <Route path="/bank-collection" element={<BankCollection />} />
         <Route path="/on-hand-report" element={<OnHandReport />} />
         <Route path="/sales-order-report" element={<SalesOrderReport />} />
-        <Route path="/sales-and-stock-report" element={<SalesAndOrderReport />} />
+        <Route
+          path="/sales-and-stock-report"
+          element={<SalesAndOrderReport />}
+        />
         <Route path="/sales-report-all" element={<SalesReportAll />} />
+        <Route path="/sales-return-report" element={<SalesReturnReport />} />
         <Route path="/credit-sale-report" element={<CreditSalesReport />} />
-        <Route path="/transfer-order-report" element={<TransferOrderReport />} />
-        <Route path="/samsung-warranty-report" element={<SamsungWarrantyReport />} />
+        <Route
+          path="/transfer-order-report"
+          element={<TransferOrderReport />}
+        />
+        <Route
+          path="/samsung-warranty-report"
+          element={<SamsungWarrantyReport />}
+        />
       </Routes>
     </>
   );
