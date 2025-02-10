@@ -1,71 +1,92 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Box, Container, LinearProgress } from "@mui/material";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import Notification from "../ui/Notification";
 import Route from "../routes/Route";
+import { jwtDecode } from "jwt-decode";
 
 const SSOLogin = () => {
-  const navigagte = useNavigate();
+  const navigate = useNavigate();
+  const queryParameters = new URLSearchParams(window?.location?.search);
+  const token = queryParameters.get("token");
   const [formData, setFormData] = useState({
-    empId: "",
+    username: "",
     password: "",
   });
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [buffer, setBuffer] = useState(10);
+  const [severity, setSeverity] = useState("info");
 
-  const progressRef = useRef(() => {});
-  useEffect(() => {
-    progressRef.current = () => {
-      if (progress > 100) {
-        setProgress(0);
-        setBuffer(10);
-      } else {
-        const diff = Math.random() * 10;
-        const diff2 = Math.random() * 10;
-        setProgress(progress + diff);
-        setBuffer(progress + diff + diff2);
-      }
-    };
-  });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      progressRef.current();
-    }, 500);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
-  const queryParameters = new URLSearchParams(window.location.search);
-  const token = queryParameters.get("token");
-
-  const ssoAuth = async (e) => {
-    e.preventDefault();
-    const response = await Route("GET", `/sso/${token}`, null, null, null);
-    if (response?.data?.message === "SSO Verified Successfully") {
-      const formData = {
-        empId: response?.data?.empId,
+  const fetchUserDetails = async (username) => {
+    const res = await Route(
+      "GET",
+      `/Common/fetchUserDtls?userId=${username}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      localStorage.setItem("userDetails", JSON.stringify(res?.data));
+    }
+  };
+  const ssoAuth = async (token) => {
+    const response = await Route(
+      "GET",
+      `/UserDtls/sso?${token}`,
+      null,
+      null,
+      null
+    );
+    if (response?.status === 200) {
+      setFormData((prev) => ({
+        ...prev,
+        username: response?.data?.empID,
         password: response?.data?.password,
-      };
-      const res = await Route("POST", "/login", null, formData, null);
-      if (res?.status === 200) {
-        localStorage.setItem("user", JSON.stringify(res?.data?.user));
-        localStorage.setItem("token", res?.data?.token);
-        res?.data?.user?.isAdmin
-          ? navigagte("/admin/dashboard")
-          : navigagte("/user/dashboard");
+      }));
+      const res = await Route(
+        "POST",
+        "/api/v1/auth/authenticate",
+        null,
+        formData,
+        null
+      );
+      if (res.status === 200) {
+        const decoded = jwtDecode(res?.data?.access_token);
+        if (decoded) {
+          const response = await Route(
+            "GET",
+            `/UserDtls/Module?role=${decoded?.roles[1]}&userId=${formData?.username}`,
+            res?.data?.access_token,
+            null,
+            null
+          );
+          if (response?.status === 200) {
+            fetchUserDetails(formData?.username);
+            localStorage.setItem("username", formData?.username);
+            localStorage.setItem("access_token", res?.data?.access_token);
+            localStorage.setItem("refresh_token", res?.data?.refresh_token);
+            localStorage.setItem("privileges", JSON.stringify(response?.data));
+            navigate("/home/dashboard");
+          } else {
+            setMessage(response?.response?.data?.message);
+            setSeverity("error");
+            setOpen(true);
+          }
+        }
       } else {
-        setMessage(res?.data?.message);
+        setMessage(res?.response?.data?.message);
+        setSeverity("error");
         setOpen(true);
       }
     }
   };
+  useEffect(() => {
+    if (token !== "") {
+      ssoAuth(encodeURIComponent(token));
+    }
+  }, [token]);
 
   return (
     <>
@@ -83,17 +104,20 @@ const SSOLogin = () => {
         >
           <Grid container spacing={4} alignItems="center">
             <Box sx={{ width: "100%" }}>
-              <LinearProgress
-                variant="buffer"
-                value={progress}
-                valueBuffer={buffer}
-              />
+              <LinearProgress/>
             </Box>
           </Grid>
         </Box>
         <Footer />
       </Container>
-      {open && <Notification open={open} setOpen={setOpen} message={message} />}
+      {open && (
+        <Notification
+          open={open}
+          setOpen={setOpen}
+          message={message}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

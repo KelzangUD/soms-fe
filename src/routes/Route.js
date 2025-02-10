@@ -42,7 +42,7 @@ const Route = async (
     }
   } catch (error) {
     if (error?.response?.status === 403) {
-      window.location.replace("/");
+      window?.location?.replace("/");
       return;
     } else {
       return error;
