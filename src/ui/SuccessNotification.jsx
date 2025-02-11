@@ -12,9 +12,9 @@ import { Transition } from "../component/common";
 
 const SuccessNotification = ({
   showNotification,
-  setShowNofication,
+  setShowNotification,
   notificationMsg,
-  alertMessange,
+  alertMessage,
   openInNewTab,
 }) => {
   return (
@@ -28,14 +28,14 @@ const SuccessNotification = ({
         aria-describedby="alert-dialog-slide-description"
         onClose={(event, reason) => {
           if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
-            setShowNofication(false);
+            setShowNotification(false);
           }
         }}
       >
         <DialogTitle>{notificationMsg}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            <Alert severity="success">{alertMessange}</Alert>
+            <Alert severity="success">{alertMessage}</Alert>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -52,7 +52,7 @@ const SuccessNotification = ({
             </Button>
           )}
           <Button
-            onClick={() => setShowNofication(false)}
+            onClick={() => setShowNotification(false)}
             variant="outlined"
             color="error"
             sx={{

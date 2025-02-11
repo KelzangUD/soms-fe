@@ -36,7 +36,7 @@ const PaymentReceipt = () => {
   const userId = localStorage?.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [responseData, setResponseData] = useState({});
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -119,7 +119,7 @@ const PaymentReceipt = () => {
       if (res?.status === 200) {
         setNotificationMsg("Customer Details Fetch Successfully");
         setSeverity("success");
-        setShowNofication(true);
+        setShowNotification(true);
         setPaymentReceiptDetails((prev) => ({
           ...prev,
           accountCode: res?.data?.accountCode,
@@ -133,12 +133,12 @@ const PaymentReceipt = () => {
       } else {
         setNotificationMsg("Customer Details not Found!");
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (err) {
       setNotificationMsg("Customer Details not Found!");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -216,7 +216,7 @@ const PaymentReceipt = () => {
   const chequeDateHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
-      postingDate: e.$d.toString(),
+      chequeDate: e.$d.toString(),
     }));
   };
   const chequeCopyHandle = (e) => {
@@ -275,14 +275,14 @@ const PaymentReceipt = () => {
     ) {
       setNotificationMsg("Please Select Payment Type!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     for (const rule of validationRules) {
       if (!paymentReceiptDetails?.[rule.key]) {
         setNotificationMsg(rule.message);
         setSeverity("info");
-        setShowNofication(true);
+        setShowNotification(true);
         return;
       }
     }
@@ -292,7 +292,7 @@ const PaymentReceipt = () => {
     ) {
       setNotificationMsg("Please Enter Cheque No!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     if (
@@ -337,12 +337,12 @@ const PaymentReceipt = () => {
         } else {
           setNotificationMsg("Failed to update payment collection. Try again!");
           setSeverity("error");
-          setShowNofication(true);
+          setShowNotification(true);
         }
       } catch (error) {
         setNotificationMsg("Error", error);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       } finally {
         setIsLoading(false);
       }
@@ -552,7 +552,7 @@ const PaymentReceipt = () => {
       {showNotification && (severity === "error" || severity === "info") && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
@@ -560,9 +560,9 @@ const PaymentReceipt = () => {
       {showDialog && (
         <SuccessNotification
           showNotification={showDialog}
-          setShowNofication={setShowDialog}
-          notificationMsg="Successully Notification!"
-          alertMessange={notificationMsg}
+          setShowNotification={setShowDialog}
+          notificationMsg="Successfully Notification!"
+          alertMessage={notificationMsg}
           openInNewTab={openInNewTab}
         />
       )}

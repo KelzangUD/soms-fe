@@ -49,21 +49,15 @@ const SalesReturnReport = () => {
     { field: "paymentmode", headerName: "Payment Mode", width: 150 },
     { field: "status", headerName: "Remarks", width: 150 },
   ];
-  const {
-    regionsOrExtensions,
-    locatorsList,
-    itemsList,
-    fetchLocatorsBasedOnExtension,
-  } = useCommon();
-  useEffect(() => {
-    console.log(locatorsList);
-  }, []);
+  const { locatorsList, itemsList, fetchLocatorsBasedOnExtension } =
+    useCommon();
 
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
+  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [details, setDetails] = useState({
     storeName: userDetails?.regionName,
     store: userDetails?.storeId,
@@ -128,8 +122,15 @@ const SalesReturnReport = () => {
       setIsLoading(false);
     }
   };
+  const fetchRegionsOrExtensions = async () => {
+    const res = await Route("GET", `/Common/FetchStore`, null, null, null);
+    if (res?.status === 200) {
+      setRegionsOrExtensions(res?.data);
+    }
+  };
   useEffect(() => {
     fetchSalesReturnReports();
+    fetchRegionsOrExtensions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const fromDateHandle = (e) => {
@@ -148,7 +149,7 @@ const SalesReturnReport = () => {
     fetchLocatorsBasedOnExtension(value?.id);
     setDetails((prev) => ({
       ...prev,
-      storeName: value?.id,
+      storeName: value?.label,
       store: value?.locationId,
     }));
   };
@@ -267,9 +268,9 @@ const SalesReturnReport = () => {
                       options={[
                         { label: "ALL", id: "ALL", locationId: "ALL" },
                         ...(regionsOrExtensions?.map((item) => ({
-                          label: item?.extensionName,
+                          label: item?.name,
                           id: item?.id,
-                          locationId: parseInt(item?.locationId),
+                          locationId: parseInt(item?.id),
                         })) || []),
                       ]}
                       value={details?.storeName}
