@@ -26,7 +26,7 @@ import {
   Notification,
   LoaderDialog,
   ItemsNotFoundDialog,
-  VisuallyHiddentInputComponent,
+  VisuallyHiddenInputComponent,
   SuccessNotification,
   Title,
 } from "../../ui/index";
@@ -50,7 +50,7 @@ const SalesOrder = () => {
   const user = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const access_token = localStorage.getItem("access_token");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [isLoading, setIsLoading] = useState(false);
@@ -163,7 +163,7 @@ const SalesOrder = () => {
       }));
     }
   };
-  const fetcEMIList = async (employeeCode) => {
+  const fetchEMIList = async (employeeCode) => {
     const res = await Route(
       "GET",
       `/SalesOrder/GetEMIList?employeeCode=${employeeCode}`,
@@ -179,7 +179,7 @@ const SalesOrder = () => {
     } catch (err) {
       setNotificationMsg("Error", err);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -239,7 +239,7 @@ const SalesOrder = () => {
     } catch (err) {
       setNotificationMsg("Error", err);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -304,7 +304,7 @@ const SalesOrder = () => {
     } catch (error) {
       setNotificationMsg("Error", error);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -346,7 +346,7 @@ const SalesOrder = () => {
   };
   const advanceOrEmiHandle = (e) => {
     if (e?.target?.value === "EMI") {
-      fetcEMIList(salesOrderDetails?.customerName.split("(")[1].split(")")[0]);
+      fetchEMIList(salesOrderDetails?.customerName.split("(")[1].split(")")[0]);
     }
     setSalesOrderDetails((prev) => ({
       ...prev,
@@ -379,7 +379,7 @@ const SalesOrder = () => {
     ) {
       setNotificationMsg("Please Fill Up Necessary Information!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     } else {
       setOpenDialog(true);
     }
@@ -601,27 +601,27 @@ const SalesOrder = () => {
           setResponseData(res?.data);
           setSeverity("success");
           setNotificationMsg("Successfully Created");
-          setShowNofication(true);
+          setShowNotification(true);
         } else if (res?.status === 400) {
           setNotificationMsg(res?.response?.data?.status);
           setSeverity("info");
-          setShowNofication(true);
+          setShowNotification(true);
         } else {
           setNotificationMsg("Failed to create the sales order. Try again!");
           setSeverity("error");
-          setShowNofication(true);
+          setShowNotification(true);
         }
       } catch (error) {
         setNotificationMsg("Error", error);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       } finally {
         setIsLoading(false);
       }
     } else {
       setNotificationMsg("Total Payment is Not equal to Net Payment");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   };
 
@@ -939,7 +939,7 @@ const SalesOrder = () => {
                           color: "#eee",
                         }}
                       />
-                      <VisuallyHiddentInputComponent
+                      <VisuallyHiddenInputComponent
                         onChange={uploadCSVFileHandle}
                       />
                     </IconButton>
@@ -1112,7 +1112,7 @@ const SalesOrder = () => {
       {showNotification && (severity === "error" || severity === "info") && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
@@ -1156,9 +1156,9 @@ const SalesOrder = () => {
       {showNotification && severity === "success" && (
         <SuccessNotification
           showNotification={showNotification}
-          setShowNofication={setShowNofication}
+          setShowNotification={setShowNotification}
           notificationMsg={notificationMsg}
-          alertMessange={`The Sales Order Created Successfully with application no
+          alertMessage={`The Sales Order Created Successfully with application no
       ${responseData?.applicationNo}`}
           openInNewTab={openInNewTab}
         />

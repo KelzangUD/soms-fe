@@ -34,7 +34,7 @@ const SSOLogin = () => {
   const ssoAuth = async (token) => {
     const response = await Route(
       "GET",
-      `/UserDtls/sso?${token}`,
+      `/api/v1/auth/sso?${token}`,
       null,
       null,
       null
