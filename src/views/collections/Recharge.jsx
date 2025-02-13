@@ -47,7 +47,7 @@ const Recharge = () => {
   const { paymentType, bankAccountNames, fetchBankAccountName } = useCommon();
   const userID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [responseData, setResponseData] = useState({});
   const [severity, setSeverity] = useState("info");
@@ -156,7 +156,7 @@ const Recharge = () => {
     if (rechargeDetails?.paymentType === "" || rechargeDetails?.bankId === "") {
       setNotificationMsg("Please select Payment Type and Bank");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     } else {
       setRechargeDetails((prev) => ({
         ...prev,
@@ -201,7 +201,7 @@ const Recharge = () => {
       if (!rechargeDetails?.[rule.key]) {
         setNotificationMsg(rule.message);
         setSeverity("info");
-        setShowNofication(true);
+        setShowNotification(true);
         return;
       }
     }
@@ -209,7 +209,7 @@ const Recharge = () => {
     if (rechargeDetails?.amount < 10) {
       setNotificationMsg("Recharge Amount should not be less than Nu.10");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     // Special condition for Card/Cheque Number
@@ -219,7 +219,7 @@ const Recharge = () => {
     ) {
       setNotificationMsg("Please Enter Card/Cheque Number!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     setIsLoading(true);
@@ -253,22 +253,22 @@ const Recharge = () => {
         setResponseData(res?.data);
         setSeverity("success");
         setNotificationMsg(res?.data?.status);
-        setShowNofication(true);
+        setShowNotification(true);
         resetHandle();
       } else if (res?.data?.status === "FAILED") {
         setResponseData(res?.data);
         setSeverity("error");
         setNotificationMsg(res?.data?.message);
-        setShowNofication(true);
+        setShowNotification(true);
       } else {
         setNotificationMsg(res?.response?.data?.message);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (err) {
       setNotificationMsg(`Recharge Failed: ${err}`);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -477,7 +477,7 @@ const Recharge = () => {
       {showNotification && (severity === "error" || severity === "info") && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
@@ -485,9 +485,9 @@ const Recharge = () => {
       {showNotification && severity === "success" && (
         <SuccessNotification
           showNotification={showNotification}
-          setShowNofication={setShowNofication}
-          notificationMsg="Succssfully Recharge"
-          alertMessange={notificationMsg}
+          setShowNotification={setShowNotification}
+          notificationMsg="Successfully Recharged!"
+          alertMessage={notificationMsg}
           openInNewTab={openInNewTab}
         />
       )}

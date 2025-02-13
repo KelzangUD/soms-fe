@@ -49,7 +49,7 @@ const SalesReportAll = () => {
     saleType: 1,
   });
   const [salesAllReport, setSalesAllReport] = useState([]);
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [isLoading, setIsLoading] = useState(false);
@@ -132,6 +132,7 @@ const SalesReportAll = () => {
                   net_amount: item?.line_Item_Amount,
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
+                  remarks: item?.status
                 })),
                 {
                   description: "Total",
@@ -215,6 +216,7 @@ const SalesReportAll = () => {
                   net_amount: item?.line_Item_Amount,
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
+                  remarks: item?.status
                 })),
                 {
                   description: "Total",
@@ -339,6 +341,7 @@ const SalesReportAll = () => {
                   net_amount: item?.line_Item_Amount,
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
+                  remarks: item?.status
                 })),
                 {
                   description: "Total",
@@ -423,6 +426,7 @@ const SalesReportAll = () => {
                   net_amount: item?.line_Item_Amount,
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
+                  remarks: item?.status
                 })),
                 {
                   description: "Total",
@@ -507,6 +511,7 @@ const SalesReportAll = () => {
                   net_amount: item?.line_Item_Amount,
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
+                  remarks: item?.status
                 })),
                 {
                   description: "Total",
@@ -591,6 +596,7 @@ const SalesReportAll = () => {
                   net_amount: item?.line_Item_Amount,
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
+                  remarks: item?.status
                 })),
                 {
                   description: "Total",
@@ -1593,7 +1599,7 @@ const SalesReportAll = () => {
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -1868,7 +1874,7 @@ const SalesReportAll = () => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />

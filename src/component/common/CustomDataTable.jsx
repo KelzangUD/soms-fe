@@ -46,6 +46,8 @@ const CustomDataTable = ({
           return "";
         }}
         disableColumnMenu
+        // showCellVerticalBorder
+        // showColumnVerticalBorder
       />
     </>
   );

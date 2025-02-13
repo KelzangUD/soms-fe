@@ -8,7 +8,6 @@ import {
   FormControl,
   InputLabel,
   Select,
-  Typography,
   Card,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
