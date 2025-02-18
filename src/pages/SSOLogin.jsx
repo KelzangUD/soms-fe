@@ -34,7 +34,7 @@ const SSOLogin = () => {
   const ssoAuth = async (token) => {
     const response = await Route(
       "GET",
-      `/api/v1/auth/sso?${token}`,
+      `/api/v1/auth/sso?token=${token}`,
       null,
       null,
       null
@@ -49,7 +49,10 @@ const SSOLogin = () => {
         "POST",
         "/api/v1/auth/authenticate",
         null,
-        formData,
+        {
+          username: response?.data?.empID,
+          password: response?.data?.password,
+        },
         null
       );
       if (res.status === 200) {
@@ -104,7 +107,7 @@ const SSOLogin = () => {
         >
           <Grid container spacing={4} alignItems="center">
             <Box sx={{ width: "100%" }}>
-              <LinearProgress/>
+              <LinearProgress />
             </Box>
           </Grid>
         </Box>

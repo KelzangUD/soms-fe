@@ -53,7 +53,7 @@ const CreateTransferOrder = ({
 
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [withinStoreLocator, setWithinStoreLocator] = useState([]);
@@ -252,7 +252,7 @@ const CreateTransferOrder = ({
     if (transferOrderItemDTOList?.qty === "") {
       setNotificationMsg("Please Enter Quantity");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     } else {
       if (serialInputDisabled) {
         setParameters((prev) => ({
@@ -277,7 +277,7 @@ const CreateTransferOrder = ({
         if (validation === "False") {
           setNotificationMsg("Please Valid Serial Number");
           setSeverity("info");
-          setShowNofication(true);
+          setShowNotification(true);
         } else {
           setParameters((prev) => ({
             ...prev,
@@ -376,7 +376,7 @@ const CreateTransferOrder = ({
     } else {
       setNotificationMsg(res?.response?.data?.message);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   };
 
@@ -385,43 +385,43 @@ const CreateTransferOrder = ({
     if (parameters?.transfer_Type === "") {
       setNotificationMsg("Please Select Transfer Type!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     if (parameters?.transfer_From_SubInventory === "") {
       setNotificationMsg("Please Select From Sub-Inventory!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     if (parameters?.transfer_From_Locator === "") {
       setNotificationMsg("Please Select From Locator!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     if (parameters?.transfer_To_Store === "") {
       setNotificationMsg("Please Select Transfer To Store!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     if (parameters?.transfer_To_SubInventory === "") {
       setNotificationMsg("Please Select Transfer To Sub-Inventory!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     if (parameters?.transfer_To_Locator === "") {
       setNotificationMsg("Please Select Transfer To Locator!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     if (parameters?.transferOrderItemDTOList.length === 0) {
-      setNotificationMsg("Please Add Items to be Transfered!");
+      setNotificationMsg("Please Add Items to be Transferred!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     let formData = new FormData();
@@ -448,7 +448,7 @@ const CreateTransferOrder = ({
     if (res?.status === 200 && res?.data?.success === true) {
       setSeverity("success");
       setNotificationMsg(res?.data?.responseText);
-      setShowNofication(true);
+      setShowNotification(true);
       setParameters((prev) => ({
         ...prev,
         transfer_Date: dateFormatterTwo(new Date()),
@@ -473,7 +473,7 @@ const CreateTransferOrder = ({
     } else {
       setNotificationMsg(res?.response?.data?.message);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   };
   return (
@@ -904,18 +904,18 @@ const CreateTransferOrder = ({
       {showNotification && severity === "success" && (
         <SuccessNotification
           showNotification={showNotification}
-          setShowNofication={() => {
-            setShowNofication(false);
+          setShowNotification={() => {
+            setShowNotification(false);
             setOpen(false);
           }}
           notificationMsg="Successfully Created Transfer Order"
-          alertMessange={notificationMsg}
+          alertMessage={notificationMsg}
         />
       )}
       {showNotification && severity === "info" && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
