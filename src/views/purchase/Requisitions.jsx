@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -41,7 +41,8 @@ const Requisitions = () => {
   const empId = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
   const access_token = localStorage.getItem("access_token");
-  const [showNotification, setShowNofication] = useState(false);
+  // const [itemsList, setItemsList] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [isETop, setIsETop] = useState(false);
@@ -58,6 +59,17 @@ const Requisitions = () => {
     uom: "",
     amount: "",
   });
+  // const fetchItemsList = async () => {
+  //   const res = await Route("GET", `/Common/FetchAllItems`, null, null, null);
+  //   console.log(res);
+  //   console.log(res?.data);
+  //   if (res?.status === 200) {
+  //     setItemsList(res?.data);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchItemsList();
+  // },[]);
   const [isLoading, setIsLoading] = useState(false);
   const requisitionTypeHandle = (e) => {
     setIsETop(e?.target?.value === "3" ? true : false);
@@ -104,7 +116,7 @@ const Requisitions = () => {
     if (!itemDTOList?.item_Description || !itemDTOList?.amount) {
       setNotificationMsg("Please complete the item details before adding.");
       setSeverity("warning");
-      setShowNofication(true);
+      setShowNotification(true);
       return;
     }
     setRequisitionData((prev) => ({
@@ -136,9 +148,9 @@ const Requisitions = () => {
       requisitionData?.needByDate === "" ||
       requisitionData?.itemDTOList?.length === 0
     ) {
-      setNotificationMsg("Please Fill up All the Necessary infomation");
+      setNotificationMsg("Please Fill up All the Necessary information");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     } else {
       setIsLoading(true);
       try {
@@ -154,16 +166,16 @@ const Requisitions = () => {
           resetStates();
           setNotificationMsg(res?.data?.responseText);
           setSeverity("success");
-          setShowNofication(true);
+          setShowNotification(true);
         } else {
           setNotificationMsg(res?.response?.data?.detail);
           setSeverity("error");
-          setShowNofication(true);
+          setShowNotification(true);
         }
       } catch (err) {
         setNotificationMsg(`Failed Creating Requisition: ${err}`);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       } finally {
         setIsLoading(false);
       }
@@ -175,11 +187,11 @@ const Requisitions = () => {
         <Grid container>
           <Grid item container xs={12}>
             <Card sx={{ width: "100%" }}>
-              <Title title="Requsition Details" />
+              <Title title="Requisition Details" />
               <Grid container spacing={1} my={1} px={2}>
                 <Grid item xs={3}>
                   <TextField
-                    label="Requisiton Number"
+                    label="Requisition Number"
                     name="requisition_number"
                     disabled
                     required
@@ -375,14 +387,14 @@ const Requisitions = () => {
       {showNotification && severity === "success" ? (
         <SuccessNotification
           showNotification={showNotification}
-          setShowNofication={setShowNofication}
+          setShowNotification={setShowNotification}
           notificationMsg="Successfully Requested"
-          alertMessange={notificationMsg}
+          alertMessage={notificationMsg}
         />
       ) : (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
