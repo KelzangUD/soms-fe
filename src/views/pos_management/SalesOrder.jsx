@@ -217,7 +217,7 @@ const SalesOrder = () => {
       }));
     }
   };
-  const fetcEMIDetails = async (emiNo) => {
+  const fetchEMIDetails = async (emiNo) => {
     const res = await Route(
       "GET",
       `/SalesOrder/GetEMIDetails?emiNo=${emiNo}`,
@@ -355,7 +355,7 @@ const SalesOrder = () => {
     }));
   };
   const advanceNoHandle = (e, value) => {
-    fetcEMIDetails(value?.id.replaceAll("|", "%7C"));
+    fetchEMIDetails(value?.id.replaceAll("|", "%7C"));
     setSalesOrderDetails((prev) => ({
       ...prev,
       advance_no: value?.id.replaceAll("|", "%7C"),

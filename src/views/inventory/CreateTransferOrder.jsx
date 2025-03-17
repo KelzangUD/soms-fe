@@ -40,7 +40,6 @@ const CreateTransferOrder = ({
   const {
     transferType,
     modeOfTransport,
-    fromSubInventory,
     fetchFromLocator,
     fromLocator,
     fetchLocatorBasedOExtension,
@@ -89,6 +88,19 @@ const CreateTransferOrder = ({
   const [serialInputDisabled, setSerialInputDisabled] = useState(true);
   const [disabledToSubInv, setDisabledToSubInv] = useState(true);
   const [toStore, setToStore] = useState([]);
+  const [fromSubInventory, setFromSubInventory] = useState([]);
+  const fetchFromSubInventory = async () => {
+      const res = await Route(
+        "GET",
+        `/Common/FetchSubInventory?userId=${empID}`,
+        null,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setFromSubInventory(res?.data);
+      }
+    };
   const fetchToStore = async () => {
     const res = await Route(
       "GET",
@@ -109,6 +121,7 @@ const CreateTransferOrder = ({
   }, [userDetails, parameters?.transfer_Type]);
 
   useEffect(() => {
+    fetchFromSubInventory();
     fetchTrasnferOrderToLocator(
       parameters?.transfer_To,
       parameters.transfer_To_SubInventory
@@ -542,7 +555,7 @@ const CreateTransferOrder = ({
               <Grid item xs={3}>
                 <FormControl>
                   <InputLabel id="from-sub-inventory-select-label">
-                    From Sub-inventoy*
+                    From Sub-inventory*
                   </InputLabel>
                   <Select
                     labelId="from-sub-inventory-select-label"
@@ -809,7 +822,7 @@ const CreateTransferOrder = ({
               <Grid item xs={1.5}>
                 <TextField
                   id="outlined-basic"
-                  label="Availiable Qty"
+                  label="Available Qty"
                   required
                   disabled
                   value={transferOrderItemDTOList?.availaibleQty}
