@@ -20,7 +20,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     color: (theme.vars || theme).palette.info.dark,
     border: `1px solid ${(theme.vars || theme).palette.info.main}`,
   },
-  "&.Received, &.Success, &.Approved, &.Active": {
+  "&.Received, &.Success, &.Approved, &.Active, &.Paid": {
     color: (theme.vars || theme).palette.success.dark,
     border: `1px solid ${(theme.vars || theme).palette.success.main}`,
   },
@@ -28,7 +28,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     color: (theme.vars || theme).palette.primary.dark,
     border: `1px solid ${(theme.vars || theme).palette.primary.main}`,
   },
-  "&.PartiallyFilled, &.In-Progress, &.In-Transit": {
+  "&.PartiallyFilled, &.In-Progress, &.In-Transit, &.UnPaid": {
     color: (theme.vars || theme).palette.warning.dark,
     border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
   },
@@ -44,7 +44,7 @@ const Status = memo((props) => {
   let icon = null;
   if (status === "Rejected") {
     icon = <ReportProblemIcon className="icon" />;
-  } else if (status === "Open") {
+  } else if (status === "Open" || status === "UnPaid") {
     icon = <InfoIcon className="icon" />;
   } else if (
     status === "PartiallyFilled" ||
@@ -61,7 +61,8 @@ const Status = memo((props) => {
   } else if (
     status === "Approved" ||
     status === "Success" ||
-    status === "Active"
+    status === "Active" ||
+    status === "Paid"
   ) {
     icon = <DoneIcon className="icon" />;
   } else if (status === "Failed" || status === "In_Active") {
@@ -74,6 +75,9 @@ const Status = memo((props) => {
   }
   if (status === "In_Active") {
     label = "In Active";
+  }
+  if (status === "UnPaid") {
+    label = "Un Paid";
   }
   return (
     <StyledChip

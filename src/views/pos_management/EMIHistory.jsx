@@ -1,144 +1,150 @@
 import React, { useState, useEffect } from "react";
-import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
-import PrintIcon from "@mui/icons-material/Print";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { Box, Grid, IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { CustomDataTable } from "../../component/common/index";
+import { LoaderDialog, Notification, RenderStatus } from "../../ui/index";
+import ViewEmiItemDetails from "./ViewEmiItemDetails";
 import Route from "../../routes/Route";
 
 const EMIHistory = () => {
+  const access_token = localStorage.getItem("access_token");
+  const [emiHistory, setEmiHistory] = useState([]);
+  const empID = localStorage.getItem("username");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const [emiDetails, setEmiDetails] = useState([]);
+  const [view, setView] = useState(false);
+  const fetchEmiHistoryDetail = async (params) => {
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/emi/getActiveEMI_CustomerDetail?customerNo=${params?.row?.customerNo}&posNo=${params?.row?.posNo}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setEmiDetails(res?.data);
+        setView(true);
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const emi_history_columns = [
-    { field: "sl", headerName: "Sl. No", width: 30 },
-    { field: "emi_no", headerName: "EMI No", width: 170 },
-    { field: "emi_date", headerName: "EMI Date", width: 100 },
-    { field: "customer_name", headerName: "Customer Name", width: 200 },
-    { field: "emi_amount", headerName: "EMI Amount", width: 100 },
-    {
-      field: "monthly_emi_amount",
-      headerName: "Monthly EMI Amount",
-      width: 150,
-    },
-    { field: "no_of_emi", headerName: "No. Of EMI", width: 100 },
-    { field: "item_name", headerName: "Item Name", width: 550 },
+    { field: "sl", headerName: "Sl.No", width: 30 },
+    { field: "posNo", headerName: "POS No", width: 170 },
+    { field: "postingDate", headerName: "Posting Date", width: 100 },
+    { field: "customerName", headerName: "Customer Name", width: 200 },
+    { field: "customerNo", headerName: "Customer No", width: 200 },
     {
       field: "status",
       headerName: "Status",
       width: 150,
+      renderCell: (params) => (
+        <RenderStatus status={params?.row?.paymentStatus} />
+      ),
     },
-  ];
-  const emi_history__rows = [
     {
-      id: 1,
-      emi_no: "EM/DP1/2024/00001",
-      emi_date: "11-Jul-2024",
-      customer_name: "Kelzang Dorji",
-      emi_amount: 9500,
-      monthly_emi_amount: 791.67,
-      no_of_emi: 12,
-      item_name: "Samsung Galaxy A04 4GB RAM 64GB, Copper (SM-A045FZCGINS)",
-      status: "Submitted",
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => fetchEmiHistoryDetail(params)}
+            color="primary"
+          >
+            <EditIcon fontSize="inherit" />
+          </IconButton>
+        </>
+      ),
     },
   ];
-
-  //   const token = localStorage.getItem("token");
-  //   const fetchResults = async () => {
-  //     const res = await Route("GET", "/results", token, null, null);
-  //     if (res?.status === 200) {
-  //       setResults(res?.data?.results);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchResults();
-  //   }, []);
+  const fetchEmiHistory = async () => {
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/emi/getActiveEMI_CustomersList?userId=${empID}`,
+        access_token,
+        null,
+        null
+      );
+      if (res?.status === 200) {
+        setEmiHistory(res?.data);
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchEmiHistory();
+  }, []);
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
-          <Grid
-            item
-            xs={12}
-            sx={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <Box sx={{ width: "100%" }}>
-              <Grid container spacing={2} alignItems="center">
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Grid item>
-                    <Paper
-                      sx={{
-                        p: "2px 0",
-                        display: "flex",
-                        alignItems: "center",
-                        width: 400,
-                      }}
-                    >
-                      <InputBase
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search"
-                        inputProps={{ "aria-label": "search" }}
-                      />
-                      <IconButton
-                        type="button"
-                        sx={{ p: "10px" }}
-                        aria-label="search"
-                      >
-                        <SearchIcon />
-                      </IconButton>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <IconButton type="button" aria-label="export" color="error">
-                      <PictureAsPdfIcon />
-                    </IconButton>
-                    <IconButton
-                      type="button"
-                      aria-label="excel"
-                      color="success"
-                    >
-                      <FileDownloadIcon />
-                    </IconButton>
-                    <IconButton
-                      type="button"
-                      aria-label="print"
-                      color="primary"
-                    >
-                      <PrintIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-                <Grid item container alignItems="center" sx={{ px: 1 }} xs={12}>
-                  <div
-                    style={{
-                      height: "auto",
-                      width: "100%",
-                      background: "#fff",
-                    }}
+      {view ? (
+        <ViewEmiItemDetails
+          open={view}
+          setOpen={setView}
+          details={emiDetails[0]}
+        />
+      ) : (
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={4} alignItems="center" sx={{ px: 2 }}>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Box sx={{ width: "100%" }}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid
+                    item
+                    container
+                    alignItems="center"
+                    sx={{ px: 1 }}
+                    xs={12}
                   >
-                    <DataGrid
-                      rows={emi_history__rows?.map((row, index) => ({
-                        ...row,
+                    <CustomDataTable
+                      rows={emiHistory?.map((item, index) => ({
                         sl: index + 1,
+                        id: index,
+                        ...item,
                       }))}
-                      columns={emi_history_columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 5 },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10]}
+                      cols={emi_history_columns}
                     />
-                  </div>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      )}
+
+      {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
     </>
   );
 };
