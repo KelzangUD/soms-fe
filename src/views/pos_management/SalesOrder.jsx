@@ -81,6 +81,7 @@ const SalesOrder = () => {
     amount: "",
     item_Number: "",
     interest: "",
+    customerTypeId: "",
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0.0,
@@ -110,6 +111,7 @@ const SalesOrder = () => {
   const [itemsNotFound, setItemsNotFound] = useState([]);
   const [openItemsNotFoundDialog, setOpenItemsNotFoundDialog] = useState(false);
   const [isFileUploaded, setIsFileUploaded] = useState(false);
+  const [isDocUploaded, setIsDocUploaded] = useState(false);
   const [emiList, setEmiList] = useState([]);
   const [responseData, setResponseData] = useState({});
   const [lineItemDetail, setLineItemDetail] = useState({
@@ -142,6 +144,8 @@ const SalesOrder = () => {
     fromDate: dateFormatter(new Date()),
     toDate: "",
     emiEligibleStatus: null,
+    emiCustomerType: null,
+    attachment: "",
   });
 
   const fetchCustomersList = async () => {
@@ -163,6 +167,15 @@ const SalesOrder = () => {
     }
   };
   const fetchCustomersDetails = async (customerID) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      mobileNo: "",
+      customerNumber: "",
+      address: "",
+      address1: "",
+      city: "",
+      customerTypeId: "",
+    }));
     const res = await Route(
       "GET",
       `/Customer/Common/Fetch_Customer_Dtls?customerId=${customerID}`,
@@ -178,6 +191,7 @@ const SalesOrder = () => {
         address: res?.data?.address1,
         address1: res?.data?.address2,
         city: res?.data?.city,
+        customerTypeId: res?.data?.customerTypeId,
       }));
     }
   };
@@ -340,7 +354,7 @@ const SalesOrder = () => {
       ...prev,
       paymentAmount:
         salesOrderDetails?.salesType === 5
-          ? linesAmount?.downPayment
+          ?  linesAmount?.actualDownPayment
           : linesAmount?.netAmount,
     }));
   }, [linesAmount?.netAmount]);
@@ -351,6 +365,11 @@ const SalesOrder = () => {
       salesType: parseInt(e?.target?.value),
     }));
     e?.target?.value === "2" ? setBulkUpload(true) : setBulkUpload(false);
+    (e?.target?.value === "5" || e?.target?.value === "6") &&
+      setSalesOrderDetails((prev) => ({
+        ...prev,
+        productType: parseInt(3),
+      }));
   };
   const productsTypeHandle = (e) => {
     setSalesOrderDetails((prev) => ({
@@ -422,6 +441,13 @@ const SalesOrder = () => {
     setEmiDuration((prev) => ({
       ...prev,
       fromDate: dateFormatter(e?.$d),
+    }));
+  };
+  const docHandle = (e) => {
+    setIsDocUploaded(true);
+    setEmiDuration((prev) => ({
+      ...prev,
+      attachment: e?.target?.files[0],
     }));
   };
 
@@ -532,7 +558,7 @@ const SalesOrder = () => {
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
         accumulator.netAmount += currentObject?.lineItemAmt || 0;
-        accumulator.downPayment += parseInt(currentObject?.downPayment) || 0;
+        accumulator.downPayment += parseInt(currentObject?.actualDownPayment) || 0;
         return accumulator;
       },
       {
@@ -573,6 +599,7 @@ const SalesOrder = () => {
       item_Number: "",
       interest: "",
       amount: "",
+      customerTypeId: "",
     }));
     setPaymentLines([]);
     setPaymentLinesItem((prev) => ({
@@ -621,6 +648,8 @@ const SalesOrder = () => {
       fromDate: dateFormatter(new Date()),
       toDate: "",
       emiEligibleStatus: null,
+      emiCustomerType: null,
+      attachment: "",
     }));
   };
   const validatePayment = () => {
@@ -678,7 +707,7 @@ const SalesOrder = () => {
             netAmount:
               salesOrderDetails.salesType !== 5
                 ? linesAmount?.netAmount
-                : linesAmount?.downPayment,
+                : linesAmount?.actualDownPayment,
           },
           emiInstallmentDetails: {
             fromDate: emiDuration?.fromDate,
@@ -831,6 +860,7 @@ const SalesOrder = () => {
                             address: "",
                             address1: "",
                             city: "",
+                            customerTypeId: "",
                           }));
                         } else {
                           customerNameHandle(event, newValue);
@@ -997,13 +1027,7 @@ const SalesOrder = () => {
                           </Select>
                         </FormControl>
                       </Grid>
-                      <Grid
-                        item
-                        xs={3}
-                        sx={{
-                          mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
-                        }}
-                      >
+                      <Grid item xs={3}>
                         <FormControl>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -1018,7 +1042,11 @@ const SalesOrder = () => {
                         item
                         xs={3}
                         sx={{
-                          mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
+                          mt:
+                            salesOrderDetails?.salesType === 4 ||
+                            salesOrderDetails?.salesType === 5
+                              ? 1
+                              : 0,
                         }}
                       >
                         <FormControl>
@@ -1033,11 +1061,34 @@ const SalesOrder = () => {
                       </Grid>
                     </>
                   )}
+                  {salesOrderDetails?.salesType === 5 &&
+                    salesOrderDetails?.customerTypeId === 1 && (
+                      <>
+                        <Grid
+                          item
+                          xs={3}
+                          sx={{
+                            mt: salesOrderDetails?.salesType === 5 ? 1 : 0,
+                          }}
+                        >
+                          <TextField
+                            type="file"
+                            label={isDocUploaded ? "Attached File" : ""}
+                            InputLabelProps={{ shrink: true }}
+                            onChange={docHandle}
+                          />
+                        </Grid>
+                      </>
+                    )}
                   <Grid
                     item
                     xs={6}
                     sx={{
-                      mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
+                      mt:
+                        salesOrderDetails?.salesType === 4 ||
+                        salesOrderDetails?.salesType === 5
+                          ? 1
+                          : 0,
                     }}
                   >
                     <TextField

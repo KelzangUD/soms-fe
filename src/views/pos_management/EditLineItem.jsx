@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Autocomplete,
   Box,
   Grid,
@@ -24,6 +25,9 @@ const EditLineItem = ({
   editLineItemIndex,
   emiCycle,
 }) => {
+  useEffect(() => {
+    console.log(editDetails);
+  }, []);
   const { subInventory, locators, fetchLocators } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNotification] = useState(false);
@@ -68,6 +72,7 @@ const EditLineItem = ({
         ? editDetails?.priceLocatorDTOs
         : [],
     downPayment: parseInt(editDetails?.downPayment).toFixed(2),
+    actualDownPayment: editDetails?.actualDownPayment,
     payableAmount: editDetails?.payableAmount,
     installmentAmount: editDetails?.installmentAmount,
     downPaymentIR: editDetails?.downPaymentIR,
@@ -124,6 +129,7 @@ const EditLineItem = ({
         description: res?.data?.description,
         itemNo: res?.data?.itemNo,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        actualDownPayment: res?.data?.actualDownPayment,
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -170,6 +176,7 @@ const EditLineItem = ({
         priceLocator: res?.data?.priceLocator,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        actualDownPayment: res?.data?.actualDownPayment,
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -201,6 +208,7 @@ const EditLineItem = ({
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        actualDownPayment: res?.data?.actualDownPayment,
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -286,13 +294,54 @@ const EditLineItem = ({
   const priceLocatorHandle = (e, value) => {
     setPricingID(value?.id);
   };
-  const submitHandle = () => {
-    setLineItems((prev) =>
-      prev.map((item, index) =>
-        index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
-      )
+  const fetchDownPaymentDetails = async () => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      installmentAmount: "",
+      payableAmount: "",
+    }));
+    const res = await Route(
+      "GET",
+      `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${lineItemDetail?.downPayment}&actualDownPayment=${lineItemDetail?.actualDownPayment}&emiCycle=${emiCycle}`,
+      access_token,
+      null,
+      null
     );
-    setOpen(false);
+    if (res?.status === 200) {
+      setLineItemDetail((prev) => ({
+        ...prev,
+        installmentAmount: res?.data?.installmentAmount,
+        payableAmount: res?.data?.netPayableAmount,
+      }));
+    }
+  };
+  useEffect(() => {
+    if (lineItemDetail?.actualDownPayment !== "" && emiCycle) {
+      fetchDownPaymentDetails();
+    }
+  }, [lineItemDetail?.actualDownPayment, emiCycle]);
+  const actualDownPaymentHandle = (e) => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      actualDownPayment: e?.target?.value,
+    }));
+  };
+  const submitHandle = () => {
+    if (
+      parseInt(lineItemDetail?.actualDownPayment) >=
+      parseInt(lineItemDetail?.downPayment)
+    ) {
+      setLineItems((prev) =>
+        prev.map((item, index) =>
+          index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
+        )
+      );
+      setOpen(false);
+    } else {
+      setNotificationMsg("Actual Down Payment is Less than Down Payment");
+      setSeverity("info");
+      setShowNotification(true);
+    }
   };
   return (
     <>
@@ -322,6 +371,14 @@ const EditLineItem = ({
                   <Typography variant="subtitle1">Edit Line Item</Typography>
                 </Grid>
               </Grid>
+              {salesType === 5 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    Actual Down Payment should be equal to or greater than
+                    Minimum Down Payment!
+                  </Alert>
+                </Grid>
+              )}
               <Grid
                 container
                 spacing={1}
@@ -472,10 +529,10 @@ const EditLineItem = ({
                 <Grid item xs={3}>
                   {salesType === 5 ? (
                     <TextField
-                      id="down_payment_amount"
-                      label="Down Payment Interest"
+                      id="minimum_down_payment"
+                      label="Minimum Down Payment"
                       disabled
-                      value={lineItemDetail?.downPaymentIR}
+                      value={lineItemDetail?.downPayment}
                     />
                   ) : (
                     <TextField
@@ -577,18 +634,10 @@ const EditLineItem = ({
                 <Grid container spacing={1} paddingY={1} paddingX={4}>
                   <Grid item xs={3}>
                     <TextField
-                      id="down_payment"
-                      label="Down Payment"
-                      disabled
-                      value={lineItemDetail?.downPayment}
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      id="emi_interest_rate"
-                      label="EMI Interest Rate"
-                      disabled
-                      value={lineItemDetail?.emiInterestRate}
+                      id="actual_down_payment"
+                      label="Actual Down Payment"
+                      onChange={actualDownPaymentHandle}
+                      value={lineItemDetail?.actualDownPayment}
                     />
                   </Grid>
                   <Grid item xs={3}>

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
+  Alert,
   Autocomplete,
   Box,
   Grid,
@@ -69,6 +70,7 @@ const AddLineItem = ({
     volumeDiscount: "",
     priceLocatorDTOs: [],
     downPayment: "",
+    actualDownPayment: "",
     payableAmount: "",
     installmentAmount: "",
     downPaymentIR: "",
@@ -146,6 +148,7 @@ const AddLineItem = ({
           itemNo: res?.data?.itemNo,
           pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
           downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+          actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
           payableAmount: res?.data?.payableAmount,
           installmentAmount: res?.data?.installmentAmount,
           downPaymentIR: res?.data?.downPaymentIR,
@@ -204,6 +207,7 @@ const AddLineItem = ({
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
         pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -239,9 +243,10 @@ const AddLineItem = ({
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         taxAmount: res?.data?.taxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
-        itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
+        itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -276,6 +281,7 @@ const AddLineItem = ({
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
         volumeDiscount: lineItemDetails?.volumeDiscount,
         downPayment: parseInt(lineItemDetails?.downPayment).toFixed(2),
+        actualDownPayment: parseInt(lineItemDetails?.downPayment).toFixed(2),
         payableAmount: lineItemDetails?.payableAmount,
         installmentAmount: lineItemDetails?.installmentAmount,
         downPaymentIR: lineItemDetails?.downPaymentIR,
@@ -379,9 +385,50 @@ const AddLineItem = ({
       pricedIdForVarientCode: e?.target?.value,
     }));
   };
+  const fetchDownPaymentDetails = async () => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      installmentAmount: "",
+      payableAmount: "",
+    }));
+    const res = await Route(
+      "GET",
+      `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${lineItemDetail?.downPayment}&actualDownPayment=${lineItemDetail?.actualDownPayment}&emiCycle=${emiCycle}`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setLineItemDetail((prev) => ({
+        ...prev,
+        installmentAmount: res?.data?.installmentAmount,
+        payableAmount: res?.data?.netPayableAmount,
+      }));
+    }
+  };
+  useEffect(() => {
+    if (lineItemDetail?.actualDownPayment !== "" && emiCycle) {
+      fetchDownPaymentDetails();
+    }
+  }, [lineItemDetail?.actualDownPayment, emiCycle]);
+  const actualDownPaymentHandle = (e) => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      actualDownPayment: e?.target?.value,
+    }));
+  };
   const submitHandle = () => {
-    setLineItems((prev) => [...prev, lineItemDetail]);
-    setOpen(false);
+    if (
+      parseInt(lineItemDetail?.actualDownPayment) >=
+      parseInt(lineItemDetail?.downPayment)
+    ) {
+      setLineItems((prev) => [...prev, lineItemDetail]);
+      setOpen(false);
+    } else {
+      setNotificationMsg("Actual Down Payment is Less than Down Payment");
+      setSeverity("info");
+      setShowNotification(true);
+    }
   };
   return (
     <>
@@ -406,6 +453,14 @@ const AddLineItem = ({
               >
                 <Typography variant="subtitle1">Add Line Item</Typography>
               </Grid>
+              {salesType === 5 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    Actual Down Payment should be equal to or greater than
+                    Minimum Down Payment!
+                  </Alert>
+                </Grid>
+              )}
               <Grid
                 container
                 spacing={1}
@@ -556,16 +611,7 @@ const AddLineItem = ({
                     value={lineItemDetail?.mrp}
                   />
                 </Grid>
-                {salesType === 5 ? (
-                  <Grid item xs={3}>
-                    <TextField
-                      id="down_payment_interest"
-                      label="Down Payment Interest"
-                      disabled
-                      value={lineItemDetail?.downPaymentIR}
-                    />
-                  </Grid>
-                ) : (
+                {salesType !== 5 ? (
                   <Grid item xs={3}>
                     <TextField
                       id="disc_amt"
@@ -574,9 +620,21 @@ const AddLineItem = ({
                       value={lineItemDetail?.discountedAmount}
                     />
                   </Grid>
-                )}
+                ) : null}
+                {salesType === 5 ? (
+                  <>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="minium_down_payment"
+                        label="Minimum Down Payment"
+                        disabled
+                        value={lineItemDetail?.downPayment}
+                      />
+                    </Grid>
+                  </>
+                ) : null}
               </Grid>
-              {salesType !== 5 && (
+              {salesType !== 5 ? (
                 <Grid container spacing={1} paddingY={1} paddingX={2}>
                   <Grid item xs={3}>
                     <TextField
@@ -611,9 +669,9 @@ const AddLineItem = ({
                     />
                   </Grid>
                 </Grid>
-              )}
+              ) : null}
 
-              {salesType !== 5 && (
+              {salesType !== 5 ? (
                 <Grid container spacing={1} paddingY={1} paddingX={2}>
                   <Grid item xs={3}>
                     <TextField
@@ -647,25 +705,17 @@ const AddLineItem = ({
                     />
                   </Grid>
                 </Grid>
-              )}
+              ) : null}
 
-              {salesType === 5 && (
+              {salesType === 5 ? (
                 <>
                   <Grid container spacing={1} paddingY={1} paddingX={2}>
                     <Grid item xs={3}>
                       <TextField
-                        id="down_payment"
-                        label="Down Payment"
-                        disabled
-                        value={lineItemDetail?.downPayment}
-                      />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <TextField
-                        id="emi_interest_rate"
-                        label="EMI Interest Rate"
-                        disabled
-                        value={lineItemDetail?.emiInterestRate}
+                        id="actual_down_payment"
+                        label="Actual Down Payment"
+                        onChange={actualDownPaymentHandle}
+                        value={lineItemDetail?.actualDownPayment}
                       />
                     </Grid>
                     <Grid item xs={3}>
@@ -686,8 +736,8 @@ const AddLineItem = ({
                     </Grid>
                   </Grid>
                 </>
-              )}
-              {salesType !== 5 && (
+              ) : null}
+              {salesType !== 5 ? (
                 <Grid
                   container
                   spacing={1}
@@ -704,7 +754,7 @@ const AddLineItem = ({
                     />
                   </Grid>
                 </Grid>
-              )}
+              ) : null}
 
               <Grid
                 item
