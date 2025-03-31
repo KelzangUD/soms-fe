@@ -354,7 +354,7 @@ const SalesOrder = () => {
       ...prev,
       paymentAmount:
         salesOrderDetails?.salesType === 5
-          ?  linesAmount?.actualDownPayment
+          ? linesAmount?.actualDownPayment
           : linesAmount?.netAmount,
     }));
   }, [linesAmount?.netAmount]);
@@ -558,7 +558,10 @@ const SalesOrder = () => {
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
         accumulator.netAmount += currentObject?.lineItemAmt || 0;
-        accumulator.downPayment += parseInt(currentObject?.actualDownPayment) || 0;
+        accumulator.downPayment +=
+          parseInt(currentObject?.actualDownPayment) || 0;
+        accumulator.actualDownPayment +=
+          parseInt(currentObject?.actualDownPayment) || 0;
         return accumulator;
       },
       {
@@ -569,6 +572,7 @@ const SalesOrder = () => {
         tdsAmount: 0,
         netAmount: 0,
         downPayment: 0,
+        actualDownPayment: 0,
       }
     );
     setLinesAmount((prev) => ({
@@ -693,6 +697,12 @@ const SalesOrder = () => {
           formData.append("cheque", placeholderFile);
         }
         formData?.append("storeName", userDetails?.regionName);
+        if (emiDuration?.attachment !== "") {
+          formData?.append("emiDocument", emiDuration?.attachment);
+        } else {
+          const placeholderFile = new File([""], "emiDocument.png");
+          formData.append("emiDocument", placeholderFile);
+        }
         const data = {
           itemLinesDtls: lineItems,
           paymentLinesDtls: paymentLines,

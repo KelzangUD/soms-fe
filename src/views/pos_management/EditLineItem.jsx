@@ -72,7 +72,7 @@ const EditLineItem = ({
         ? editDetails?.priceLocatorDTOs
         : [],
     downPayment: parseInt(editDetails?.downPayment).toFixed(2),
-    actualDownPayment: editDetails?.actualDownPayment,
+    actualDownPayment: parseInt(editDetails?.actualDownPayment).toFixed(2),
     payableAmount: editDetails?.payableAmount,
     installmentAmount: editDetails?.installmentAmount,
     downPaymentIR: editDetails?.downPaymentIR,
@@ -119,7 +119,7 @@ const EditLineItem = ({
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
-        itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
+        itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
         lineItemAmt: res?.data?.sellingPrice,
         available: res?.data?.available,
         serialNoStatus: res?.data?.serialNoStatus,
@@ -295,11 +295,11 @@ const EditLineItem = ({
     setPricingID(value?.id);
   };
   const fetchDownPaymentDetails = async () => {
-    setLineItemDetail((prev) => ({
-      ...prev,
-      installmentAmount: "",
-      payableAmount: "",
-    }));
+    // setLineItemDetail((prev) => ({
+    //   ...prev,
+    //   installmentAmount: "",
+    //   payableAmount: "",
+    // }));
     const res = await Route(
       "GET",
       `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${lineItemDetail?.downPayment}&actualDownPayment=${lineItemDetail?.actualDownPayment}&emiCycle=${emiCycle}`,
@@ -316,10 +316,8 @@ const EditLineItem = ({
     }
   };
   useEffect(() => {
-    if (lineItemDetail?.actualDownPayment !== "" && emiCycle) {
-      fetchDownPaymentDetails();
-    }
-  }, [lineItemDetail?.actualDownPayment, emiCycle]);
+    fetchDownPaymentDetails();
+  }, [lineItemDetail?.actualDownPayment]);
   const actualDownPaymentHandle = (e) => {
     setLineItemDetail((prev) => ({
       ...prev,
@@ -599,7 +597,7 @@ const EditLineItem = ({
                     <Grid item xs={3}>
                       <TextField
                         id="vol_dis"
-                        label="Volumn Discount"
+                        label="Volume Discount"
                         disabled
                         value={lineItemDetail?.volumeDiscount}
                       />

@@ -40,6 +40,7 @@ const EMICollection = () => {
   };
   const emi_history_columns = [
     { field: "sl", headerName: "Sl.No", width: 30 },
+    { field: "address", headerName: "Organization", width: 170 },
     { field: "posNo", headerName: "POS No", width: 170 },
     { field: "postingDate", headerName: "Posting Date", width: 100 },
     { field: "customerName", headerName: "Customer Name", width: 200 },

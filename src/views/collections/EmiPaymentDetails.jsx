@@ -96,6 +96,14 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                           disabled
                         />
                       </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          label="Remarks"
+                          name="remarks"
+                          defaultValue={details?.remarks}
+                          disabled
+                        />
+                      </Grid>
                     </Grid>
                   </Paper>
                 </Grid>
