@@ -3,14 +3,8 @@ import {
   Box,
   Grid,
   Button,
-  Checkbox,
-  Dialog,
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
   TextField,
   Table,
   TableBody,
@@ -19,34 +13,122 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import PaymentIcon from "@mui/icons-material/Payment";
 import { PaymentDetailsTable } from "../../component/pos_management/index";
-import { Title, RenderStatus } from "../../ui/index";
-import EmiPayment from "./EmiPaymentDetails";
+import {
+  Title,
+  RenderStatus,
+  LoaderDialog,
+  Notification,
+} from "../../ui/index";
+import EmiPayment from "./EmiPayment";
+import Route from "../../routes/Route";
 
 const EmiPaymentDetails = ({ open, setOpen, details }) => {
-  useEffect(() => {
-    console.log(details);
-  }, []);
+  const access_token = localStorage.getItem("access_token");
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const [isLoading, setIsLoading] = useState(false);
   const [viewEmiPayment, setViewEmiPayment] = useState(false);
   const [paymentLines, setPaymentLines] = useState([]);
-  const [installmentDetails, setInstallmentDetails] = useState({
-    emiDurationPaidCount: 0,
-    installmentAmountPaid: 0,
-    installmentId: 92,
-    outstandingBalance: 82882,
-    payFromDate: "",
-    payToDate: "",
-    payableAmount: 82882,
-    paymentAmount: 0,
-    paymentMethod: null,
-    paymentStatus: "UnPaid",
-    paymentType: null,
+  const [emiPaymentDetails, setEmiPaymentDetails] = useState({
+    installment_ID: "",
+    emiMonthCount: "",
+    paymentStatus: "",
+    updatedBy: "",
+    paymentLinesDetails: [],
   });
   const paymentActionHandle = (e, row) => {
-    console.log(e, row);
+    setEmiPaymentDetails((prev) => ({
+      ...prev,
+      installment_ID: row?.installmentId,
+      emiMonthCount: row?.pendingInstallmentNo,
+      paymentStatus: "Paid",
+      updatedBy: localStorage?.getItem("username"),
+      monthlyInstallment: details?.installmentAmount,
+    }));
     setViewEmiPayment(true);
+  };
+  const deletePaymentItemHandle = (e, indexToRemove) => {
+    setPaymentLines((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  const paymentHandle = async () => {
+    const totalAmount = paymentLines?.reduce(
+      (accumulator, currentObject) => {
+        accumulator.paymentAmount +=
+          parseInt(currentObject?.paymentAmount) || 0;
+
+        return accumulator;
+      },
+      {
+        paymentAmount: 0,
+      }
+    );
+    if (emiPaymentDetails?.monthlyInstallment !== totalAmount?.paymentAmount) {
+      setNotificationMsg(
+        "Total Payment Amount is not equal to Installment Payment Amount"
+      );
+      setSeverity("info");
+      setShowNotification(true);
+    } else {
+      const data = {
+        installment_ID: emiPaymentDetails?.installment_ID,
+        emiMonthCount: emiPaymentDetails?.emiMonthCount,
+        paymentStatus: emiPaymentDetails?.paymentStatus,
+        updatedBy: emiPaymentDetails?.updatedBy,
+        paymentLinesDtls: paymentLines?.map((item) => ({
+          ...item,
+          installmentAmountPaid: item?.paymentAmount,
+        })),
+      };
+      console.log(data);
+      setIsLoading(true);
+      try {
+        // let formData = new FormData();
+        // if (paymentLines && paymentLines.length > 0) {
+        //   paymentLines?.forEach((item) => {
+        //     if (parseInt(item?.paymentType) === 2) {
+        //       formData.append("cheque", item.chequeCopy);
+        //     } else {
+        //       const placeholderFile = new File([""], "cheque.png");
+        //       formData.append("cheque", placeholderFile);
+        //     }
+        //   });
+        // }
+
+        // const jsonDataBlob = new Blob([JSON.stringify(data)], {
+        //   type: "application/json",
+        // });
+        // formData.append("details", jsonDataBlob, "data.json");
+        const res = await Route(
+          "POST",
+          `/emi/updateInstallmentPayment`,
+          access_token,
+          data,
+          null
+        );
+        if (res?.status === 201) {
+          setNotificationMsg(res?.response?.data?.message);
+          setSeverity("success");
+          setShowNotification(true);
+          setOpen(false);
+        } else {
+          setNotificationMsg(res?.response?.data?.message);
+          setSeverity("error");
+          setShowNotification(true);
+        }
+      } catch (err) {
+        setNotificationMsg("Failed To Make Payment");
+        setSeverity("error");
+        setShowNotification(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
@@ -82,9 +164,17 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                       </Grid>
                       <Grid item xs={3}>
                         <TextField
-                          label="Company Name"
-                          name="company_name"
-                          defaultValue={details?.address}
+                          label="Designation"
+                          name="designation"
+                          defaultValue={details?.designation}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <TextField
+                          label="Mobile Number"
+                          name="mobile_number"
+                          defaultValue={details?.customerNo}
                           disabled
                         />
                       </Grid>
@@ -96,11 +186,27 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid item xs={3}>
                         <TextField
-                          label="Remarks"
-                          name="remarks"
-                          defaultValue={details?.remarks}
+                          label="Customer Type"
+                          name="customer_type"
+                          defaultValue={details?.customerType}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <TextField
+                          label="Organization"
+                          name="organization"
+                          defaultValue={details?.organizationName}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <TextField
+                          label="Address"
+                          name="address"
+                          defaultValue={details?.address}
                           disabled
                         />
                       </Grid>
@@ -113,13 +219,21 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                     <Grid container spacing={2} p={2}>
                       <Grid item xs={4}>
                         <TextField
+                          label="Pos no"
+                          name="pos_no"
+                          defaultValue={details?.posNo}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <TextField
                           label="Item Name"
                           name="item_name"
                           defaultValue={details?.itemDescription}
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={4}>
                         <TextField
                           label="Item Code"
                           name="item_code"
@@ -127,7 +241,7 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={4}>
                         <TextField
                           label="Serial Number"
                           name="serial_number"
@@ -140,6 +254,22 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                           label="EMI Duration"
                           name="emi_duration"
                           defaultValue={details?.emiDuration}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <TextField
+                          label="EMI From Date"
+                          name="emi_from_date"
+                          defaultValue={details?.fromDate}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <TextField
+                          label="EMI To Date"
+                          name="emi_to_date"
+                          defaultValue={details?.toDate}
                           disabled
                         />
                       </Grid>
@@ -161,6 +291,14 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                       </Grid>
                       <Grid item xs={2}>
                         <TextField
+                          label="Net Payable Amount"
+                          name="net_payable_amount"
+                          defaultValue={details?.payableAmount}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <TextField
                           label="Remaining Amount"
                           name="remaining_amount"
                           defaultValue={details?.remainingAmount}
@@ -175,19 +313,11 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={4}>
                         <TextField
-                          label="EMI From Date"
-                          name="emi_from_date"
-                          defaultValue={details?.fromDate}
-                          disabled
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <TextField
-                          label="EMI To Date"
+                          label="EMI Remarks"
                           name="emi_to_date"
-                          defaultValue={details?.toDate}
+                          defaultValue={details?.remarks}
                           disabled
                         />
                       </Grid>
@@ -206,51 +336,54 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                           >
                             <TableHead>
                               <TableRow>
+                                <TableCell>Sl.No</TableCell>
                                 <TableCell>Pay From Date</TableCell>
                                 <TableCell>Pay To Date</TableCell>
                                 <TableCell>Payment Amount</TableCell>
+                                <TableCell>
+                                  Monthly Installment Pending
+                                </TableCell>
                                 <TableCell>Payment Status</TableCell>
+                                <TableCell>Payment Date</TableCell>
                                 <TableCell align="right">
                                   Payment Action
                                 </TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {details?.paymentLinesDtls?.map((row, index) => (
-                                <TableRow key={index}>
-                                  <TableCell>{row?.payFromDate}</TableCell>
-                                  <TableCell>{row?.payToDate}</TableCell>
-                                  <TableCell>
-                                    {row?.paymentStatus === "Paid"
-                                      ? row?.installmentAmountPaid
-                                      : row?.paymentAmount}
-                                  </TableCell>
-                                  <TableCell>
-                                    <RenderStatus status={row?.paymentStatus} />
-                                  </TableCell>
-                                  <TableCell align="right">
-                                    {row?.paymentStatus === "Paid" ? (
-                                      <IconButton
-                                        onClick={(e) =>
-                                          paymentActionHandle(e, row)
-                                        }
-                                        color="primary"
-                                      >
-                                        <VisibilityIcon />
-                                      </IconButton>
-                                    ) : (
-                                      <IconButton
-                                        onClick={(e) =>
-                                          paymentActionHandle(e, row)
-                                        }
-                                        color="primary"
-                                      >
-                                        <PaymentIcon />
-                                      </IconButton>
-                                    )}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
+                              {details?.monthlyInstallmentDetailsList?.map(
+                                (row, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{row?.payFromDate}</TableCell>
+                                    <TableCell>{row?.payToDate}</TableCell>
+                                    <TableCell>
+                                      {details?.installmentAmount}
+                                    </TableCell>
+                                    <TableCell>
+                                      {row?.pendingInstallmentNo}
+                                    </TableCell>
+                                    <TableCell>
+                                      <RenderStatus
+                                        status={row?.paymentStatus}
+                                      />
+                                    </TableCell>
+                                    <TableCell>{row?.paymentDate}</TableCell>
+                                    <TableCell align="right">
+                                      {row?.paymentStatus === "UnPaid" && (
+                                        <IconButton
+                                          onClick={(e) =>
+                                            paymentActionHandle(e, row)
+                                          }
+                                          color="primary"
+                                        >
+                                          <PaymentIcon />
+                                        </IconButton>
+                                      )}
+                                    </TableCell>
+                                  </TableRow>
+                                )
+                              )}
                             </TableBody>
                           </Table>
                         </TableContainer>
@@ -260,8 +393,8 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
                 </Grid>
                 <Grid item xs={12} p={2}>
                   <PaymentDetailsTable
-                  // paymentLines={paymentLines}
-                  // deletePaymentItemHandle={deletePaymentItemHandle}
+                    paymentLines={paymentLines}
+                    deletePaymentItemHandle={deletePaymentItemHandle}
                   />
                 </Grid>
               </Grid>
@@ -275,7 +408,7 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
               >
                 <Button
                   variant="contained"
-                  onClick={() => setOpen(false)}
+                  onClick={paymentHandle}
                   color="primary"
                   size="small"
                 >
@@ -302,6 +435,15 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
           open={viewEmiPayment}
           setOpen={setViewEmiPayment}
           setPaymentLines={setPaymentLines}
+        />
+      )}
+      {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMsg}
+          severity={severity}
         />
       )}
     </>
