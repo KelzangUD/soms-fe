@@ -67,7 +67,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
         paymentAmount: 0,
       }
     );
-    if (emiPaymentDetails?.payableAmount !== totalAmount?.paymentAmount) {
+    if (emiPaymentDetails?.monthlyInstallment !== totalAmount?.paymentAmount) {
       setNotificationMsg(
         "Total Payment Amount is not equal to Installment Payment Amount"
       );
