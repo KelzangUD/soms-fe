@@ -24,7 +24,7 @@ import {
 import EmiPayment from "./EmiPayment";
 import Route from "../../routes/Route";
 
-const EmiPaymentDetails = ({ open, setOpen, details }) => {
+const EmiPaymentDetails = ({ setOpen, details }) => {
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -85,31 +85,30 @@ const EmiPaymentDetails = ({ open, setOpen, details }) => {
           installmentAmountPaid: item?.paymentAmount,
         })),
       };
-      console.log(data);
       setIsLoading(true);
       try {
-        // let formData = new FormData();
-        // if (paymentLines && paymentLines.length > 0) {
-        //   paymentLines?.forEach((item) => {
-        //     if (parseInt(item?.paymentType) === 2) {
-        //       formData.append("cheque", item.chequeCopy);
-        //     } else {
-        //       const placeholderFile = new File([""], "cheque.png");
-        //       formData.append("cheque", placeholderFile);
-        //     }
-        //   });
-        // }
-
-        // const jsonDataBlob = new Blob([JSON.stringify(data)], {
-        //   type: "application/json",
-        // });
-        // formData.append("details", jsonDataBlob, "data.json");
+        let formData = new FormData();
+        if (paymentLines && paymentLines.length > 0) {
+          paymentLines?.forEach((item) => {
+            if (parseInt(item?.paymentType) === 2) {
+              formData.append("chequeFiles", item.chequeCopy);
+            } else {
+              const placeholderFile = new File([""], "cheque.png");
+              formData.append("chequeFiles", placeholderFile);
+            }
+          });
+        }
+        const jsonDataBlob = new Blob([JSON.stringify(data)], {
+          type: "application/json",
+        });
+        formData.append("details", jsonDataBlob, "data.json");
         const res = await Route(
           "POST",
           `/emi/updateInstallmentPayment`,
           access_token,
-          data,
-          null
+          formData,
+          null,
+          "multipart/form-data"
         );
         if (res?.status === 201) {
           setNotificationMsg(res?.response?.data?.message);

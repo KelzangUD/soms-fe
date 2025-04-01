@@ -26,7 +26,9 @@ const EditLineItem = ({
   emiCycle,
 }) => {
   useEffect(() => {
-    console.log(editDetails);
+    // console.log(editDetails);
+    console.log(lineItemDetail);
+    console?.log(lineItemDetail?.actualDownPayment);
   }, []);
   const { subInventory, locators, fetchLocators } = useCommon();
   const access_token = localStorage.getItem("access_token");
@@ -72,7 +74,7 @@ const EditLineItem = ({
         ? editDetails?.priceLocatorDTOs
         : [],
     downPayment: parseInt(editDetails?.downPayment).toFixed(2),
-    actualDownPayment: parseInt(editDetails?.actualDownPayment).toFixed(2),
+    actualDownPayment: editDetails?.actualDownPayment,
     payableAmount: editDetails?.payableAmount,
     installmentAmount: editDetails?.installmentAmount,
     downPaymentIR: editDetails?.downPaymentIR,
@@ -295,11 +297,6 @@ const EditLineItem = ({
     setPricingID(value?.id);
   };
   const fetchDownPaymentDetails = async () => {
-    // setLineItemDetail((prev) => ({
-    //   ...prev,
-    //   installmentAmount: "",
-    //   payableAmount: "",
-    // }));
     const res = await Route(
       "GET",
       `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${lineItemDetail?.downPayment}&actualDownPayment=${lineItemDetail?.actualDownPayment}&emiCycle=${emiCycle}`,
@@ -308,20 +305,27 @@ const EditLineItem = ({
       null
     );
     if (res?.status === 200) {
+      console.log(lineItemDetail);
       setLineItemDetail((prev) => ({
         ...prev,
         installmentAmount: res?.data?.installmentAmount,
         payableAmount: res?.data?.netPayableAmount,
+        actualDownPayment: lineItemDetail?.actualDownPayment
       }));
     }
   };
   useEffect(() => {
-    fetchDownPaymentDetails();
-  }, [lineItemDetail?.actualDownPayment]);
+    if (
+      parseInt(lineItemDetail?.actualDownPayment) !==
+      parseInt(editDetails?.actualDownPayment)
+    ) {
+      fetchDownPaymentDetails();
+    }
+  }, [lineItemDetail?.actualDownPayment, editDetails?.actualDownPayment]);
   const actualDownPaymentHandle = (e) => {
     setLineItemDetail((prev) => ({
       ...prev,
-      actualDownPayment: e?.target?.value,
+      actualDownPayment: e.target.value,
     }));
   };
   const submitHandle = () => {
