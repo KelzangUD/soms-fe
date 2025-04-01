@@ -42,8 +42,8 @@ const EMIHistory = () => {
     { field: "sl", headerName: "Sl.No", width: 30 },
     { field: "posNo", headerName: "POS No", width: 170 },
     { field: "customerName", headerName: "Customer Name", width: 200 },
-    { field: "customerNo", headerName: "Customer No (CID)", width: 150 },
-    { field: "address", headerName: "Organization", width: 200 },
+    { field: "customerNo", headerName: "Customer No (CID)", width: 120 },
+    // { field: "address", headerName: "Organization", width: 200 },
     { field: "postingDate", headerName: "Posting Date", width: 100 },
     {
       field: "status",
@@ -82,7 +82,6 @@ const EMIHistory = () => {
         null
       );
       if (res?.status === 200) {
-        console.log(res?.data);
         setEmiHistory(res?.data);
       }
     } catch (err) {

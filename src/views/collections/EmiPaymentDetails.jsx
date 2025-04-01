@@ -61,14 +61,13 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
       (accumulator, currentObject) => {
         accumulator.paymentAmount +=
           parseInt(currentObject?.paymentAmount) || 0;
-
         return accumulator;
       },
       {
         paymentAmount: 0,
       }
     );
-    if (emiPaymentDetails?.monthlyInstallment !== totalAmount?.paymentAmount) {
+    if (emiPaymentDetails?.payableAmount !== totalAmount?.paymentAmount) {
       setNotificationMsg(
         "Total Payment Amount is not equal to Installment Payment Amount"
       );
@@ -357,7 +356,9 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                                     <TableCell>{row?.payFromDate}</TableCell>
                                     <TableCell>{row?.payToDate}</TableCell>
                                     <TableCell>
-                                      {details?.installmentAmount}
+                                      {row?.paymentStatus === "UnPaid"
+                                        ? row?.payableAmount
+                                        : row?.installmentAmountPaid}
                                     </TableCell>
                                     <TableCell>
                                       {row?.pendingInstallmentNo}
@@ -390,19 +391,20 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                     </Grid>
                   </Paper>
                 </Grid>
-                <Grid item xs={12} p={2}>
-                  <PaymentDetailsTable
-                    paymentLines={paymentLines}
-                    deletePaymentItemHandle={deletePaymentItemHandle}
-                  />
-                </Grid>
+                {paymentLines?.length > 0 && (
+                  <Grid item xs={12} px={2} mt={2}>
+                    <PaymentDetailsTable
+                      paymentLines={paymentLines}
+                      deletePaymentItemHandle={deletePaymentItemHandle}
+                    />
+                  </Grid>
+                )}
               </Grid>
               <Grid
                 item
                 xs={12}
                 alignItems="right"
-                marginBottom={2}
-                marginX={2}
+                margin={2}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 <Button
