@@ -16,11 +16,11 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   "& .icon": {
     color: "inherit",
   },
-  "&.Open, &.NotShipped": {
+  "&.Open, &.NotShipped, &.Active,": {
     color: (theme.vars || theme).palette.info.dark,
     border: `1px solid ${(theme.vars || theme).palette.info.main}`,
   },
-  "&.Received, &.Success, &.Approved, &.Active, &.Paid": {
+  "&.Received, &.Success, &.Approved, &.Closed, &.Paid": {
     color: (theme.vars || theme).palette.success.dark,
     border: `1px solid ${(theme.vars || theme).palette.success.main}`,
   },
@@ -49,7 +49,8 @@ const Status = memo((props) => {
   } else if (
     status === "PartiallyFilled" ||
     status === "In-Progress" ||
-    status === "In-Transit"
+    status === "In-Transit" ||
+    status === "Active"
   ) {
     icon = <AutorenewIcon className="icon" />;
   } else if (status === "Received") {
@@ -61,7 +62,7 @@ const Status = memo((props) => {
   } else if (
     status === "Approved" ||
     status === "Success" ||
-    status === "Active" ||
+    status === "Closed" ||
     status === "Paid"
   ) {
     icon = <DoneIcon className="icon" />;

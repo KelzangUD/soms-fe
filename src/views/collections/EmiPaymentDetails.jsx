@@ -112,8 +112,8 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
           null,
           "multipart/form-data"
         );
-        if (res?.status === 201) {
-          setNotificationMsg(res?.response?.data?.message);
+        if (res?.status === 200) {
+          setNotificationMsg("EMI Installment Successfully Paid!");
           setSeverity("success");
           setShowNotification(true);
           setOpen(false);
