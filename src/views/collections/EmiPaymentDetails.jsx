@@ -46,7 +46,10 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
       emiMonthCount: row?.pendingInstallmentNo,
       paymentStatus: "Paid",
       updatedBy: localStorage?.getItem("username"),
-      monthlyInstallment: details?.installmentAmount,
+      monthlyInstallment:
+        row?.paymentStatus === "UnPaid"
+          ? row?.payableAmount
+          : row?.installmentAmountPaid,
     }));
     setViewEmiPayment(true);
   };
