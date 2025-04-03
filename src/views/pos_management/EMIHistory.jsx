@@ -82,7 +82,7 @@ const EMIHistory = () => {
         null
       );
       if (res?.status === 200) {
-        setEmiHistory(res?.data);
+        setEmiHistory(res?.data?.filter((item) => (item?.paymentStatus !== "Active")));
       }
     } catch (err) {
       setNotificationMessage("Error Fetching Report");
