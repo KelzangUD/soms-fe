@@ -305,7 +305,6 @@ const EditLineItem = ({
       null
     );
     if (res?.status === 200) {
-      console.log(lineItemDetail);
       setLineItemDetail((prev) => ({
         ...prev,
         installmentAmount: res?.data?.installmentAmount,

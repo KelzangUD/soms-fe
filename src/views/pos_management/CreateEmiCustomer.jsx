@@ -6,6 +6,7 @@ import {
   Paper,
   Grid,
   TextField,
+  Typography,
 } from "@mui/material";
 import { Notification, LoaderDialog } from "../../ui/index";
 import Route from "../../routes/Route";
@@ -28,9 +29,11 @@ const CreateEmiCustomer = () => {
     emi_FOCAL_ORGANIZATION: "",
     emiCustomerTypeId: "",
     emiCustomerTypeName: "",
+    attachment: "",
   });
   const [emiFocalDetail, setEmiFocalDetail] = useState([]);
   const [emiCustomerTypes, setEmiCustomerTypes] = useState([]);
+  const [isDocUploaded, setIsDocUploaded] = useState(false);
 
   const fetchEMICustomerTypes = async () => {
     const res = await Route(
@@ -95,6 +98,7 @@ const CreateEmiCustomer = () => {
       ...prev,
       emiCustomerTypeId: value?.id,
       emiCustomerTypeName: value?.label,
+      attachment: value?.id === 1 ? prev?.attachment : "",
     }));
   };
   const emiFocalDetailHandle = (e, value) => {
@@ -136,6 +140,14 @@ const CreateEmiCustomer = () => {
       emi_FOCAL_ORGANIZATION: "",
       emiCustomerTypeId: "",
       emiCustomerTypeName: "",
+      attachment: "",
+    }));
+  };
+  const docHandle = (e) => {
+    setIsDocUploaded(true);
+    setCustomer((prev) => ({
+      ...prev,
+      attachment: e?.target?.files[0],
     }));
   };
   const validationFunction = () => {
@@ -158,27 +170,47 @@ const CreateEmiCustomer = () => {
 
   const submitHandle = async () => {
     if (validationFunction()) {
-      setIsLoading(true);
-      try {
-        const res = await Route(
-          "POST",
-          `/Customer/emiCustomerMaster`,
-          access_token,
-          [customer],
-          null
-        );
-        if (res?.status === 201) {
-          resetStateFn();
-          setSeverity("success");
-          setNotificationMsg("EMI Customer Successfully Created!");
-          setShowNotification(true);
-        }
-      } catch (error) {
-        setNotificationMsg("Error", error);
-        setSeverity("error");
+      if (customer?.emiCustomerTypeId === 1 && customer?.attachment === "") {
+        setSeverity("info");
+        setNotificationMsg("Please Upload Necessary File!");
         setShowNotification(true);
-      } finally {
-        setIsLoading(false);
+      } else {
+        setIsLoading(true);
+        try {
+          let formData = new FormData();
+          if (customer?.attachment !== "") {
+            formData?.append("emiDocument", customer?.attachment);
+          } else {
+            const placeholderFile = new File([""], "emiDocument.png");
+            formData.append("emiDocument", placeholderFile);
+          }
+          const data = [customer];
+          console.log(data);
+          const jsonDataBlob = new Blob([JSON.stringify(data)], {
+            type: "application/json",
+          });
+          formData.append("customer", jsonDataBlob, "data.json");
+          const res = await Route(
+            "POST",
+            `/Customer/emiCustomerMaster`,
+            access_token,
+            formData,
+            null,
+            "multipart/form-data"
+          );
+          if (res?.status === 201) {
+            resetStateFn();
+            setSeverity("success");
+            setNotificationMsg("EMI Customer Successfully Created!");
+            setShowNotification(true);
+          }
+        } catch (error) {
+          setNotificationMsg("Error", error);
+          setSeverity("error");
+          setShowNotification(true);
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
   };
@@ -188,9 +220,27 @@ const CreateEmiCustomer = () => {
       <Box sx={{ px: 2 }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
-            <Paper elevation={1}>
+            <Paper elevation={1} sx={{ overflow: "hidden" }}>
+              <Grid
+                container
+                paddingX={4}
+                paddingY={2}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: (theme) => theme.palette.bg.light,
+                  color: "#fff",
+                }}
+              >
+                <Grid item>
+                  <Typography variant="subtitle1">
+                    EMI Customer Details
+                  </Typography>
+                </Grid>
+              </Grid>
               <Grid container padding={2}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={4}>
                     <TextField
                       label="Customer Name"
@@ -219,7 +269,7 @@ const CreateEmiCustomer = () => {
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{ my: 0.5 }}>
+                <Grid container spacing={1} sx={{ my: 0.5 }}>
                   <Grid item xs={4}>
                     <Autocomplete
                       disablePortal
@@ -229,20 +279,7 @@ const CreateEmiCustomer = () => {
                       }))}
                       onChange={(event, newValue) => {
                         if (newValue === null) {
-                          setCustomer((prev) => ({
-                            ...prev,
-                            customerType: "EMI Customer",
-                            customerName: "",
-                            customerNumber: "",
-                            mobileNo: "",
-                            regionName: "",
-                            designation: "",
-                            email: "",
-                            emiFocalId: "",
-                            emi_FOCAL_ORGANIZATION: "",
-                            emiCustomerTypeId: "",
-                            emiCustomerTypeName: "",
-                          }));
+                          resetStateFn();
                         } else {
                           emiCustomerTypeHandle(event, newValue);
                         }
@@ -316,6 +353,18 @@ const CreateEmiCustomer = () => {
                       onChange={emailHandle}
                     />
                   </Grid>
+                  {customer?.emiCustomerTypeId === 1 && (
+                    <>
+                      <Grid item xs={4}>
+                        <TextField
+                          type="file"
+                          label={isDocUploaded ? "Attached File" : ""}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={docHandle}
+                        />
+                      </Grid>
+                    </>
+                  )}
                 </Grid>
               </Grid>
             </Paper>

@@ -111,7 +111,6 @@ const SalesOrder = () => {
   const [itemsNotFound, setItemsNotFound] = useState([]);
   const [openItemsNotFoundDialog, setOpenItemsNotFoundDialog] = useState(false);
   const [isFileUploaded, setIsFileUploaded] = useState(false);
-  const [isDocUploaded, setIsDocUploaded] = useState(false);
   const [emiList, setEmiList] = useState([]);
   const [responseData, setResponseData] = useState({});
   const [lineItemDetail, setLineItemDetail] = useState({
@@ -145,7 +144,6 @@ const SalesOrder = () => {
     toDate: "",
     emiEligibleStatus: null,
     emiCustomerType: null,
-    attachment: "",
   });
 
   const fetchCustomersList = async () => {
@@ -443,13 +441,6 @@ const SalesOrder = () => {
       fromDate: dateFormatter(e?.$d),
     }));
   };
-  const docHandle = (e) => {
-    setIsDocUploaded(true);
-    setEmiDuration((prev) => ({
-      ...prev,
-      attachment: e?.target?.files[0],
-    }));
-  };
 
   const remarksHandle = (e) => {
     setSalesOrderDetails((prev) => ({
@@ -653,7 +644,6 @@ const SalesOrder = () => {
       toDate: "",
       emiEligibleStatus: null,
       emiCustomerType: null,
-      attachment: "",
     }));
   };
   const validatePayment = () => {
@@ -697,12 +687,6 @@ const SalesOrder = () => {
           formData.append("cheque", placeholderFile);
         }
         formData?.append("storeName", userDetails?.regionName);
-        if (emiDuration?.attachment !== "") {
-          formData?.append("emiDocument", emiDuration?.attachment);
-        } else {
-          const placeholderFile = new File([""], "emiDocument.png");
-          formData.append("emiDocument", placeholderFile);
-        }
         const data = {
           itemLinesDtls: lineItems,
           paymentLinesDtls: paymentLines,
@@ -1071,25 +1055,6 @@ const SalesOrder = () => {
                       </Grid>
                     </>
                   )}
-                  {salesOrderDetails?.salesType === 5 &&
-                    salesOrderDetails?.customerTypeId === 1 && (
-                      <>
-                        <Grid
-                          item
-                          xs={3}
-                          sx={{
-                            mt: salesOrderDetails?.salesType === 5 ? 1 : 0,
-                          }}
-                        >
-                          <TextField
-                            type="file"
-                            label={isDocUploaded ? "Attached File" : ""}
-                            InputLabelProps={{ shrink: true }}
-                            onChange={docHandle}
-                          />
-                        </Grid>
-                      </>
-                    )}
                   <Grid
                     item
                     xs={6}
@@ -1178,125 +1143,132 @@ const SalesOrder = () => {
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <Title title="Payment Details" />
-              <Grid container p={2}>
-                <Grid container spacing={1}>
-                  <Grid item xs={2}>
-                    <TextField
-                      label="Payment Amount"
-                      name="payment_amount"
-                      required
-                      onChange={paymentAmountHandle}
-                      value={
-                        Math.round(paymentLinesItem?.paymentAmount * 100) / 100
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <FormControl>
-                      <InputLabel id="payment-type-select-label">
-                        Payment Type
-                      </InputLabel>
-                      <Select
-                        labelId="payment-type-select-label"
-                        id="payment-type-select"
-                        label="Payment Type"
-                        onChange={paymentHandle}
-                        value={paymentLinesItem?.paymentTypeItem}
-                      >
-                        {paymentType?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
-                            {item?.type}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <FormControl>
-                      <InputLabel id="bank-ac-name-select-label">
-                        Bank A/C Name
-                      </InputLabel>
-                      <Select
-                        labelId="bank-ac-name-select-label"
-                        id="bank-ac-name-select"
-                        label="Bank A/C Name"
-                        onChange={bankHandle}
-                        value={paymentLinesItem?.bankItem}
-                      >
-                        {banks?.map((item) => (
-                          <MenuItem value={item} key={item?.id}>
-                            {item?.bankName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  {paymentLinesItem?.paymentType === "3" && (
-                    <Grid item sx={2}>
+          {Math.round(paymentLinesItem?.paymentAmount * 100) / 100 ===
+          0 ? null : (
+            <Grid item xs={12}>
+              <Card>
+                <Title title="Payment Details" />
+                <Grid container p={2}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={2}>
                       <TextField
-                        label="Card No"
-                        name="card_no"
-                        onChange={cardNoHandle}
+                        label="Payment Amount"
+                        name="payment_amount"
+                        required
+                        onChange={paymentAmountHandle}
+                        value={
+                          Math.round(paymentLinesItem?.paymentAmount * 100) /
+                          100
+                        }
                       />
                     </Grid>
-                  )}
-                  {paymentLinesItem?.paymentType === "2" && (
-                    <>
+                    <Grid item xs={3}>
+                      <FormControl>
+                        <InputLabel id="payment-type-select-label">
+                          Payment Type
+                        </InputLabel>
+                        <Select
+                          labelId="payment-type-select-label"
+                          id="payment-type-select"
+                          label="Payment Type"
+                          onChange={paymentHandle}
+                          value={paymentLinesItem?.paymentTypeItem}
+                        >
+                          {paymentType?.map((item) => (
+                            <MenuItem value={item} key={item?.id}>
+                              {item?.type}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <FormControl>
+                        <InputLabel id="bank-ac-name-select-label">
+                          Bank A/C Name
+                        </InputLabel>
+                        <Select
+                          labelId="bank-ac-name-select-label"
+                          id="bank-ac-name-select"
+                          label="Bank A/C Name"
+                          onChange={bankHandle}
+                          value={paymentLinesItem?.bankItem}
+                        >
+                          {banks?.map((item) => (
+                            <MenuItem value={item} key={item?.id}>
+                              {item?.bankName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    {paymentLinesItem?.paymentType === "3" && (
                       <Grid item sx={2}>
                         <TextField
-                          label="Cheque No"
-                          name="cheque_no"
-                          onChange={chequeNoHandle}
+                          label="Card No"
+                          name="card_no"
+                          onChange={cardNoHandle}
                         />
                       </Grid>
-                      <Grid item sx={1}>
-                        <FormControl>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Cheque Date"
-                              onChange={chequeDateHandle}
-                            />
-                          </LocalizationProvider>
-                        </FormControl>
-                      </Grid>
-                      <Grid item sx={2}>
-                        <TextField
-                          type="file"
-                          label={isFileUploaded ? "File" : ""}
-                          InputLabelProps={{ shrink: true }}
-                          onChange={chequeCopyHandle}
+                    )}
+                    {paymentLinesItem?.paymentType === "2" && (
+                      <>
+                        <Grid item sx={2}>
+                          <TextField
+                            label="Cheque No"
+                            name="cheque_no"
+                            onChange={chequeNoHandle}
+                          />
+                        </Grid>
+                        <Grid item sx={1}>
+                          <FormControl>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DatePicker
+                                label="Cheque Date"
+                                onChange={chequeDateHandle}
+                              />
+                            </LocalizationProvider>
+                          </FormControl>
+                        </Grid>
+                        <Grid item sx={2}>
+                          <TextField
+                            type="file"
+                            label={isFileUploaded ? "File" : ""}
+                            InputLabelProps={{ shrink: true }}
+                            onChange={chequeCopyHandle}
+                          />
+                        </Grid>
+                      </>
+                    )}
+                    <Grid
+                      item
+                      container
+                      xs={1}
+                      display="flex"
+                      alignItems="center"
+                    >
+                      <IconButton
+                        aria-label="add"
+                        onClick={addPaymentItemHandle}
+                      >
+                        <AddBoxIcon
+                          sx={{
+                            color: "addBtnColor.light",
+                          }}
                         />
-                      </Grid>
-                    </>
-                  )}
-                  <Grid
-                    item
-                    container
-                    xs={1}
-                    display="flex"
-                    alignItems="center"
-                  >
-                    <IconButton aria-label="add" onClick={addPaymentItemHandle}>
-                      <AddBoxIcon
-                        sx={{
-                          color: "addBtnColor.light",
-                        }}
-                      />
-                    </IconButton>
+                      </IconButton>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid container padding={2}>
-                <PaymentDetailsTable
-                  paymentLines={paymentLines}
-                  deletePaymentItemHandle={deletePaymentItemHandle}
-                />
-              </Grid>
-            </Card>
-          </Grid>
+                <Grid container padding={2}>
+                  <PaymentDetailsTable
+                    paymentLines={paymentLines}
+                    deletePaymentItemHandle={deletePaymentItemHandle}
+                  />
+                </Grid>
+              </Card>
+            </Grid>
+          )}
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
             <Button variant="contained" onClick={postHandle}>
               Post
