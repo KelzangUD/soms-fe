@@ -29,7 +29,9 @@ const PostedSalesReceipt = () => {
           <p>Billing: {salesOrderData?.billing}</p>
           <p>
             Phone:{" "}
-            {salesOrderData?.phone === "" || salesOrderData?.phone == null || salesOrderData?.phone === undefined
+            {salesOrderData?.phone === "" ||
+            salesOrderData?.phone == null ||
+            salesOrderData?.phone === undefined
               ? "77889977"
               : salesOrderData?.phone}
           </p>
@@ -54,22 +56,36 @@ const PostedSalesReceipt = () => {
           <p>Tax: {parseFloat(salesOrderData?.tax).toFixed(2)}</p>
         </div>
         <div>
-          <p>Discount/Commission: {parseFloat(salesOrderData?.disc).toFixed(2)}</p>
-        </div>
-        <div>
-          <p>Advance Amount: {parseFloat(salesOrderData?.advance).toFixed(2)}</p>
+          <p>
+            Discount/Commission: {parseFloat(salesOrderData?.disc).toFixed(2)}
+          </p>
         </div>
         <div>
           <p>
-            Downpayment:{" "}
+            Advance Amount: {parseFloat(salesOrderData?.advance).toFixed(2)}
+          </p>
+        </div>
+        <div>
+          <p>
+            Down Payment:{" "}
             {salesOrderData?.downPayment === "null"
               ? parseFloat(0).toFixed(2)
               : parseFloat(salesOrderData?.downPayment).toFixed(2)}
           </p>
         </div>
+        <div>
+          <p>
+            EMI Service Charge:{" "}
+            {salesOrderData?.emiServiceCharge === "null"
+              ? parseFloat(0).toFixed(2)
+              : parseFloat(salesOrderData?.emiServiceCharge).toFixed(2)}
+          </p>
+        </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
-          <p>Total Payment: {parseFloat(salesOrderData?.totalAmount).toFixed(2)}</p>
+          <p>
+            Total Payment: {parseFloat(salesOrderData?.totalAmount).toFixed(2)}
+          </p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
