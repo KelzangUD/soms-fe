@@ -184,7 +184,7 @@ const CreateEmiCustomer = () => {
             const placeholderFile = new File([""], "emiDocument.png");
             formData.append("emiDocument", placeholderFile);
           }
-          const data = [customer];
+          const data = customer;
           console.log(data);
           const jsonDataBlob = new Blob([JSON.stringify(data)], {
             type: "application/json",
