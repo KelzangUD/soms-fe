@@ -145,6 +145,7 @@ const SalesOrder = () => {
     emiEligibleStatus: null,
     emiCustomerType: null,
   });
+  const [downPaymentStatus, setDownPaymentStatus] = useState("No");
 
   const fetchCustomersList = async () => {
     const res = await Route(
@@ -713,6 +714,7 @@ const SalesOrder = () => {
             installmentAmount: parseFloat(
               lineItems[0]?.installmentAmount
             ).toFixed(2),
+            downPaymentStatus: downPaymentStatus,
           },
           userId: user,
         };
@@ -1309,6 +1311,8 @@ const SalesOrder = () => {
           adj_type={salesOrderDetails?.adj_type}
           user={user}
           emiCycle={emiDuration?.emiCycle}
+          downPaymentStatus={downPaymentStatus}
+          setDownPaymentStatus={setDownPaymentStatus}
         />
       )}
       {edit && (

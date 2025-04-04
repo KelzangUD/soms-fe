@@ -31,6 +31,8 @@ const AddLineItem = ({
   adj_type,
   user,
   emiCycle,
+  downPaymentStatus,
+  setDownPaymentStatus,
 }) => {
   const { fetchLocators, locators } = useCommon();
   const access_token = localStorage.getItem("access_token");
@@ -81,7 +83,6 @@ const AddLineItem = ({
     emiInterestRate: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [downPaymentStatus, setDownPaymentStatus] = useState("No");
   const fetchSubInventory = async () => {
     const res = await Route(
       "GET",
