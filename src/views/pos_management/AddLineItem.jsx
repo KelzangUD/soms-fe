@@ -325,7 +325,6 @@ const AddLineItem = ({
     lineItemDetail?.subInventoryId,
     lineItemDetail?.locatorId,
     lineItemDetail?.qty,
-    downPaymentStatus,
   ]);
   useEffect(() => {
     if (lineItemDetail?.serialNo !== "" && lineItemDetail?.qty !== "") {
@@ -337,7 +336,7 @@ const AddLineItem = ({
       setShowNotification(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineItemDetail?.serialNo, lineItemDetail?.qty]);
+  }, [lineItemDetail?.serialNo, lineItemDetail?.qty, downPaymentStatus]);
   useEffect(() => {
     if (pricingID !== "") {
       fetchPriceLocatorDetails();
