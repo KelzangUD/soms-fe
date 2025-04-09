@@ -119,11 +119,20 @@ const AddLineItem = ({
     try {
       const res = await Route(
         "GET",
-        `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo=${lineItemDetail?.serialNo}&qty=${lineItemDetail?.qty}&emiCycle=${emiCycle}&downPaymentStatus=${downPaymentStatus}`,
+        `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${
+          lineItemDetail?.itemNo
+        }&subInventory=${lineItemDetail?.subInventoryId}&locator=${
+          lineItemDetail?.locatorId
+        }&serialNo=${lineItemDetail?.serialNo}&qty=${
+          lineItemDetail?.qty
+        }&emiCycle=${
+          emiCycle === null ? 0 : emiCycle
+        }&downPaymentStatus=${downPaymentStatus}`,
         access_token,
         null,
         null
       );
+      console.log(res?.data);
       if (res?.status === 200 && res?.data?.available === "Y") {
         setLineItemDetail((prev) => ({
           ...prev,
@@ -145,7 +154,7 @@ const AddLineItem = ({
           advanceTaxAmount: res?.data?.advanceTaxAmount,
           volumeDiscount: res?.data?.volumeDiscount,
           itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-          lineItemAmt: res?.data?.lineItemAmt,
+          lineItemAmt: res?.data?.sellingPrice,
           available: res?.data?.available,
           serialNoStatus: res?.data?.serialNoStatus,
           taxAmt: res?.data?.taxAmount,
@@ -424,16 +433,21 @@ const AddLineItem = ({
     }));
   };
   const submitHandle = () => {
-    if (
-      parseInt(lineItemDetail?.actualDownPayment) >=
-      parseInt(lineItemDetail?.downPayment)
-    ) {
+    if (salesType === 5) {
+      if (
+        parseInt(lineItemDetail?.actualDownPayment) >=
+        parseInt(lineItemDetail?.downPayment)
+      ) {
+        setLineItems((prev) => [...prev, lineItemDetail]);
+        setOpen(false);
+      } else {
+        setNotificationMsg("Actual Down Payment is Less than Down Payment");
+        setSeverity("info");
+        setShowNotification(true);
+      }
+    } else {
       setLineItems((prev) => [...prev, lineItemDetail]);
       setOpen(false);
-    } else {
-      setNotificationMsg("Actual Down Payment is Less than Down Payment");
-      setSeverity("info");
-      setShowNotification(true);
     }
   };
   return (

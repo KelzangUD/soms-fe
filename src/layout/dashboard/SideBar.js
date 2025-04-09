@@ -108,7 +108,7 @@ export const MenuItems = [
         route: "pos-management/sales-return",
       },
       {
-        page: "EMI Customer Create",
+        page: "Create EMI Customer",
         route: "pos-management/create-emi-customer",
       },
       {

@@ -101,7 +101,13 @@ const EditLineItem = ({
   const fetchItemDescriptionWithSerialNO = async () => {
     const res = await Route(
       "GET",
-      `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo=${lineItemDetail?.serialNo}&qty=${lineItemDetail?.qty}&emiCycle=${emiCycle}`,
+      `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${
+        lineItemDetail?.itemNo
+      }&subInventory=${lineItemDetail?.subInventoryId}&locator=${
+        lineItemDetail?.locatorId
+      }&serialNo=${lineItemDetail?.serialNo}&qty=${
+        lineItemDetail?.qty
+      }&emiCycle=${emiCycle === null ? 0 : emiCycle}`,
       access_token,
       null,
       null
@@ -299,7 +305,11 @@ const EditLineItem = ({
   const fetchDownPaymentDetails = async () => {
     const res = await Route(
       "GET",
-      `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${lineItemDetail?.downPayment}&actualDownPayment=${lineItemDetail?.actualDownPayment}&emiCycle=${emiCycle}`,
+      `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${
+        lineItemDetail?.downPayment
+      }&actualDownPayment=${lineItemDetail?.actualDownPayment}&emiCycle=${
+        emiCycle === null ? 0 : emiCycle
+      }`,
       access_token,
       null,
       null
@@ -309,7 +319,7 @@ const EditLineItem = ({
         ...prev,
         installmentAmount: res?.data?.installmentAmount,
         payableAmount: res?.data?.netPayableAmount,
-        actualDownPayment: lineItemDetail?.actualDownPayment
+        actualDownPayment: lineItemDetail?.actualDownPayment,
       }));
     }
   };
@@ -328,20 +338,29 @@ const EditLineItem = ({
     }));
   };
   const submitHandle = () => {
-    if (
-      parseInt(lineItemDetail?.actualDownPayment) >=
-      parseInt(lineItemDetail?.downPayment)
-    ) {
+    if (salesType === 5) {
+      if (
+        parseInt(lineItemDetail?.actualDownPayment) >=
+        parseInt(lineItemDetail?.downPayment)
+      ) {
+        setLineItems((prev) =>
+          prev.map((item, index) =>
+            index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
+          )
+        );
+        setOpen(false);
+      } else {
+        setNotificationMsg("Actual Down Payment is Less than Down Payment");
+        setSeverity("info");
+        setShowNotification(true);
+      }
+    } else {
       setLineItems((prev) =>
         prev.map((item, index) =>
           index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
         )
       );
       setOpen(false);
-    } else {
-      setNotificationMsg("Actual Down Payment is Less than Down Payment");
-      setSeverity("info");
-      setShowNotification(true);
     }
   };
   return (
