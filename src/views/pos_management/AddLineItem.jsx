@@ -6,9 +6,9 @@ import {
   Grid,
   Button,
   Dialog,
-  MenuItem,
   FormControl,
   InputLabel,
+  MenuItem,
   Select,
   TextField,
   Typography,
@@ -132,7 +132,6 @@ const AddLineItem = ({
         null,
         null
       );
-      console.log(res?.data);
       if (res?.status === 200 && res?.data?.available === "Y") {
         setLineItemDetail((prev) => ({
           ...prev,
@@ -215,7 +214,7 @@ const AddLineItem = ({
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-        lineItemAmt: res?.data?.lineItemAmt,
+        lineItemAmt: res?.data?.sellingPrice,
         available: res?.data?.available,
         serialNoStatus: res?.data?.serialNoStatus,
         taxAmt: res?.data?.taxAmount,
@@ -408,7 +407,11 @@ const AddLineItem = ({
     }));
     const res = await Route(
       "GET",
-      `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${lineItemDetail?.downPayment}&actualDownPayment=${lineItemDetail?.actualDownPayment}&emiCycle=${emiCycle}`,
+      `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${
+        lineItemDetail?.downPayment === "" ? 0 : lineItemDetail?.downPayment
+      }&actualDownPayment=${
+        lineItemDetail?.actualDownPayment
+      }&emiCycle=${emiCycle}`,
       access_token,
       null,
       null
@@ -651,6 +654,16 @@ const AddLineItem = ({
                     value={lineItemDetail?.mrp}
                   />
                 </Grid>
+                {salesType === 5 && downPaymentStatus === "No" && (
+                  <Grid item xs={3}>
+                    <TextField
+                      id="installment_amount"
+                      label="Installment Amount"
+                      disabled
+                      value={lineItemDetail?.installmentAmount}
+                    />
+                  </Grid>
+                )}
                 {salesType !== 5 ? (
                   <Grid item xs={3}>
                     <TextField
@@ -661,7 +674,7 @@ const AddLineItem = ({
                     />
                   </Grid>
                 ) : null}
-                {salesType === 5 && downPaymentStatus === "Yes" ? (
+                {salesType === 5 && downPaymentStatus === "Yes" && (
                   <>
                     <Grid item xs={3}>
                       <TextField
@@ -672,15 +685,6 @@ const AddLineItem = ({
                       />
                     </Grid>
                   </>
-                ) : (
-                  <Grid item xs={3}>
-                    <TextField
-                      id="payable_amount"
-                      label="Payable Amount"
-                      disabled
-                      value={lineItemDetail?.payableAmount}
-                    />
-                  </Grid>
                 )}
               </Grid>
               {salesType !== 5 ? (
@@ -719,7 +723,6 @@ const AddLineItem = ({
                   </Grid>
                 </Grid>
               ) : null}
-
               {salesType !== 5 ? (
                 <Grid container spacing={1} paddingY={1} paddingX={2}>
                   <Grid item xs={3}>
@@ -776,16 +779,16 @@ const AddLineItem = ({
                             value={lineItemDetail?.payableAmount}
                           />
                         </Grid>
+                        <Grid item xs={3}>
+                          <TextField
+                            id="installment_amount"
+                            label="Installment Amount"
+                            disabled
+                            value={lineItemDetail?.installmentAmount}
+                          />
+                        </Grid>
                       </>
                     )}
-                    <Grid item xs={3}>
-                      <TextField
-                        id="installment_amount"
-                        label="Installment Amount"
-                        disabled
-                        value={lineItemDetail?.installmentAmount}
-                      />
-                    </Grid>
                   </Grid>
                 </>
               ) : null}

@@ -3,9 +3,13 @@ import {
   Alert,
   Autocomplete,
   Box,
-  Grid,
   Button,
   Dialog,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -24,12 +28,9 @@ const EditLineItem = ({
   editDetails,
   editLineItemIndex,
   emiCycle,
+  downPaymentStatus,
+  setDownPaymentStatus,
 }) => {
-  useEffect(() => {
-    // console.log(editDetails);
-    console.log(lineItemDetail);
-    console?.log(lineItemDetail?.actualDownPayment);
-  }, []);
   const { subInventory, locators, fetchLocators } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNotification] = useState(false);
@@ -107,7 +108,9 @@ const EditLineItem = ({
         lineItemDetail?.locatorId
       }&serialNo=${lineItemDetail?.serialNo}&qty=${
         lineItemDetail?.qty
-      }&emiCycle=${emiCycle === null ? 0 : emiCycle}`,
+      }&emiCycle=${
+        emiCycle === null ? 0 : emiCycle
+      }&downPaymentStatus=${downPaymentStatus}`,
       access_token,
       null,
       null
@@ -137,7 +140,6 @@ const EditLineItem = ({
         description: res?.data?.description,
         itemNo: res?.data?.itemNo,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
-        actualDownPayment: res?.data?.actualDownPayment,
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -184,7 +186,6 @@ const EditLineItem = ({
         priceLocator: res?.data?.priceLocator,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
-        actualDownPayment: res?.data?.actualDownPayment,
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -216,7 +217,6 @@ const EditLineItem = ({
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
-        actualDownPayment: res?.data?.actualDownPayment,
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -303,13 +303,16 @@ const EditLineItem = ({
     setPricingID(value?.id);
   };
   const fetchDownPaymentDetails = async () => {
+    console.log(typeof lineItemDetail?.downPayment);
     const res = await Route(
       "GET",
       `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${
-        lineItemDetail?.downPayment
-      }&actualDownPayment=${lineItemDetail?.actualDownPayment}&emiCycle=${
-        emiCycle === null ? 0 : emiCycle
-      }`,
+        lineItemDetail?.downPayment === "NaN" ? 0 : lineItemDetail?.downPayment
+      }&actualDownPayment=${
+        lineItemDetail?.actualDownPayment === undefined
+          ? editDetails?.actualDownPayment
+          : lineItemDetail?.actualDownPayment
+      }&emiCycle=${emiCycle === null ? 0 : emiCycle}`,
       access_token,
       null,
       null
@@ -326,7 +329,8 @@ const EditLineItem = ({
   useEffect(() => {
     if (
       parseInt(lineItemDetail?.actualDownPayment) !==
-      parseInt(editDetails?.actualDownPayment)
+        parseInt(editDetails?.actualDownPayment) &&
+      salesType === 5
     ) {
       fetchDownPaymentDetails();
     }
@@ -512,14 +516,34 @@ const EditLineItem = ({
                     onChange={priceLocatorHandle}
                   />
                 </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="disc_per"
-                    label="Disc/Comm %"
-                    disabled
-                    value={lineItemDetail?.discPercentage}
-                  />
-                </Grid>
+                {salesType === 5 ? (
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <InputLabel id="down-payment-status-select-label">
+                        Down Payment Status
+                      </InputLabel>
+                      <Select
+                        labelId="down-payment-status-select-label"
+                        id="down-payment-status-select"
+                        label="Down Payment Status"
+                        onChange={(e) => setDownPaymentStatus(e?.target?.value)}
+                        value={downPaymentStatus}
+                      >
+                        <MenuItem value="Yes">Yes</MenuItem>
+                        <MenuItem value="No">No</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                ) : (
+                  <Grid item xs={3}>
+                    <TextField
+                      id="dis_percentage"
+                      label="Disc/Comm %"
+                      disabled
+                      value={lineItemDetail?.discPercentage}
+                    />
+                  </Grid>
+                )}
               </Grid>
               <Grid container spacing={1} paddingY={1} paddingX={4}>
                 <Grid item xs={3}>
@@ -546,8 +570,18 @@ const EditLineItem = ({
                     value={lineItemDetail?.mrp}
                   />
                 </Grid>
+                {salesType == 5 && downPaymentStatus === "No" && (
+                  <Grid item xs={3}>
+                    <TextField
+                      id="installment_amount"
+                      label="Installment Amount"
+                      disabled
+                      value={lineItemDetail?.installmentAmount}
+                    />
+                  </Grid>
+                )}
                 <Grid item xs={3}>
-                  {salesType === 5 ? (
+                  {salesType === 5 && downPaymentStatus === "Yes" ? (
                     <TextField
                       id="minimum_down_payment"
                       label="Minimum Down Payment"

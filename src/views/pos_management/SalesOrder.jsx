@@ -1328,6 +1328,8 @@ const SalesOrder = () => {
           lineItems={lineItems}
           editLineItemIndex={editLineItemIndex}
           emiCycle={emiDuration?.emiCycle}
+          downPaymentStatus={downPaymentStatus}
+          setDownPaymentStatus={setDownPaymentStatus}
         />
       )}
       {isLoading && <LoaderDialog open={isLoading} />}
