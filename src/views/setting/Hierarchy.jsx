@@ -11,7 +11,7 @@ const Hierarchy = () => {
   const access_token = localStorage.getItem("access_token");
   const [hierarchyList, setHierarchyList] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [hierarchyDtls, setHierarcyDtls] = useState("");
+  const [hierarchyDtls, setHierarchyDtls] = useState("");
   const [hierarchyRole, setHierarchyRole] = useState([]);
   const [hierarchyName, setHierarchyName] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -84,7 +84,7 @@ const Hierarchy = () => {
     );
     if (res?.status === 200) {
       setHierarchyName(name);
-      setHierarcyDtls(res?.data);
+      setHierarchyDtls(res?.data);
       setShowEditModal(true);
     }
   };

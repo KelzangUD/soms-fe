@@ -41,7 +41,7 @@ const CompanySetting = () => {
   const [location, setlocation] = useState([]);
   const [region, setRegion] = useState([]);
   const [notificationMsg, setNotificationMsg] = useState("");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [severity, setSeverity] = useState("");
 
   const fetchCountry = async () => {
@@ -140,7 +140,7 @@ const CompanySetting = () => {
               if (res.data.responseCode === 0) {
                 setNotificationMsg(res.data.responseText);
                 setSeverity("info");
-                setShowNofication(true);
+                setShowNotification(true);
 
                 setStatus({ success: true });
                 setSubmitting(false);
@@ -150,7 +150,7 @@ const CompanySetting = () => {
               } else {
                 setNotificationMsg(res.data.responseText);
                 setSeverity("error");
-                setShowNofication(true);
+                setShowNotification(true);
 
                 setStatus({ success: false });
                 setSubmitting(false);
@@ -531,7 +531,7 @@ const CompanySetting = () => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />

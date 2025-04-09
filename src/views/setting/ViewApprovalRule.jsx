@@ -25,7 +25,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
   const ref = useRef(null);
   const access_token = localStorage.getItem("access_token");
   const [ruleDetails, setRuleDetails] = useState("");
-  const [hierarchyLevel, setHierarchylevel] = useState([]);
+  const [hierarchyLevel, setHierarchyLevel] = useState([]);
 
   const fetchRuleDetails = async () => {
     const res = await Route(
@@ -37,7 +37,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
     );
     if (res?.status === 200) {
       setRuleDetails(res?.data);
-      setHierarchylevel(res?.data?.hierarchyLevelInterfaceList);
+      setHierarchyLevel(res?.data?.hierarchyLevelInterfaceList);
     }
   };
 

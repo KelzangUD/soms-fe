@@ -31,7 +31,7 @@ const AddConditionModal = ({
   const ref = useRef(null);
   const access_token = localStorage.getItem("access_token");
   const [hierarchyList, setHierarchyList] = useState([]);
-  const [hierarchyLevelList, sethierarchyLevelList] = useState([]);
+  const [hierarchyLevelList, setHierarchyLevelList] = useState([]);
   const [systemUser, setSystemUser] = useState([]);
 
   const fetchHierarchyList = async () => {
@@ -56,7 +56,7 @@ const AddConditionModal = ({
       null
     );
     if (res?.status === 200) {
-      sethierarchyLevelList(res?.data);
+      setHierarchyLevelList(res?.data);
     }
   };
 

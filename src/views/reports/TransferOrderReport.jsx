@@ -53,7 +53,7 @@ const TransferOrderReport = () => {
     { field: "itemNumber", headerName: "Item Number", width: 180 },
     {
       field: "itemDescription",
-      headerName: "Item Descripton",
+      headerName: "Item Description",
       width: 250,
     },
     {
@@ -95,7 +95,7 @@ const TransferOrderReport = () => {
   ];
 
   const access_token = localStorage.getItem("access_token");
-  const fetchTrasferOrdersReport = async () => {
+  const fetchTransferOrdersReport = async () => {
     const res = await Route(
       "GET",
       `/Report/transferOrderReport?transferType=${params?.transferType}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&fromStore=${params?.fromStore}&toStore=${params?.toStore}&itemDesc=${params?.itemDesc}`,
@@ -114,7 +114,7 @@ const TransferOrderReport = () => {
     }
   };
   useEffect(() => {
-    fetchTrasferOrdersReport();
+    fetchTransferOrdersReport();
   }, []);
   const transferTypeHandle = (e) => {
     setParams((prev) => ({
@@ -146,7 +146,7 @@ const TransferOrderReport = () => {
       toStore: e?.target?.value,
     }));
   };
-  const itemDesciptionHandle = (e) => {
+  const itemDescriptionHandle = (e) => {
     setParams((prev) => ({
       ...prev,
       itemDesc: e?.target?.value,
@@ -247,13 +247,13 @@ const TransferOrderReport = () => {
                       label="Item Description"
                       name="item_description"
                       required
-                      onChange={itemDesciptionHandle}
+                      onChange={itemDescriptionHandle}
                     />
                   </Grid>
                   <Grid item xs={2}>
                     <Button
                       variant="contained"
-                      onClick={fetchTrasferOrdersReport}
+                      onClick={fetchTransferOrdersReport}
                     >
                       Search
                     </Button>

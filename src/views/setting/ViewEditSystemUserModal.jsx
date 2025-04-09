@@ -41,7 +41,7 @@ const ViewEditSystemUserModal = ({
   const [subInventory, setSubInventory] = useState([]);
   const [locator, setLocator] = useState([]);
   const [notificationMsg, setNotificationMsg] = useState("");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [severity, setSeverity] = useState("");
   const user = localStorage.getItem("username");
   const [userPrivileges, setUserPrivileges] = useState([]);
@@ -88,7 +88,7 @@ const ViewEditSystemUserModal = ({
     }
   };
 
-  const fetchUserPriviledges = async (roleId, userId) => {
+  const fetchUserPrivileges = async (roleId, userId) => {
     const res = await Route(
       "GET",
       `/Common/fetchUserPermission?roleId=${roleId}&userId=${userId}`,
@@ -121,7 +121,7 @@ const ViewEditSystemUserModal = ({
     if (data?.subInventoryId !== "") {
       fetchLocator(data?.subInventoryId);
     }
-    fetchUserPriviledges(data.roleId, data.user_code);
+    fetchUserPrivileges(data.roleId, data.user_code);
     fetchModuleAccess(data.roleId);
   }, []);
 
@@ -338,14 +338,14 @@ const ViewEditSystemUserModal = ({
                     if (res.data.responseCode === 0) {
                       setNotificationMsg(res?.data?.responseText);
                       setSeverity("success");
-                      setShowNofication(true);
+                      setShowNotification(true);
                       setStatus({ success: true });
                       setSubmitting(false);
                       fetchSystemUser();
                     } else {
                       setNotificationMsg(res?.data?.responseText);
                       setSeverity("error");
-                      setShowNofication(true);
+                      setShowNotification(true);
                       setStatus({ success: false });
                       setSubmitting(false);
                     }
@@ -383,7 +383,7 @@ const ViewEditSystemUserModal = ({
                           value={values?.roleId}
                           onChange={(e) => {
                             handleChange(e);
-                            fetchUserPriviledges(
+                            fetchUserPrivileges(
                               e?.target?.value,
                               data?.user_code
                             );
@@ -589,7 +589,7 @@ const ViewEditSystemUserModal = ({
       {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
@@ -597,12 +597,12 @@ const ViewEditSystemUserModal = ({
       {showNotification && severity === "success" && (
         <SuccessNotification
           showNotification={showNotification}
-          setShowNofication={() => {
-            setShowNofication(false);
+          setShowNotification={() => {
+            setShowNotification(false);
             setOpen(false);
           }}
           notificationMsg="Successfully Updated!"
-          alertMessange={notificationMsg}
+          alertMessage={notificationMsg}
         />
       )}
     </>

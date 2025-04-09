@@ -63,7 +63,7 @@ const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
   const [subInventory, setSubInventory] = useState([]);
   const [locator, setLocator] = useState([]);
   const [notificationMsg, setNotificationMsg] = useState("");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [severity, setSeverity] = useState("");
   const [rolePrivileges, setRolePrivileges] = useState([]);
   const [moduleAccess, setModuleAccess] = useState([]);
@@ -122,7 +122,7 @@ const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
     }
   };
 
-  const fetchRolePriviledges = async (id) => {
+  const fetchRolePrivileges = async (id) => {
     const res = await Route(
       "GET",
       `/Common/fetchModulePermission?roleId=${id}`,
@@ -230,7 +230,7 @@ const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
                 if (res?.data?.responseCode === 0) {
                   setNotificationMsg(res.data.responseText);
                   setSeverity("success");
-                  setShowNofication(true);
+                  setShowNotification(true);
                   setStatus({ success: true });
                   setSubmitting(false);
                   resetForm();
@@ -238,7 +238,7 @@ const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
                 } else {
                   setNotificationMsg(res.data.responseText);
                   setSeverity("error");
-                  setShowNofication(true);
+                  setShowNotification(true);
                   setStatus({ success: false });
                   setSubmitting(false);
                 }
@@ -347,7 +347,7 @@ const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
                       value={values.roleId}
                       onChange={(e) => {
                         handleChange(e);
-                        fetchRolePriviledges(e.target.value);
+                        fetchRolePrivileges(e.target.value);
                         fetchModuleAccess(e.target.value);
                       }}
                       onBlur={handleBlur}
@@ -487,18 +487,18 @@ const AddSystemUserDialog = ({ open, setOpen, fetchSystemUser }) => {
       {showNotification && severity === "success" && (
         <SuccessNotification
           showNotification={showNotification}
-          setShowNofication={() => {
-            setShowNofication(false);
+          setShowNotification={() => {
+            setShowNotification(false);
             setOpen(false);
           }}
           notificationMsg="Successfully Created!"
-          alertMessange={notificationMsg}
+          alertMessage={notificationMsg}
         />
       )}
       {showNotification && severity === "error" && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />

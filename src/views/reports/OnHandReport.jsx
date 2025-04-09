@@ -199,6 +199,8 @@ const OnHandReport = () => {
                         userDetails?.roleName === "Administrator" ||
                         userDetails?.roleName === "General Manager" ||
                         userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "CC Executive Region" ||
+                        userDetails?.roleName === "CC Executive Extension" ||
                         userDetails?.roleName === "Regional Accountant"
                           ? false
                           : true
@@ -256,6 +258,8 @@ const OnHandReport = () => {
                           userDetails?.roleId === 37 ||
                           userDetails?.roleId === 53 ||
                           userDetails?.roleId === 54 ||
+                          userDetails?.roleId === 51 ||
+                          userDetails?.roleId === 52 ||
                           userDetails?.roleId === 55
                             ? false
                             : true

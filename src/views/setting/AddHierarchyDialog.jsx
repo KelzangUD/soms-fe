@@ -70,7 +70,7 @@ const AddHierarchyDialog = ({
   const [hierarchyName, setHierarchyName] = useState("");
   const [isHierarchyNameDisabled, setHierarchyNameDisabled] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [severity, setSeverity] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
@@ -114,13 +114,13 @@ const AddHierarchyDialog = ({
       if (res.data.responseCode === 0) {
         setNotificationMsg(res.data.responseText);
         setSeverity("info");
-        setShowNofication(true);
+        setShowNotification(true);
         fetchHierarchyList();
         handleClose();
       } else {
         setNotificationMsg(res.data.responseText);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (error) {
       console.log(error);
@@ -403,7 +403,7 @@ const AddHierarchyDialog = ({
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />

@@ -90,7 +90,10 @@ export default function SideNav() {
               <img
                 src={Logo}
                 alt="Logo"
-                style={{ width: "30%", height: "auto" }}
+                style={{
+                  width: "30%",
+                  height: "auto",
+                }}
               />
             </Button>
           </Grid>
