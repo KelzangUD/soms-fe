@@ -38,7 +38,7 @@ const AddApprovalRuleDialog = ({
   const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [notificationMsg, setNotificationMsg] = useState("");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [severity, setSeverity] = useState("");
   const [type, setType] = useState([]);
   const [approvalFor, setApprovalFor] = useState([]);
@@ -263,7 +263,7 @@ const AddApprovalRuleDialog = ({
                   if (res?.data?.responseCode === 0) {
                     setNotificationMsg(res?.data?.responseText);
                     setSeverity("info");
-                    setShowNofication(true);
+                    setShowNotification(true);
                     setStatus({ success: true });
                     setSubmitting(false);
                     resetForm();
@@ -271,7 +271,7 @@ const AddApprovalRuleDialog = ({
                   } else {
                     setNotificationMsg(res?.data?.responseText);
                     setSeverity("error");
-                    setShowNofication(true);
+                    setShowNotification(true);
                     setStatus({ success: false });
                     setSubmitting(false);
                   }
@@ -286,7 +286,7 @@ const AddApprovalRuleDialog = ({
                   if (res?.data?.responseCode === 0) {
                     setNotificationMsg(res?.data?.responseText);
                     setSeverity("info");
-                    setShowNofication(true);
+                    setShowNotification(true);
                     setStatus({ success: true });
                     setSubmitting(false);
                     resetForm();
@@ -294,7 +294,7 @@ const AddApprovalRuleDialog = ({
                   } else {
                     setNotificationMsg(res?.data?.responseText);
                     setSeverity("error");
-                    setShowNofication(true);
+                    setShowNotification(true);
                     setStatus({ success: false });
                     setSubmitting(false);
                   }
@@ -551,7 +551,7 @@ const AddApprovalRuleDialog = ({
         <Notification
           open={showNotification}
           setOpen={() => {
-            setShowNofication(true);
+            setShowNotification(true);
             handleClose();
           }}
           message={notificationMsg}

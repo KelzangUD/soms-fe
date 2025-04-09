@@ -38,9 +38,7 @@ const SalesOrderList = () => {
   );
   const [fromDate, setFromDate] = useState(dateFormatterTwo(new Date()));
   const [toDate, setToDate] = useState(dateFormatterTwo(new Date()));
-
   const [salesOrderList, setSalesOrderList] = useState([]);
-
   const sales_order_list_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "pos_no", headerName: "POS No", flex: 1.5 },
@@ -68,7 +66,6 @@ const SalesOrderList = () => {
       ),
     },
   ];
-  const sales_order_list_rows = [];
   const regionOrExtensionHandle = (e, value) => {
     setRegionOrExtension(value?.id);
   };

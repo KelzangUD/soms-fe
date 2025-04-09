@@ -31,7 +31,7 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
   const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [notificationMsg, setNotificationMsg] = useState("");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [severity, setSeverity] = useState("");
 
   return (
@@ -86,7 +86,7 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
                 if (res?.status === 201) {
                   setNotificationMsg("New Role is created successfully.");
                   setSeverity("info");
-                  setShowNofication(true);
+                  setShowNotification(true);
 
                   setStatus({ success: true });
                   setSubmitting(false);
@@ -96,10 +96,10 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
                   handleClose();
                 } else {
                   setNotificationMsg(
-                    "Error occured in creating new role. Try again!"
+                    "Error occurred in creating new role. Try again!"
                   );
                   setSeverity("error");
-                  setShowNofication(true);
+                  setShowNotification(true);
 
                   setStatus({ success: false });
                   setSubmitting(false);
@@ -164,7 +164,7 @@ const AddNewRoleModal = ({ handleClose, fetchRole, open }) => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
