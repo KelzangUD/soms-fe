@@ -124,7 +124,7 @@ const LineItemsTable = ({
             <TableRow>
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Down Payment Amount</TableCell>
-              <TableCell align="right">{linesAmount?.downPayment}</TableCell>
+              <TableCell align="right">{linesAmount?.actualDownPayment}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />

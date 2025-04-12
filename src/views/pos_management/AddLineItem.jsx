@@ -133,41 +133,84 @@ const AddLineItem = ({
         null
       );
       if (res?.status === 200 && res?.data?.available === "Y") {
-        setLineItemDetail((prev) => ({
-          ...prev,
-          priceLocator: res?.data?.priceLocator,
-          mrp: res?.data?.mrp,
-          discPercentage: res?.data?.discPercentage,
-          tdsAmount: parseInt(res?.data?.tdsAmount),
-          discountedAmount: res?.data?.discountAmt,
-          sellingPrice: res?.data?.sellingPrice,
-          taxPercentage:
-            res?.data?.taxPercentage !== null
-              ? parseInt(res?.data?.taxPercentage)
-              : 0,
-          additionalDiscount:
-            res?.data?.additionalDiscount !== null
-              ? parseInt(res?.data?.additionalDiscount)
-              : 0,
-          amountExclTax: res?.data?.amountExclTax,
-          advanceTaxAmount: res?.data?.advanceTaxAmount,
-          volumeDiscount: res?.data?.volumeDiscount,
-          itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-          lineItemAmt: res?.data?.sellingPrice,
-          available: res?.data?.available,
-          serialNoStatus: res?.data?.serialNoStatus,
-          taxAmt: res?.data?.taxAmount,
-          priceLocatorDTOs: res?.data?.priceLocatorDTOs,
-          description: res?.data?.description,
-          itemNo: res?.data?.itemNo,
-          pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
-          downPayment: parseInt(res?.data?.downPayment).toFixed(2),
-          actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
-          payableAmount: res?.data?.payableAmount,
-          installmentAmount: res?.data?.installmentAmount,
-          downPaymentIR: res?.data?.downPaymentIR,
-          emiInterestRate: res?.data?.emiInterestRate,
-        }));
+        if (salesType === 5 && res?.data?.mrp < 50000) {
+          setLineItemDetail((prev) => ({
+            ...prev,
+            priceLocator: "",
+            mrp: res?.data?.mrp,
+            discPercentage: "",
+            tdsAmount: "",
+            discountedAmount: "",
+            sellingPrice: res?.data?.sellingPrice,
+            taxPercentage:
+              res?.data?.taxPercentage !== null
+                ? parseInt(res?.data?.taxPercentage)
+                : 0,
+            additionalDiscount:
+              res?.data?.additionalDiscount !== null
+                ? parseInt(res?.data?.additionalDiscount)
+                : 0,
+            amountExclTax: "",
+            advanceTaxAmount: "",
+            volumeDiscount: "",
+            itemTotalAddedQty: "",
+            lineItemAmt: res?.data?.sellingPrice,
+            available: res?.data?.available,
+            serialNoStatus: "",
+            taxAmt: res?.data?.taxAmount,
+            priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+            description: res?.data?.description,
+            itemNo: res?.data?.itemNo,
+            pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
+            downPayment: "",
+            actualDownPayment: "",
+            payableAmount: "",
+            installmentAmount: "",
+            downPaymentIR: "",
+            emiInterestRate: "",
+          }));
+          setNotificationMsg(
+            "EMI Not Available for Amount less than Nu.50,000/-"
+          );
+          setSeverity("info");
+          setShowNotification(true);
+        } else {
+          setLineItemDetail((prev) => ({
+            ...prev,
+            priceLocator: res?.data?.priceLocator,
+            mrp: res?.data?.mrp,
+            discPercentage: res?.data?.discPercentage,
+            tdsAmount: parseInt(res?.data?.tdsAmount),
+            discountedAmount: res?.data?.discountAmt,
+            sellingPrice: res?.data?.sellingPrice,
+            taxPercentage:
+              res?.data?.taxPercentage !== null
+                ? parseInt(res?.data?.taxPercentage)
+                : 0,
+            additionalDiscount:
+              res?.data?.additionalDiscount !== null
+                ? parseInt(res?.data?.additionalDiscount)
+                : 0,
+            amountExclTax: res?.data?.amountExclTax,
+            advanceTaxAmount: res?.data?.advanceTaxAmount,
+            volumeDiscount: res?.data?.volumeDiscount,
+            itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
+            lineItemAmt: res?.data?.sellingPrice,
+            available: res?.data?.available,
+            serialNoStatus: res?.data?.serialNoStatus,
+            taxAmt: res?.data?.taxAmount,
+            priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+            description: res?.data?.description,
+            itemNo: res?.data?.itemNo,
+            pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
+            downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+            actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
+            payableAmount: res?.data?.payableAmount,
+            installmentAmount: res?.data?.installmentAmount,
+            downPaymentIR: res?.data?.downPaymentIR,
+            emiInterestRate: res?.data?.emiInterestRate,
+          }));
+        }
       } else if (res?.status === 200 && res?.data?.available === "N") {
         setNotificationMsg("Item Not Available");
         setSeverity("info");
@@ -445,7 +488,7 @@ const AddLineItem = ({
         setOpen(false);
       } else {
         setNotificationMsg("Actual Down Payment is Less than Down Payment");
-        setSeverity("info");
+        setSeverity("warning");
         setShowNotification(true);
       }
     } else {
@@ -612,6 +655,7 @@ const AddLineItem = ({
                         label="Down Payment Status"
                         onChange={(e) => setDownPaymentStatus(e?.target?.value)}
                         value={downPaymentStatus}
+                        disabled
                       >
                         <MenuItem value="Yes">Yes</MenuItem>
                         <MenuItem value="No">No</MenuItem>

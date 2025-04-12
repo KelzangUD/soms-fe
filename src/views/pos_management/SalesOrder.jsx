@@ -145,7 +145,7 @@ const SalesOrder = () => {
     emiEligibleStatus: null,
     emiCustomerType: null,
   });
-  const [downPaymentStatus, setDownPaymentStatus] = useState("No");
+  const [downPaymentStatus, setDownPaymentStatus] = useState("Yes");
 
   const fetchCustomersList = async () => {
     const res = await Route(
@@ -349,6 +349,8 @@ const SalesOrder = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paymentLinesItem?.paymentType]);
   useEffect(() => {
+    console.log(linesAmount);
+    console.log(salesOrderDetails);
     setPaymentLinesItem((prev) => ({
       ...prev,
       paymentAmount:
@@ -356,7 +358,7 @@ const SalesOrder = () => {
           ? linesAmount?.actualDownPayment
           : linesAmount?.netAmount,
     }));
-  }, [linesAmount?.netAmount]);
+  }, [linesAmount]);
   const salesTypeHandle = (e) => {
     resetStateHandle();
     setSalesOrderDetails((prev) => ({
@@ -551,7 +553,7 @@ const SalesOrder = () => {
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
         accumulator.netAmount += currentObject?.lineItemAmt || 0;
         accumulator.downPayment +=
-          parseInt(currentObject?.actualDownPayment) || 0;
+          parseInt(currentObject?.downPayment) || 0;
         accumulator.actualDownPayment +=
           parseInt(currentObject?.actualDownPayment) || 0;
         return accumulator;
@@ -758,6 +760,9 @@ const SalesOrder = () => {
       setShowNotification(true);
     }
   };
+  useEffect(() => {
+    console.log(paymentLinesItem);
+  }, [paymentLinesItem]);
 
   const openInNewTab = () => {
     // Store full data in localStorage
@@ -1145,132 +1150,125 @@ const SalesOrder = () => {
               </Grid>
             </Card>
           </Grid>
-          {Math.round(paymentLinesItem?.paymentAmount * 100) / 100 ===
-          0 ? null : (
-            <Grid item xs={12}>
-              <Card>
-                <Title title="Payment Details" />
-                <Grid container p={2}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={2}>
+          <Grid item xs={12}>
+            <Card>
+              <Title title="Payment Details" />
+              <Grid container p={2}>
+                <Grid container spacing={1}>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Payment Amount"
+                      name="payment_amount"
+                      required
+                      onChange={paymentAmountHandle}
+                      value={
+                        Math.round(paymentLinesItem?.paymentAmount * 100) / 100
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <InputLabel id="payment-type-select-label">
+                        Payment Type
+                      </InputLabel>
+                      <Select
+                        labelId="payment-type-select-label"
+                        id="payment-type-select"
+                        label="Payment Type"
+                        onChange={paymentHandle}
+                        value={paymentLinesItem?.paymentTypeItem}
+                      >
+                        {paymentType?.map((item) => (
+                          <MenuItem value={item} key={item?.id}>
+                            {item?.type}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl>
+                      <InputLabel id="bank-ac-name-select-label">
+                        Bank A/C Name
+                      </InputLabel>
+                      <Select
+                        labelId="bank-ac-name-select-label"
+                        id="bank-ac-name-select"
+                        label="Bank A/C Name"
+                        onChange={bankHandle}
+                        value={paymentLinesItem?.bankItem}
+                      >
+                        {banks?.map((item) => (
+                          <MenuItem value={item} key={item?.id}>
+                            {item?.bankName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {paymentLinesItem?.paymentType === "3" && (
+                    <Grid item sx={2}>
                       <TextField
-                        label="Payment Amount"
-                        name="payment_amount"
-                        required
-                        onChange={paymentAmountHandle}
-                        value={
-                          Math.round(paymentLinesItem?.paymentAmount * 100) /
-                          100
-                        }
+                        label="Card No"
+                        name="card_no"
+                        onChange={cardNoHandle}
                       />
                     </Grid>
-                    <Grid item xs={3}>
-                      <FormControl>
-                        <InputLabel id="payment-type-select-label">
-                          Payment Type
-                        </InputLabel>
-                        <Select
-                          labelId="payment-type-select-label"
-                          id="payment-type-select"
-                          label="Payment Type"
-                          onChange={paymentHandle}
-                          value={paymentLinesItem?.paymentTypeItem}
-                        >
-                          {paymentType?.map((item) => (
-                            <MenuItem value={item} key={item?.id}>
-                              {item?.type}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <FormControl>
-                        <InputLabel id="bank-ac-name-select-label">
-                          Bank A/C Name
-                        </InputLabel>
-                        <Select
-                          labelId="bank-ac-name-select-label"
-                          id="bank-ac-name-select"
-                          label="Bank A/C Name"
-                          onChange={bankHandle}
-                          value={paymentLinesItem?.bankItem}
-                        >
-                          {banks?.map((item) => (
-                            <MenuItem value={item} key={item?.id}>
-                              {item?.bankName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    {paymentLinesItem?.paymentType === "3" && (
+                  )}
+                  {paymentLinesItem?.paymentType === "2" && (
+                    <>
                       <Grid item sx={2}>
                         <TextField
-                          label="Card No"
-                          name="card_no"
-                          onChange={cardNoHandle}
+                          label="Cheque No"
+                          name="cheque_no"
+                          onChange={chequeNoHandle}
                         />
                       </Grid>
-                    )}
-                    {paymentLinesItem?.paymentType === "2" && (
-                      <>
-                        <Grid item sx={2}>
-                          <TextField
-                            label="Cheque No"
-                            name="cheque_no"
-                            onChange={chequeNoHandle}
-                          />
-                        </Grid>
-                        <Grid item sx={1}>
-                          <FormControl>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                              <DatePicker
-                                label="Cheque Date"
-                                onChange={chequeDateHandle}
-                              />
-                            </LocalizationProvider>
-                          </FormControl>
-                        </Grid>
-                        <Grid item sx={2}>
-                          <TextField
-                            type="file"
-                            label={isFileUploaded ? "File" : ""}
-                            InputLabelProps={{ shrink: true }}
-                            onChange={chequeCopyHandle}
-                          />
-                        </Grid>
-                      </>
-                    )}
-                    <Grid
-                      item
-                      container
-                      xs={1}
-                      display="flex"
-                      alignItems="center"
-                    >
-                      <IconButton
-                        aria-label="add"
-                        onClick={addPaymentItemHandle}
-                      >
-                        <AddBoxIcon
-                          sx={{
-                            color: "addBtnColor.light",
-                          }}
+                      <Grid item sx={1}>
+                        <FormControl>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              label="Cheque Date"
+                              onChange={chequeDateHandle}
+                            />
+                          </LocalizationProvider>
+                        </FormControl>
+                      </Grid>
+                      <Grid item sx={2}>
+                        <TextField
+                          type="file"
+                          label={isFileUploaded ? "File" : ""}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={chequeCopyHandle}
                         />
-                      </IconButton>
-                    </Grid>
+                      </Grid>
+                    </>
+                  )}
+                  <Grid
+                    item
+                    container
+                    xs={1}
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <IconButton aria-label="add" onClick={addPaymentItemHandle}>
+                      <AddBoxIcon
+                        sx={{
+                          color: "addBtnColor.light",
+                        }}
+                      />
+                    </IconButton>
                   </Grid>
                 </Grid>
-                <Grid container padding={2}>
-                  <PaymentDetailsTable
-                    paymentLines={paymentLines}
-                    deletePaymentItemHandle={deletePaymentItemHandle}
-                  />
-                </Grid>
-              </Card>
-            </Grid>
-          )}
+              </Grid>
+              <Grid container padding={2}>
+                <PaymentDetailsTable
+                  paymentLines={paymentLines}
+                  deletePaymentItemHandle={deletePaymentItemHandle}
+                />
+              </Grid>
+            </Card>
+          </Grid>
           <Grid container display="flex" justifyContent="flex-end" marginY={2}>
             <Button variant="contained" onClick={postHandle}>
               Post

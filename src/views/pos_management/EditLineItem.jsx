@@ -528,6 +528,7 @@ const EditLineItem = ({
                         label="Down Payment Status"
                         onChange={(e) => setDownPaymentStatus(e?.target?.value)}
                         value={downPaymentStatus}
+                        disabled
                       >
                         <MenuItem value="Yes">Yes</MenuItem>
                         <MenuItem value="No">No</MenuItem>
