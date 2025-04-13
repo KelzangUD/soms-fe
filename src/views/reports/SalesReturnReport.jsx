@@ -35,7 +35,7 @@ const SalesReturnReport = () => {
     { field: "invoice_no", headerName: "Return Sales Order No", width: 150 },
     { field: "inventory_item_number", headerName: "Item Code", width: 150 },
     { field: "description", headerName: "Item Description", width: 250 },
-    { field: "line_item_amount", headerName: "Gross Amount", width: 100 },
+    { field: "selling_price", headerName: "Gross Amount", width: 100 },
     { field: "discount_value", headerName: "Discount/Commission", width: 150 },
     { field: "additional_discount", headerName: "Add. Disc", width: 80 },
     {
@@ -45,7 +45,7 @@ const SalesReturnReport = () => {
     },
     { field: "tds_amount", headerName: "TDS", width: 60 },
     { field: "tax_amount", headerName: "Tax Amount", width: 100 },
-    { field: "selling_price", headerName: "Net Amount", width: 100 },
+    { field: "line_item_amount", headerName: "Net Amount", width: 100 },
     { field: "paymentmode", headerName: "Payment Mode", width: 150 },
     { field: "status", headerName: "Remarks", width: 150 },
   ];
@@ -103,13 +103,13 @@ const SalesReturnReport = () => {
           "Return Sales Order No": item?.invoice_no,
           "Item Code": item?.inventory_item_number,
           "Item Description": item?.description,
-          "Gross Amount": item?.line_item_amount,
+          "Gross Amount": item?.selling_price,
           "Discount/Commission": item?.discount_value,
           "Add. Disc": item?.additional_discount,
           "Lot of Sale Dis.": item?.line_discount_amount,
           TDS: item?.tds_amount,
           "Tax Amount": item?.tax_amount,
-          "Net Amount": item?.selling_price,
+          "Net Amount": item?.line_item_amount,
           "Payment Mode": item?.paymentmode,
           Remarks: item?.status,
         }))
