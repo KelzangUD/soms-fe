@@ -197,7 +197,6 @@ const CreateTransferOrder = ({
     fetchLocatorBasedOExtension(toStoreName);
   };
   const transferToSubInvHandle = (e) => {
-    // fetchTrasnferOrderToLocator(e?.target?.value);
     setParameters((prev) => ({
       ...prev,
       transfer_To_SubInventory: e?.target?.value,
@@ -267,31 +266,15 @@ const CreateTransferOrder = ({
       setSeverity("info");
       setShowNotification(true);
     } else {
-      if (serialInputDisabled) {
-        setParameters((prev) => ({
-          ...prev,
-          transferOrderItemDTOList: [
-            ...prev.transferOrderItemDTOList,
-            transferOrderItemDTOList,
-          ],
-        }));
-        setTransferOrderDTOList((prev) => ({
-          ...prev,
-          item_Description: "",
-          item_Number: "",
-          item_Serial_Number: "",
-          uom: "",
-          qty: "",
-        }));
+      if (
+        parseInt(transferOrderItemDTOList?.qty) >
+        transferOrderItemDTOList?.availaibleQty
+      ) {
+        setNotificationMsg("Quantity Entered Is More Than Available Quantity!");
+        setSeverity("warning");
+        setShowNotification(true);
       } else {
-        const validation = await validateSerialNumberWithLocator(
-          transferOrderItemDTOList?.item_Serial_Number
-        );
-        if (validation === "False") {
-          setNotificationMsg("Please Valid Serial Number");
-          setSeverity("info");
-          setShowNotification(true);
-        } else {
+        if (serialInputDisabled) {
           setParameters((prev) => ({
             ...prev,
             transferOrderItemDTOList: [
@@ -306,7 +289,33 @@ const CreateTransferOrder = ({
             item_Serial_Number: "",
             uom: "",
             qty: "",
+            availaibleQty: "",
           }));
+        } else {
+          const validation = await validateSerialNumberWithLocator(
+            transferOrderItemDTOList?.item_Serial_Number
+          );
+          if (validation === "False") {
+            setNotificationMsg("Please Valid Serial Number");
+            setSeverity("info");
+            setShowNotification(true);
+          } else {
+            setParameters((prev) => ({
+              ...prev,
+              transferOrderItemDTOList: [
+                ...prev.transferOrderItemDTOList,
+                transferOrderItemDTOList,
+              ],
+            }));
+            setTransferOrderDTOList((prev) => ({
+              ...prev,
+              item_Description: "",
+              item_Number: "",
+              item_Serial_Number: "",
+              uom: "",
+              qty: "",
+            }));
+          }
         }
       }
     }
@@ -925,7 +934,7 @@ const CreateTransferOrder = ({
           alertMessage={notificationMsg}
         />
       )}
-      {showNotification && severity === "info" && (
+      {showNotification && (severity === "info" || severity === "warning") && (
         <Notification
           open={showNotification}
           setOpen={setShowNotification}
