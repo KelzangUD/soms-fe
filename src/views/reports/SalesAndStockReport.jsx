@@ -73,12 +73,12 @@ const SalesAndStockReport = () => {
             item_code: item?.item,
             item_details: item?.description,
             unit: item?.uom,
-            opening_balance: item?.opBal,
-            stock_received: item?.receiptIN,
-            transfer_out: item?.issueQty,
-            sales_qty: item?.saleQty,
-            amount: item?.amount,
-            closing_balance: item?.closing,
+            opening_balance: parseInt(item?.opBal),
+            stock_received: parseInt(item?.receiptIN),
+            transfer_out: parseInt(item?.issueQty),
+            sales_qty: parseInt(item?.saleQty),
+            amount: parseInt(item?.amount),
+            closing_balance: parseInt(item?.closing),
           }))
         );
         setPrintData(
@@ -87,12 +87,12 @@ const SalesAndStockReport = () => {
             "Item Code": item?.item,
             "Item Details": item?.description,
             Unit: item?.uom,
-            "Opening Balance": item?.opBal,
-            "Stock Received": item?.receiptIN,
-            "Transfer Out": item?.issueQty,
-            "Sales Qty": item?.saleQty,
-            Amount: item?.amount,
-            "Closing Balance": item?.closing,
+            "Opening Balance": parseInt(item?.opBal),
+            "Stock Received": parseInt(item?.receiptIN),
+            "Transfer Out": parseInt(item?.issueQty),
+            "Sales Qty": parseInt(item?.saleQty),
+            Amount: parseInt(item?.amount),
+            "Closing Balance": parseInt(item?.closing),
           }))
         );
       }
@@ -283,7 +283,7 @@ const SalesAndStockReport = () => {
                 >
                   <PrintSection
                     exportExcel={() =>
-                      exportToExcel(printData, "Recharge_Collection")
+                      exportToExcel(printData, "Sales_and_Stock_Report")
                     }
                     exportPdf={exportJsonToPdfHandle}
                     handlePrint={reactToPrintFn}
