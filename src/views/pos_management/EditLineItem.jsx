@@ -303,7 +303,6 @@ const EditLineItem = ({
     setPricingID(value?.id);
   };
   const fetchDownPaymentDetails = async () => {
-    console.log(typeof lineItemDetail?.downPayment);
     const res = await Route(
       "GET",
       `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${

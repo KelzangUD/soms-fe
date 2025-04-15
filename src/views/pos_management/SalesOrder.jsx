@@ -349,8 +349,6 @@ const SalesOrder = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paymentLinesItem?.paymentType]);
   useEffect(() => {
-    console.log(linesAmount);
-    console.log(salesOrderDetails);
     setPaymentLinesItem((prev) => ({
       ...prev,
       paymentAmount:
@@ -655,10 +653,10 @@ const SalesOrder = () => {
     let message = "";
     if (salesOrderDetails.salesType !== 5) {
       expectedAmount = parseInt(linesAmount?.netAmount) || 0;
-      message = "Total Payment is Not equal to Net Payment";
+      message = "Total Payment is Not equal to Net Payment!";
     } else {
-      expectedAmount = parseInt(linesAmount?.downPayment) || 0;
-      message = "Total Payment is Not equal to Down Payment";
+      expectedAmount = parseInt(linesAmount?.actualDownPayment) || 0;
+      message = "Total Payment is Not equal to Actual Payment!";
     }
     const totalPayment = paymentLines?.length
       ? paymentLines.reduce(
@@ -755,14 +753,11 @@ const SalesOrder = () => {
         setIsLoading(false);
       }
     } else {
-      setNotificationMsg("Total Payment is Not equal to Net Payment");
+      setNotificationMsg("Total Payment is Not equal to Net Payment!");
       setSeverity("info");
       setShowNotification(true);
     }
   };
-  useEffect(() => {
-    console.log(paymentLinesItem);
-  }, [paymentLinesItem]);
 
   const openInNewTab = () => {
     // Store full data in localStorage
