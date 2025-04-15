@@ -123,16 +123,22 @@ const SalesReportAll = () => {
                   posting_Date: item?.posting_Date,
                   item_code: item?.item_code,
                   description: item?.description,
-                  gross_amount: item?.selling_price,
-                  discount_Value: item?.discount_Value,
-                  additional_Discount: item?.additional_Discount,
-                  line_Discount_Amount: item?.line_Discount_Amount,
-                  tds_Amount: item?.tds_Amount,
-                  tax_Amount: item?.tax_Amount,
-                  net_amount: item?.line_Item_Amount,
+                  gross_amount: parseFloat(item?.selling_price, 10),
+                  discount_Value: parseFloat(item?.discount_Value, 10),
+                  additional_Discount: parseFloat(
+                    item?.additional_Discount,
+                    10
+                  ),
+                  line_Discount_Amount: parseFloat(
+                    item?.line_Discount_Amount,
+                    10
+                  ),
+                  tds_Amount: parseFloat(item?.tds_Amount, 10),
+                  tax_Amount: parseFloat(item?.tax_Amount, 10),
+                  net_amount: parseFloat(item?.line_Item_Amount, 10),
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
-                  remarks: item?.status
+                  remarks: item?.status,
                 })),
                 {
                   description: "Total",
@@ -207,16 +213,22 @@ const SalesReportAll = () => {
                   posting_Date: item?.posting_Date,
                   item_code: item?.item_code,
                   description: item?.description,
-                  gross_amount: item?.selling_price,
-                  discount_Value: item?.discount_Value,
-                  additional_Discount: item?.additional_Discount,
-                  line_Discount_Amount: item?.line_Discount_Amount,
-                  tds_Amount: item?.tds_Amount,
-                  tax_Amount: item?.tax_Amount,
-                  net_amount: item?.line_Item_Amount,
+                  gross_amount: parseFloat(item?.selling_price, 10),
+                  discount_Value: parseFloat(item?.discount_Value, 10),
+                  additional_Discount: parseFloat(
+                    item?.additional_Discount,
+                    10
+                  ),
+                  line_Discount_Amount: parseFloat(
+                    item?.line_Discount_Amount,
+                    10
+                  ),
+                  tds_Amount: parseFloat(item?.tds_Amount, 10),
+                  tax_Amount: parseFloat(item?.tax_Amount, 10),
+                  net_amount: parseFloat(item?.line_Item_Amount, 10),
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
-                  remarks: item?.status
+                  remarks: item?.status,
                 })),
                 {
                   description: "Total",
@@ -332,16 +344,22 @@ const SalesReportAll = () => {
                   posting_Date: item?.posting_Date,
                   item_code: item?.item_code,
                   description: item?.description,
-                  gross_amount: item?.selling_price,
-                  discount_Value: item?.discount_Value,
-                  additional_Discount: item?.additional_Discount,
-                  line_Discount_Amount: item?.line_Discount_Amount,
-                  tds_Amount: item?.tds_Amount,
-                  tax_Amount: item?.tax_Amount,
-                  net_amount: item?.line_Item_Amount,
+                  gross_amount: parseFloat(item?.selling_price, 10),
+                  discount_Value: parseFloat(item?.discount_Value, 10),
+                  additional_Discount: parseFloat(
+                    item?.additional_Discount,
+                    10
+                  ),
+                  line_Discount_Amount: parseFloat(
+                    item?.line_Discount_Amount,
+                    10
+                  ),
+                  tds_Amount: parseFloat(item?.tds_Amount, 10),
+                  tax_Amount: parseFloat(item?.tax_Amount, 10),
+                  net_amount: parseFloat(item?.line_Item_Amount, 10),
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
-                  remarks: item?.status
+                  remarks: item?.status,
                 })),
                 {
                   description: "Total",
@@ -417,16 +435,22 @@ const SalesReportAll = () => {
                   posting_Date: item?.posting_Date,
                   item_code: item?.item_code,
                   description: item?.description,
-                  gross_amount: item?.selling_price,
-                  discount_Value: item?.discount_Value,
-                  additional_Discount: item?.additional_Discount,
-                  line_Discount_Amount: item?.line_Discount_Amount,
-                  tds_Amount: item?.tds_Amount,
-                  tax_Amount: item?.tax_Amount,
-                  net_amount: item?.line_Item_Amount,
+                  gross_amount: parseFloat(item?.selling_price, 10),
+                  discount_Value: parseFloat(item?.discount_Value, 10),
+                  additional_Discount: parseFloat(
+                    item?.additional_Discount,
+                    10
+                  ),
+                  line_Discount_Amount: parseFloat(
+                    item?.line_Discount_Amount,
+                    10
+                  ),
+                  tds_Amount: parseFloat(item?.tds_Amount, 10),
+                  tax_Amount: parseFloat(item?.tax_Amount, 10),
+                  net_amount: parseFloat(item?.line_Item_Amount, 10),
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
-                  remarks: item?.status
+                  remarks: item?.status,
                 })),
                 {
                   description: "Total",
@@ -502,16 +526,22 @@ const SalesReportAll = () => {
                   posting_Date: item?.posting_Date,
                   item_code: item?.item_code,
                   description: item?.description,
-                  gross_amount: item?.selling_price,
-                  discount_Value: item?.discount_Value,
-                  additional_Discount: item?.additional_Discount,
-                  line_Discount_Amount: item?.line_Discount_Amount,
-                  tds_Amount: item?.tds_Amount,
-                  tax_Amount: item?.tax_Amount,
-                  net_amount: item?.line_Item_Amount,
+                  gross_amount: parseFloat(item?.selling_price, 10),
+                  discount_Value: parseFloat(item?.discount_Value, 10),
+                  additional_Discount: parseFloat(
+                    item?.additional_Discount,
+                    10
+                  ),
+                  line_Discount_Amount: parseFloat(
+                    item?.line_Discount_Amount,
+                    10
+                  ),
+                  tds_Amount: parseFloat(item?.tds_Amount, 10),
+                  tax_Amount: parseFloat(item?.tax_Amount, 10),
+                  net_amount: parseFloat(item?.line_Item_Amount, 10),
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
-                  remarks: item?.status
+                  remarks: item?.status,
                 })),
                 {
                   description: "Total",
@@ -587,16 +617,22 @@ const SalesReportAll = () => {
                   posting_Date: item?.posting_Date,
                   item_code: item?.item_code,
                   description: item?.description,
-                  gross_amount: item?.selling_price,
-                  discount_Value: item?.discount_Value,
-                  additional_Discount: item?.additional_Discount,
-                  line_Discount_Amount: item?.line_Discount_Amount,
-                  tds_Amount: item?.tds_Amount,
-                  tax_Amount: item?.tax_Amount,
-                  net_amount: item?.line_Item_Amount,
+                  gross_amount: parseFloat(item?.selling_price, 10),
+                  discount_Value: parseFloat(item?.discount_Value, 10),
+                  additional_Discount: parseFloat(
+                    item?.additional_Discount,
+                    10
+                  ),
+                  line_Discount_Amount: parseFloat(
+                    item?.line_Discount_Amount,
+                    10
+                  ),
+                  tds_Amount: parseFloat(item?.tds_Amount, 10),
+                  tax_Amount: parseFloat(item?.tax_Amount, 10),
+                  net_amount: parseFloat(item?.line_Item_Amount, 10),
                   paymentMode: item?.paymentMode,
                   createdBy: item?.createdBy,
-                  remarks: item?.status
+                  remarks: item?.status,
                 })),
                 {
                   description: "Total",
