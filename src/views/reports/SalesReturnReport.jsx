@@ -142,7 +142,7 @@ const SalesReturnReport = () => {
   const toDateHandle = (e) => {
     setDetails((prev) => ({
       ...prev,
-      fromDate: dateFormatterTwo(e?.$d),
+      toDate: dateFormatterTwo(e?.$d),
     }));
   };
   const regionOrExtensionHandle = (e, value) => {
