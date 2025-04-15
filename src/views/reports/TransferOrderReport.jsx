@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Grid,
@@ -18,14 +18,22 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { RenderStatus } from "../../ui/index";
-import { CustomDataTable } from "../../component/common/index";
+import { CustomDataTable, PrintSection } from "../../component/common/index";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
+import { exportToExcel } from "react-json-to-excel";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useReactToPrint } from "react-to-print";
+import { LoaderDialog, Notification } from "../../ui/index";
 
 const TransferOrderReport = () => {
   const { regionsOrExtensions } = useCommon();
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
+  const [printData, setPrintData] = useState([]);
   const [transferOrders, setTransferOrders] = useState([]);
   const [params, setParams] = useState({
     transferType: "Store to Store",
@@ -35,6 +43,10 @@ const TransferOrderReport = () => {
     toStore: "",
     itemDesc: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
   const transfer_order_report_columns = [
     { field: "sl", headerName: "Sl. No", width: 40 },
     {
@@ -111,6 +123,24 @@ const TransferOrderReport = () => {
           sl: index + 1,
         }))
       );
+      setPrintData(
+        res?.data?.map((item, index) => ({
+          sl: index + 1,
+          "Transfer Type": item?.transferType,
+          "Transfer Date": item?.transferDate,
+          "Transfer Order No": item?.transferOrderNo,
+          "From Store Name": item?.transferFrom,
+          "To Store Name": item?.transferTo,
+          "Item Number": item?.itemNumber,
+          "Item Description": item?.itemDescription,
+          UOM: item?.uom,
+          "Serial Number": item?.itemSerialNo,
+          "Quantity Transferred": parseInt(item?.qnty),
+          "Quantity Received": parseInt(item?.receivedQnty),
+          "Received Date": item?.receivedDate,
+          Status: item?.txnStatus,
+        }))
+      );
     }
   };
   useEffect(() => {
@@ -151,6 +181,61 @@ const TransferOrderReport = () => {
       ...prev,
       itemDesc: e?.target?.value,
     }));
+  };
+
+  const exportJsonToPdfHandle = () => {
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "pt",
+      format: "a4",
+    });
+    autoTable(doc, {
+      head: [
+        [
+          "sl",
+          "Transfer Type",
+          "Transfer Date",
+          "Transfer Order No",
+          "From Store Name",
+          "To Store Name",
+          "Item Number",
+          "Item Description",
+          "UOM",
+          "Serial Number",
+          "Quantity Transferred",
+          "Quantity Received",
+          "Received Date",
+          "Status",
+        ],
+      ],
+      body: printData?.map((item) => [
+        item?.sl,
+        item?.["Transfer Type"],
+        item?.["Transfer Date"],
+        item?.["Transfer Order No"],
+        item?.["From Store Name"],
+        item?.["To Store Name"],
+        item?.["Item Number"],
+        item?.["Item Description"],
+        item?.["UOM"],
+        item?.["Serial Number"],
+        item?.["Quantity Transferred"],
+        item?.["Quantity Received"],
+        item?.["Received Date"],
+        item?.["Status"],
+      ]),
+      styles: {
+        fontSize: 6,
+        cellPadding: 5,
+        overflow: "linebreak",
+      },
+      // margin: { top: 35 },
+      didDrawPage: (data) => {
+        doc.setFontSize(12);
+        doc.text("Transfer_Order_Report", data.settings.margin.left, 30);
+      },
+    });
+    doc.save("Transfer_Order_Report");
   };
 
   return (
@@ -267,17 +352,21 @@ const TransferOrderReport = () => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <IconButton aria-label="pdf" color="error">
-                    <PictureAsPdfIcon fontSize="inherit" />
-                  </IconButton>
-                  <IconButton aria-label="excel" color="success">
-                    <FileDownloadIcon fontSize="inherit" />
-                  </IconButton>
-                  <IconButton aria-label="print" color="primary">
-                    <PrintIcon fontSize="inherit" />
-                  </IconButton>
+                  <PrintSection
+                    exportExcel={() =>
+                      exportToExcel(printData, "Transfer Order Report")
+                    }
+                    exportPdf={exportJsonToPdfHandle}
+                    handlePrint={reactToPrintFn}
+                  />
                 </Grid>
-                <Grid item container alignItems="center" xs={12}>
+                <Grid
+                  item
+                  container
+                  alignItems="center"
+                  xs={12}
+                  ref={contentRef}
+                >
                   <CustomDataTable
                     rows={transferOrders}
                     cols={transfer_order_report_columns}
