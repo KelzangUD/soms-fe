@@ -252,7 +252,7 @@ const CreateEmiCustomer = () => {
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
-                      label="Customer No"
+                      label="Customer No (CID No)"
                       name="customer_no"
                       required
                       onChange={customerNoHandle}

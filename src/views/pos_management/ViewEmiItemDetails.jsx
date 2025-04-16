@@ -222,7 +222,7 @@ const ViewEmiItemDetails = ({ setOpen, details }) => {
                             <TableHead>
                               <TableRow>
                                 <TableCell>Sl.No</TableCell>
-                                <TableCell>EMI Monthly No</TableCell>
+                                <TableCell>Journal No</TableCell>
                                 <TableCell>Payment Amount</TableCell>
                                 <TableCell>Payment Date</TableCell>
                                 <TableCell>Payment Type</TableCell>
