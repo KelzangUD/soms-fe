@@ -151,7 +151,7 @@ const AddLineItem = ({
         priceLocator: res?.data?.priceLocator,
         mrp: res?.data?.mrp,
         discPercentage: res?.data?.discPercentage,
-        tdsAmount: parseInt(res?.data?.tdsAmount),
+        tdsAmount: parseInt(res?.data?.tds_Amount),
         discountedAmount: res?.data?.discountAmt,
         sellingPrice: res?.data?.sellingPrice,
         taxPercentage: parseInt(res?.data?.taxPercentage),
@@ -160,7 +160,7 @@ const AddLineItem = ({
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-        lineItemAmt: res?.data?.sellingPrice,
+        lineItemAmt: res?.data?.lineItemAmt,
         available: res?.data?.available,
         serialNoStatus: res?.data?.serialNoStatus,
         taxAmt: res?.data?.taxAmount,
@@ -193,6 +193,7 @@ const AddLineItem = ({
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
+        lineItemAmt: res?.data?.lineItemAmt,
       }));
     }
   };
@@ -578,10 +579,10 @@ const AddLineItem = ({
               >
                 <Grid item xs={3}>
                   <TextField
-                    id="selling_price"
+                    id="line_item_amount"
                     label="Line Item Amount"
                     disabled
-                    value={lineItemDetail?.sellingPrice}
+                    value={lineItemDetail?.lineItemAmt}
                   />
                 </Grid>
               </Grid>
