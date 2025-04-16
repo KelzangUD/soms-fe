@@ -115,7 +115,7 @@ const PostedSalesReceipt = () => {
             <div>
               <p>
                 Total Amount (Nu.):{" "}
-                {parseFloat(salesOrderData?.totalAmount).toFixed(2)}
+                {parseFloat(salesOrderData?.grossTotal).toFixed(2)}
               </p>
             </div>
             <div>
