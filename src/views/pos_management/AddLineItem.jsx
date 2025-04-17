@@ -138,11 +138,7 @@ const AddLineItem = ({
           priceLocator: res?.data?.priceLocator,
           mrp: res?.data?.mrp,
           discPercentage: res?.data?.discPercentage,
-<<<<<<< HEAD
-          tdsAmount: parseInt(res?.data?.tdsAmount),
-=======
           tdsAmount: res?.data?.tds_Amount,
->>>>>>> wip
           discountedAmount: res?.data?.discountAmt,
           sellingPrice: res?.data?.sellingPrice,
           taxPercentage: parseInt(res?.data?.taxPercentage),
@@ -160,8 +156,6 @@ const AddLineItem = ({
           itemNo: res?.data?.itemNo,
           pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
         }));
-<<<<<<< HEAD
-=======
         if (salesType === 5 && res?.data?.mrp < 50000) {
           setLineItemDetail((prev) => ({
             ...prev,
@@ -240,7 +234,6 @@ const AddLineItem = ({
             emiInterestRate: res?.data?.emiInterestRate,
           }));
         }
->>>>>>> wip
       } else if (res?.status === 200 && res?.data?.available === "N") {
         setNotificationMsg("Item Not Available");
         setSeverity("info");
@@ -332,8 +325,6 @@ const AddLineItem = ({
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
-<<<<<<< HEAD
-=======
         lineItemAmt: res?.data?.lineItemAmt,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
         actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
@@ -341,7 +332,6 @@ const AddLineItem = ({
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
         emiInterestRate: res?.data?.emiInterestRate,
->>>>>>> wip
       }));
     }
   };
@@ -790,92 +780,31 @@ const AddLineItem = ({
                     value={lineItemDetail?.additionalDiscount}
                   />
                 </Grid>
-<<<<<<< HEAD
-                <Grid item xs={3}>
-                  <TextField
-                    id="tax_amt"
-                    label="Tax Amount"
-                    disabled
-                    value={lineItemDetail?.taxAmt}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
-                <Grid item xs={3}>
-                  <TextField
-                    id="amt_excel_tax"
-                    label="Amount Excl. Tax"
-                    disabled
-                    value={lineItemDetail?.amountExclTax}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="adv_tax"
-                    label="Advance Tax Amount"
-                    value={lineItemDetail?.advanceTaxAmount}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="vol_disc"
-                    label="Volumn Discount"
-                    disabled
-                    value={lineItemDetail?.volumeDiscount}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="item_total_added_qty"
-                    label="Item Total Added Qty"
-                    disabled
-                    value={lineItemDetail?.itemTotalAddedQty}
-                  />
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                spacing={1}
-                paddingY={1}
-                paddingX={2}
-                sx={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <Grid item xs={3}>
-                  <TextField
-                    id="selling_price"
-                    label="Line Item Amount"
-                    disabled
-                    value={lineItemDetail?.sellingPrice}
-                  />
-                </Grid>
-              </Grid>
-=======
-              ) : null}
 
->>>>>>> wip
-              <Grid
-                item
-                xs={12}
-                alignItems="right"
-                paddingY={1}
-                paddingX={2}
-                marginBottom={1}
-                sx={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={submitHandle}
-                  sx={{ mr: 2 }}
+                <Grid
+                  item
+                  xs={12}
+                  alignItems="right"
+                  paddingY={1}
+                  paddingX={2}
+                  marginBottom={1}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  Submit
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => setOpen(false)}
-                  color="error"
-                >
-                  Close
-                </Button>
+                  <Button
+                    variant="contained"
+                    onClick={submitHandle}
+                    sx={{ mr: 2 }}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => setOpen(false)}
+                    color="error"
+                  >
+                    Close
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
