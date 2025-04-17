@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Autocomplete,
   Box,
   Grid,
   Button,
   Dialog,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -24,15 +29,20 @@ const AddLineItem = ({
   itemNo,
   lineItemDetails,
   adj_type,
+  user,
+  emiCycle,
+  downPaymentStatus,
+  setDownPaymentStatus,
 }) => {
-  const { subInventory, fetchLocators, locators } = useCommon();
+  const { fetchLocators, locators } = useCommon();
   const access_token = localStorage.getItem("access_token");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [desc, setDesc] = useState("");
   const [onHandItems, setOnHandItems] = useState([]);
   const [pricingID, setPricingID] = useState("");
+  const [subInventory, setSubInventory] = useState([]);
   const [lineItemDetail, setLineItemDetail] = useState({
     storeName: storeName,
     subInventoryId: userDetails?.subInventory,
@@ -65,8 +75,26 @@ const AddLineItem = ({
     pricedIdForVarientCode: "",
     volumeDiscount: "",
     priceLocatorDTOs: [],
+    downPayment: "",
+    actualDownPayment: "",
+    payableAmount: "",
+    installmentAmount: "",
+    downPaymentIR: "",
+    emiInterestRate: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const fetchSubInventory = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchSubInventory?userId=${user}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setSubInventory(res?.data);
+    }
+  };
 
   const fetchOnHandItems = async () => {
     const res = await Route(
@@ -91,7 +119,15 @@ const AddLineItem = ({
     try {
       const res = await Route(
         "GET",
-        `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo=${lineItemDetail?.serialNo}&qty=${lineItemDetail?.qty}`,
+        `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${
+          lineItemDetail?.itemNo
+        }&subInventory=${lineItemDetail?.subInventoryId}&locator=${
+          lineItemDetail?.locatorId
+        }&serialNo=${lineItemDetail?.serialNo}&qty=${
+          lineItemDetail?.qty
+        }&emiCycle=${
+          emiCycle === null ? 0 : emiCycle
+        }&downPaymentStatus=${downPaymentStatus}`,
         access_token,
         null,
         null
@@ -102,7 +138,7 @@ const AddLineItem = ({
           priceLocator: res?.data?.priceLocator,
           mrp: res?.data?.mrp,
           discPercentage: res?.data?.discPercentage,
-          tdsAmount: res?.data?.tds_Amount,
+          tdsAmount: parseInt(res?.data?.tdsAmount),
           discountedAmount: res?.data?.discountAmt,
           sellingPrice: res?.data?.sellingPrice,
           taxPercentage: parseInt(res?.data?.taxPercentage),
@@ -121,18 +157,18 @@ const AddLineItem = ({
           pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
         }));
       } else if (res?.status === 200 && res?.data?.available === "N") {
-        setNotificationMsg("Item Not Avaliable");
+        setNotificationMsg("Item Not Available");
         setSeverity("info");
-        setShowNofication(true);
+        setShowNotification(true);
       } else {
         setNotificationMsg(res?.response?.data?.detail);
         setSeverity("info");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (err) {
       setNotificationMsg(`Error: ${err}`);
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -154,8 +190,14 @@ const AddLineItem = ({
         tdsAmount: res?.data?.tds_Amount,
         discountedAmount: res?.data?.discountAmt,
         sellingPrice: res?.data?.sellingPrice,
-        taxPercentage: parseInt(res?.data?.taxPercentage),
-        additionalDiscount: parseInt(res?.data?.additionalDiscount),
+        taxPercentage:
+          res?.data?.taxPercentage !== null
+            ? parseInt(res?.data?.taxPercentage)
+            : 0,
+        additionalDiscount:
+          res?.data?.additionalDiscount !== null
+            ? parseInt(res?.data?.additionalDiscount)
+            : 0,
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
@@ -166,6 +208,12 @@ const AddLineItem = ({
         taxAmt: res?.data?.taxAmount,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
         pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
+        downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        payableAmount: res?.data?.payableAmount,
+        installmentAmount: res?.data?.installmentAmount,
+        downPaymentIR: res?.data?.downPaymentIR,
+        emiInterestRate: res?.data?.emiInterestRate,
       }));
     }
   };
@@ -183,17 +231,22 @@ const AddLineItem = ({
         discPercentage: res?.data?.discPercentage,
         tdsAmount: res?.data?.tds_Amount,
         mrp: res?.data?.mrp,
-        additionalDiscount: parseInt(res?.data?.additionalDiscount),
-        taxPercentage: parseInt(res?.data?.taxPercentage),
+        additionalDiscount:
+          res?.data?.additionalDiscount !== null
+            ? parseInt(res?.data?.additionalDiscount)
+            : 0,
+        taxPercentage:
+          res?.data?.taxPercentage !== null
+            ? parseInt(res?.data?.taxPercentage)
+            : 0,
         sellingPrice: res?.data?.sellingPrice,
         discountAmt: res?.data?.discountAmt,
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         taxAmount: res?.data?.taxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
-        itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
+        itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
-        lineItemAmt: res?.data?.lineItemAmt,
       }));
     }
   };
@@ -209,8 +262,8 @@ const AddLineItem = ({
         mrp: lineItemDetails?.mrp,
         discountedAmount: lineItemDetails?.discountedAmount,
         sellingPrice: lineItemDetails?.sellingPrice,
-        taxPercentage: lineItemDetails?.taxPercentage,
-        additionalDiscount: lineItemDetails?.additionalDiscount,
+        taxPercentage: parseInt(lineItemDetails?.taxPercentage),
+        additionalDiscount: parseInt(lineItemDetails?.additionalDiscount),
         amountExclTax: lineItemDetails?.amountExclTax,
         advanceTaxAmount: lineItemDetails?.advanceTaxAmount,
         itemTotalAddedQty: lineItemDetails?.itemTotalAddedQty,
@@ -223,10 +276,19 @@ const AddLineItem = ({
         base_amount_tds: lineItemDetails?.base_amount_tds,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
         volumeDiscount: lineItemDetails?.volumeDiscount,
+        downPayment: parseInt(lineItemDetails?.downPayment).toFixed(2),
+        actualDownPayment: parseInt(lineItemDetails?.downPayment).toFixed(2),
+        payableAmount: lineItemDetails?.payableAmount,
+        installmentAmount: lineItemDetails?.installmentAmount,
+        downPaymentIR: lineItemDetails?.downPaymentIR,
+        emiInterestRate: lineItemDetails?.emiInterestRate,
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adj_type]);
+  useEffect(() => {
+    fetchSubInventory();
+  }, []);
   useEffect(() => {
     fetchLocators(lineItemDetail?.subInventoryId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -262,10 +324,10 @@ const AddLineItem = ({
     if (lineItemDetail?.serialNo !== "" && lineItemDetail?.qty === "") {
       setNotificationMsg("Please enter quantity!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineItemDetail?.serialNo, lineItemDetail?.qty]);
+  }, [lineItemDetail?.serialNo, lineItemDetail?.qty, downPaymentStatus]);
   useEffect(() => {
     if (pricingID !== "") {
       fetchPriceLocatorDetails();
@@ -292,7 +354,7 @@ const AddLineItem = ({
     if (value?.serial_controlled === "Y") {
       setNotificationMsg("Please Enter Serial Number!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     }
     setLineItemDetail((prev) => ({
       ...prev,
@@ -319,9 +381,59 @@ const AddLineItem = ({
       pricedIdForVarientCode: e?.target?.value,
     }));
   };
+  const fetchDownPaymentDetails = async () => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      installmentAmount: "",
+      payableAmount: "",
+    }));
+    const res = await Route(
+      "GET",
+      `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${
+        lineItemDetail?.downPayment === "" ? 0 : lineItemDetail?.downPayment
+      }&actualDownPayment=${
+        lineItemDetail?.actualDownPayment
+      }&emiCycle=${emiCycle}`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setLineItemDetail((prev) => ({
+        ...prev,
+        installmentAmount: res?.data?.installmentAmount,
+        payableAmount: res?.data?.netPayableAmount,
+      }));
+    }
+  };
+  useEffect(() => {
+    if (lineItemDetail?.actualDownPayment !== "" && emiCycle) {
+      fetchDownPaymentDetails();
+    }
+  }, [lineItemDetail?.actualDownPayment, emiCycle]);
+  const actualDownPaymentHandle = (e) => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      actualDownPayment: e?.target?.value,
+    }));
+  };
   const submitHandle = () => {
-    setLineItems((prev) => [...prev, lineItemDetail]);
-    setOpen(false);
+    if (salesType === 5) {
+      if (
+        parseInt(lineItemDetail?.actualDownPayment) >=
+        parseInt(lineItemDetail?.downPayment)
+      ) {
+        setLineItems((prev) => [...prev, lineItemDetail]);
+        setOpen(false);
+      } else {
+        setNotificationMsg("Actual Down Payment is Less than Down Payment");
+        setSeverity("warning");
+        setShowNotification(true);
+      }
+    } else {
+      setLineItems((prev) => [...prev, lineItemDetail]);
+      setOpen(false);
+    }
   };
   return (
     <>
@@ -346,6 +458,14 @@ const AddLineItem = ({
               >
                 <Typography variant="subtitle1">Add Line Item</Typography>
               </Grid>
+              {salesType === 5 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    Actual Down Payment should be equal to or greater than
+                    Minimum Down Payment!
+                  </Alert>
+                </Grid>
+              )}
               <Grid
                 container
                 spacing={1}
@@ -372,6 +492,7 @@ const AddLineItem = ({
                         label: item?.id,
                       }))}
                       onChange={subInventoryHandle}
+                      value={lineItemDetail?.subInventoryId}
                       renderInput={(params) => (
                         <TextField {...params} label="Sub-Inventory" />
                       )}
@@ -396,6 +517,7 @@ const AddLineItem = ({
                         label: item?.name,
                       }))}
                       onChange={locatorHandle}
+                      value={lineItemDetail?.locatorId}
                       renderInput={(params) => (
                         <TextField {...params} label="Locator" />
                       )}
@@ -460,14 +582,35 @@ const AddLineItem = ({
                     onChange={priceLocatorHandle}
                   />
                 </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="dis_percentage"
-                    label="Disc/Comm %"
-                    disabled
-                    value={lineItemDetail?.discPercentage}
-                  />
-                </Grid>
+                {salesType === 5 ? (
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <InputLabel id="down-payment-status-select-label">
+                        Down Payment Status
+                      </InputLabel>
+                      <Select
+                        labelId="down-payment-status-select-label"
+                        id="down-payment-status-select"
+                        label="Down Payment Status"
+                        onChange={(e) => setDownPaymentStatus(e?.target?.value)}
+                        value={downPaymentStatus}
+                        disabled
+                      >
+                        <MenuItem value="Yes">Yes</MenuItem>
+                        <MenuItem value="No">No</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                ) : (
+                  <Grid item xs={3}>
+                    <TextField
+                      id="dis_percentage"
+                      label="Disc/Comm %"
+                      disabled
+                      value={lineItemDetail?.discPercentage}
+                    />
+                  </Grid>
+                )}
               </Grid>
               <Grid container spacing={1} paddingY={1} paddingX={2}>
                 <Grid item xs={3}>
@@ -494,14 +637,38 @@ const AddLineItem = ({
                     value={lineItemDetail?.mrp}
                   />
                 </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="disc_amt"
-                    label="Disc/Comm Amount"
-                    disabled
-                    value={lineItemDetail?.discountedAmount}
-                  />
-                </Grid>
+                {salesType === 5 && downPaymentStatus === "No" && (
+                  <Grid item xs={3}>
+                    <TextField
+                      id="installment_amount"
+                      label="Installment Amount"
+                      disabled
+                      value={lineItemDetail?.installmentAmount}
+                    />
+                  </Grid>
+                )}
+                {salesType !== 5 ? (
+                  <Grid item xs={3}>
+                    <TextField
+                      id="disc_amt"
+                      label="Disc/Comm Amount"
+                      disabled
+                      value={lineItemDetail?.discountedAmount}
+                    />
+                  </Grid>
+                ) : null}
+                {salesType === 5 && downPaymentStatus === "Yes" && (
+                  <>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="minium_down_payment"
+                        label="Minimum Down Payment"
+                        disabled
+                        value={lineItemDetail?.downPayment}
+                      />
+                    </Grid>
+                  </>
+                )}
               </Grid>
               <Grid container spacing={1} paddingY={1} paddingX={2}>
                 <Grid item xs={3}>
@@ -579,10 +746,10 @@ const AddLineItem = ({
               >
                 <Grid item xs={3}>
                   <TextField
-                    id="line_item_amount"
+                    id="selling_price"
                     label="Line Item Amount"
                     disabled
-                    value={lineItemDetail?.lineItemAmt}
+                    value={lineItemDetail?.sellingPrice}
                   />
                 </Grid>
               </Grid>
@@ -617,7 +784,7 @@ const AddLineItem = ({
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
