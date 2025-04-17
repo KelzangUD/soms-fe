@@ -81,6 +81,7 @@ const SalesOrder = () => {
     amount: "",
     item_Number: "",
     interest: "",
+    customerTypeId: "",
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0.0,
@@ -89,6 +90,7 @@ const SalesOrder = () => {
     advanceTaxAmount: 0.0,
     tdsAmount: 0.0,
     netAmount: 0.0,
+    downPayment: 0.0,
   });
   const [paymentLines, setPaymentLines] = useState([]);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
@@ -131,6 +133,19 @@ const SalesOrder = () => {
     priceLocatorDTOs: "",
     pricedIdForVarientCode: "",
   });
+  const [emiDuration, setEmiDuration] = useState({
+    emiCycle: null,
+    emiNo: null,
+    item_Number: null,
+    amount: null,
+    interest: null,
+    status: null,
+    fromDate: dateFormatter(new Date()),
+    toDate: "",
+    emiEligibleStatus: null,
+    emiCustomerType: null,
+  });
+  const [downPaymentStatus, setDownPaymentStatus] = useState("Yes");
 
   const fetchCustomersList = async () => {
     const res = await Route(
@@ -141,10 +156,25 @@ const SalesOrder = () => {
       null
     );
     if (res?.status === 200) {
-      setCustomersList(res?.data);
+      if (res?.data?.length === 0) {
+        setNotificationMsg("Customers Not Found");
+        setSeverity("info");
+        setShowNotification(true);
+      } else {
+        setCustomersList(res?.data);
+      }
     }
   };
   const fetchCustomersDetails = async (customerID) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      mobileNo: "",
+      customerNumber: "",
+      address: "",
+      address1: "",
+      city: "",
+      customerTypeId: "",
+    }));
     const res = await Route(
       "GET",
       `/Customer/Common/Fetch_Customer_Dtls?customerId=${customerID}`,
@@ -160,6 +190,7 @@ const SalesOrder = () => {
         address: res?.data?.address1,
         address1: res?.data?.address2,
         city: res?.data?.city,
+        customerTypeId: res?.data?.customerTypeId,
       }));
     }
   };
@@ -217,7 +248,7 @@ const SalesOrder = () => {
       }));
     }
   };
-  const fetcEMIDetails = async (emiNo) => {
+  const fetchEMIDetails = async (emiNo) => {
     const res = await Route(
       "GET",
       `/SalesOrder/GetEMIDetails?emiNo=${emiNo}`,
@@ -320,9 +351,12 @@ const SalesOrder = () => {
   useEffect(() => {
     setPaymentLinesItem((prev) => ({
       ...prev,
-      paymentAmount: linesAmount?.netAmount,
+      paymentAmount:
+        salesOrderDetails?.salesType === 5
+          ? linesAmount?.actualDownPayment
+          : linesAmount?.netAmount,
     }));
-  }, [linesAmount?.netAmount]);
+  }, [linesAmount]);
   const salesTypeHandle = (e) => {
     resetStateHandle();
     setSalesOrderDetails((prev) => ({
@@ -330,6 +364,11 @@ const SalesOrder = () => {
       salesType: parseInt(e?.target?.value),
     }));
     e?.target?.value === "2" ? setBulkUpload(true) : setBulkUpload(false);
+    (e?.target?.value === "5" || e?.target?.value === "6") &&
+      setSalesOrderDetails((prev) => ({
+        ...prev,
+        productType: parseInt(3),
+      }));
   };
   const productsTypeHandle = (e) => {
     setSalesOrderDetails((prev) => ({
@@ -355,13 +394,55 @@ const SalesOrder = () => {
     }));
   };
   const advanceNoHandle = (e, value) => {
-    fetcEMIDetails(value?.id.replaceAll("|", "%7C"));
+    fetchEMIDetails(value?.id.replaceAll("|", "%7C"));
     setSalesOrderDetails((prev) => ({
       ...prev,
       advance_no: value?.id.replaceAll("|", "%7C"),
       advanceNo: value?.id,
     }));
   };
+
+  const fetchEMIEndDate = async () => {
+    const res = await Route(
+      "GET",
+      `/emi/getEMI_EndDate?fromDate=${dateFormatter(
+        emiDuration?.fromDate
+      )}&emiCycle=${emiDuration?.emiCycle}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      if (res?.data?.emiEligibleStatus === "0") {
+        setEmiDuration((prev) => ({
+          ...prev,
+          toDate: res?.data?.toDate,
+          emiEligibleStatus: res?.data?.emiEligibleStatus,
+        }));
+      } else {
+        setNotificationMsg("EMI Not Eligible!");
+        setSeverity("warning");
+        setShowNotification(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    emiDuration?.emiCycle !== null && fetchEMIEndDate();
+  }, [emiDuration?.emiCycle, emiDuration?.fromDate]);
+  const emiCycleHandle = (e) => {
+    setEmiDuration((prev) => ({
+      ...prev,
+      emiCycle: e?.target?.value,
+    }));
+  };
+  const emiFromDateHandle = (e) => {
+    setEmiDuration((prev) => ({
+      ...prev,
+      fromDate: dateFormatter(e?.$d),
+    }));
+  };
+
   const remarksHandle = (e) => {
     setSalesOrderDetails((prev) => ({
       ...prev,
@@ -470,6 +551,10 @@ const SalesOrder = () => {
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
         accumulator.netAmount += currentObject?.lineItemAmt || 0;
+        accumulator.downPayment +=
+          parseInt(currentObject?.downPayment) || 0;
+        accumulator.actualDownPayment +=
+          parseInt(currentObject?.actualDownPayment) || 0;
         return accumulator;
       },
       {
@@ -479,6 +564,8 @@ const SalesOrder = () => {
         advanceTaxAmount: 0,
         tdsAmount: 0,
         netAmount: 0,
+        downPayment: 0,
+        actualDownPayment: 0,
       }
     );
     setLinesAmount((prev) => ({
@@ -509,6 +596,7 @@ const SalesOrder = () => {
       item_Number: "",
       interest: "",
       amount: "",
+      customerTypeId: "",
     }));
     setPaymentLines([]);
     setPaymentLinesItem((prev) => ({
@@ -546,18 +634,49 @@ const SalesOrder = () => {
       priceLocatorDTOs: "",
       pricedIdForVarientCode: "",
     }));
+    setEmiDuration((prev) => ({
+      ...prev,
+      emiCycle: null,
+      emiNo: null,
+      item_Number: null,
+      amount: null,
+      interest: null,
+      status: null,
+      fromDate: dateFormatter(new Date()),
+      toDate: "",
+      emiEligibleStatus: null,
+      emiCustomerType: null,
+    }));
+  };
+  const validatePayment = () => {
+    if (!salesOrderDetails) return false;
+    let expectedAmount = 0;
+    let message = "";
+    if (salesOrderDetails.salesType !== 5) {
+      expectedAmount = parseInt(linesAmount?.netAmount) || 0;
+      message = "Total Payment is Not equal to Net Payment!";
+    } else {
+      expectedAmount = parseInt(linesAmount?.actualDownPayment) || 0;
+      message = "Total Payment is Not equal to Actual Payment!";
+    }
+    const totalPayment = paymentLines?.length
+      ? paymentLines.reduce(
+          (accumulator, currentObject) =>
+            accumulator + (parseInt(currentObject?.paymentAmount) || 0),
+          0
+        )
+      : 0;
+    if (expectedAmount !== totalPayment) {
+      setNotificationMsg(message);
+      setSeverity("info");
+      setShowNotification(true);
+      return false;
+    }
+    return true;
   };
 
   const postHandle = async () => {
-    if (
-      parseInt(linesAmount?.netAmount) ===
-      (paymentLines?.length > 0 &&
-        paymentLines?.reduce(
-          (accumulator, currentObject) =>
-            accumulator + parseInt(currentObject?.paymentAmount),
-          0
-        ))
-    ) {
+    if (validatePayment()) {
       setIsLoading(true);
       try {
         let formData = new FormData();
@@ -581,7 +700,22 @@ const SalesOrder = () => {
             additionalDiscount: 0,
             lotOfSaleDiscount: 0,
             tdsAmount: linesAmount?.tdsAmount,
-            netAmount: linesAmount?.netAmount,
+            netAmount:
+              salesOrderDetails.salesType !== 5
+                ? linesAmount?.netAmount
+                : linesAmount?.actualDownPayment,
+          },
+          emiInstallmentDetails: {
+            fromDate: emiDuration?.fromDate,
+            toDate: emiDuration?.toDate,
+            emiDuration: parseInt(emiDuration?.emiCycle),
+            downPayment: linesAmount?.downPayment,
+            interestRate: parseFloat(lineItems[0]?.emiInterestRate).toFixed(2),
+            payableAmount: parseFloat(lineItems[0]?.payableAmount).toFixed(2),
+            installmentAmount: parseFloat(
+              lineItems[0]?.installmentAmount
+            ).toFixed(2),
+            downPaymentStatus: downPaymentStatus,
           },
           userId: user,
         };
@@ -620,41 +754,13 @@ const SalesOrder = () => {
         setIsLoading(false);
       }
     } else {
-      setNotificationMsg("Total Payment is Not equal to Net Payment");
+      setNotificationMsg("Total Payment is Not equal to Net Payment!");
       setSeverity("info");
       setShowNotification(true);
     }
   };
 
   const openInNewTab = () => {
-    // const queryParams = new URLSearchParams();
-    // queryParams.append("advance", responseData?.advance);
-    // queryParams.append("amount", responseData?.amount);
-    // queryParams.append("applicationNo", responseData?.applicationNo);
-    // queryParams.append("billing", responseData?.billing);
-    // queryParams.append("companyName", responseData?.companyName);
-    // queryParams.append("createdBy", responseData?.createdBy);
-    // queryParams.append("customerName", responseData?.customerName);
-    // queryParams.append("customerNo", responseData?.customerNo);
-    // queryParams.append("discount", responseData?.discount);
-    // queryParams.append("downPayment", responseData?.downPayment);
-    // queryParams.append("grossTotal", responseData?.grossTotal);
-    // queryParams.append("paymentDate", responseData?.paymentDate);
-    // queryParams.append("phone", responseData?.phone);
-    // queryParams.append("receiptType", responseData?.receiptType);
-    // queryParams.append("rechargeDate", responseData?.rechargeDate);
-    // queryParams.append("tax", responseData?.tax);
-    // queryParams.append("totalAmount", responseData?.totalAmount);
-    // responseData?.itemDetails.forEach((item) =>
-    //   queryParams.append("itemDetails", JSON.stringify(item))
-    // );
-    // const queryString = queryParams.toString();
-    // const newWindow = window.open(
-    //   `/sales-order-receipt?${queryString}`,
-    //   "_blank",
-    //   "noopener,noreferrer"
-    // );
-    // if (newWindow) newWindow.opener = null;
     // Store full data in localStorage
     localStorage.setItem("salesOrderData", JSON.stringify(responseData));
     const queryParams = new URLSearchParams();
@@ -751,6 +857,7 @@ const SalesOrder = () => {
                             address: "",
                             address1: "",
                             city: "",
+                            customerTypeId: "",
                           }));
                         } else {
                           customerNameHandle(event, newValue);
@@ -892,11 +999,74 @@ const SalesOrder = () => {
                       </Grid>
                     </>
                   )}
+                  {salesOrderDetails?.salesType === 5 && (
+                    <>
+                      <Grid
+                        item
+                        xs={3}
+                        sx={{
+                          mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
+                        }}
+                      >
+                        <FormControl>
+                          <InputLabel id="advance-emi-select-label">
+                            EMI Cycle
+                          </InputLabel>
+                          <Select
+                            labelId="advance-emi-select-label"
+                            id="advance-emi-select"
+                            value={emiDuration?.emiCycle}
+                            label="Advance/EMI"
+                            onChange={emiCycleHandle}
+                          >
+                            <MenuItem value="6">6 Months</MenuItem>
+                            <MenuItem value="12">12 Months</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <FormControl>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              label="EMI From Date"
+                              value={dayjs(emiDuration?.fromDate)}
+                              onChange={emiFromDateHandle}
+                            />
+                          </LocalizationProvider>
+                        </FormControl>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={3}
+                        sx={{
+                          mt:
+                            salesOrderDetails?.salesType === 4 ||
+                            salesOrderDetails?.salesType === 5
+                              ? 1
+                              : 0,
+                        }}
+                      >
+                        <FormControl>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              label="EMI To Date"
+                              value={dayjs(emiDuration?.toDate)}
+                              disabled
+                            />
+                          </LocalizationProvider>
+                        </FormControl>
+                      </Grid>
+                    </>
+                  )}
                   <Grid
                     item
                     xs={6}
                     sx={{
-                      mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
+                      mt:
+                        salesOrderDetails?.salesType === 4 ||
+                        salesOrderDetails?.salesType === 5
+                          ? 1
+                          : 0,
                     }}
                   >
                     <TextField
@@ -1110,14 +1280,17 @@ const SalesOrder = () => {
           </Grid>
         </Grid>
       </Box>
-      {showNotification && (severity === "error" || severity === "info") && (
-        <Notification
-          open={showNotification}
-          setOpen={setShowNotification}
-          message={notificationMsg}
-          severity={severity}
-        />
-      )}
+      {showNotification &&
+        (severity === "error" ||
+          severity === "info" ||
+          severity === "warning") && (
+          <Notification
+            open={showNotification}
+            setOpen={setShowNotification}
+            message={notificationMsg}
+            severity={severity}
+          />
+        )}
       {openDialog && (
         <AddLineItem
           open={openDialog}
@@ -1130,6 +1303,10 @@ const SalesOrder = () => {
           itemNo={salesOrderDetails?.item_Number}
           lineItemDetails={lineItemDetail}
           adj_type={salesOrderDetails?.adj_type}
+          user={user}
+          emiCycle={emiDuration?.emiCycle}
+          downPaymentStatus={downPaymentStatus}
+          setDownPaymentStatus={setDownPaymentStatus}
         />
       )}
       {edit && (
@@ -1144,6 +1321,9 @@ const SalesOrder = () => {
           editDetails={editDetails}
           lineItems={lineItems}
           editLineItemIndex={editLineItemIndex}
+          emiCycle={emiDuration?.emiCycle}
+          downPaymentStatus={downPaymentStatus}
+          setDownPaymentStatus={setDownPaymentStatus}
         />
       )}
       {isLoading && <LoaderDialog open={isLoading} />}

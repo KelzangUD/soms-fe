@@ -9,7 +9,7 @@ import { CustomDataTable } from "../../component/common/index";
 const RequisitionList = () => {
   const access_token = localStorage.getItem("access_token");
   const empId = localStorage.getItem("username");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [requisitionList, setRequisitionList] = useState([]);
@@ -35,18 +35,18 @@ const RequisitionList = () => {
       } else {
         setNotificationMsg(res?.response?.data?.message);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const requisiton_list_columns = [
+  const requisition_list_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "requisitionNo", headerName: "Requisition No", flex: 2 },
     {
@@ -98,7 +98,7 @@ const RequisitionList = () => {
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -120,14 +120,14 @@ const RequisitionList = () => {
               ...row,
               sl: index + 1,
             }))}
-            cols={requisiton_list_columns}
+            cols={requisition_list_columns}
           />
         </Grid>
       </Grid>
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
