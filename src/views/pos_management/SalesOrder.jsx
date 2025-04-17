@@ -541,7 +541,6 @@ const SalesOrder = () => {
     );
   };
   useEffect(() => {
-    console.log(lineItems);
     const totals = lineItems?.reduce(
       (accumulator, currentObject) => {
         accumulator.grossTotal +=
@@ -575,6 +574,7 @@ const SalesOrder = () => {
   }, [lineItems]);
 
   const resetStateHandle = () => {
+  setCustomersList([]);
     setSalesOrderDetails((prev) => ({
       ...prev,
       postingDate: dateFormatter(dayjs(new Date())),

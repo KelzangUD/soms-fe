@@ -780,31 +780,90 @@ const AddLineItem = ({
                     value={lineItemDetail?.additionalDiscount}
                   />
                 </Grid>
-
-                <Grid
-                  item
-                  xs={12}
-                  alignItems="right"
-                  paddingY={1}
-                  paddingX={2}
-                  marginBottom={1}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Button
-                    variant="contained"
-                    onClick={submitHandle}
-                    sx={{ mr: 2 }}
-                  >
-                    Submit
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => setOpen(false)}
-                    color="error"
-                  >
-                    Close
-                  </Button>
+                <Grid item xs={3}>
+                  <TextField
+                    id="tax_amount"
+                    label="Tax Amount"
+                    disabled
+                    value={lineItemDetail?.additionalDiscount}
+                  />
                 </Grid>
+              </Grid>
+              <Grid container spacing={1} paddingY={1} paddingX={2}>
+                <Grid item xs={3}>
+                  <TextField
+                    id="amount_excl_tax"
+                    label="Amount Excl. Tax"
+                    disabled
+                    value={lineItemDetail?.taxPercentage}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    id="advance_tax_amount"
+                    label="Advance Tax Amount"
+                    value={lineItemDetail?.sellingPrice}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    id="vol_dis"
+                    label="Volume Discount"
+                    disabled
+                    value={lineItemDetail?.additionalDiscount}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    id="item_total_added_qty"
+                    label="Item Total Added Qty"
+                    disabled
+                    value={lineItemDetail?.additionalDiscount}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                spacing={1}
+                paddingY={1}
+                paddingX={2}
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Grid item xs={3}>
+                  <TextField
+                    id="line_item_amt"
+                    label="Line Item Amount"
+                    disabled
+                    value={lineItemDetail?.additionalDiscount}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                alignItems="right"
+                paddingY={1}
+                paddingX={2}
+                marginBottom={1}
+                sx={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={submitHandle}
+                  sx={{ mr: 2 }}
+                >
+                  Submit
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => setOpen(false)}
+                  color="error"
+                >
+                  Close
+                </Button>
               </Grid>
             </Grid>
           </Grid>

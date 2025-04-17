@@ -18,9 +18,6 @@ const LineItemsTable = ({
   editLineItemHandle,
   linesAmount,
 }) => {
-  React.useEffect(() => {
-    console.log(linesAmount);
-  },[]);
   return (
     <>
       <TableContainer>
