@@ -84,12 +84,13 @@ const SalesOrder = () => {
     customerTypeId: "",
   });
   const [linesAmount, setLinesAmount] = useState({
-    grossTotal: 0.00,
-    taxAmt: 0.00,
-    discountedAmount: 0.00,
-    advanceTaxAmount: 0.00,
-    tdsAmount: 0.00,
-    netAmount: 0.00,
+    grossTotal: 0.0,
+    taxAmt: 0.0,
+    discountedAmount: 0.0,
+    advanceTaxAmount: 0.0,
+    tdsAmount: 0.0,
+    netAmount: 0.0,
+    downPayment: 0.0,
   });
   const [paymentLines, setPaymentLines] = useState([]);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
@@ -549,7 +550,11 @@ const SalesOrder = () => {
         accumulator.discountedAmount += currentObject?.discountedAmount || 0;
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
-        accumulator.netAmount += currentObject?.sellingPrice || 0;
+        accumulator.netAmount += currentObject?.lineItemAmt || 0;
+        accumulator.downPayment +=
+          parseInt(currentObject?.downPayment) || 0;
+        accumulator.actualDownPayment +=
+          parseInt(currentObject?.actualDownPayment) || 0;
         return accumulator;
       },
       {
