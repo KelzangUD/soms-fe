@@ -18,6 +18,9 @@ const LineItemsTable = ({
   editLineItemHandle,
   linesAmount,
 }) => {
+  React.useEffect(() => {
+    console.log(linesAmount);
+  },[]);
   return (
     <>
       <TableContainer>
@@ -63,7 +66,7 @@ const LineItemsTable = ({
                   <TableCell align="right">{item?.tdsAmount}</TableCell>
                   <TableCell align="right">{item?.advanceTaxAmount}</TableCell>
                   <TableCell align="right">{item?.discountedAmount}</TableCell>
-                  <TableCell align="right">{item?.sellingPrice}</TableCell>
+                  <TableCell align="right">{item?.lineItemAmt}</TableCell>
                   <TableCell align="right">
                     <ButtonGroup variant="text" aria-label="Basic button group">
                       <IconButton

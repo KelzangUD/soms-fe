@@ -83,12 +83,12 @@ const SalesOrder = () => {
     interest: "",
   });
   const [linesAmount, setLinesAmount] = useState({
-    grossTotal: 0.00,
-    taxAmt: 0.00,
-    discountedAmount: 0.00,
-    advanceTaxAmount: 0.00,
-    tdsAmount: 0.00,
-    netAmount: 0.00,
+    grossTotal: 0.0,
+    taxAmt: 0.0,
+    discountedAmount: 0.0,
+    advanceTaxAmount: 0.0,
+    tdsAmount: 0.0,
+    netAmount: 0.0,
   });
   const [paymentLines, setPaymentLines] = useState([]);
   const [paymentLinesItem, setPaymentLinesItem] = useState({
@@ -346,7 +346,7 @@ const SalesOrder = () => {
   };
   const advanceOrEmiHandle = (e) => {
     if (e?.target?.value === "EMI") {
-      fetchEMIList(salesOrderDetails?.customerName.split("(")[1].split(")")[0]);
+      fetchEMIList(salesOrderDetails?.customerName?.split("")[1]?.split("")[0]);
     }
     setSalesOrderDetails((prev) => ({
       ...prev,
@@ -460,6 +460,7 @@ const SalesOrder = () => {
     );
   };
   useEffect(() => {
+    console.log(lineItems);
     const totals = lineItems?.reduce(
       (accumulator, currentObject) => {
         accumulator.grossTotal +=
@@ -468,7 +469,7 @@ const SalesOrder = () => {
         accumulator.discountedAmount += currentObject?.discountedAmount || 0;
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
-        accumulator.netAmount += currentObject?.sellingPrice || 0;
+        accumulator.netAmount += currentObject?.lineItemAmt || 0;
         return accumulator;
       },
       {
