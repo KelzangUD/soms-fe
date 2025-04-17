@@ -14,7 +14,7 @@ const PostedSalesReceipt = () => {
   }
   return (
     <>
-      <div style={{ width: "320px", padding: "0", lineHeight: "1.7" }}>
+      <div style={{ width: "320px", padding: "0", lineHeight: "1.5" }}>
         <div style={{ textAlign: "center" }}>
           <h3>{salesOrderData?.companyName}</h3>
           <p>{salesOrderData?.customerName}</p>
