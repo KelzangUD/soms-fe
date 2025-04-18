@@ -208,7 +208,7 @@ const AddLineItem = ({
                 ? 0
                 : parseInt(res?.data?.downPayment).toFixed(2),
             actualDownPayment:
-              res?.data?.actualDownPayment === null
+              res?.data?.downPayment === null
                 ? 0
                 : parseInt(res?.data?.downPayment).toFixed(2),
             payableAmount: res?.data?.payableAmount,
