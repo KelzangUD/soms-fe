@@ -359,9 +359,10 @@ const AddLineItem = ({
           lineItemDetails?.downPayment === null
             ? 0
             : parseInt(lineItemDetails?.downPayment).toFixed(2),
-        actualDownPayment: lineItemDetails?.downPayment
-          ? 0
-          : parseInt(lineItemDetails?.downPayment).toFixed(2),
+        actualDownPayment:
+          lineItemDetails?.downPayment === null
+            ? 0
+            : parseInt(lineItemDetails?.downPayment).toFixed(2),
         payableAmount: lineItemDetails?.payableAmount,
         installmentAmount: lineItemDetails?.installmentAmount,
         downPaymentIR: lineItemDetails?.downPaymentIR,

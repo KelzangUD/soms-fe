@@ -550,8 +550,7 @@ const SalesOrder = () => {
         accumulator.advanceTaxAmount += currentObject?.advanceTaxAmount || 0;
         accumulator.tdsAmount += currentObject?.tdsAmount || 0;
         accumulator.netAmount += currentObject?.lineItemAmt || 0;
-        accumulator.downPayment +=
-          parseInt(currentObject?.downPayment) || 0;
+        accumulator.downPayment += parseInt(currentObject?.downPayment) || 0;
         accumulator.actualDownPayment +=
           parseInt(currentObject?.actualDownPayment) || 0;
         return accumulator;
@@ -574,7 +573,7 @@ const SalesOrder = () => {
   }, [lineItems]);
 
   const resetStateHandle = () => {
-  setCustomersList([]);
+    setCustomersList([]);
     setSalesOrderDetails((prev) => ({
       ...prev,
       postingDate: dateFormatter(dayjs(new Date())),
@@ -708,17 +707,28 @@ const SalesOrder = () => {
           emiInstallmentDetails: {
             fromDate: emiDuration?.fromDate,
             toDate: emiDuration?.toDate,
-            emiDuration: parseInt(emiDuration?.emiCycle),
+            emiDuration:
+              emiDuration?.emiCycle === null
+                ? 0
+                : parseInt(emiDuration?.emiCycle),
             downPayment: linesAmount?.downPayment,
-            interestRate: parseFloat(lineItems[0]?.emiInterestRate).toFixed(2),
-            payableAmount: parseFloat(lineItems[0]?.payableAmount).toFixed(2),
-            installmentAmount: parseFloat(
-              lineItems[0]?.installmentAmount
-            ).toFixed(2),
+            interestRate:
+              lineItems[0]?.emiInterestRate === null
+                ? 0
+                : parseFloat(lineItems[0]?.emiInterestRate).toFixed(2),
+            payableAmount:
+              lineItems[0]?.payableAmount === null
+                ? 0
+                : parseFloat(lineItems[0]?.payableAmount).toFixed(2),
+            installmentAmount:
+              lineItems[0]?.installmentAmount === null
+                ? 0
+                : parseFloat(lineItems[0]?.installmentAmount).toFixed(2),
             downPaymentStatus: downPaymentStatus,
           },
           userId: user,
         };
+
         const jsonDataBlob = new Blob([JSON.stringify(data)], {
           type: "application/json",
         });
