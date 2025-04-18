@@ -62,16 +62,6 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
   };
 
   const paymentHandle = async () => {
-    const data = {
-      installment_ID: emiPaymentDetails?.installment_ID,
-      emiMonthCount: emiPaymentDetails?.emiMonthCount,
-      paymentStatus: emiPaymentDetails?.paymentStatus,
-      updatedBy: emiPaymentDetails?.updatedBy,
-      paymentLinesDtls: paymentLines?.map((item) => ({
-        ...item,
-        installmentAmountPaid: item?.paymentAmount,
-      })),
-    };
     const totalAmount = paymentLines?.reduce(
       (accumulator, currentObject) => {
         accumulator.paymentAmount +=
@@ -94,6 +84,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
         emiMonthCount: emiPaymentDetails?.emiMonthCount,
         paymentStatus: emiPaymentDetails?.paymentStatus,
         updatedBy: emiPaymentDetails?.updatedBy,
+        payableAmount: emiPaymentDetails?.payableAmount,
         paymentLinesDtls: paymentLines?.map((item) => ({
           ...item,
           installmentAmountPaid: item?.paymentAmount,
