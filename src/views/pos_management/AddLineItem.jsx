@@ -133,29 +133,6 @@ const AddLineItem = ({
         null
       );
       if (res?.status === 200 && res?.data?.available === "Y") {
-        setLineItemDetail((prev) => ({
-          ...prev,
-          priceLocator: res?.data?.priceLocator,
-          mrp: res?.data?.mrp,
-          discPercentage: res?.data?.discPercentage,
-          tdsAmount: res?.data?.tds_Amount,
-          discountedAmount: res?.data?.discountAmt,
-          sellingPrice: res?.data?.sellingPrice,
-          taxPercentage: parseInt(res?.data?.taxPercentage),
-          additionalDiscount: parseInt(res?.data?.additionalDiscount),
-          amountExclTax: res?.data?.amountExclTax,
-          advanceTaxAmount: res?.data?.advanceTaxAmount,
-          volumeDiscount: res?.data?.volumeDiscount,
-          itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-          lineItemAmt: res?.data?.sellingPrice,
-          available: res?.data?.available,
-          serialNoStatus: res?.data?.serialNoStatus,
-          taxAmt: res?.data?.taxAmount,
-          priceLocatorDTOs: res?.data?.priceLocatorDTOs,
-          description: res?.data?.description,
-          itemNo: res?.data?.itemNo,
-          pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
-        }));
         if (salesType === 5 && res?.data?.mrp < 50000) {
           setLineItemDetail((prev) => ({
             ...prev,
@@ -203,7 +180,7 @@ const AddLineItem = ({
             priceLocator: res?.data?.priceLocator,
             mrp: res?.data?.mrp,
             discPercentage: res?.data?.discPercentage,
-            tdsAmount: parseInt(res?.data?.tdsAmount),
+            tdsAmount: res?.data?.tds_Amount,
             discountedAmount: res?.data?.discountAmt,
             sellingPrice: res?.data?.sellingPrice,
             taxPercentage:
@@ -280,7 +257,7 @@ const AddLineItem = ({
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-        lineItemAmt: res?.data?.lineItemAmt,
+        lineItemAmt: res?.data?.sellingPrice,
         available: res?.data?.available,
         serialNoStatus: res?.data?.serialNoStatus,
         taxAmt: res?.data?.taxAmount,
@@ -325,7 +302,6 @@ const AddLineItem = ({
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
-        lineItemAmt: res?.data?.lineItemAmt,
         downPayment: parseInt(res?.data?.downPayment).toFixed(2),
         actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
         payableAmount: res?.data?.payableAmount,
@@ -343,7 +319,7 @@ const AddLineItem = ({
         imeiNo: lineItemDetails?.imeiNo,
         priceLocator: lineItemDetails?.priceLocator,
         discPercentage: lineItemDetails?.discPercentage,
-        tdsAmount: lineItemDetails?.tdsAmount,
+        tdsAmount: lineItemDetails?.tds_Amount,
         mrp: lineItemDetails?.mrp,
         discountedAmount: lineItemDetails?.discountedAmount,
         sellingPrice: lineItemDetails?.sellingPrice,
@@ -755,92 +731,130 @@ const AddLineItem = ({
                   </>
                 )}
               </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
-                <Grid item xs={3}>
-                  <TextField
-                    id="tax_per"
-                    label="Tax %"
-                    disabled
-                    value={lineItemDetail?.taxPercentage}
-                  />
+              {salesType !== 5 ? (
+                <Grid container spacing={1} paddingY={1} paddingX={2}>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="tax_per"
+                      label="Tax %"
+                      disabled
+                      value={lineItemDetail?.taxPercentage}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="selling_price"
+                      label="Selling Price"
+                      disabled
+                      value={lineItemDetail?.sellingPrice}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="add_disc"
+                      label="Additional Disc"
+                      disabled
+                      value={lineItemDetail?.additionalDiscount}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="tax_amt"
+                      label="Tax Amount"
+                      disabled
+                      value={lineItemDetail?.taxAmt}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="selling_price"
-                    label="Selling Price"
-                    disabled
-                    value={lineItemDetail?.sellingPrice}
-                  />
+              ) : null}
+              {salesType !== 5 ? (
+                <Grid container spacing={1} paddingY={1} paddingX={2}>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="amt_excel_tax"
+                      label="Amount Excl. Tax"
+                      disabled
+                      value={lineItemDetail?.amountExclTax}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="adv_tax"
+                      label="Advance Tax Amount"
+                      value={lineItemDetail?.advanceTaxAmount}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="vol_disc"
+                      label="Volume Discount"
+                      disabled
+                      value={lineItemDetail?.volumeDiscount}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="item_total_added_qty"
+                      label="Item Total Added Qty"
+                      disabled
+                      value={lineItemDetail?.itemTotalAddedQty}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="add_disc"
-                    label="Additional Disc"
-                    disabled
-                    value={lineItemDetail?.additionalDiscount}
-                  />
+              ) : null}
+              {salesType === 5 ? (
+                <>
+                  <Grid container spacing={1} paddingY={1} paddingX={2}>
+                    {downPaymentStatus === "Yes" && (
+                      <>
+                        <Grid item xs={3}>
+                          <TextField
+                            id="actual_down_payment"
+                            label="Actual Down Payment"
+                            onChange={actualDownPaymentHandle}
+                            value={lineItemDetail?.actualDownPayment}
+                          />
+                        </Grid>
+                        <Grid item xs={3}>
+                          <TextField
+                            id="payable_amount"
+                            label="Payable Amount"
+                            disabled
+                            value={lineItemDetail?.payableAmount}
+                          />
+                        </Grid>
+                        <Grid item xs={3}>
+                          <TextField
+                            id="installment_amount"
+                            label="Installment Amount"
+                            disabled
+                            value={lineItemDetail?.installmentAmount}
+                          />
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
+                </>
+              ) : null}
+              {salesType !== 5 ? (
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={1}
+                  paddingX={2}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <Grid item xs={3}>
+                    <TextField
+                      id="selling_price"
+                      label="Line Item Amount"
+                      disabled
+                      value={lineItemDetail?.lineItemAmt}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="tax_amount"
-                    label="Tax Amount"
-                    disabled
-                    value={lineItemDetail?.additionalDiscount}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
-                <Grid item xs={3}>
-                  <TextField
-                    id="amount_excl_tax"
-                    label="Amount Excl. Tax"
-                    disabled
-                    value={lineItemDetail?.taxPercentage}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="advance_tax_amount"
-                    label="Advance Tax Amount"
-                    value={lineItemDetail?.sellingPrice}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="vol_dis"
-                    label="Volume Discount"
-                    disabled
-                    value={lineItemDetail?.additionalDiscount}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="item_total_added_qty"
-                    label="Item Total Added Qty"
-                    disabled
-                    value={lineItemDetail?.additionalDiscount}
-                  />
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                spacing={1}
-                paddingY={1}
-                paddingX={2}
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Grid item xs={3}>
-                  <TextField
-                    id="line_item_amt"
-                    label="Line Item Amount"
-                    disabled
-                    value={lineItemDetail?.additionalDiscount}
-                  />
-                </Grid>
-              </Grid>
+              ) : null}
+
               <Grid
                 item
                 xs={12}
