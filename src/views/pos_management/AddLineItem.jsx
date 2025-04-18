@@ -75,8 +75,8 @@ const AddLineItem = ({
     pricedIdForVarientCode: "",
     volumeDiscount: "",
     priceLocatorDTOs: [],
-    downPayment: "",
-    actualDownPayment: "",
+    downPayment: 0,
+    actualDownPayment: 0,
     payableAmount: "",
     installmentAmount: "",
     downPaymentIR: "",
@@ -154,7 +154,7 @@ const AddLineItem = ({
             advanceTaxAmount: "",
             volumeDiscount: "",
             itemTotalAddedQty: "",
-            lineItemAmt: res?.data?.sellingPrice,
+            lineItemAmt: res?.data?.lineItemAmt,
             available: res?.data?.available,
             serialNoStatus: "",
             taxAmt: res?.data?.taxAmount,
@@ -162,8 +162,8 @@ const AddLineItem = ({
             description: res?.data?.description,
             itemNo: res?.data?.itemNo,
             pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
-            downPayment: "",
-            actualDownPayment: "",
+            downPayment: 0,
+            actualDownPayment: 0,
             payableAmount: "",
             installmentAmount: "",
             downPaymentIR: "",
@@ -195,7 +195,7 @@ const AddLineItem = ({
             advanceTaxAmount: res?.data?.advanceTaxAmount,
             volumeDiscount: res?.data?.volumeDiscount,
             itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-            lineItemAmt: res?.data?.sellingPrice,
+            lineItemAmt: res?.data?.lineItemAmt,
             available: res?.data?.available,
             serialNoStatus: res?.data?.serialNoStatus,
             taxAmt: res?.data?.taxAmount,
@@ -203,8 +203,14 @@ const AddLineItem = ({
             description: res?.data?.description,
             itemNo: res?.data?.itemNo,
             pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
-            downPayment: parseInt(res?.data?.downPayment).toFixed(2),
-            actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
+            downPayment:
+              res?.data?.downPayment === null
+                ? 0
+                : parseInt(res?.data?.downPayment).toFixed(2),
+            actualDownPayment:
+              res?.data?.actualDownPayment === null
+                ? 0
+                : parseInt(res?.data?.downPayment).toFixed(2),
             payableAmount: res?.data?.payableAmount,
             installmentAmount: res?.data?.installmentAmount,
             downPaymentIR: res?.data?.downPaymentIR,
@@ -257,14 +263,20 @@ const AddLineItem = ({
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
-        lineItemAmt: res?.data?.sellingPrice,
+        lineItemAmt: res?.data?.lineItemAmt,
         available: res?.data?.available,
         serialNoStatus: res?.data?.serialNoStatus,
         taxAmt: res?.data?.taxAmount,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
         pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
-        downPayment: parseInt(res?.data?.downPayment).toFixed(2),
-        actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        downPayment:
+          res?.data?.downPayment === null
+            ? 0
+            : parseInt(res?.data?.downPayment).toFixed(2),
+        actualDownPayment:
+          res?.data?.downPayment === null
+            ? 0
+            : parseInt(res?.data?.downPayment).toFixed(2),
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -302,8 +314,14 @@ const AddLineItem = ({
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
-        downPayment: parseInt(res?.data?.downPayment).toFixed(2),
-        actualDownPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        downPayment:
+          res?.data?.downPayment === null
+            ? 0
+            : parseInt(res?.data?.downPayment).toFixed(2),
+        actualDownPayment:
+          res?.data?.downPayment === null
+            ? 0
+            : parseInt(res?.data?.downPayment).toFixed(2),
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -337,8 +355,13 @@ const AddLineItem = ({
         base_amount_tds: lineItemDetails?.base_amount_tds,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
         volumeDiscount: lineItemDetails?.volumeDiscount,
-        downPayment: parseInt(lineItemDetails?.downPayment).toFixed(2),
-        actualDownPayment: parseInt(lineItemDetails?.downPayment).toFixed(2),
+        downPayment:
+          lineItemDetails?.downPayment === null
+            ? 0
+            : parseInt(lineItemDetails?.downPayment).toFixed(2),
+        actualDownPayment: lineItemDetails?.downPayment
+          ? 0
+          : parseInt(lineItemDetails?.downPayment).toFixed(2),
         payableAmount: lineItemDetails?.payableAmount,
         installmentAmount: lineItemDetails?.installmentAmount,
         downPaymentIR: lineItemDetails?.downPaymentIR,
