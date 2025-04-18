@@ -63,7 +63,7 @@ const LineItemsTable = ({
                   <TableCell align="right">{item?.tdsAmount}</TableCell>
                   <TableCell align="right">{item?.advanceTaxAmount}</TableCell>
                   <TableCell align="right">{item?.discountedAmount}</TableCell>
-                  <TableCell align="right">{item?.sellingPrice}</TableCell>
+                  <TableCell align="right">{item?.lineItemAmt}</TableCell>
                   <TableCell align="right">
                     <ButtonGroup variant="text" aria-label="Basic button group">
                       <IconButton
@@ -124,7 +124,7 @@ const LineItemsTable = ({
             <TableRow>
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Down Payment Amount</TableCell>
-              <TableCell align="right">0</TableCell>
+              <TableCell align="right">{linesAmount?.actualDownPayment}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />

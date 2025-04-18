@@ -67,7 +67,7 @@ const SalesReceipt = () => {
         </div>
         <div>
           <p>
-            Downpayment: {downPayment === "null" ? parseFloat(0).toFixed(2) : parseFloat(downPayment).toFixed(2)}
+            Down Payment: {downPayment === "null" ? parseFloat(0).toFixed(2) : parseFloat(downPayment).toFixed(2)}
           </p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />

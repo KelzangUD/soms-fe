@@ -27,7 +27,7 @@ const ViewRequisitionItemDetails = ({
       }))
     );
   }, [details]);
-  const requisiton_item_columns = [
+  const requisition_item_columns = [
     { field: "sl", headerName: "Sl. No", flex: 0.4 },
     { field: "item_Number", headerName: "Item Number", flex: 2 },
     {
@@ -111,7 +111,7 @@ const ViewRequisitionItemDetails = ({
                   ...row,
                   sl: index + 1,
                 }))}
-                columns={requisiton_item_columns}
+                columns={requisition_item_columns}
                 initialState={{
                   pagination: {
                     paginationModel: { page: 0, pageSize: 5 },

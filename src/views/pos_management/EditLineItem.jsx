@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Autocomplete,
   Box,
-  Grid,
   Button,
   Dialog,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -22,10 +27,13 @@ const EditLineItem = ({
   userDetails,
   editDetails,
   editLineItemIndex,
+  emiCycle,
+  downPaymentStatus,
+  setDownPaymentStatus,
 }) => {
   const { subInventory, locators, fetchLocators } = useCommon();
   const access_token = localStorage.getItem("access_token");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [desc, setDesc] = useState("");
@@ -66,6 +74,12 @@ const EditLineItem = ({
       editDetails?.priceLocatorDTOs !== null
         ? editDetails?.priceLocatorDTOs
         : [],
+    downPayment: parseInt(editDetails?.downPayment).toFixed(2),
+    actualDownPayment: editDetails?.actualDownPayment,
+    payableAmount: editDetails?.payableAmount,
+    installmentAmount: editDetails?.installmentAmount,
+    downPaymentIR: editDetails?.downPaymentIR,
+    emiInterestRate: editDetails?.emiInterestRate,
   });
   const fetchOnHandItems = async () => {
     const res = await Route(
@@ -88,7 +102,15 @@ const EditLineItem = ({
   const fetchItemDescriptionWithSerialNO = async () => {
     const res = await Route(
       "GET",
-      `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo=${lineItemDetail?.serialNo}&qty=${lineItemDetail?.qty}`,
+      `/SalesOrder/FetchBySerialNo?salesType=${salesType}&storeName=${storeName}&item=${
+        lineItemDetail?.itemNo
+      }&subInventory=${lineItemDetail?.subInventoryId}&locator=${
+        lineItemDetail?.locatorId
+      }&serialNo=${lineItemDetail?.serialNo}&qty=${
+        lineItemDetail?.qty
+      }&emiCycle=${
+        emiCycle === null ? 0 : emiCycle
+      }&downPaymentStatus=${downPaymentStatus}`,
       access_token,
       null,
       null
@@ -108,7 +130,7 @@ const EditLineItem = ({
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
-        itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
+        itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
         lineItemAmt: res?.data?.sellingPrice,
         available: res?.data?.available,
         serialNoStatus: res?.data?.serialNoStatus,
@@ -117,15 +139,20 @@ const EditLineItem = ({
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
         description: res?.data?.description,
         itemNo: res?.data?.itemNo,
+        downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        payableAmount: res?.data?.payableAmount,
+        installmentAmount: res?.data?.installmentAmount,
+        downPaymentIR: res?.data?.downPaymentIR,
+        emiInterestRate: res?.data?.emiInterestRate,
       }));
     } else if (res?.status === 200 && res?.data?.available === "N") {
-      setNotificationMsg("Item Not Avaliable");
+      setNotificationMsg("Item Not Available");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     } else {
       setNotificationMsg(res?.response?.data?.detail);
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   };
   const fetchItemDescriptionWithOutSerialNO = async () => {
@@ -158,6 +185,11 @@ const EditLineItem = ({
         taxAmt: res?.data?.taxAmount,
         priceLocator: res?.data?.priceLocator,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
+        downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        payableAmount: res?.data?.payableAmount,
+        installmentAmount: res?.data?.installmentAmount,
+        downPaymentIR: res?.data?.downPaymentIR,
+        emiInterestRate: res?.data?.emiInterestRate,
       }));
     }
   };
@@ -184,6 +216,11 @@ const EditLineItem = ({
         taxAmount: res?.data?.taxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotlaAddedQty: res?.data?.itemTotalAddedQty,
+        downPayment: parseInt(res?.data?.downPayment).toFixed(2),
+        payableAmount: res?.data?.payableAmount,
+        installmentAmount: res?.data?.installmentAmount,
+        downPaymentIR: res?.data?.downPaymentIR,
+        emiInterestRate: res?.data?.emiInterestRate,
       }));
     }
   };
@@ -219,7 +256,7 @@ const EditLineItem = ({
     if (lineItemDetail?.serialNo !== "" && lineItemDetail?.qty === "") {
       setNotificationMsg("Please enter quantity!");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   }, [lineItemDetail?.serialNo, lineItemDetail?.qty]);
   useEffect(() => {
@@ -265,13 +302,69 @@ const EditLineItem = ({
   const priceLocatorHandle = (e, value) => {
     setPricingID(value?.id);
   };
-  const submitHandle = () => {
-    setLineItems((prev) =>
-      prev.map((item, index) =>
-        index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
-      )
+  const fetchDownPaymentDetails = async () => {
+    const res = await Route(
+      "GET",
+      `/emi/getDownPaymentDetails?mrp=${lineItemDetail?.mrp}&minDownPayment=${
+        lineItemDetail?.downPayment === "NaN" ? 0 : lineItemDetail?.downPayment
+      }&actualDownPayment=${
+        lineItemDetail?.actualDownPayment === undefined
+          ? editDetails?.actualDownPayment
+          : lineItemDetail?.actualDownPayment
+      }&emiCycle=${emiCycle === null ? 0 : emiCycle}`,
+      access_token,
+      null,
+      null
     );
-    setOpen(false);
+    if (res?.status === 200) {
+      setLineItemDetail((prev) => ({
+        ...prev,
+        installmentAmount: res?.data?.installmentAmount,
+        payableAmount: res?.data?.netPayableAmount,
+        actualDownPayment: lineItemDetail?.actualDownPayment,
+      }));
+    }
+  };
+  useEffect(() => {
+    if (
+      parseInt(lineItemDetail?.actualDownPayment) !==
+        parseInt(editDetails?.actualDownPayment) &&
+      salesType === 5
+    ) {
+      fetchDownPaymentDetails();
+    }
+  }, [lineItemDetail?.actualDownPayment, editDetails?.actualDownPayment]);
+  const actualDownPaymentHandle = (e) => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      actualDownPayment: e.target.value,
+    }));
+  };
+  const submitHandle = () => {
+    if (salesType === 5) {
+      if (
+        parseInt(lineItemDetail?.actualDownPayment) >=
+        parseInt(lineItemDetail?.downPayment)
+      ) {
+        setLineItems((prev) =>
+          prev.map((item, index) =>
+            index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
+          )
+        );
+        setOpen(false);
+      } else {
+        setNotificationMsg("Actual Down Payment is Less than Down Payment");
+        setSeverity("info");
+        setShowNotification(true);
+      }
+    } else {
+      setLineItems((prev) =>
+        prev.map((item, index) =>
+          index === editLineItemIndex ? { ...item, ...lineItemDetail } : item
+        )
+      );
+      setOpen(false);
+    }
   };
   return (
     <>
@@ -301,6 +394,14 @@ const EditLineItem = ({
                   <Typography variant="subtitle1">Edit Line Item</Typography>
                 </Grid>
               </Grid>
+              {salesType === 5 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    Actual Down Payment should be equal to or greater than
+                    Minimum Down Payment!
+                  </Alert>
+                </Grid>
+              )}
               <Grid
                 container
                 spacing={1}
@@ -325,6 +426,7 @@ const EditLineItem = ({
                         label: item?.id,
                       }))}
                       onChange={subInventoryHandle}
+                      value={lineItemDetail?.subInventoryId}
                       renderInput={(params) => (
                         <TextField {...params} label="Sub-Inventory" />
                       )}
@@ -347,6 +449,7 @@ const EditLineItem = ({
                         label: item?.name,
                       }))}
                       onChange={locatorHandle}
+                      value={lineItemDetail?.locatorId}
                       renderInput={(params) => (
                         <TextField {...params} label="Locator" />
                       )}
@@ -381,6 +484,7 @@ const EditLineItem = ({
                     id="serial_no"
                     label="Serial No"
                     onChange={serialNoHandle}
+                    value={lineItemDetail?.serialNo}
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -411,14 +515,35 @@ const EditLineItem = ({
                     onChange={priceLocatorHandle}
                   />
                 </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="disc_per"
-                    label="Disc/Comm %"
-                    disabled
-                    value={lineItemDetail?.discPercentage}
-                  />
-                </Grid>
+                {salesType === 5 ? (
+                  <Grid item xs={3}>
+                    <FormControl>
+                      <InputLabel id="down-payment-status-select-label">
+                        Down Payment Status
+                      </InputLabel>
+                      <Select
+                        labelId="down-payment-status-select-label"
+                        id="down-payment-status-select"
+                        label="Down Payment Status"
+                        onChange={(e) => setDownPaymentStatus(e?.target?.value)}
+                        value={downPaymentStatus}
+                        disabled
+                      >
+                        <MenuItem value="Yes">Yes</MenuItem>
+                        <MenuItem value="No">No</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                ) : (
+                  <Grid item xs={3}>
+                    <TextField
+                      id="dis_percentage"
+                      label="Disc/Comm %"
+                      disabled
+                      value={lineItemDetail?.discPercentage}
+                    />
+                  </Grid>
+                )}
               </Grid>
               <Grid container spacing={1} paddingY={1} paddingX={4}>
                 <Grid item xs={3}>
@@ -445,98 +570,148 @@ const EditLineItem = ({
                     value={lineItemDetail?.mrp}
                   />
                 </Grid>
+                {salesType == 5 && downPaymentStatus === "No" && (
+                  <Grid item xs={3}>
+                    <TextField
+                      id="installment_amount"
+                      label="Installment Amount"
+                      disabled
+                      value={lineItemDetail?.installmentAmount}
+                    />
+                  </Grid>
+                )}
                 <Grid item xs={3}>
-                  <TextField
-                    id="disc_com_amt"
-                    label="Disc/Comm Amount"
-                    disabled
-                    value={lineItemDetail?.discountedAmount}
-                  />
+                  {salesType === 5 && downPaymentStatus === "Yes" ? (
+                    <TextField
+                      id="minimum_down_payment"
+                      label="Minimum Down Payment"
+                      disabled
+                      value={lineItemDetail?.downPayment}
+                    />
+                  ) : (
+                    <TextField
+                      id="disc_com_amt"
+                      label="Disc/Comm Amount"
+                      disabled
+                      value={lineItemDetail?.discountedAmount}
+                    />
+                  )}
                 </Grid>
               </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={4}>
-                <Grid item xs={3}>
-                  <TextField
-                    id="tax_per"
-                    label="Tax %"
-                    disabled
-                    value={lineItemDetail?.taxPercentage}
-                  />
+              {salesType !== 5 ? (
+                <>
+                  <Grid container spacing={1} paddingY={1} paddingX={4}>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="tax_per"
+                        label="Tax %"
+                        disabled
+                        value={lineItemDetail?.taxPercentage}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="selling_price"
+                        label="Selling Price"
+                        disabled
+                        value={lineItemDetail?.sellingPrice}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="add_disc"
+                        label="Additional Disc"
+                        disabled
+                        value={lineItemDetail?.additionalDiscount}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="tax_amt"
+                        label="Tax Amount"
+                        disabled
+                        value={lineItemDetail?.taxAmt}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1} paddingY={1} paddingX={4}>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="amt_excel"
+                        label="Amount Excl. Tax"
+                        disabled
+                        value={lineItemDetail?.amountExclTax}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="adv_tax"
+                        label="Advance Tax Amount"
+                        value={lineItemDetail?.advanceTaxAmount}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="vol_dis"
+                        label="Volume Discount"
+                        disabled
+                        value={lineItemDetail?.volumeDiscount}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="item_total_added_qty"
+                        label="Item Total Added Qty"
+                        disabled
+                        value={lineItemDetail?.itemTotalAddedQty}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    container
+                    spacing={1}
+                    paddingY={1}
+                    paddingX={4}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    <Grid item xs={3}>
+                      <TextField
+                        id="selling_price"
+                        label="Line Item Amount"
+                        disabled
+                        value={lineItemDetail?.sellingPrice}
+                      />
+                    </Grid>
+                  </Grid>
+                </>
+              ) : (
+                <Grid container spacing={1} paddingY={1} paddingX={4}>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="actual_down_payment"
+                      label="Actual Down Payment"
+                      onChange={actualDownPaymentHandle}
+                      value={lineItemDetail?.actualDownPayment}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="payable_amount"
+                      label="Payable Amount"
+                      disabled
+                      value={lineItemDetail?.payableAmount}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="installment_amount"
+                      label="Installment Amount"
+                      disabled
+                      value={lineItemDetail?.installmentAmount}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="selling_price"
-                    label="Selling Price"
-                    disabled
-                    value={lineItemDetail?.sellingPrice}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="add_disc"
-                    label="Additional Disc"
-                    disabled
-                    value={lineItemDetail?.additionalDiscount}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="tax_amt"
-                    label="Tax Amount"
-                    disabled
-                    value={lineItemDetail?.taxAmt}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={4}>
-                <Grid item xs={3}>
-                  <TextField
-                    id="amt_excel"
-                    label="Amount Excl. Tax"
-                    disabled
-                    value={lineItemDetail?.amountExclTax}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="adv_tax"
-                    label="Advance Tax Amount"
-                    value={lineItemDetail?.advanceTaxAmount}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="vol_dis"
-                    label="Volumn Discount"
-                    disabled
-                    value={lineItemDetail?.volumeDiscount}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="item_total_added_qty"
-                    label="Item Total Added Qty"
-                    disabled
-                    value={lineItemDetail?.itemTotalAddedQty}
-                  />
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                spacing={1}
-                paddingY={1}
-                paddingX={4}
-                sx={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <Grid item xs={3}>
-                  <TextField
-                    id="selling_price"
-                    label="Line Item Amount"
-                    disabled
-                    value={lineItemDetail?.sellingPrice}
-                  />
-                </Grid>
-              </Grid>
+              )}
               <Grid
                 item
                 xs={12}
@@ -568,7 +743,7 @@ const EditLineItem = ({
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />

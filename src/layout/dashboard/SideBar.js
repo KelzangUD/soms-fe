@@ -107,14 +107,14 @@ export const MenuItems = [
         page: "Sales Return",
         route: "pos-management/sales-return",
       },
-      // {
-      //   page: "Apply EMI",
-      //   route: "pos-management/apply-emi",
-      // },
-      // {
-      //   page: "EMI History",
-      //   route: "pos-management/emi-history",
-      // },
+      {
+        page: "Create EMI Customer",
+        route: "pos-management/create-emi-customer",
+      },
+      {
+        page: "EMI History",
+        route: "pos-management/emi-history",
+      },
       // {
       //   page: "EMI Approval",
       //   route: "pos-management/emi-approval",
@@ -142,9 +142,13 @@ export const MenuItems = [
         route: "collections/recharge",
       },
       // {
-      //   page: "Credit/EMI Collection",
-      //   route: "collections/credit-or-emi-collection",
+      //   page: "EMI Collection",
+      //   route: "collections/emi-collection",
       // },
+      {
+        page: "EMI Collection",
+        route: "collections/emi-collection",
+      },
       // {
       //   page: "Advance Collection",
       //   route: "collections/advance-collection",

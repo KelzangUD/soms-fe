@@ -10,6 +10,7 @@ import {
   AdvanceCollectionHistory,
   AdvanceRefund,
   AdvanceRefundHistory,
+  EmiCollection
 } from "../../views/collections/index";
 
 const Collections = () => {
@@ -23,6 +24,10 @@ const Collections = () => {
         <Route
           path="/credit-or-emi-collection"
           element={<CreditOrEMICollection />}
+        />
+         <Route
+          path="/emi-collection"
+          element={<EmiCollection />}
         />
         <Route path="/advance-collection" element={<AdvanceCollection />} />
         <Route
