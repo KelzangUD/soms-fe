@@ -37,6 +37,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
     emiMonthCount: "",
     paymentStatus: "",
     updatedBy: "",
+    payableAmount: "",
     paymentLinesDetails: [],
   });
   const paymentActionHandle = (e, row) => {
@@ -45,6 +46,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
       installment_ID: row?.installmentId,
       emiMonthCount: row?.pendingInstallmentNo,
       paymentStatus: "Paid",
+      payableAmount: row?.payableAmount,
       updatedBy: localStorage?.getItem("username"),
       monthlyInstallment:
         row?.paymentStatus === "UnPaid"
@@ -60,6 +62,16 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
   };
 
   const paymentHandle = async () => {
+    const data = {
+      installment_ID: emiPaymentDetails?.installment_ID,
+      emiMonthCount: emiPaymentDetails?.emiMonthCount,
+      paymentStatus: emiPaymentDetails?.paymentStatus,
+      updatedBy: emiPaymentDetails?.updatedBy,
+      paymentLinesDtls: paymentLines?.map((item) => ({
+        ...item,
+        installmentAmountPaid: item?.paymentAmount,
+      })),
+    };
     const totalAmount = paymentLines?.reduce(
       (accumulator, currentObject) => {
         accumulator.paymentAmount +=
