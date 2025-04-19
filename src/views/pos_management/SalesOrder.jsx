@@ -385,7 +385,9 @@ const SalesOrder = () => {
   };
   const advanceOrEmiHandle = (e) => {
     if (e?.target?.value === "EMI") {
-      fetchEMIList(salesOrderDetails?.customerName?.split("")[1]?.split("")[0]);
+      fetchEMIList(
+        salesOrderDetails?.customerName?.split(" (")[1]?.split(".")[0]
+      );
     }
     setSalesOrderDetails((prev) => ({
       ...prev,
