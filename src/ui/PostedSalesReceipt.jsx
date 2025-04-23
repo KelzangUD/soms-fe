@@ -66,7 +66,7 @@ const PostedSalesReceipt = () => {
             <div>
               <p>
                 Discount/Commission:{" "}
-                {parseFloat(salesOrderData?.disc)?.toLocaleString("en-US", {
+                {parseFloat(salesOrderData?.discount)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}

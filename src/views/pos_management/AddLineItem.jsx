@@ -326,6 +326,7 @@ const AddLineItem = ({
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
         emiInterestRate: res?.data?.emiInterestRate,
+        lineItemAmt: res?.data?.lineItemAmt,
       }));
     }
   };
