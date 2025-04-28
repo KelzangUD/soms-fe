@@ -16,6 +16,7 @@ import {
   SamsungWarrantyReport,
   SalesReturnList,
   SalesReturnReport,
+  FailedTransactionReport,
 } from "../../views/reports/index";
 
 const Reports = () => {
@@ -45,6 +46,10 @@ const Reports = () => {
         <Route
           path="/samsung-warranty-report"
           element={<SamsungWarrantyReport />}
+        />
+        <Route
+          path="/failed-transaction-report"
+          element={<FailedTransactionReport />}
         />
       </Routes>
     </>

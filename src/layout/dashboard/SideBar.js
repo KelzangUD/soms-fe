@@ -299,6 +299,10 @@ export const MenuItems = [
         page: "Samsung Warranty Report",
         route: "reports/samsung-warranty-report",
       },
+      {
+        page: "Failed Transaction Report",
+        route: "reports/failed-transaction-report",
+      },
       // {
       //   page: "Service Log Report",
       //   route: "report/ebsservicelog",

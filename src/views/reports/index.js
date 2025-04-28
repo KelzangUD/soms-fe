@@ -13,3 +13,4 @@ export { default as TransferOrderReport } from "./TransferOrderReport";
 export { default as SamsungWarrantyReport } from "./SamsungWarrantyReport";
 export { default as SalesReturnList} from "./SalesReturnList";
 export { default as SalesReturnReport } from "./SalesReturnReport";
+export { default as FailedTransactionReport } from "./FailedTransactionReport";
