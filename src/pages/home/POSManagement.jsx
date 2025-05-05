@@ -1,6 +1,14 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { SalesOrder, SalesReturn, ApplyEmi, EMIHistory, EMIApproval, CreateEmiCustomer } from "../../views/pos_management/index";
+import {
+  SalesOrder,
+  SalesReturn,
+  ApplyEmi,
+  EMIHistory,
+  EMIApproval,
+  CreateEmiCustomer,
+  EMIOrganization,
+} from "../../views/pos_management/index";
 
 const POSManagement = () => {
   return (
@@ -12,6 +20,7 @@ const POSManagement = () => {
         <Route path="/create-emi-customer" element={<CreateEmiCustomer />} />
         <Route path="/emi-history" element={<EMIHistory />} />
         <Route path="/emi-approval" element={<EMIApproval />} />
+        <Route path="/emi-organization" element={<EMIOrganization />} />
       </Routes>
     </>
   );

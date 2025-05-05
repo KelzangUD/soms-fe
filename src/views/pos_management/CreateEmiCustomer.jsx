@@ -30,6 +30,7 @@ const CreateEmiCustomer = () => {
     emiCustomerTypeId: "",
     emiCustomerTypeName: "",
     attachment: "",
+    createdBy: localStorage?.getItem("username")
   });
   const [emiFocalDetail, setEmiFocalDetail] = useState([]);
   const [emiCustomerTypes, setEmiCustomerTypes] = useState([]);
@@ -74,6 +75,7 @@ const CreateEmiCustomer = () => {
   useEffect(() => {
     fetchEMICustomerTypes();
     fetchEMIFocalDetail();
+    // eslint-disable-next-line 
   }, []);
   const customerNameHandle = (e) => {
     setCustomer((prev) => ({
@@ -141,6 +143,7 @@ const CreateEmiCustomer = () => {
       emiCustomerTypeId: "",
       emiCustomerTypeName: "",
       attachment: "",
+      createdBy: localStorage?.getItem("username")
     }));
   };
   const docHandle = (e) => {
@@ -185,7 +188,6 @@ const CreateEmiCustomer = () => {
             formData.append("emiDocument", placeholderFile);
           }
           const data = customer;
-          console.log(data);
           const jsonDataBlob = new Blob([JSON.stringify(data)], {
             type: "application/json",
           });

@@ -794,7 +794,8 @@ const SalesOrder = () => {
               <Title title="Header" />
               <Grid container>
                 <Alert severity="info" sx={{ width: "100%" }}>
-                  For Staff EMI, Please Select EMI Number.
+                  For Staff EMI, Please Select EMI Number. Customer EMI is only
+                  available between 1st and 20th of the Month
                 </Alert>
               </Grid>
               <Grid container p={2}>
@@ -1043,6 +1044,7 @@ const SalesOrder = () => {
                               label="EMI From Date"
                               value={dayjs(emiDuration?.fromDate)}
                               onChange={emiFromDateHandle}
+                              disabled
                             />
                           </LocalizationProvider>
                         </FormControl>

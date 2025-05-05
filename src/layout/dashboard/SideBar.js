@@ -115,10 +115,10 @@ export const MenuItems = [
         page: "EMI History",
         route: "pos-management/emi-history",
       },
-      // {
-      //   page: "EMI Approval",
-      //   route: "pos-management/emi-approval",
-      // },
+      {
+        page: "EMI Organization",
+        route: "pos-management/emi-organization",
+      },
     ],
   },
   {
