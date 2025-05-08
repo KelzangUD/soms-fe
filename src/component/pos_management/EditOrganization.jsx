@@ -64,7 +64,7 @@ const EditOrganization = ({
       setIsLoading(true);
       try {
         const res = await Route(
-          "PUT",
+          "POST",
           `/sapApiController/emiFocalPersonMaster`,
           access_token,
           [details],

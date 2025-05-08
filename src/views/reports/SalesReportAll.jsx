@@ -729,6 +729,136 @@ const SalesReportAll = () => {
                 },
               ]
             : []),
+          ...(res?.data?.emiCollection?.length > 0
+            ? [
+                {
+                  item_code: res?.data?.emiCollection,
+                },
+                ...res?.data?.emiCollection?.map((item) => ({
+                  sl: item?.rownumber,
+                  sales_type: item?.sales_type,
+                  customer_name: item?.customer_name,
+                  customer_number: item?.customer_number,
+                  customer_account_code: item?.inventory_item_Number,
+                  salesOrderNo: item?.salesOrderNo,
+                  region_Name: item?.region_Name,
+                  store_Name: item?.store_Name,
+                  revenue_head: item?.revenue_head,
+                  posting_Date: item?.posting_Date,
+                  item_code: item?.item_code,
+                  description: item?.description,
+                  gross_amount: parseFloat(item?.selling_price, 10),
+                  discount_Value: parseFloat(item?.discount_Value, 10),
+                  additional_Discount: parseFloat(
+                    item?.additional_Discount,
+                    10
+                  ),
+                  line_Discount_Amount: parseFloat(
+                    item?.line_Discount_Amount,
+                    10
+                  ),
+                  tds_Amount: parseFloat(item?.tds_Amount, 10),
+                  tax_Amount: parseFloat(item?.tax_Amount, 10),
+                  net_amount: parseFloat(item?.line_Item_Amount, 10),
+                  paymentMode: item?.paymentMode,
+                  createdBy: item?.createdBy,
+                  remarks: item?.status,
+                })),
+                {
+                  description: "Total",
+                  gross_amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  discount_Value: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  additional_Discount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  line_Discount_Amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  tds_Amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  tax_Amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  net_amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                },
+                {
+                  description: "Total",
+                  gross_amount:
+                    res?.data?.emiCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    ) +
+                    res?.data?.emiCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    ) +
+                    res?.data?.emiCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    ) +
+                    res?.data?.emiCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.emiCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.emiCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    ) +
+                    res?.data?.emiCollection?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    ),
+                },
+              ]
+            : []),
           {
             description: "Grand Total",
             gross_amount: (
@@ -758,6 +888,11 @@ const SalesReportAll = () => {
                 0
               ) +
               res?.data?.vasServiceCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.selling_price, 10),
+                0
+              ) +
+              res?.data?.emiCollection?.reduce(
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.selling_price, 10),
                 0
@@ -825,6 +960,11 @@ const SalesReportAll = () => {
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.additional_Discount, 10),
                 0
+              ) +
+              res?.data?.emiCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.additional_Discount, 10),
+                0
               )
             ).toFixed(2),
             line_Discount_Amount: (
@@ -889,6 +1029,11 @@ const SalesReportAll = () => {
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.tds_Amount, 10),
                 0
+              ) +
+              res?.data?.emiCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.tds_Amount, 10),
+                0
               )
             ).toFixed(2),
             tax_Amount: (
@@ -921,6 +1066,11 @@ const SalesReportAll = () => {
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.tax_Amount, 10),
                 0
+              ) +
+              res?.data?.emiCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.tax_Amount, 10),
+                0
               )
             ).toFixed(2),
             net_amount: (
@@ -950,6 +1100,11 @@ const SalesReportAll = () => {
                 0
               ) +
               res?.data?.vasServiceCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.line_Item_Amount, 10),
+                0
+              ) +
+              res?.data?.emiCollection?.reduce(
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.line_Item_Amount, 10),
                 0
@@ -1401,6 +1556,79 @@ const SalesReportAll = () => {
                 },
               ]
             : []),
+          ...(res?.data?.emiCollection?.length > 0
+            ? [
+                {
+                  id: uuidv4(),
+                  item_code: res?.data?.emiCollectionTitle,
+                  isTitle: true,
+                },
+                ...res?.data?.emiCollection?.map((item, index) => ({
+                  ...item,
+                  id: uuidv4(),
+                  sl: index + 1,
+                  item_code: item?.inventory_item_Number,
+                  item_description: item?.description,
+                  gross_amount: item?.selling_price,
+                  net_amount: item?.line_Item_Amount,
+                })),
+                {
+                  id: uuidv4(),
+                  item_description: "Total",
+                  isSubTitle: true,
+                  gross_amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.selling_price, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  discount_Value: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.discount_Value, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  additional_Discount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.additional_Discount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  line_Discount_Amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        parseFloat(item?.line_Discount_Amount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  tds_Amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tds_Amount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  tax_Amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.tax_Amount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                  net_amount: res?.data?.emiCollection
+                    ?.reduce(
+                      (accumulator, item) =>
+                        accumulator + parseFloat(item?.line_Item_Amount, 10),
+                      0
+                    )
+                    .toFixed(2),
+                },
+              ]
+            : []),
           {
             id: uuidv4(),
             item_description: "Grand Total",
@@ -1432,6 +1660,11 @@ const SalesReportAll = () => {
                 0
               ) +
               res?.data?.vasServiceCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.selling_price, 10),
+                0
+              ) +
+              res?.data?.emiCollection?.reduce(
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.selling_price, 10),
                 0
@@ -1467,6 +1700,11 @@ const SalesReportAll = () => {
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.discount_Value, 10),
                 0
+              ) +
+              res?.data?.emiCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.discount_Value, 10),
+                0
               )
             ).toFixed(2),
             additional_Discount: (
@@ -1496,6 +1734,11 @@ const SalesReportAll = () => {
                 0
               ) +
               res?.data?.vasServiceCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.additional_Discount, 10),
+                0
+              ) +
+              res?.data?.emiCollection?.reduce(
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.additional_Discount, 10),
                 0
@@ -1531,6 +1774,11 @@ const SalesReportAll = () => {
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.line_Discount_Amount, 10),
                 0
+              ) +
+              res?.data?.emiCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.line_Discount_Amount, 10),
+                0
               )
             ).toFixed(2),
             tds_Amount: (
@@ -1560,6 +1808,11 @@ const SalesReportAll = () => {
                 0
               ) +
               res?.data?.vasServiceCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.tds_Amount, 10),
+                0
+              ) +
+              res?.data?.emiCollection?.reduce(
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.tds_Amount, 10),
                 0
@@ -1595,6 +1848,11 @@ const SalesReportAll = () => {
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.tax_Amount, 10),
                 0
+              ) +
+              res?.data?.emiCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.tax_Amount, 10),
+                0
               )
             ).toFixed(2),
             net_amount: (
@@ -1624,6 +1882,11 @@ const SalesReportAll = () => {
                 0
               ) +
               res?.data?.vasServiceCollection?.reduce(
+                (accumulator, item) =>
+                  accumulator + parseFloat(item?.line_Item_Amount, 10),
+                0
+              ) +
+              res?.data?.emiCollection?.reduce(
                 (accumulator, item) =>
                   accumulator + parseFloat(item?.line_Item_Amount, 10),
                 0
