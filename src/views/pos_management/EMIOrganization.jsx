@@ -11,7 +11,6 @@ import {
 import Route from "../../routes/Route";
 
 const EMIOrganization = () => {
-  // const access_token = localStorage.getItem("access_token");
   const [emiOrganization, setEmiOrganization] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showNotification, setShowNotification] = useState(false);

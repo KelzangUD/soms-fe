@@ -4,9 +4,13 @@ import {
   Button,
   DialogContent,
   DialogTitle,
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
   TextField,
+  Select,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Route from "../../routes/Route";
@@ -30,6 +34,7 @@ const AddOrganization = ({ open, setOpen, fetchEmiOrganization }) => {
     regionName: "",
     designation: "",
     email: "",
+    status: "Active",
   });
   const changeHandle = (e) => {
     setDetails((prev) => ({
@@ -161,6 +166,22 @@ const AddOrganization = ({ open, setOpen, fetchEmiOrganization }) => {
                 onChange={changeHandle}
                 required
               />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={details?.status}
+                  label="Status"
+                  name="status"
+                  onChange={changeHandle}
+                >
+                  <MenuItem value="Active">Active</MenuItem>
+                  <MenuItem value="In-Active">In-Active</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
           <Grid

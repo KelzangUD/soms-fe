@@ -4,9 +4,13 @@ import {
   Button,
   DialogContent,
   DialogTitle,
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
   TextField,
+  Select,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Route from "../../routes/Route";
@@ -35,6 +39,7 @@ const EditOrganization = ({
     regionName: oldDetails?.emi_FOCAL_ADDRESS,
     designation: oldDetails?.emi_FOCAL_DESIGNATION,
     email: oldDetails?.emi_FOCAL_EMAIL,
+    status: oldDetails?.emi_FOCAL_STATUS,
   });
   const changeHandle = (e) => {
     setDetails((prev) => ({
@@ -59,13 +64,13 @@ const EditOrganization = ({
       setIsLoading(true);
       try {
         const res = await Route(
-          "PUT",
+          "POST",
           `/sapApiController/emiFocalPersonMaster`,
           access_token,
           [details],
           null
         );
-        if (res?.status === 201) {
+        if (res?.status === 200) {
           fetchEmiOrganization();
           setNotificationMsg("Success");
           setSeverity("success");
@@ -167,6 +172,22 @@ const EditOrganization = ({
                 required
               />
             </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={details?.status}
+                  label="Status"
+                  name="status"
+                  onChange={changeHandle}
+                >
+                  <MenuItem value="Active">Active</MenuItem>
+                  <MenuItem value="In-Active">In-Active</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
           <Grid
             container
@@ -200,7 +221,7 @@ const EditOrganization = ({
             setShowNotification(false);
             setOpen(false);
           }}
-          notificationMsg="Organization Added Successfully!"
+          notificationMsg="Organization Updated Successfully!"
           alertMessage={notificationMsg}
         />
       )}
