@@ -288,10 +288,10 @@ export const CommonProvider = ({ children }) => {
       setLocatorsList(res?.data);
     }
   };
-  const validateSerialNumberWithLocator = async (serialNo) => {
+  const validateSerialNumberWithLocator = async (serialNo, itemCode) => {
     const res = await Route(
       "GET",
-      `/Common/validateSerialNumberWithLocator?StoreName=${userDetails?.regionName}&SubInventoryID=${userDetails?.subInventory}&LocatorID=${userDetails?.locator}&SerialNo=${serialNo}`,
+      `/Common/validateSerialNumberWithLocator?StoreName=${userDetails?.regionName}&SubInventoryID=${userDetails?.subInventory}&LocatorID=${userDetails?.locator}&SerialNo=${serialNo}&itemCode=${itemCode}`,
       null,
       null,
       null
