@@ -32,7 +32,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     color: (theme.vars || theme).palette.warning.dark,
     border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
   },
-  "&.Rejected, &.Failed, &.In_Active": {
+  "&.Rejected, &.Failed, &.In_Active, &.In-Active": {
     color: (theme.vars || theme).palette.error.dark,
     border: `1px solid ${(theme.vars || theme).palette.error.main}`,
   },
@@ -66,7 +66,7 @@ const Status = memo((props) => {
     status === "Paid"
   ) {
     icon = <DoneIcon className="icon" />;
-  } else if (status === "Failed" || status === "In_Active") {
+  } else if (status === "Failed" || status === "In_Active" || status === "In-Active") {
     icon = <CloseIcon className="icon" />;
   }
 
@@ -75,6 +75,9 @@ const Status = memo((props) => {
     label = "Partially Filled";
   }
   if (status === "In_Active") {
+    label = "In Active";
+  }
+  if (status === "In-Active") {
     label = "In Active";
   }
   if (status === "UnPaid") {

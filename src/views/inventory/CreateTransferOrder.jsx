@@ -90,17 +90,17 @@ const CreateTransferOrder = ({
   const [toStore, setToStore] = useState([]);
   const [fromSubInventory, setFromSubInventory] = useState([]);
   const fetchFromSubInventory = async () => {
-      const res = await Route(
-        "GET",
-        `/Common/FetchSubInventory?userId=${empID}`,
-        null,
-        null,
-        null
-      );
-      if (res?.status === 200) {
-        setFromSubInventory(res?.data);
-      }
-    };
+    const res = await Route(
+      "GET",
+      `/Common/FetchSubInventory?userId=${empID}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setFromSubInventory(res?.data);
+    }
+  };
   const fetchToStore = async () => {
     const res = await Route(
       "GET",
@@ -293,7 +293,8 @@ const CreateTransferOrder = ({
           }));
         } else {
           const validation = await validateSerialNumberWithLocator(
-            transferOrderItemDTOList?.item_Serial_Number
+            transferOrderItemDTOList?.item_Serial_Number,
+            transferOrderItemDTOList?.item_Number
           );
           if (validation === "False") {
             setNotificationMsg("Please Valid Serial Number");
@@ -314,6 +315,7 @@ const CreateTransferOrder = ({
               item_Serial_Number: "",
               uom: "",
               qty: "",
+              availaibleQty: "",
             }));
           }
         }
@@ -458,7 +460,6 @@ const CreateTransferOrder = ({
     });
 
     formData.append("data", jsonDataBlob, "data.json");
-    console.log(parameters);
     const res = await Route(
       "POST",
       `/transferOrder/createTransferOrder`,
@@ -622,7 +623,7 @@ const CreateTransferOrder = ({
               <Grid item xs={3}>
                 <FormControl>
                   <InputLabel id="to-sub-inventory-select-label">
-                    To Sub-Inventry*
+                    To Sub-Inventory*
                   </InputLabel>
                   <Select
                     labelId="to-sub-inventory-select-label"
@@ -817,6 +818,7 @@ const CreateTransferOrder = ({
                   required
                   onChange={serialNumberHandle}
                   disabled={serialInputDisabled}
+                  value={transferOrderItemDTOList?.item_Serial_Number}
                 />
               </Grid>
               <Grid item xs={1.5}>

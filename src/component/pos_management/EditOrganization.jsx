@@ -70,7 +70,7 @@ const EditOrganization = ({
           [details],
           null
         );
-        if (res?.status === 200) {
+        if (res?.status === 201) {
           fetchEmiOrganization();
           setNotificationMsg("Success");
           setSeverity("success");
