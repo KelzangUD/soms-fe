@@ -800,10 +800,10 @@ const SalesOrder = () => {
               </Grid>
               <Grid container p={2}>
                 <Grid container spacing={1} mb={1}>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField label="POS No" name="pos_no" disabled />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="Posting Date"
                       name="posting_date"
@@ -811,7 +811,7 @@ const SalesOrder = () => {
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <InputLabel id="sales-type-select-label">
                         Sales Type
@@ -831,7 +831,7 @@ const SalesOrder = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <InputLabel id="product-type-select-label">
                         Product Type
@@ -852,8 +852,8 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={1} py={1} mb={1}>
-                  <Grid item xs={3}>
+                <Grid container spacing={1} py={{ sx: 0, md: 1 }} mb={1}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={customersList?.map((item) => ({
@@ -882,7 +882,7 @@ const SalesOrder = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="Mobile No"
                       name="mobile_no"
@@ -891,7 +891,7 @@ const SalesOrder = () => {
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="Customer No"
                       name="customer_no"
@@ -900,7 +900,7 @@ const SalesOrder = () => {
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="Address"
                       name="address"
@@ -910,7 +910,7 @@ const SalesOrder = () => {
                   </Grid>
                 </Grid>
                 <Grid container spacing={1}>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="Address 1"
                       name="address 1"
@@ -918,7 +918,7 @@ const SalesOrder = () => {
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="City"
                       name="city"
@@ -928,7 +928,7 @@ const SalesOrder = () => {
                   </Grid>
                   {salesOrderDetails?.salesType === 4 && (
                     <>
-                      <Grid item xs={3}>
+                      <Grid item xs={12} md={3}>
                         <FormControl>
                           <InputLabel id="advance-emi-select-label">
                             Advance/EMI
@@ -945,7 +945,7 @@ const SalesOrder = () => {
                           </Select>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={12} md={3}>
                         <Autocomplete
                           disablePortal
                           options={emiList?.map((item) => ({
@@ -970,7 +970,7 @@ const SalesOrder = () => {
                           )}
                         />
                       </Grid>
-                      <Grid item xs={3} mt={1}>
+                      <Grid item xs={12} md={3} mt={{ xs: 0, md: 1 }}>
                         <TextField
                           label="Item Number"
                           name="item_number"
@@ -978,7 +978,7 @@ const SalesOrder = () => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={3} mt={1}>
+                      <Grid item xs={12} md={3} mt={{ xs: 0, md: 1 }}>
                         <TextField
                           label="Advance Amount"
                           name="advance_amount"
@@ -986,7 +986,7 @@ const SalesOrder = () => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={3} mt={1}>
+                      <Grid item xs={12} md={3} mt={{ xs: 0, md: 1 }}>
                         <TextField
                           label="Down Payment Amount"
                           name="down_payment_amount"
@@ -994,7 +994,7 @@ const SalesOrder = () => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={3} mt={1}>
+                      <Grid item xs={12} md={3} mt={{ xs: 0, md: 1 }}>
                         <TextField
                           label="Interest Amount"
                           name="interest_amount"
@@ -1002,7 +1002,7 @@ const SalesOrder = () => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={3} mt={1}>
+                      <Grid item xs={12} md={3} mt={{ xs: 0, md: 1 }}>
                         <TextField
                           label="Final Amount"
                           name="city"
@@ -1016,7 +1016,8 @@ const SalesOrder = () => {
                     <>
                       <Grid
                         item
-                        xs={3}
+                        xs={12}
+                        md={3}
                         sx={{
                           mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
                         }}
@@ -1037,7 +1038,7 @@ const SalesOrder = () => {
                           </Select>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={12} md={3}>
                         <FormControl>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -1051,13 +1052,17 @@ const SalesOrder = () => {
                       </Grid>
                       <Grid
                         item
-                        xs={3}
+                        xs={12}
+                        md={3}
                         sx={{
-                          mt:
-                            salesOrderDetails?.salesType === 4 ||
-                            salesOrderDetails?.salesType === 5
-                              ? 1
-                              : 0,
+                          mt: {
+                            xs: 0,
+                            md:
+                              salesOrderDetails?.salesType === 4 ||
+                              salesOrderDetails?.salesType === 5
+                                ? 1
+                                : 0,
+                          },
                         }}
                       >
                         <FormControl>
@@ -1074,13 +1079,17 @@ const SalesOrder = () => {
                   )}
                   <Grid
                     item
-                    xs={6}
+                    xs={12}
+                    md={3}
                     sx={{
-                      mt:
-                        salesOrderDetails?.salesType === 4 ||
-                        salesOrderDetails?.salesType === 5
-                          ? 1
-                          : 0,
+                      mt: {
+                        xs: 0,
+                        md:
+                          salesOrderDetails?.salesType === 4 ||
+                          salesOrderDetails?.salesType === 5
+                            ? 1
+                            : 0,
+                      },
                     }}
                   >
                     <TextField
@@ -1165,7 +1174,7 @@ const SalesOrder = () => {
               <Title title="Payment Details" />
               <Grid container p={2}>
                 <Grid container spacing={1}>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <TextField
                       label="Payment Amount"
                       name="payment_amount"
@@ -1176,7 +1185,7 @@ const SalesOrder = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <InputLabel id="payment-type-select-label">
                         Payment Type
@@ -1196,7 +1205,7 @@ const SalesOrder = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <FormControl>
                       <InputLabel id="bank-ac-name-select-label">
                         Bank A/C Name
@@ -1217,7 +1226,7 @@ const SalesOrder = () => {
                     </FormControl>
                   </Grid>
                   {paymentLinesItem?.paymentType === "3" && (
-                    <Grid item sx={2}>
+                    <Grid item xs={12} md={2}>
                       <TextField
                         label="Card No"
                         name="card_no"
@@ -1227,14 +1236,14 @@ const SalesOrder = () => {
                   )}
                   {paymentLinesItem?.paymentType === "2" && (
                     <>
-                      <Grid item sx={2}>
+                      <Grid item xs={12} md={2}>
                         <TextField
                           label="Cheque No"
                           name="cheque_no"
                           onChange={chequeNoHandle}
                         />
                       </Grid>
-                      <Grid item sx={1}>
+                      <Grid item xs={12} md={1}>
                         <FormControl>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -1244,7 +1253,7 @@ const SalesOrder = () => {
                           </LocalizationProvider>
                         </FormControl>
                       </Grid>
-                      <Grid item sx={2}>
+                      <Grid item xs={12} md={2}>
                         <TextField
                           type="file"
                           label={isFileUploaded ? "File" : ""}

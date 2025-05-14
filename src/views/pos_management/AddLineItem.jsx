@@ -559,7 +559,7 @@ const AddLineItem = ({
                 paddingX={2}
                 marginTop={1}
               >
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     id="storeName"
                     label="Store Name"
@@ -567,7 +567,7 @@ const AddLineItem = ({
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   {userDetails?.roleName === "Administrator" ||
                   userDetails?.roleName === "Regional Manager" ||
                   userDetails?.roleName === "General Manager" ? (
@@ -592,7 +592,7 @@ const AddLineItem = ({
                     />
                   )}
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   {userDetails?.roleName === "Administrator" ||
                   userDetails?.roleName === "Regional Manager" ||
                   userDetails?.roleName === "General Manager" ? (
@@ -617,7 +617,7 @@ const AddLineItem = ({
                     />
                   )}
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <Autocomplete
                     disablePortal
                     options={onHandItems}
@@ -632,15 +632,20 @@ const AddLineItem = ({
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
-                <Grid item xs={3}>
+              <Grid
+                container
+                spacing={1}
+                paddingY={{ xs: 0, md: 1 }}
+                paddingX={2}
+              >
+                <Grid item xs={12} md={3}>
                   <TextField
                     id="serial_no"
                     label="Serial No"
                     onChange={serialNoHandle}
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     id="qty"
                     label="Quantity"
@@ -648,7 +653,7 @@ const AddLineItem = ({
                     onChange={qtyHandle}
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <Autocomplete
                     disablePortal
                     options={
@@ -669,7 +674,7 @@ const AddLineItem = ({
                   />
                 </Grid>
                 {salesType === 5 ? (
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <InputLabel id="down-payment-status-select-label">
                         Down Payment Status
@@ -688,7 +693,7 @@ const AddLineItem = ({
                     </FormControl>
                   </Grid>
                 ) : (
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="dis_percentage"
                       label="Disc/Comm %"
@@ -699,7 +704,7 @@ const AddLineItem = ({
                 )}
               </Grid>
               <Grid container spacing={1} paddingY={1} paddingX={2}>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     id="tds_amount"
                     label="TDS Amount"
@@ -707,7 +712,7 @@ const AddLineItem = ({
                     value={lineItemDetail?.tdsAmount}
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     id="item_no"
                     label="Item No."
@@ -715,7 +720,7 @@ const AddLineItem = ({
                     value={lineItemDetail?.itemNo}
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     id="mrp"
                     label="MRP"
@@ -724,7 +729,7 @@ const AddLineItem = ({
                   />
                 </Grid>
                 {salesType === 5 && downPaymentStatus === "No" && (
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="installment_amount"
                       label="Installment Amount"
@@ -734,7 +739,7 @@ const AddLineItem = ({
                   </Grid>
                 )}
                 {salesType !== 5 ? (
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="disc_amt"
                       label="Disc/Comm Amount"
@@ -745,7 +750,7 @@ const AddLineItem = ({
                 ) : null}
                 {salesType === 5 && downPaymentStatus === "Yes" && (
                   <>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} md={3}>
                       <TextField
                         id="minium_down_payment"
                         label="Minimum Down Payment"
@@ -757,8 +762,13 @@ const AddLineItem = ({
                 )}
               </Grid>
               {salesType !== 5 ? (
-                <Grid container spacing={1} paddingY={1} paddingX={2}>
-                  <Grid item xs={3}>
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={{ xs: 0, md: 1 }}
+                  paddingX={2}
+                >
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="tax_per"
                       label="Tax %"
@@ -766,7 +776,7 @@ const AddLineItem = ({
                       value={lineItemDetail?.taxPercentage}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="selling_price"
                       label="Selling Price"
@@ -774,7 +784,7 @@ const AddLineItem = ({
                       value={lineItemDetail?.sellingPrice}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="add_disc"
                       label="Additional Disc"
@@ -782,7 +792,7 @@ const AddLineItem = ({
                       value={lineItemDetail?.additionalDiscount}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="tax_amt"
                       label="Tax Amount"
@@ -793,8 +803,13 @@ const AddLineItem = ({
                 </Grid>
               ) : null}
               {salesType !== 5 ? (
-                <Grid container spacing={1} paddingY={1} paddingX={2}>
-                  <Grid item xs={3}>
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={{ xs: 0, md: 1 }}
+                  paddingX={2}
+                >
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="amt_excel_tax"
                       label="Amount Excl. Tax"
@@ -802,14 +817,14 @@ const AddLineItem = ({
                       value={lineItemDetail?.amountExclTax}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="adv_tax"
                       label="Advance Tax Amount"
                       value={lineItemDetail?.advanceTaxAmount}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="vol_disc"
                       label="Volume Discount"
@@ -817,7 +832,7 @@ const AddLineItem = ({
                       value={lineItemDetail?.volumeDiscount}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="item_total_added_qty"
                       label="Item Total Added Qty"
@@ -829,10 +844,15 @@ const AddLineItem = ({
               ) : null}
               {salesType === 5 ? (
                 <>
-                  <Grid container spacing={1} paddingY={1} paddingX={2}>
+                  <Grid
+                    container
+                    spacing={1}
+                    paddingY={{ xs: 0, md: 1 }}
+                    paddingX={2}
+                  >
                     {downPaymentStatus === "Yes" && (
                       <>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3}>
                           <TextField
                             id="actual_down_payment"
                             label="Actual Down Payment"
@@ -840,7 +860,7 @@ const AddLineItem = ({
                             value={lineItemDetail?.actualDownPayment}
                           />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3}>
                           <TextField
                             id="payable_amount"
                             label="Payable Amount"
@@ -848,7 +868,7 @@ const AddLineItem = ({
                             value={lineItemDetail?.payableAmount}
                           />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3}>
                           <TextField
                             id="installment_amount"
                             label="Installment Amount"
@@ -869,7 +889,7 @@ const AddLineItem = ({
                   paddingX={2}
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       id="selling_price"
                       label="Line Item Amount"
