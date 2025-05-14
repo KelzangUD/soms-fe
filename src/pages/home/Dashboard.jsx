@@ -32,7 +32,7 @@ const Dashboard = () => {
       <Grid container spacing={2} alignItems="center" sx={{ px: 2 }}>
         <Grid item container xs={12} spacing={1}>
           {status?.map((item, index) => (
-            <Grid item xs={3} key={item?.title}>
+            <Grid item xs={6} md={3} key={item?.title}>
               <StatusCard
                 index={index}
                 // icon={item?.icon}
@@ -43,26 +43,26 @@ const Dashboard = () => {
           ))}
         </Grid>
         <Grid item container xs={12} spacing={1}>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <Revenue />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <RevenueVSamsungRev />
           </Grid>
         </Grid>
         <Grid item container xs={12} spacing={1}>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <SamsungStock />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <RCVStockVSimStock />
           </Grid>
         </Grid>
         <Grid item container xs={12} spacing={1} sx={{ mb: 4 }}>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <Sales />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <PostPaidVLeaseLine />
           </Grid>
         </Grid>
