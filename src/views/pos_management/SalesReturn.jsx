@@ -37,11 +37,11 @@ const SalesReturn = () => {
   const { paymentType, fetchBankBasedOnPaymentType, banks } = useCommon();
   const user = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [responseData, setResponseData] = useState({});
-  const [invoiceNo, setInoiceNo] = useState("");
+  const [invoiceNo, setInvoiceNo] = useState("");
   const [emptyInvoiceNo, setEmptyInvoiceNo] = useState(false);
   const [salesData, setSalesData] = useState(null);
   const [isFileUploaded, setIsFileUploaded] = useState(false);
@@ -80,7 +80,7 @@ const SalesReturn = () => {
 
   const setSalesInvoice = (e) => {
     setEmptyInvoiceNo(false);
-    setInoiceNo(e?.target?.value);
+    setInvoiceNo(e?.target?.value);
   };
 
   useEffect(() => {
@@ -140,7 +140,7 @@ const SalesReturn = () => {
         } else {
           setNotificationMsg("Bank A/C can't be empty");
           setSeverity("info");
-          setShowNofication(true);
+          setShowNotification(true);
         }
       } else if (parseInt(paymentLinesItem.paymentType) === 2) {
         if (paymentLinesItem.bankAccountNumber !== "") {
@@ -151,22 +151,22 @@ const SalesReturn = () => {
               } else {
                 setNotificationMsg("Cheque copy can't be empty");
                 setSeverity("info");
-                setShowNofication(true);
+                setShowNotification(true);
               }
             } else {
               setNotificationMsg("Cheque date can't be empty");
               setSeverity("info");
-              setShowNofication(true);
+              setShowNotification(true);
             }
           } else {
             setNotificationMsg("Cheque number can't be empty");
             setSeverity("info");
-            setShowNofication(true);
+            setShowNotification(true);
           }
         } else {
           setNotificationMsg("Bank A/C can't be empty");
           setSeverity("info");
-          setShowNofication(true);
+          setShowNotification(true);
         }
       } else {
         if (paymentLinesItem.bankAccountNumber !== "") {
@@ -175,18 +175,18 @@ const SalesReturn = () => {
           } else {
             setNotificationMsg("Card No. can't be empty");
             setSeverity("info");
-            setShowNofication(true);
+            setShowNotification(true);
           }
         } else {
           setNotificationMsg("Bank A/C can't be empty");
           setSeverity("info");
-          setShowNofication(true);
+          setShowNotification(true);
         }
       }
     } else {
       setNotificationMsg("Refund amount and refund type can't be empty");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   };
 
@@ -238,17 +238,17 @@ const SalesReturn = () => {
               "This POS_No is already return. Check the POS_No"
             );
             setSeverity("info");
-            setShowNofication(true);
+            setShowNotification(true);
           }
         } else {
           setNotificationMsg(res?.response?.data?.message);
           setSeverity("error");
-          setShowNofication(true);
+          setShowNotification(true);
         }
       } catch (error) {
         setNotificationMsg("Error fetching invoice:", error);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       } finally {
         setLoading(false);
       }
@@ -258,7 +258,7 @@ const SalesReturn = () => {
   };
 
   const resetHandle = () => {
-    setInoiceNo("");
+    setInvoiceNo("");
     setSalesData(null);
     setPaymentLines([]);
     setGrossTotal("");
@@ -331,12 +331,15 @@ const SalesReturn = () => {
   };
 
   const postSalesReturn = async () => {
-      if (paymentLinesItem?.paymentAmount === "" || paymentLinesItem?.paymentAmount === 0) {
-        setSeverity("info");
-        setNotificationMsg("Please Enter Refund Amount");
-        setShowNofication(true);
-        return;
-      }
+    if (
+      paymentLinesItem?.paymentAmount === "" ||
+      paymentLinesItem?.paymentAmount === 0
+    ) {
+      setSeverity("info");
+      setNotificationMsg("Please Enter Refund Amount");
+      setShowNotification(true);
+      return;
+    }
     setLoading(true);
     try {
       let formData = new FormData();
@@ -384,17 +387,17 @@ const SalesReturn = () => {
         setResponseData(res?.data);
         setSeverity("success");
         setNotificationMsg("Successfully Posted Sales Return");
-        setShowNofication(true);
+        setShowNotification(true);
         resetHandle();
       } else {
         setNotificationMsg(res?.response?.data?.message);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (error) {
       setNotificationMsg("Error posting the:", error);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setLoading(false);
     }
@@ -408,10 +411,10 @@ const SalesReturn = () => {
             <Card>
               <Title title="Header" />
               <Grid container spacing={1} p={2}>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField label="POS No" name="pos_no" disabled />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Posting Date"
                     name="posting_date"
@@ -419,7 +422,7 @@ const SalesReturn = () => {
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     error={emptyInvoiceNo}
                     label="Invoice No"
@@ -430,7 +433,7 @@ const SalesReturn = () => {
                     helperText={emptyInvoiceNo ? "Invoice No is Empty" : null}
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <Button
                     variant="contained"
                     onClick={fetchSalesInvoice}
@@ -446,28 +449,28 @@ const SalesReturn = () => {
                 </Grid>
               </Grid>
               <Grid container spacing={1} px={2}>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Sales Type"
                     value={salesHeaderDtls?.sales_Type}
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Product Type"
                     value={salesHeaderDtls?.product_Type}
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Mobile No"
                     value={salesHeaderDtls?.mobileNo}
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Customer No"
                     value={salesHeaderDtls?.customerNumber}
@@ -475,29 +478,29 @@ const SalesReturn = () => {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={1} p={2}>
-                <Grid item xs={3}>
+              <Grid container spacing={1} px={2} py={{ xs: 1, md: 2 }}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Customer Name"
                     value={salesHeaderDtls?.customerName}
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Address"
                     value={salesHeaderDtls?.address}
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Address 1"
                     value={salesHeaderDtls?.address1}
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="City"
                     value={salesHeaderDtls?.city}
@@ -658,7 +661,7 @@ const SalesReturn = () => {
             <Card>
               <Title title="Refund Details" />
               <Grid container spacing={1} padding={2}>
-                <Grid item xs={2}>
+                <Grid item xs={12} md={2}>
                   <TextField
                     label="Refund Amount"
                     type="number"
@@ -668,7 +671,7 @@ const SalesReturn = () => {
                     onChange={paymentAmountHandle}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={12} md={2}>
                   <FormControl>
                     <InputLabel id="refund-type-select-label">
                       Refund Type
@@ -687,7 +690,7 @@ const SalesReturn = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <FormControl>
                     <InputLabel id="bank-ac-name-select-label">
                       Bank A/C Name
@@ -707,7 +710,7 @@ const SalesReturn = () => {
                   </FormControl>
                 </Grid>
                 {paymentLinesItem?.paymentType === "3" && (
-                  <Grid item sx={2}>
+                  <Grid item xs={12} md={2}>
                     <TextField
                       label="Card No"
                       name="card_no"
@@ -716,7 +719,7 @@ const SalesReturn = () => {
                   </Grid>
                 )}
                 {paymentLinesItem?.paymentType === "2" && (
-                  <Grid item sx={2}>
+                  <Grid item xs={12} md={2}>
                     <TextField
                       label="Cheque No"
                       name="cheque_no"
@@ -725,7 +728,7 @@ const SalesReturn = () => {
                   </Grid>
                 )}
                 {paymentLinesItem?.paymentType === "2" && (
-                  <Grid item sx={1}>
+                  <Grid item xs={12} md={1}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -737,7 +740,7 @@ const SalesReturn = () => {
                   </Grid>
                 )}
                 {paymentLinesItem?.paymentType === "2" && (
-                  <Grid item sx={1}>
+                  <Grid item xs={12} md={1}>
                     <TextField
                       type="file"
                       label={isFileUploaded ? "File" : ""}
@@ -747,7 +750,7 @@ const SalesReturn = () => {
                   </Grid>
                 )}
                 <Grid item container xs={1} display="flex" alignItems="center">
-                  <Grid item xs={1}>
+                  <Grid item xs={12} md={1}>
                     <IconButton aria-label="add" onClick={addPaymentItemHandle}>
                       <AddBoxIcon
                         sx={{
@@ -843,7 +846,7 @@ const SalesReturn = () => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
