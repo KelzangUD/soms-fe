@@ -2,21 +2,36 @@ import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
-  Toolbar,
+  Button,
+  Collapse,
+  Drawer,
+  Divider,
+  Grid,
   IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
   Menu,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import PersonIcon from "@mui/icons-material/Person";
-import MoreIcon from "@mui/icons-material/MoreVert";
+import MenuIcon from "@mui/icons-material/Menu";
 import KeyIcon from "@mui/icons-material/Key";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import Logout from "@mui/icons-material/Logout";
 import Notification from "../../ui/Notification";
 import Route from "../../routes/Route";
 import { useNavigate, useLocation } from "react-router-dom";
+import { drawerClasses } from "@mui/material/Drawer";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { MenuItems } from "./SideBar";
+import { menuListFilter } from "../../util/CommonUtil";
+import Logo from "../../assets/images/logo.ico";
 
 const Nav = () => {
   const location = useLocation();
@@ -56,6 +71,30 @@ const Nav = () => {
     navigation("/home/change-password");
     setAnchorEl(false);
   };
+  const routeHandle = (route) => {
+    navigation(route);
+  };
+  const handleNestedItemClick = (index) => {
+    setOpenStates((prevOpenStates) => {
+      const isAlreadyOpen = prevOpenStates[index];
+      const newOpenStates = prevOpenStates.map(() => false);
+      newOpenStates[index] = !isAlreadyOpen;
+      return newOpenStates;
+    });
+  };
+  const [openStates, setOpenStates] = useState(MenuItems.map(() => false));
+  const [menuList, setMenuList] = useState([]);
+
+  useEffect(() => {
+    if (localStorage?.getItem("privileges")?.length > 0) {
+      setMenuList(
+        menuListFilter(
+          MenuItems,
+          JSON.parse(localStorage?.getItem("privileges"))
+        )
+      );
+    }
+  }, []);
   const token = localStorage.getItem("access_token");
   const logoutHandle = async () => {
     const res = await Route("GET", "/api/v1/auth/logout", token, null, null);
@@ -111,40 +150,135 @@ const Nav = () => {
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
+    <Drawer
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      sx={{
+        flexShrink: 0,
+        boxSizing: "border-box",
+        mt: 10,
+        [`& .${drawerClasses.paper}`]: {
+          boxSizing: "border-box",
+          color: "#fff",
+          backgroundColor: "#0277bd",
+        },
+      }}
     >
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <ListItemIcon>
-          <PersonIcon fontSize="small" />
-        </ListItemIcon>
-        My Profile
-      </MenuItem>
-      <MenuItem onClick={changePasswordHandle}>
-        <ListItemIcon>
-          <KeyIcon fontSize="small" />
-        </ListItemIcon>
-        Change Password
-      </MenuItem>
-      <MenuItem onClick={logoutHandle}>
-        <ListItemIcon>
-          <Logout fontSize="small" />
-        </ListItemIcon>
-        Logout
-      </MenuItem>
-    </Menu>
+      <Box sx={{ width: 250 }} role="presentation">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Grid container alignItems="center">
+            <Grid item xs={12} alignItems="center">
+              <Button
+                type="button"
+                variant="text"
+                color="primary"
+                size="large"
+                fullWidth
+              >
+                <img
+                  src={Logo}
+                  alt="Logo"
+                  style={{
+                    width: "30%",
+                    height: "auto",
+                  }}
+                />
+              </Button>
+            </Grid>
+            <Grid item xs={12} marginBottom={1}>
+              <Typography variant="body2" align="center">
+                Sales & Order Management System
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+        <Divider />
+        <List
+          sx={{
+            width: "100%",
+            maxWidth: 360,
+            maxHeight: "100vh",
+            overflowY: "auto",
+            marginTop: "-8px",
+          }}
+          component="nav"
+          aria-labelledby="nested-list-subheader"
+        >
+          {menuList?.map((item, index) => (
+            <React.Fragment key={index}>
+              {item?.nestedItems !== undefined ? (
+                item?.nestedItems?.length > 0 && (
+                  <ListItemButton
+                    onClick={() => {
+                      routeHandle(item?.route);
+                      handleNestedItemClick(item?.itemNumber);
+                    }}
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText style={{ marginLeft: -26 }}>
+                      <Typography variant="body2">{item?.module}</Typography>
+                    </ListItemText>
+                    {item.nestedItems &&
+                      (openStates[index] ? <ExpandLess /> : <ExpandMore />)}
+                  </ListItemButton>
+                )
+              ) : (
+                <ListItemButton
+                  onClick={() => {
+                    routeHandle(item?.route);
+                    handleNestedItemClick(item?.itemNumber);
+                  }}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText style={{ marginLeft: -26 }}>
+                    <Typography variant="body2">{item?.module}</Typography>
+                  </ListItemText>
+                  {item.nestedItems &&
+                    (openStates[index] ? (
+                      <ExpandLess fontSize="small" />
+                    ) : (
+                      <ExpandMore fontSize="small" />
+                    ))}
+                </ListItemButton>
+              )}
+              {item.nestedItems && (
+                <Collapse in={openStates[index]} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {item.nestedItems.map((nestedItem, nestedIndex) => (
+                      <ListItemButton
+                        key={nestedIndex}
+                        onClick={() => routeHandle(nestedItem?.route)}
+                      >
+                        <ListItemIcon>
+                          <KeyboardArrowRightIcon
+                            fontSize="small"
+                            sx={{
+                              color: "#fff",
+                            }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText style={{ marginLeft: -26 }}>
+                          <Typography variant="body2">
+                            {nestedItem?.page}
+                          </Typography>
+                        </ListItemText>
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Collapse>
+              )}
+            </React.Fragment>
+          ))}
+        </List>
+      </Box>
+    </Drawer>
   );
   return (
     <>
@@ -154,7 +288,7 @@ const Nav = () => {
           boxShadow: "none",
           paddingY: "21px",
           marginBottom: 4,
-          background: theme => theme.palette.bg.light,
+          background: (theme) => theme.palette.bg.light,
           color: "#fff",
         }}
       >
@@ -172,19 +306,6 @@ const Nav = () => {
           >
             {currentLocation.toUpperCase()}
           </Typography>
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="small"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle sx={{ height: 35, width: "auto" }} />
-            </IconButton>
-          </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="small"
@@ -194,7 +315,22 @@ const Nav = () => {
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <MenuIcon />
+            </IconButton>
+          </Box>
+          <Box>
+            <IconButton
+              size="small"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle
+                sx={{ height: { xs: 20, md: 35 }, width: "auto" }}
+              />
             </IconButton>
           </Box>
         </Toolbar>
