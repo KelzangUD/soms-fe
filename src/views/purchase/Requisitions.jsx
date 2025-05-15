@@ -189,7 +189,7 @@ const Requisitions = () => {
             <Card sx={{ width: "100%" }}>
               <Title title="Requisition Details" />
               <Grid container spacing={1} my={1} px={2}>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Requisition Number"
                     name="requisition_number"
@@ -197,7 +197,7 @@ const Requisitions = () => {
                     required
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <FormControl>
                     <InputLabel id="requisition-type-select-label">
                       Requisition Type*
@@ -218,7 +218,7 @@ const Requisitions = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
@@ -230,7 +230,7 @@ const Requisitions = () => {
                     </LocalizationProvider>
                   </FormControl>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
@@ -242,8 +242,8 @@ const Requisitions = () => {
                   </FormControl>
                 </Grid>
               </Grid>
-              <Grid container spacing={1} mt={1} mb={2} px={2}>
-                <Grid item xs={3}>
+              <Grid container spacing={1} mt={{xs: 0, md: 1}} mb={2} px={2}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     label="Employee Name"
                     name="employee_name"
@@ -252,7 +252,7 @@ const Requisitions = () => {
                     disabled
                   />
                 </Grid>
-                <Grid item xs={3} display="flex">
+                <Grid item xs={12} md={3} display="flex">
                   <TextField
                     label="Region"
                     name="region"
@@ -267,7 +267,7 @@ const Requisitions = () => {
               <Card>
                 <Title title="Item Details" />
                 <Grid container padding={2} spacing={1}>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={itemsList?.map((item) => ({
@@ -283,7 +283,7 @@ const Requisitions = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="Item Number"
                       name="item_number"
@@ -291,7 +291,7 @@ const Requisitions = () => {
                       value={itemDTOList?.item_Number}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="UOM"
                       name="uom"
@@ -299,8 +299,11 @@ const Requisitions = () => {
                       value={itemDTOList?.uom}
                     />
                   </Grid>
-                  <Grid item xs={3} display="flex">
-                    <Grid>
+                  <Grid item xs={12} md={3} sx={{
+                    display: "flex",
+                    justifyContent: "space-between"
+                  }}>
+                    <Grid xs={11}>
                       <TextField
                         label={isETop ? "Amount" : "Required Quantity"}
                         name="amount"
@@ -309,7 +312,7 @@ const Requisitions = () => {
                         value={itemDTOList?.amount}
                       />
                     </Grid>
-                    <Grid alignContent="center">
+                    <Grid alignContent="center" xs={1}>
                       <IconButton
                         aria-label="add"
                         onClick={addItemListButtonHandle}
