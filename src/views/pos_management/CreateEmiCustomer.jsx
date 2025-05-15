@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Notification, LoaderDialog } from "../../ui/index";
+import { Notification, LoaderDialog, Title } from "../../ui/index";
 import Route from "../../routes/Route";
 
 const CreateEmiCustomer = () => {
@@ -30,7 +30,7 @@ const CreateEmiCustomer = () => {
     emiCustomerTypeId: "",
     emiCustomerTypeName: "",
     attachment: "",
-    createdBy: localStorage?.getItem("username")
+    createdBy: localStorage?.getItem("username"),
   });
   const [emiFocalDetail, setEmiFocalDetail] = useState([]);
   const [emiCustomerTypes, setEmiCustomerTypes] = useState([]);
@@ -75,7 +75,7 @@ const CreateEmiCustomer = () => {
   useEffect(() => {
     fetchEMICustomerTypes();
     fetchEMIFocalDetail();
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
   }, []);
   const customerNameHandle = (e) => {
     setCustomer((prev) => ({
@@ -143,7 +143,7 @@ const CreateEmiCustomer = () => {
       emiCustomerTypeId: "",
       emiCustomerTypeName: "",
       attachment: "",
-      createdBy: localStorage?.getItem("username")
+      createdBy: localStorage?.getItem("username"),
     }));
   };
   const docHandle = (e) => {
@@ -223,27 +223,10 @@ const CreateEmiCustomer = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Paper elevation={1} sx={{ overflow: "hidden" }}>
-              <Grid
-                container
-                paddingX={4}
-                paddingY={2}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  backgroundColor: (theme) => theme.palette.bg.light,
-                  color: "#fff",
-                }}
-              >
-                <Grid item>
-                  <Typography variant="subtitle1">
-                    EMI Customer Details
-                  </Typography>
-                </Grid>
-              </Grid>
+              <Title title="EMI Customer Details" />
               <Grid container padding={2}>
                 <Grid container spacing={1}>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Customer Name"
                       name="customer_name"
@@ -252,7 +235,7 @@ const CreateEmiCustomer = () => {
                       value={customer?.customerName}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Customer No (CID No)"
                       name="customer_no"
@@ -261,7 +244,7 @@ const CreateEmiCustomer = () => {
                       value={customer?.customerNumber}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Mobile No"
                       name="mobile_no"
@@ -271,8 +254,8 @@ const CreateEmiCustomer = () => {
                     />
                   </Grid>
                 </Grid>
-                <Grid container spacing={1} sx={{ my: 0.5 }}>
-                  <Grid item xs={4}>
+                <Grid container spacing={1} sx={{ my: { xs: 0, md: 0.5 } }}>
+                  <Grid item xs={12} md={4}>
                     <Autocomplete
                       disablePortal
                       options={emiCustomerTypes?.map((item) => ({
@@ -293,7 +276,7 @@ const CreateEmiCustomer = () => {
                     />
                   </Grid>
                   {customer?.emiCustomerTypeId === 2 && (
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <Autocomplete
                         disablePortal
                         options={emiFocalDetail?.map((item) => ({
@@ -327,7 +310,7 @@ const CreateEmiCustomer = () => {
                       />
                     </Grid>
                   )}
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Address/Location"
                       name="address"
@@ -336,7 +319,7 @@ const CreateEmiCustomer = () => {
                       onChange={addressHandle}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Designation"
                       name="designation"
@@ -345,7 +328,7 @@ const CreateEmiCustomer = () => {
                       onChange={designationHandle}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Email"
                       name="email"
@@ -357,7 +340,7 @@ const CreateEmiCustomer = () => {
                   </Grid>
                   {customer?.emiCustomerTypeId === 1 && (
                     <>
-                      <Grid item xs={4}>
+                      <Grid item xs={12} md={4}>
                         <TextField
                           type="file"
                           label={isDocUploaded ? "Attached File" : ""}
@@ -371,7 +354,12 @@ const CreateEmiCustomer = () => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid container display="flex" justifyContent="flex-end" marginY={4}>
+          <Grid
+            container
+            display="flex"
+            justifyContent="flex-end"
+            marginY={{ xs: 2, md: 4 }}
+          >
             <Button
               variant="contained"
               sx={{ mr: 2 }}
