@@ -1,11 +1,20 @@
 import React from "react";
 import Logo from "../assets/images/logo.ico";
 import { Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Header = () => {
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <>
-      <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ backgroundColor: "#F5F7F8", p: 1 }}>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ backgroundColor: "#F5F7F8", p: 1 }}
+      >
         <Box display="flex" alignItems="center">
           <Box sx={{ px: 2 }}>
             <img
@@ -23,9 +32,9 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            Sales & Order Management System
+            {isMdUp ? "Sales & Order Management System" : "SOMS"}
           </Typography>
-        </Box> 
+        </Box>
       </Box>
     </>
   );
