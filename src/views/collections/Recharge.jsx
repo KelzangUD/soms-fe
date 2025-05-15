@@ -291,7 +291,7 @@ const Recharge = () => {
             <Card>
               <Title title="Recharge Details" />
               <Grid container padding={2} spacing={1}>
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4}>
                   <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
@@ -302,7 +302,7 @@ const Recharge = () => {
                     </LocalizationProvider>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4}>
                   <TextField
                     label="Recharge Type"
                     name="payment_type"
@@ -311,7 +311,7 @@ const Recharge = () => {
                     disabled
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4}>
                   <TextField
                     label="Prepaid Number"
                     name="prepaid_no"
@@ -374,7 +374,7 @@ const Recharge = () => {
                 </Alert>
               </Grid>
               <Grid container padding={2} py={2} spacing={1}>
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4}>
                   <TextField
                     label="Payment Amount"
                     name="payment_amount"
@@ -384,7 +384,7 @@ const Recharge = () => {
                     required
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4}>
                   <FormControl>
                     <InputLabel id="payment-type-select-label">
                       Payment Type*
@@ -404,7 +404,7 @@ const Recharge = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4}>
                   <FormControl>
                     <InputLabel id="bank-ac-name-select-label">
                       Bank A/C Name*
@@ -424,8 +424,8 @@ const Recharge = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid container pl={1} spacing={1} sx={{ mt: 0.5 }}>
-                  <Grid item xs={4}>
+                <Grid container pl={1} spacing={1} sx={{ mt: {xs: 0, md: 0.5} }}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Card/Cheque Number"
                       name="cheque_no"
@@ -434,7 +434,7 @@ const Recharge = () => {
                       disabled={disableFields?.cardOrChequeNo}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -446,7 +446,7 @@ const Recharge = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       type="file"
                       label={isFileUploaded ? "File" : ""}
