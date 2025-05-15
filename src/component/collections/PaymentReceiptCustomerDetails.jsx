@@ -9,8 +9,8 @@ const PaymentReceiptCustomerDetails = ({ paymentReceiptDetails }) => {
         <Title title="Customer Details" />
         <Grid
           container
-          paddingY={2}
-          spacing={3.5}
+          paddingY={{ xs: 1.5, md: 2 }}
+          spacing={{ xs: 1.5, md:3.5}}
           sx={{
             display: "flex",
             flexFlow: "column",

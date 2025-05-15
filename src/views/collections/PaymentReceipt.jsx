@@ -361,11 +361,11 @@ const PaymentReceipt = () => {
       <Box sx={{ px: 2 }}>
         <Grid container alignItems="center">
           <Grid item container xs={12} spacing={2}>
-            <Grid item container xs={9}>
+            <Grid item container xs={12} md={9}>
               <Card sx={{ width: "100%" }}>
                 <Title title="Service Details" />
                 <Grid container spacing={1} padding={2}>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <InputLabel id="service-type-select-label">
                         Service Type*
@@ -385,7 +385,7 @@ const PaymentReceipt = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <InputLabel id="payment-select-label">Payment</InputLabel>
                       <Select
@@ -404,7 +404,7 @@ const PaymentReceipt = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       error={incorrectFormant}
                       label="Mobile Number/Account Code"
@@ -419,8 +419,13 @@ const PaymentReceipt = () => {
               </Card>
               <Card sx={{ width: "100%", marginTop: 2 }}>
                 <Title title="Payment Details" />
-                <Grid container spacing={1} marginY={1} paddingX={2}>
-                  <Grid item xs={3}>
+                <Grid
+                  container
+                  spacing={1}
+                  marginY={{ xs: 0, md: 1 }}
+                  paddingX={2}
+                >
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -432,7 +437,7 @@ const PaymentReceipt = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <InputLabel id="payment-method-select-label">
                         Payment Method
@@ -452,7 +457,7 @@ const PaymentReceipt = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="Amount"
                       name="amount"
@@ -461,7 +466,7 @@ const PaymentReceipt = () => {
                       value={paymentReceiptDetails?.amount}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <InputLabel id="bank-acc-select-label">
                         Bank Account
@@ -482,8 +487,13 @@ const PaymentReceipt = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid container spacing={1} marginY={1} paddingX={2}>
-                  <Grid item xs={3}>
+                <Grid
+                  container
+                  spacing={1}
+                  marginY={{ xs: 0, md: 1 }}
+                  paddingX={2}
+                >
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="Cheque No"
                       name="cheque_no"
@@ -492,7 +502,7 @@ const PaymentReceipt = () => {
                       value={paymentReceiptDetails?.chequeNo}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -504,7 +514,7 @@ const PaymentReceipt = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       type="file"
                       label={isFileUploaded ? "File" : ""}
@@ -514,7 +524,7 @@ const PaymentReceipt = () => {
                     />
                   </Grid>
                 </Grid>
-                <Grid item xs={12} marginY={2} paddingX={2}>
+                <Grid item xs={12} marginY={{ xs: 1, md: 2 }} paddingX={2}>
                   <TextField
                     label="Remarks"
                     name="remarks"
@@ -527,7 +537,7 @@ const PaymentReceipt = () => {
                 </Grid>
               </Card>
             </Grid>
-            <Grid item xs={3} container>
+            <Grid item xs={12} md={3} container>
               <PaymentReceiptCustomerDetails
                 paymentReceiptDetails={paymentReceiptDetails}
               />
