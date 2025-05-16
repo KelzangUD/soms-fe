@@ -175,7 +175,7 @@ const PostedTransferShipment = () => {
         item?.sl,
         item?.["Transfer Order No"],
         item?.["Transfer From Code"],
-        item?.["ransfer To Code"],
+        item?.["Transfer To Code"],
         item?.["Posted Date"],
         item?.Status,
       ]),

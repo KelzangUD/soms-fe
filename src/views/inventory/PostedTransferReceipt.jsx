@@ -16,7 +16,6 @@ import { useReactToPrint } from "react-to-print";
 const PostedTransferReceipt = () => {
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
-  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
@@ -25,7 +24,7 @@ const PostedTransferReceipt = () => {
     {}
   );
   const [view, setView] = useState(false);
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [open, setOpen] = useState(false);
@@ -48,7 +47,7 @@ const PostedTransferReceipt = () => {
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +64,7 @@ const PostedTransferReceipt = () => {
       headerName: "Transfer From Code",
       flex: 2.5,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", flex: 2.5 },
+    { field: "transfer_to_code", headerName: "Transfer To Code", flex: 2.5 },
     { field: "posted_date", headerName: "Posted Date", flex: 1.5 },
     {
       field: "status",
@@ -128,7 +127,7 @@ const PostedTransferReceipt = () => {
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -244,7 +243,7 @@ const PostedTransferReceipt = () => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
