@@ -10,10 +10,12 @@ import { CustomDataTable } from "../../component/common/index";
 import dayjs from "dayjs";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
 
 const TransferOrderOutward = () => {
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
+  const { isMdUp } = useCommon();
   const [transferOrderList, setTransferOrderList] = useState([]);
   const [transferOrderDetails, setTransferOrderDetails] = useState({});
   const [view, setView] = useState(false);
@@ -52,25 +54,48 @@ const TransferOrderOutward = () => {
     fetchViewTransferOrderDetails(params?.row?.transfer_order_no);
   };
   const transfer_order_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", flex: 1.6 },
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "transfer_order_no",
+      headerName: "Transfer Order No",
+      flex: isMdUp ? 1.6 : undefined,
+      width: isMdUp ? undefined : 160,
+    },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
-      flex: 2.5,
+      flex: isMdUp ? 2.5 : undefined,
+      width: isMdUp ? undefined : 250,
     },
-    { field: "transfer_to_code", headerName: "Transfer To Code", flex: 2.5 },
-    { field: "posted_date", headerName: "Posted Date", flex: 1 },
+    {
+      field: "transfer_to_code",
+      headerName: "Transfer To Code",
+      flex: isMdUp ? 2.5 : undefined,
+      width: isMdUp ? undefined : 250,
+    },
+    {
+      field: "posted_date",
+      headerName: "Posted Date",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 120,
+    },
     {
       field: "status",
       headerName: "Status",
-      flex: 1.2,
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 120,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      flex: 1,
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 100,
       renderCell: (params) => (
         <>
           <IconButton
@@ -153,7 +178,7 @@ const TransferOrderOutward = () => {
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Grid item container spacing={1} alignItems="center">
-                    <Grid item xs={2}>
+                    <Grid item xs={4} md={2}>
                       <FormControl>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
@@ -164,7 +189,7 @@ const TransferOrderOutward = () => {
                         </LocalizationProvider>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={4} md={2}>
                       <FormControl>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
