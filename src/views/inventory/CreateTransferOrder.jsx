@@ -512,7 +512,7 @@ const CreateTransferOrder = ({
           <Title title="Transfer Order" />
           <Grid item container xs={12} paddingX={2}>
             <Grid item container xs={12} mt={1} spacing={1}>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <TextField
                   id="outlined-basic"
                   label="Transfer Order No"
@@ -520,7 +520,7 @@ const CreateTransferOrder = ({
                   disabled
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <FormControl>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -531,7 +531,7 @@ const CreateTransferOrder = ({
                   </LocalizationProvider>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <FormControl>
                   <InputLabel id="transfer-type-select-label">
                     Transfer Type*
@@ -551,7 +551,7 @@ const CreateTransferOrder = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <TextField
                   id="outlined-basic"
                   label="From Store"
@@ -561,8 +561,14 @@ const CreateTransferOrder = ({
                 />
               </Grid>
             </Grid>
-            <Grid item container xs={12} paddingTop={2} spacing={1}>
-              <Grid item xs={3}>
+            <Grid
+              item
+              container
+              xs={12}
+              paddingTop={{ xs: 1, md: 2 }}
+              spacing={1}
+            >
+              <Grid item xs={12} md={3}>
                 <FormControl>
                   <InputLabel id="from-sub-inventory-select-label">
                     From Sub-inventory*
@@ -582,7 +588,7 @@ const CreateTransferOrder = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <FormControl>
                   <InputLabel id="from-locator-select-label">
                     From Locator*
@@ -602,7 +608,7 @@ const CreateTransferOrder = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <FormControl>
                   <InputLabel id="to-store-select-label">To Store*</InputLabel>
                   <Select
@@ -620,7 +626,7 @@ const CreateTransferOrder = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <FormControl>
                   <InputLabel id="to-sub-inventory-select-label">
                     To Sub-Inventory*
@@ -642,8 +648,14 @@ const CreateTransferOrder = ({
                 </FormControl>
               </Grid>
             </Grid>
-            <Grid item container xs={12} paddingY={2} spacing={1}>
-              <Grid item xs={3}>
+            <Grid
+              item
+              container
+              xs={12}
+              paddingY={{ xs: 1, md: 2 }}
+              spacing={1}
+            >
+              <Grid item xs={12} md={3}>
                 <FormControl>
                   <InputLabel id="to-locator-select-label">
                     To Locator*
@@ -694,7 +706,7 @@ const CreateTransferOrder = ({
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <FormControl>
                   <InputLabel id="mode-of-transport-select-label">
                     Mode Of Transport
@@ -714,7 +726,7 @@ const CreateTransferOrder = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <TextField
                   id="outlined-basic"
                   label="Vehicle No."
@@ -722,7 +734,7 @@ const CreateTransferOrder = ({
                   value={parameters?.vehicle_Number}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <TextField
                   id="outlined-basic"
                   label="Remarks"
@@ -734,7 +746,8 @@ const CreateTransferOrder = ({
             <Grid item xs={12}>
               <Grid
                 container
-                padding={1}
+                paddingY={1}
+                paddingX={{ xs: 3, md: 1 }}
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
@@ -780,7 +793,7 @@ const CreateTransferOrder = ({
               </Grid>
             </Grid>
             <Grid item container xs={12} paddingY={2} spacing={1}>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <Autocomplete
                   disablePortal
                   options={onHandsTransferOrderItems?.map((item) => ({
@@ -802,7 +815,7 @@ const CreateTransferOrder = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={12} md={3}>
                 <TextField
                   id="outlined-basic"
                   label="Item Number"
@@ -811,7 +824,7 @@ const CreateTransferOrder = ({
                   value={transferOrderItemDTOList?.item_Number}
                 />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={12} md={3}>
                 <TextField
                   id="outlined-basic"
                   label="Serial Number"
@@ -821,7 +834,7 @@ const CreateTransferOrder = ({
                   value={transferOrderItemDTOList?.item_Serial_Number}
                 />
               </Grid>
-              <Grid item xs={1.5}>
+              <Grid item xs={12} md={1.5}>
                 <TextField
                   id="outlined-basic"
                   label="UOM"
@@ -830,7 +843,7 @@ const CreateTransferOrder = ({
                   value={transferOrderItemDTOList?.uom}
                 />
               </Grid>
-              <Grid item xs={1.5}>
+              <Grid item xs={12} md={1.5}>
                 <TextField
                   id="outlined-basic"
                   label="Available Qty"
@@ -839,8 +852,8 @@ const CreateTransferOrder = ({
                   value={transferOrderItemDTOList?.availaibleQty}
                 />
               </Grid>
-              <Grid item container xs={2} alignItems="center">
-                <Grid item xs={9}>
+              <Grid item container xs={12} md={2} alignItems="center">
+                <Grid item xs={12} md={9}>
                   <TextField
                     id="outlined-basic"
                     label="Quantity"
@@ -849,7 +862,7 @@ const CreateTransferOrder = ({
                     onChange={qtyHandle}
                   />
                 </Grid>
-                <Grid item xs={3} alignContent="center">
+                <Grid item xs={12} md={3} alignContent="center">
                   <IconButton aria-label="add" onClick={addHandle}>
                     <AddBoxIcon
                       sx={{

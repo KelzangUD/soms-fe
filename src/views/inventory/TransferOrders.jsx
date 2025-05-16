@@ -10,10 +10,12 @@ import UpdateTransferOrder from "./UpdateTransferOrder";
 import { LoaderDialog, Notification, RenderStatus } from "../../ui/index";
 import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
 
 const TransferOrders = () => {
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
+  const { isMdUp } = useCommon();
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
@@ -118,25 +120,48 @@ const TransferOrders = () => {
     updateTransferOrderShipment(params?.row?.transfer_order_no);
   };
   const transfer_order_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", flex: 2 },
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "transfer_order_no",
+      headerName: "Transfer Order No",
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 200,
+    },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
-      flex: 2.4,
+      flex: isMdUp ? 2.4 : undefined,
+      width: isMdUp ? undefined : 240,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", flex: 2.4 },
-    { field: "posted_date", headerName: "Posted Date", flex: 1.5 },
+    {
+      field: "transfer_to_code",
+      headerName: "Transfer To Code",
+      flex: isMdUp ? 2.4 : undefined,
+      width: isMdUp ? undefined : 240,
+    },
+    {
+      field: "posted_date",
+      headerName: "Posted Date",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
     {
       field: "status",
       headerName: "Status",
-      flex: 1.3,
+      flex: isMdUp ? 1.3 : undefined,
+      width: isMdUp ? undefined : 130,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      flex: 1.5,
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
       renderCell: (params) => (
         <>
           <IconButton
