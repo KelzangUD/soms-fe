@@ -19,12 +19,14 @@ import UpdateRequisition from "./UpdateRequisition";
 import ApproveRequisition from "./ApproveRequisition";
 import { CustomDataTable } from "../../component/common/index";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
 
 const RequisitionApproval = () => {
+  const { isMdUp } = useCommon();
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [requisitionList, setRequisitionList] = useState([]);
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [itemDetails, setItemDetails] = useState([]);
@@ -51,12 +53,12 @@ const RequisitionApproval = () => {
       } else {
         setNotificationMsg(res?.data?.message);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -75,22 +77,39 @@ const RequisitionApproval = () => {
     } else {
       setNotificationMsg(res?.data?.message);
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   };
-  const requisiton_approval_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "requisitionNo", headerName: "Requisition No", flex: 2 },
+  const requisition_approval_columns = [
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "requisitionNo",
+      headerName: "Requisition No",
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 200,
+    },
     {
       field: "requisitionTypeName",
       headerName: "Requisition Type",
-      flex: 2,
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 200,
     },
-    { field: "requisition_Date", headerName: "Requisition Date", flex: 1.5 },
+    {
+      field: "requisition_Date",
+      headerName: "Requisition Date",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 200,
+    },
     {
       field: "approvalStatus",
       headerName: "Approval Status",
-      flex: 1.5,
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.approvalStatus} />
       ),
@@ -98,7 +117,8 @@ const RequisitionApproval = () => {
     {
       field: "action",
       headerName: "Action",
-      flex: 1.5,
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
       renderCell: (params) => (
         <>
           <IconButton
@@ -163,17 +183,17 @@ const RequisitionApproval = () => {
         setShowDialog(false);
         setNotificationMsg(res?.data?.responseText);
         setSeverity("success");
-        setShowNofication(true);
+        setShowNotification(true);
         fetchRequisitionListByApprover();
       } else {
         setNotificationMsg(res?.data?.message);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -200,17 +220,17 @@ const RequisitionApproval = () => {
       if (res?.status === 200) {
         setNotificationMsg(res?.data?.responseText);
         setSeverity("success");
-        setShowNofication(true);
+        setShowNotification(true);
         fetchRequisitionListByApprover();
       } else {
         setNotificationMsg(res?.data?.message);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (err) {
       setNotificationMsg("Failed To Fetch");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -231,17 +251,17 @@ const RequisitionApproval = () => {
       if (res?.status === 200) {
         setNotificationMsg(res?.data?.responseText);
         setSeverity("success");
-        setShowNofication(true);
+        setShowNotification(true);
         fetchRequisitionListByApprover();
       } else {
         setNotificationMsg(res?.data?.message);
         setSeverity("error");
-        setShowNofication(true);
+        setShowNotification(true);
       }
     } catch (err) {
       setNotificationMsg("Failed to fetch");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -285,7 +305,7 @@ const RequisitionApproval = () => {
                   ...row,
                   sl: index + 1,
                 }))}
-                cols={requisiton_approval_columns}
+                cols={requisition_approval_columns}
                 checkboxSelection={true}
                 onRowSelectionModelChange={handleRowSelection}
               />
@@ -296,7 +316,7 @@ const RequisitionApproval = () => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
@@ -359,7 +379,7 @@ const RequisitionApproval = () => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
