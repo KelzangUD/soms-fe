@@ -12,17 +12,19 @@ import { exportToExcel } from "react-json-to-excel";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
+import { useCommon } from "../../contexts/CommonContext";
 
 const PostedTransferShipment = () => {
   const empID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
+  const { isMdUp } = useCommon();
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
   const [transferShipment, setTransferShipment] = useState([]);
   const [transferShipmentDetails, setTransferShipmentDetails] = useState({});
   const [view, setView] = useState(false);
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [open, setOpen] = useState(false);
@@ -44,7 +46,7 @@ const PostedTransferShipment = () => {
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -54,25 +56,48 @@ const PostedTransferShipment = () => {
     fetchPostedTransferShipmentDetails(params?.id);
   };
   const posted_transfer_shipment_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "transfer_order_no", headerName: "Transfer Order No", flex: 1.5 },
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "transfer_order_no",
+      headerName: "Transfer Order No",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
     {
       field: "transfer_from_code",
       headerName: "Transfer From Code",
-      flex: 2.5,
+      flex: isMdUp ? 2.5 : undefined,
+      width: isMdUp ? undefined : 250,
     },
-    { field: "transfer_to_code", headerName: "Tansfer To Code", flex: 3 },
-    { field: "posted_date", headerName: "Posted Date", flex: 1.2 },
+    {
+      field: "transfer_to_code",
+      headerName: "Transfer To Code",
+      flex: isMdUp ? 3 : undefined,
+      width: isMdUp ? undefined : 300,
+    },
+    {
+      field: "posted_date",
+      headerName: "Posted Date",
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 120,
+    },
     {
       field: "status",
       headerName: "Status",
-      flex: 1.2,
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 120,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      flex: 0.7,
+      flex: isMdUp ? 0.7 : undefined,
+      width: isMdUp ? undefined : 100,
       renderCell: (params) => (
         <>
           <IconButton
@@ -124,7 +149,7 @@ const PostedTransferShipment = () => {
     } catch (err) {
       setNotificationMsg("Failed To Fetch Sales All Report");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     } finally {
       setIsLoading(false);
     }
@@ -178,21 +203,21 @@ const PostedTransferShipment = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
-                  <Grid item xs={3}>
+                  <Grid item xs={4} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker label="From*" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker label="To*" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={3}>
                     <Button variant="contained">Search</Button>
                   </Grid>
                 </Grid>
@@ -235,7 +260,7 @@ const PostedTransferShipment = () => {
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
