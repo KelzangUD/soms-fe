@@ -1,5 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import Route from "../routes/Route";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const CommonContext = createContext();
 
@@ -31,6 +33,9 @@ export const CommonProvider = ({ children }) => {
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [locatorsList, setLocatorsList] = useState([]);
+
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   const fetchSalesType = async () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
@@ -355,6 +360,7 @@ export const CommonProvider = ({ children }) => {
         validateSerialNumberWithLocator,
         fetchTrasnferOrderToLocator,
         transferOrderToLocator,
+        isMdUp
       }}
     >
       {children}

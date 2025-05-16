@@ -5,10 +5,12 @@ import Route from "../../routes/Route";
 import { Notification, LoaderDialog, RenderStatus } from "../../ui/index";
 import ViewRequisitionItemDetails from "./ViewRequisitionItemDetails";
 import { CustomDataTable } from "../../component/common/index";
+import { useCommon } from "../../contexts/CommonContext";
 
 const RequisitionList = () => {
   const access_token = localStorage.getItem("access_token");
   const empId = localStorage.getItem("username");
+  const { isMdUp } = useCommon();
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -47,18 +49,35 @@ const RequisitionList = () => {
   };
 
   const requisition_list_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
-    { field: "requisitionNo", headerName: "Requisition No", flex: 2 },
+    {
+      field: "sl",
+      headerName: "Sl.No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "requisitionNo",
+      headerName: "Requisition No",
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 200,
+    },
     {
       field: "requisitionTypeName",
       headerName: "Requisition Type",
-      flex: 2,
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 200,
     },
-    { field: "requisition_Date", headerName: "Requisition Date", flex: 1.5 },
+    {
+      field: "requisition_Date",
+      headerName: "Requisition Date",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
     {
       field: "approvalStatus",
       headerName: "Approval Status",
-      flex: 1.3,
+      flex: isMdUp ? 1.3 : undefined,
+      width: isMdUp ? undefined : 150,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.approvalStatus} />
       ),
@@ -66,7 +85,8 @@ const RequisitionList = () => {
     {
       field: "action",
       headerName: "Action",
-      flex: 0.7,
+      flex: isMdUp ? 0.7 : undefined,
+      width: isMdUp ? undefined : 100,
       renderCell: (params) => (
         <>
           <IconButton
