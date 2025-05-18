@@ -24,7 +24,7 @@ import { useCommon } from "../../contexts/CommonContext";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const PaymentCollection = () => {
-  const { regionsOrExtensions } = useCommon();
+  const { regionsOrExtensions, isMdUp } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -53,7 +53,10 @@ const PaymentCollection = () => {
       );
       if (res?.status === 200) {
         const queryParams = new URLSearchParams();
-        queryParams.append("advance", res?.data?.advance === null ? 0 : res?.data?.advance);
+        queryParams.append(
+          "advance",
+          res?.data?.advance === null ? 0 : res?.data?.advance
+        );
         queryParams.append("amount", res?.data?.amount);
         queryParams.append("applicationNo", res?.data?.applicationNo);
         queryParams.append("billing", res?.data?.billing);
@@ -61,9 +64,18 @@ const PaymentCollection = () => {
         queryParams.append("createdBy", res?.data?.createdBy);
         queryParams.append("customerName", res?.data?.customerName);
         queryParams.append("customerNo", res?.data?.customerNo);
-        queryParams.append("discount", res?.data?.discount === null ? 0 : res?.data?.discount);
-        queryParams.append("downPayment", res?.data?.downPayment === null ? 0 : res?.data?.downPayment);
-        queryParams.append("grossTotal", res?.data?.grossTotal === null ? 0 : res?.data?.grossTotal);
+        queryParams.append(
+          "discount",
+          res?.data?.discount === null ? 0 : res?.data?.discount
+        );
+        queryParams.append(
+          "downPayment",
+          res?.data?.downPayment === null ? 0 : res?.data?.downPayment
+        );
+        queryParams.append(
+          "grossTotal",
+          res?.data?.grossTotal === null ? 0 : res?.data?.grossTotal
+        );
         queryParams.append("paymentDate", res?.data?.posting_date);
         queryParams.append("phone", res?.data?.phone);
         queryParams.append("receiptType", res?.data?.receiptType);
@@ -91,40 +103,56 @@ const PaymentCollection = () => {
   };
 
   const payment_collection_columns = [
-    { field: "sl", headerName: "Sl.No", flex: 0.4 },
-    { field: "payment_amount", headerName: "Payment Amount", flex: 1.1 },
+    {
+      field: "sl",
+      headerName: "Sl.No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "payment_amount",
+      headerName: "Payment Amount",
+      flex: isMdUp ? 1.1 : undefined,
+      width: isMdUp ? undefined : 140,
+    },
     {
       field: "recharge_type",
       headerName: "Payment Type",
-      flex: 0.9,
+      flex: isMdUp ? 0.9 : undefined,
+      width: isMdUp ? undefined : 150,
     },
-    { field: "payment_ref_number", headerName: "Reference Number", flex: 1.5 },
+    {
+      field: "payment_ref_number",
+      headerName: "Reference Number",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
     {
       field: "result_code",
       headerName: "Status",
-      flex: 1.1,
+      flex: isMdUp ? 1.1 : undefined,
+      width: isMdUp ? undefined : 130,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.result_code} />
       ),
     },
-    { field: "created_date", headerName: "Created Date", flex: 0.9 },
-    { field: "created_by", headerName: "Created User", flex: 1.5 },
-    // {
-    //   field: "old_print",
-    //   headerName: "Old Print",
-    //   flex: 0.9,
-    //   renderCell: (params) => (
-    //     <>
-    //       <IconButton aria-label="old_print" size="small" color="primary">
-    //         <PrintIcon fontSize="inherit" />
-    //       </IconButton>
-    //     </>
-    //   ),
-    // },
+    {
+      field: "created_date",
+      headerName: "Created Date",
+      flex: isMdUp ? 0.9 : undefined,
+      width: isMdUp ? undefined : 130,
+    },
+    {
+      field: "created_by",
+      headerName: "Created User",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
     {
       field: "action",
       headerName: "Action",
-      flex: 0.9,
+      flex: isMdUp ? 0.9 : undefined,
+      width: isMdUp ? undefined : 120,
       renderCell: (params) => (
         <>
           <IconButton
@@ -257,7 +285,7 @@ const PaymentCollection = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={regionsOrExtensions?.map((item) => ({
@@ -279,7 +307,7 @@ const PaymentCollection = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -290,7 +318,7 @@ const PaymentCollection = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
