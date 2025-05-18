@@ -293,19 +293,6 @@ const Nav = () => {
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontWeight: 400,
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            {currentLocation.toUpperCase()}
-          </Typography>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="small"
@@ -318,6 +305,20 @@ const Nav = () => {
               <MenuIcon />
             </IconButton>
           </Box>
+          <Typography
+            variant="h6"
+            noWrap
+            sx={{
+              mr: 2,
+              display: "flex",
+              fontWeight: 400,
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            {currentLocation.toUpperCase()}
+          </Typography>
+
           <Box>
             <IconButton
               size="small"
