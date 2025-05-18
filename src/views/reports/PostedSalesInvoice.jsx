@@ -27,6 +27,7 @@ const PostedSalesInvoice = () => {
   const { regionsOrExtensions } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const { isMdUp } = useCommon();
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
@@ -54,35 +55,6 @@ const PostedSalesInvoice = () => {
         null
       );
       if (res?.status === 200) {
-        // const queryParams = new URLSearchParams();
-        // queryParams.append("advance", res?.data?.advance);
-        // queryParams.append("amount", res?.data?.amount);
-        // queryParams.append("applicationNo", res?.data?.applicationNo);
-        // queryParams.append("billing", res?.data?.billing);
-        // queryParams.append("companyName", res?.data?.companyName);
-        // queryParams.append("createdBy", res?.data?.createdBy);
-        // queryParams.append("customerName", res?.data?.customerName);
-        // queryParams.append("customerNo", res?.data?.customerNo);
-        // queryParams.append("discount", res?.data?.discount);
-        // queryParams.append("downPayment", res?.data?.downPayment);
-        // queryParams.append("grossTotal", res?.data?.grossTotal);
-        // queryParams.append("paymentDate", res?.data?.posting_date);
-        // queryParams.append("phone", res?.data?.phone);
-        // queryParams.append("receiptType", res?.data?.receiptType);
-        // queryParams.append("rechargeDate", res?.data?.rechargeDate);
-        // queryParams.append("tax", res?.data?.tax);
-        // queryParams.append("totalAmount", res?.data?.totalAmount);
-        // res?.data?.itemDetails?.forEach((item) =>
-        //   queryParams.append("itemDetails", JSON.stringify(item))
-        // );
-        // const queryString = queryParams.toString();
-        // const newWindow = window.open(
-        //   `/sales-order-receipt?${queryString}`,
-        //   "_blank",
-        //   "noopener,noreferrer"
-        // );
-        // if (newWindow) newWindow.opener = null;
-
         // Store full data in localStorage
         localStorage.setItem("salesOrderData", JSON.stringify(res?.data));
         // Pass only an identifier in the URL (e.g., applicationNo)
@@ -108,26 +80,84 @@ const PostedSalesInvoice = () => {
   };
 
   const posted_sales_invoice_columns = [
-    { field: "sl", headerName: "Sl.No", width: 40 },
-    { field: "pos_no", headerName: "POS No", width: 150 },
+    {
+      field: "sl",
+      headerName: "Sl.No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "pos_no",
+      headerName: "POS No",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
     {
       field: "posting_date",
       headerName: "POS Date",
       width: 100,
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 100,
     },
-    { field: "customer_name", headerName: "Customer Name", width: 250 },
-    { field: "mobile_number", headerName: "Mobile No", width: 150 },
-    { field: "type", headerName: "Payment Terms", width: 120 },
-    { field: "bank_account_number", headerName: "Bank Name", width: 300 },
-    { field: "cheque_number", headerName: "Cheque No", width: 90 },
-    { field: "paymentDate", headerName: "Cheque Date", width: 100 },
-    { field: "payment_amount", headerName: "Payment Amount (Nu)", width: 150 },
-    { field: "created_by", headerName: "Created User", width: 150 },
-    { field: "invoice_type", headerName: "Invoice Type", width: 100 },
+    {
+      field: "customer_name",
+      headerName: "Customer Name",
+      flex: isMdUp ? 2.5 : undefined,
+      width: isMdUp ? undefined : 250,
+    },
+    {
+      field: "mobile_number",
+      headerName: "Mobile No",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
+    {
+      field: "type",
+      headerName: "Payment Terms",
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 120,
+    },
+    {
+      field: "bank_account_number",
+      headerName: "Bank Name",
+      flex: isMdUp ? 3 : undefined,
+      width: isMdUp ? undefined : 300,
+    },
+    {
+      field: "cheque_number",
+      headerName: "Cheque No",
+      flex: isMdUp ? 0.9 : undefined,
+      width: isMdUp ? undefined : 90,
+    },
+    {
+      field: "paymentDate",
+      headerName: "Cheque Date",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 100,
+    },
+    {
+      field: "payment_amount",
+      headerName: "Payment Amount (Nu)",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
+    {
+      field: "created_by",
+      headerName: "Created User",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
+    {
+      field: "invoice_type",
+      headerName: "Invoice Type",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 100,
+    },
     {
       field: "action",
       headerName: "Action",
-      width: 80,
+      flex: isMdUp ? 0.8 : undefined,
+      width: isMdUp ? undefined : 80,
       renderCell: (params) => (
         <>
           <IconButton
@@ -271,7 +301,7 @@ const PostedSalesInvoice = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container xs={12} spacing={2}>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <Autocomplete
                       disablePortal
                       options={regionsOrExtensions?.map((item) => ({
@@ -293,7 +323,7 @@ const PostedSalesInvoice = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={6} md={2}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -304,7 +334,7 @@ const PostedSalesInvoice = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={6} md={2}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -316,14 +346,14 @@ const PostedSalesInvoice = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <TextField
                       label="Customer Name"
                       name="customer_name"
                       onChange={customerNameHandle}
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={9} md={2}>
                     <TextField
                       label="POS No."
                       name="pos_no"
