@@ -24,7 +24,7 @@ import { useReactToPrint } from "react-to-print";
 import { dateFormatterTwo } from "../../util/CommonUtil";
 
 const RechargeCollection = () => {
-  const { regionsOrExtensions } = useCommon();
+  const { regionsOrExtensions, isMdUp } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -104,44 +104,56 @@ const RechargeCollection = () => {
     }
   };
   const recharge_collection_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.4 },
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
     {
       field: "payment_amount",
       headerName: "Recharge Amount",
-      flex: 1.5,
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 180,
     },
     {
       field: "recharge_type",
       headerName: "Payment Type",
-      flex: 1.1,
+      flex: isMdUp ? 1.1 : undefined,
+      width: isMdUp ? undefined : 180,
     },
-    { field: "payment_ref_number", headerName: "Reference Number", flex: 1.5 },
-    { field: "created_date", headerName: "Created Date", flex: 1 },
-    { field: "created_by", headerName: "Created User", flex: 1.8 },
+    {
+      field: "payment_ref_number",
+      headerName: "Reference Number",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
+    {
+      field: "created_date",
+      headerName: "Created Date",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 120,
+    },
+    {
+      field: "created_by",
+      headerName: "Created User",
+      flex: isMdUp ? 1.8 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
     {
       field: "result_code",
       headerName: "Status",
-      flex: 1.2,
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 130,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.result_code} />
       ),
     },
-    // {
-    //   field: "old_print",
-    //   headerName: "Old Print",
-    //   flex: 1,
-    //   renderCell: (params) => (
-    //     <>
-    //       <IconButton aria-label="view" size="small" color="primary">
-    //         <PrintIcon fontSize="inherit" />
-    //       </IconButton>
-    //     </>
-    //   ),
-    // },
     {
       field: "action",
       headerName: "Action",
-      flex: 1,
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 120,
       renderCell: (params) => (
         <>
           <IconButton
@@ -260,7 +272,7 @@ const RechargeCollection = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={regionsOrExtensions?.map((item) => ({
@@ -282,7 +294,7 @@ const RechargeCollection = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -293,7 +305,7 @@ const RechargeCollection = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
