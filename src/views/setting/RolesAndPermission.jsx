@@ -86,7 +86,7 @@ const RolesAndPermission = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs={3} container spacing={2} sx={{ mb: 1 }}>
+              <Grid item xs={12} md={3} container spacing={2} sx={{ mb: 1 }}>
                 <Grid item xs={12} sx={{ my: 1 }}>
                   <Button
                     variant="contained"
@@ -117,7 +117,7 @@ const RolesAndPermission = () => {
                   </Paper>
                 </Grid>
               </Grid>
-              <Grid item xs={9} sx={{ my: 1 }}>
+              <Grid item xs={12} md={9} sx={{ my: 1 }}>
                 <ModuleAccess
                   moduleAccess={moduleAccess}
                   roleId={selectedId}

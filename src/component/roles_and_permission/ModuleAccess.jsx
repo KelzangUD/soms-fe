@@ -56,7 +56,7 @@ const ModuleAccess = ({
   const [access, setAccess] = useState([]);
   const [permissionList, setPermissionList] = useState([]);
   const [notificationMsg, setNotificationMsg] = useState("");
-  const [showNotification, setShowNofication] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [severity, setSeverity] = useState("");
   const [changedAccess, setChangedAccess] = useState([]); // Store only changed access records
   const [changedPermissions, setChangedPermissions] = useState([]);
@@ -198,11 +198,11 @@ const ModuleAccess = ({
       fetchModulePermission();
       setNotificationMsg("Role Permission has been successfully updated.");
       setSeverity("info");
-      setShowNofication(true);
+      setShowNotification(true);
     } else {
       setNotificationMsg("Error occured updating role permission. Try again!");
       setSeverity("error");
-      setShowNofication(true);
+      setShowNotification(true);
     }
   };
 
@@ -230,7 +230,7 @@ const ModuleAccess = ({
                   Module Access
                 </Typography>
                 <Paper>
-                  <List sx={{ paddingX: "16px" }}>
+                  <List sx={{ paddingX:  "16px" }}>
                     {combinedModules?.map((item) => (
                       <ListItem disablePadding key={item?.id}>
                         <ListItemIcon>{item?.icon}</ListItemIcon>
@@ -350,7 +350,7 @@ const ModuleAccess = ({
       {showNotification && (
         <Notification
           open={showNotification}
-          setOpen={setShowNofication}
+          setOpen={setShowNotification}
           message={notificationMsg}
           severity={severity}
         />
