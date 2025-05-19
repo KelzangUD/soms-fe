@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Paper, Grid, Button, InputBase, IconButton } from "@mui/material";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import SearchIcon from "@mui/icons-material/Search";
+import { Box, Grid, Button, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -10,9 +8,11 @@ import ViewEditSystemUserModal from "./ViewEditSystemUserModal";
 import { CustomDataTable } from "../../component/common/index";
 import { RenderStatus } from "../../ui";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
 
 const SystemUsers = () => {
   const access_token = localStorage.getItem("access_token");
+  const { isMdUp } = useCommon();
   const [systemUsers, setSystemUsers] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -35,25 +35,48 @@ const SystemUsers = () => {
   };
 
   const columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.3 },
-    { field: "full_name", headerName: "Name", flex: 1.5 },
-    { field: "email_address", headerName: "Email", flex: 2.3 },
-    { field: "createdDate", headerName: "Created Date", flex: 1.2 },
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "full_name",
+      headerName: "Name",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
+    {
+      field: "email_address",
+      headerName: "Email",
+      flex: isMdUp ? 2.3 : undefined,
+      width: isMdUp ? undefined : 280,
+    },
+    {
+      field: "createdDate",
+      headerName: "Created Date",
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
     {
       field: "roleName",
       headerName: "Role",
-      flex: 1.5,
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 180,
     },
     {
       field: "status",
       headerName: "Status",
-      flex: 1.5,
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 130,
       renderCell: (params) => <RenderStatus status={params?.row?.status} />,
     },
     {
       field: "action",
       headerName: "Action",
-      flex: 1,
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 100,
       renderCell: (params) => (
         <>
           <IconButton
