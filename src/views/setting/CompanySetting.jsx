@@ -194,7 +194,7 @@ const CompanySetting = () => {
                         )}
                       </Grid>
                       <Grid item container spacing={1}>
-                        <Grid item xs={4}>
+                        <Grid item xs={12} md={4}>
                           <TextField
                             label="Company Short Name"
                             name="shortName"
@@ -211,7 +211,7 @@ const CompanySetting = () => {
                             </FormHelperText>
                           )}
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={12} md={4}>
                           <TextField
                             label="Incorporation Date"
                             name="incorporateDate"
@@ -219,7 +219,7 @@ const CompanySetting = () => {
                             disabled
                           />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={12} md={4}>
                           <TextField
                             label="TPN Number"
                             name="tpn"
@@ -237,25 +237,28 @@ const CompanySetting = () => {
                           )}
                         </Grid>
                       </Grid>
-                      <Grid item container>
-                        <TextField
-                          label="Address"
-                          name="companyAddress"
-                          onChange={handleChange}
-                          value={values?.companyAddress}
-                          onBlur={handleBlur}
-                        />
-                        {touched?.companyAddress && errors?.companyAddress && (
-                          <FormHelperText
-                            error
-                            id="standard-weight-helper-text--register"
-                          >
-                            {errors?.companyAddress}
-                          </FormHelperText>
-                        )}
+                      <Grid item container spacing={1}>
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Address"
+                            name="companyAddress"
+                            onChange={handleChange}
+                            value={values?.companyAddress}
+                            onBlur={handleBlur}
+                          />
+                          {touched?.companyAddress &&
+                            errors?.companyAddress && (
+                              <FormHelperText
+                                error
+                                id="standard-weight-helper-text--register"
+                              >
+                                {errors?.companyAddress}
+                              </FormHelperText>
+                            )}
+                        </Grid>
                       </Grid>
                       <Grid item container spacing={1} sx={{ mt: -3 }}>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3}>
                           <TextField
                             label="Country"
                             margin="normal"
@@ -284,7 +287,12 @@ const CompanySetting = () => {
                             </FormHelperText>
                           )}
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid
+                          item
+                          xs={12}
+                          md={3}
+                          sx={{ mt: { xs: -2, md: 0 } }}
+                        >
                           <TextField
                             label="Region"
                             margin="normal"
@@ -313,7 +321,7 @@ const CompanySetting = () => {
                             </FormHelperText>
                           )}
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3} sx={{ mt: { xs: -2, md: 0 } }}>
                           <TextField
                             label="Dzongkhag"
                             margin="normal"
@@ -342,7 +350,7 @@ const CompanySetting = () => {
                             </FormHelperText>
                           )}
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3} sx={{ mt: { xs: -2, md: 0 } }}>
                           <TextField
                             label="Location"
                             margin="normal"
@@ -373,7 +381,7 @@ const CompanySetting = () => {
                         </Grid>
                       </Grid>
                       <Grid item container spacing={1} sx={{ mt: -2 }}>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3}>
                           <TextField
                             label="Postal Code"
                             name="postalCode"
@@ -390,7 +398,7 @@ const CompanySetting = () => {
                             </FormHelperText>
                           )}
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                           <TextField
                             label="Company Email"
                             name="companyEmail"
@@ -399,7 +407,7 @@ const CompanySetting = () => {
                             onBlur={handleBlur}
                           />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3}>
                           <TextField
                             label="Phone Number"
                             name="companyPhoneNo"
@@ -419,7 +427,7 @@ const CompanySetting = () => {
                         </Grid>
                       </Grid>
                       <Grid item container spacing={1}>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3}>
                           <TextField
                             label="Contact Person"
                             name="contactPerson"
@@ -436,7 +444,7 @@ const CompanySetting = () => {
                             </FormHelperText>
                           )}
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                           <TextField
                             label="Contact Email"
                             name="contactEmail"
@@ -453,7 +461,7 @@ const CompanySetting = () => {
                             </FormHelperText>
                           )}
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} md={3}>
                           <TextField
                             label="Mobile Number"
                             name="mobileNo"
