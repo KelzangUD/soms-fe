@@ -17,6 +17,7 @@ const OnHandReport = () => {
     itemsList,
     fetchLocatorsBasedOnExtension,
     locatorsList,
+    isMdUp,
   } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -159,6 +160,7 @@ const OnHandReport = () => {
     doc.save("OnHand_Report");
   };
 
+  const columns = on_hand_report_columns(isMdUp); 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -171,7 +173,7 @@ const OnHandReport = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} sx={{ pt: 2 }}>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <TextField
                       label="As On Date"
                       name="as_on_date"
@@ -180,7 +182,7 @@ const OnHandReport = () => {
                       value={dateFormatterTwo(new Date())}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -206,7 +208,7 @@ const OnHandReport = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -223,7 +225,7 @@ const OnHandReport = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     {userDetails?.subInventory === "WAREH" ? (
                       <Autocomplete
                         disablePortal
@@ -265,7 +267,7 @@ const OnHandReport = () => {
                       />
                     )}
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <TextField
                       label="Serial No."
                       name="serial_no"
@@ -274,7 +276,7 @@ const OnHandReport = () => {
                       onChange={serialNoHandle}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <TextField
                       label="IMEI No."
                       name="imei_no"
@@ -307,7 +309,7 @@ const OnHandReport = () => {
                       sl: index + 1,
                       ...item,
                     }))}
-                    cols={on_hand_report_columns}
+                    cols={columns}
                   />
                 </Grid>
               </Grid>
