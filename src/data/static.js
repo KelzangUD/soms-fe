@@ -1,76 +1,95 @@
 // ==================== Sales Report-All Headers =================================
-export const sales_report_all_columns = [
-  { field: "sl", headerName: "Sl. No", width: 60 },
-  {
-    field: "sales_type",
-    headerName: "Sales Type",
-    width: 100,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.sales_type || "---",
-  },
-  {
-    field: "item_code",
-    headerName: "Item Code",
-    width: 150,
-    valueGetter: (params) => params?.row?.item_code || "---",
-  },
-  {
-    field: "item_description",
-    headerName: "Item Description",
-    width: 300,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.item_description || "---",
-  },
-  {
-    field: "gross_amount",
-    headerName: "Gross Amount",
-    width: 100,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.gross_amount || "---",
-  },
-  {
-    field: "discount_Value",
-    headerName: "Discount/Commission",
-    width: 150,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.discount_Value || "---",
-  },
-  {
-    field: "additional_Discount",
-    headerName: "Add. Dis",
-    width: 150,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.additional_Discount || "---",
-  },
-  {
-    field: "line_Discount_Amount",
-    headerName: "Lots of Sale Dis",
-    width: 150,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.line_Discount_Amount || "---",
-  },
-  {
-    field: "tds_Amount",
-    headerName: "TDS",
-    width: 80,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.tds_Amount || "---",
-  },
-  {
-    field: "tax_Amount",
-    headerName: "Tax Amount",
-    width: 120,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.tax_Amount || "---",
-  },
-  {
-    field: "net_amount",
-    headerName: "Net Amount",
-    width: 120,
-    valueGetter: (params) =>
-      params?.row?.isTitle ? null : params?.row?.net_amount || "---",
-  },
-];
+export const sales_report_all_columns = (isMdUp) => {
+  return [
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "sales_type",
+      headerName: "Sales Type",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 120,
+      valueGetter: (params) =>
+        params?.row?.isTitle ? null : params?.row?.sales_type || "---",
+    },
+    {
+      field: "item_code",
+      headerName: "Item Code",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 180,
+      valueGetter: (params) => params?.row?.item_code || "---",
+    },
+    {
+      field: "item_description",
+      headerName: "Item Description",
+      flex: isMdUp ? 3 : undefined,
+      width: isMdUp ? undefined : 300,
+      valueGetter: (params) =>
+        params?.row?.isTitle ? null : params?.row?.item_description || "---",
+    },
+    {
+      field: "gross_amount",
+      headerName: "Gross Amount",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 140,
+      valueGetter: (params) =>
+        params?.row?.isTitle ? null : params?.row?.gross_amount || "---",
+    },
+    {
+      field: "discount_Value",
+      headerName: "Discount/Commission",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 190,
+      valueGetter: (params) =>
+        params?.row?.isTitle ? null : params?.row?.discount_Value || "---",
+    },
+    {
+      field: "additional_Discount",
+      headerName: "Add. Dis",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 100,
+      valueGetter: (params) =>
+        params?.row?.isTitle ? null : params?.row?.additional_Discount || "---",
+    },
+    {
+      field: "line_Discount_Amount",
+      headerName: "Lots of Sale Dis",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 150,
+      valueGetter: (params) =>
+        params?.row?.isTitle
+          ? null
+          : params?.row?.line_Discount_Amount || "---",
+    },
+    {
+      field: "tds_Amount",
+      headerName: "TDS",
+      flex: isMdUp ? 0.8 : undefined,
+      width: isMdUp ? undefined : 80,
+      valueGetter: (params) =>
+        params?.row?.isTitle ? null : params?.row?.tds_Amount || "---",
+    },
+    {
+      field: "tax_Amount",
+      headerName: "Tax Amount",
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 120,
+      valueGetter: (params) =>
+        params?.row?.isTitle ? null : params?.row?.tax_Amount || "---",
+    },
+    {
+      field: "net_amount",
+      headerName: "Net Amount",
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 180,
+      valueGetter: (params) =>
+        params?.row?.isTitle ? null : params?.row?.net_amount || "---",
+    },
+  ];
+};
 // ==================== Sales And Order Report Headers ===========================
 export const sales_and_stock_report_columns = (isMdUp) => {
   return [

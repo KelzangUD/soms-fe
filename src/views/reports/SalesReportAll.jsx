@@ -27,7 +27,7 @@ import { useCommon } from "../../contexts/CommonContext";
 import { v4 as uuidv4 } from "uuid";
 
 const SalesReportAll = () => {
-  const { fetchLocatorsBasedOnExtension, locatorsList } = useCommon();
+  const { fetchLocatorsBasedOnExtension, locatorsList, isMdUp } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -1991,6 +1991,8 @@ const SalesReportAll = () => {
     doc.save("Sales All-Report");
   };
 
+  const columns = sales_report_all_columns(isMdUp); 
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -2003,7 +2005,7 @@ const SalesReportAll = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl
                       fullWidth
                       size="small"
@@ -2027,7 +2029,7 @@ const SalesReportAll = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl
                       fullWidth
                       size="small"
@@ -2051,7 +2053,7 @@ const SalesReportAll = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -2062,7 +2064,7 @@ const SalesReportAll = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -2074,7 +2076,7 @@ const SalesReportAll = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <Autocomplete
                       disablePortal
                       onChange={regionOrExtensionHandle}
@@ -2099,7 +2101,7 @@ const SalesReportAll = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -2116,7 +2118,7 @@ const SalesReportAll = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -2162,7 +2164,7 @@ const SalesReportAll = () => {
                 >
                   <CustomDataTable
                     rows={salesAllReport}
-                    cols={sales_report_all_columns}
+                    cols={columns}
                   />
                 </Grid>
               </Grid>
