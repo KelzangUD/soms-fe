@@ -24,7 +24,7 @@ import { dateFormatterTwo } from "../../util/CommonUtil";
 import { useCommon } from "../../contexts/CommonContext";
 
 const BankCollection = () => {
-  const { regionsOrExtensions } = useCommon();
+  const { regionsOrExtensions, isMdUp } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -104,23 +104,65 @@ const BankCollection = () => {
     }
   };
   const bank_collection_columns = [
-    { field: "sl", headerName: "Sl.No", width: 60 },
-    { field: "payment_amount", headerName: "Payment Amount", width: 130 },
+    {
+      field: "sl",
+      headerName: "Sl.No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "payment_amount",
+      headerName: "Payment Amount",
+      flex: isMdUp ? 1.3 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
     {
       field: "type",
       headerName: "Payment Type",
-      width: 100,
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 130,
     },
-    { field: "payment_ref_number", headerName: "Reference Number", width: 150 },
-    { field: "bank_name", headerName: "Bank Name", width: 300 },
-    { field: "cheque", headerName: "Cheque No", width: 100 },
-    { field: "cheque_date", headerName: "Cheque Date", width: 100 },
-    { field: "created_date", headerName: "Created Date", width: 100 },
-    { field: "created_by", headerName: "Created User", width: 160 },
+    {
+      field: "payment_ref_number",
+      headerName: "Reference Number",
+      flex: isMdUp ? 1.5 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
+    {
+      field: "bank_name",
+      headerName: "Bank Name",
+      flex: isMdUp ? 3 : undefined,
+      width: isMdUp ? undefined : 380,
+    },
+    {
+      field: "cheque",
+      headerName: "Cheque No",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 120,
+    },
+    {
+      field: "cheque_date",
+      headerName: "Cheque Date",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 120,
+    },
+    {
+      field: "created_date",
+      headerName: "Created Date",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 120,
+    },
+    {
+      field: "created_by",
+      headerName: "Created User",
+      flex: isMdUp ? 1.6 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
     {
       field: "result_code",
       headerName: "Status",
-      width: 100,
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 120,
       renderCell: (params) => (
         <RenderStatus status={params?.row?.result_code} />
       ),
@@ -128,7 +170,8 @@ const BankCollection = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 60,
+      flex: isMdUp ? 0.6 : undefined,
+      width: isMdUp ? undefined : 100,
       renderCell: (params) => (
         <>
           <IconButton
@@ -261,7 +304,7 @@ const BankCollection = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={regionsOrExtensions?.map((item) => ({
@@ -283,7 +326,7 @@ const BankCollection = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -294,7 +337,7 @@ const BankCollection = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
