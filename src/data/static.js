@@ -72,34 +72,70 @@ export const sales_report_all_columns = [
   },
 ];
 // ==================== Sales And Order Report Headers ===========================
-export const sales_and_stock_report_columns = [
-  { field: "sl", headerName: "Sl. No", flex: 0.3 },
-  { field: "item_code", headerName: "Item Code", flex: 1.8 },
-  {
-    field: "item_details",
-    headerName: "Particulars (Details of Item)",
-    flex: 3.2,
-  },
-  { field: "unit", headerName: "Unit", flex: 0.5 },
-  {
-    field: "opening_balance",
-    headerName: "Opening Balance (Qty)",
-    flex: 1.4,
-  },
-  { field: "stock_received", headerName: "Stock Received (Qty)", flex: 1.4 },
-  { field: "transfer_out", headerName: "Transfer Out (Qty)", flex: 1.2 },
-  { field: "sales_qty", headerName: "Sales Qty", flex: 0.7 },
-  {
-    field: "amount",
-    headerName: "Amount",
-    flex: 0.7,
-  },
-  {
-    field: "closing_balance",
-    headerName: "Closing Balance",
-    flex: 1,
-  },
-];
+export const sales_and_stock_report_columns = (isMdUp) => {
+  return [
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "item_code",
+      headerName: "Item Code",
+      flex: isMdUp ? 1.8 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
+    {
+      field: "item_details",
+      headerName: "Particulars (Details of Item)",
+      flex: isMdUp ? 3.2 : undefined,
+      width: isMdUp ? undefined : 380,
+    },
+    {
+      field: "unit",
+      headerName: "Unit",
+      flex: isMdUp ? 0.5 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "opening_balance",
+      headerName: "Opening Balance (Qty)",
+      flex: isMdUp ? 1.4 : undefined,
+      width: isMdUp ? undefined : 170,
+    },
+    {
+      field: "stock_received",
+      headerName: "Stock Received (Qty)",
+      flex: isMdUp ? 1.4 : undefined,
+      width: isMdUp ? undefined : 170,
+    },
+    {
+      field: "transfer_out",
+      headerName: "Transfer Out (Qty)",
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
+    {
+      field: "sales_qty",
+      headerName: "Sales Qty",
+      flex: isMdUp ? 0.7 : undefined,
+      width: isMdUp ? undefined : 100,
+    },
+    {
+      field: "amount",
+      headerName: "Amount",
+      flex: isMdUp ? 0.7 : undefined,
+      width: isMdUp ? undefined : 90,
+    },
+    {
+      field: "closing_balance",
+      headerName: "Closing Balance",
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 140,
+    },
+  ];
+};
 // ===================== On-Hand Report Headers ===============================
 export const on_hand_report_columns = (isMdUp) => {
   return [

@@ -31,6 +31,7 @@ const SalesAndStockReport = () => {
     fetchLocatorsBasedOnExtension,
     locatorsList,
     itemsList,
+    isMdUp,
   } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -180,6 +181,7 @@ const SalesAndStockReport = () => {
     });
     doc.save("Sales and Stock Report");
   };
+  const columns = sales_and_stock_report_columns(isMdUp); 
 
   return (
     <>
@@ -193,7 +195,7 @@ const SalesAndStockReport = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -204,7 +206,7 @@ const SalesAndStockReport = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -216,7 +218,7 @@ const SalesAndStockReport = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -233,7 +235,7 @@ const SalesAndStockReport = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -250,7 +252,7 @@ const SalesAndStockReport = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -298,7 +300,7 @@ const SalesAndStockReport = () => {
                 >
                   <CustomDataTable
                     rows={salesAndStocks}
-                    cols={sales_and_stock_report_columns}
+                    cols={columns}
                   />
                 </Grid>
               </Grid>
