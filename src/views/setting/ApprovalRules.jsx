@@ -7,6 +7,8 @@ import Route from "../../routes/Route";
 import AddApprovalRuleDialog from "./AddApprovalRuleDialog";
 import ViewApprovalRule from "./ViewApprovalRule";
 import { CustomDataTable } from "../../component/common/index";
+import { useCommon } from "../../contexts/CommonContext";
+import { RenderStatus } from "../../ui";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -31,6 +33,7 @@ function a11yProps(index) {
   };
 }
 const ApprovalRules = () => {
+  const { isMdUp } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const [value, setValue] = useState(0);
   const [ruleList, setRuleList] = useState([]);
@@ -61,19 +64,42 @@ const ApprovalRules = () => {
   }, [selectedLabel]);
 
   const approval_rules_columns = [
-    { field: "sl", headerName: "Sl. No", flex: 0.05 },
-    { field: "approvalUserRoleName", headerName: "For", flex: 0.2 },
-    { field: "approvalTypeName", headerName: "Type", flex: 0.2 },
-    { field: "approvalRuleName", headerName: "Rule Name", flex: 0.2 },
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "approvalUserRoleName",
+      headerName: "For",
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 150,
+    },
+    {
+      field: "approvalTypeName",
+      headerName: "Type",
+      flex: isMdUp ? 1.4 : undefined,
+      width: isMdUp ? undefined : 140,
+    },
+    {
+      field: "approvalRuleName",
+      headerName: "Rule Name",
+      flex: isMdUp ? 1.4 : undefined,
+      width: isMdUp ? undefined : 140,
+    },
     {
       field: "approvalStatus",
       headerName: "Status",
-      flex: 0.2,
+      flex: isMdUp ? 1.2 : undefined,
+      width: isMdUp ? undefined : 100,
+      renderCell: (params) => <RenderStatus status={params?.row?.approvalStatus} />,
     },
     {
       field: "action",
       headerName: "Action",
-      flex: 0.1,
+      flex: isMdUp ? 1 : undefined,
+      width: isMdUp ? undefined : 100,
       renderCell: (params) => (
         <>
           <IconButton
