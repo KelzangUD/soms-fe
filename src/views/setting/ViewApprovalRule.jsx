@@ -83,7 +83,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
         <DialogContent dividers>
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={1}>
-              <Grid item xs={4}>
+              <Grid item xs={12} md={4}>
                 <TextField
                   label="For"
                   name="approvalFor"
@@ -92,7 +92,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
                   disabled
                 ></TextField>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12} md={4}>
                 <TextField
                   label="Type"
                   name="type"
@@ -101,7 +101,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
                   disabled
                 ></TextField>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12} md={4}>
                 <TextField
                   label="Role"
                   name="role"
@@ -112,7 +112,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
               </Grid>
             </Grid>
             <Grid container spacing={1} style={{ marginTop: "2px" }}>
-              <Grid item xs={4}>
+              <Grid item xs={12} md={4}>
                 <TextField
                   label="Rule Name"
                   name="rule_name"
@@ -121,7 +121,7 @@ const ViewApprovalRule = ({ open, handleClose, ruleId }) => {
                   disabled
                 ></TextField>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12} md={4}>
                 <TextField
                   label="Status"
                   name="rule_name"
