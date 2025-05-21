@@ -41,7 +41,7 @@ export const CommonProvider = ({ children }) => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
     if (res?.status === 200) {
       const currentDate = new Date().getDate();
-      if (currentDate < 20) {
+      if (currentDate <= 20) {
         setSalesType(res?.data);
       } else {
         setSalesType(
