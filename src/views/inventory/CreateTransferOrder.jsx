@@ -102,12 +102,6 @@ const CreateTransferOrder = ({
     }
   };
   const fetchToStore = async () => {
-    setParameters((prev) => ({
-      ...prev,
-      selectedStore: "",
-      transfer_To: "",
-      transfer_To_Store: "",
-    }));
     const res = await Route(
       "GET",
       `/Common/FetchTransferToStore?StoreID=${userDetails?.storeId}&storeName=${userDetails?.regionName}&transferType=${parameters?.transfer_Type}`,
