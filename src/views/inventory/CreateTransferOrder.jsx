@@ -102,6 +102,12 @@ const CreateTransferOrder = ({
     }
   };
   const fetchToStore = async () => {
+    setParameters((prev) => ({
+      ...prev,
+      selectedStore: "",
+      transfer_To: "",
+      transfer_To_Store: "",
+    }));
     const res = await Route(
       "GET",
       `/Common/FetchTransferToStore?StoreID=${userDetails?.storeId}&storeName=${userDetails?.regionName}&transferType=${parameters?.transfer_Type}`,
@@ -118,7 +124,7 @@ const CreateTransferOrder = ({
     if (parameters?.transfer_Type !== "") {
       fetchToStore();
     }
-  }, [userDetails, parameters?.transfer_Type]);
+  }, [parameters?.transfer_Type]);
 
   useEffect(() => {
     fetchFromSubInventory();
@@ -824,7 +830,7 @@ const CreateTransferOrder = ({
                   value={transferOrderItemDTOList?.item_Number}
                 />
               </Grid>
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={2}>
                 <TextField
                   id="outlined-basic"
                   label="Serial Number"
@@ -834,7 +840,7 @@ const CreateTransferOrder = ({
                   value={transferOrderItemDTOList?.item_Serial_Number}
                 />
               </Grid>
-              <Grid item xs={12} md={1.5}>
+              <Grid item xs={12} md={1}>
                 <TextField
                   id="outlined-basic"
                   label="UOM"
@@ -852,7 +858,7 @@ const CreateTransferOrder = ({
                   value={transferOrderItemDTOList?.availaibleQty}
                 />
               </Grid>
-              <Grid item container xs={12} md={2} alignItems="center">
+              <Grid item container xs={12} md={1.5} alignItems="center">
                 <Grid item xs={12} md={9}>
                   <TextField
                     id="outlined-basic"
