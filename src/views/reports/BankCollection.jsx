@@ -333,6 +333,7 @@ const BankCollection = () => {
                           label="From Date"
                           value={dayjs(fromDate)}
                           onChange={fromDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -344,6 +345,7 @@ const BankCollection = () => {
                           label="To Date"
                           value={dayjs(toDate)}
                           onChange={toDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>

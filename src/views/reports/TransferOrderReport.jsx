@@ -276,6 +276,7 @@ const TransferOrderReport = () => {
                           label="From Date"
                           value={dayjs(params?.fromDate)}
                           onChange={fromDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -287,6 +288,7 @@ const TransferOrderReport = () => {
                           label="To Date"
                           value={dayjs(params?.toDate)}
                           onChange={toDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>

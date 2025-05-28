@@ -232,6 +232,7 @@ const EmployeeEMIReport = () => {
                           label="From Date"
                           value={dayjs(fromDate)}
                           onChange={fromDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -243,6 +244,7 @@ const EmployeeEMIReport = () => {
                           label="To Date"
                           value={dayjs(toDate)}
                           onChange={toDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>

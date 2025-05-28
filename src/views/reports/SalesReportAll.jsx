@@ -2060,6 +2060,7 @@ const SalesReportAll = () => {
                           label="From Date"
                           onChange={fromDateHandle}
                           value={dayjs(params?.fromDate)}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -2072,6 +2073,7 @@ const SalesReportAll = () => {
                           onChange={toDateHandle}
                           value={dayjs(params?.toDate)}
                           minDate={dayjs(params?.fromDate)}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>

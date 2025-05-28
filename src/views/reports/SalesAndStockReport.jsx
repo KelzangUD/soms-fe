@@ -53,9 +53,9 @@ const SalesAndStockReport = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [severity, setSeverity] = useState("info");
   useEffect(() => {
-    fetchLocatorsBasedOnExtension(userDetails?.regionName);
+    fetchLocatorsBasedOnExtension(params?.store);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userDetails?.regionName]);
+  }, [params?.store]);
   const fetchSalesAndStockReport = async () => {
     setIsLoading(true);
     try {
@@ -181,7 +181,7 @@ const SalesAndStockReport = () => {
     });
     doc.save("Sales and Stock Report");
   };
-  const columns = sales_and_stock_report_columns(isMdUp); 
+  const columns = sales_and_stock_report_columns(isMdUp);
 
   return (
     <>
@@ -202,6 +202,7 @@ const SalesAndStockReport = () => {
                           label="From Date"
                           value={dayjs(params?.fromDate)}
                           onChange={fromDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -214,6 +215,7 @@ const SalesAndStockReport = () => {
                           value={dayjs(params?.toDate)}
                           onChange={toDateHandle}
                           minDate={dayjs(params?.fromDate)}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -222,7 +224,7 @@ const SalesAndStockReport = () => {
                     <Autocomplete
                       disablePortal
                       options={[
-                        { label: "ALL", id: "" },
+                        { label: "ALL", id: "ALL" },
                         ...(regionsOrExtensions?.map((item) => ({
                           label: item?.extensionName,
                           id: item?.id,
@@ -233,6 +235,14 @@ const SalesAndStockReport = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="Region/Extension" />
                       )}
+                      disabled={
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager" ||
+                        userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "Regional Accountant"
+                          ? false
+                          : true
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} md={2}>
@@ -298,10 +308,7 @@ const SalesAndStockReport = () => {
                   xs={12}
                   ref={contentRef}
                 >
-                  <CustomDataTable
-                    rows={salesAndStocks}
-                    cols={columns}
-                  />
+                  <CustomDataTable rows={salesAndStocks} cols={columns} />
                 </Grid>
               </Grid>
             </Box>

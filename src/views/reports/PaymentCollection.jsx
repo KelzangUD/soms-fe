@@ -314,6 +314,7 @@ const PaymentCollection = () => {
                           label="From Date"
                           value={dayjs(fromDate)}
                           onChange={fromDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -326,6 +327,7 @@ const PaymentCollection = () => {
                           value={dayjs(toDate)}
                           onChange={toDateHandle}
                           minDate={dayjs(fromDate)}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>

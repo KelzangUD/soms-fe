@@ -301,6 +301,7 @@ const RechargeCollection = () => {
                           label="From Date"
                           value={dayjs(fromDate)}
                           onChange={fromDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -313,6 +314,7 @@ const RechargeCollection = () => {
                           value={dayjs(toDate)}
                           onChange={toDateHandle}
                           minDate={dayjs(fromDate)}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>

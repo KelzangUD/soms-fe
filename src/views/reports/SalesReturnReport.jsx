@@ -246,6 +246,7 @@ const SalesReturnReport = () => {
                           label="From Date*"
                           value={dayjs(details?.fromDate)}
                           onChange={fromDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -258,6 +259,7 @@ const SalesReturnReport = () => {
                           value={dayjs(details?.toDate)}
                           onChange={toDateHandle}
                           minDate={dayjs(details?.fromDate)}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>

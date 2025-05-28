@@ -330,6 +330,7 @@ const PostedSalesInvoice = () => {
                           label="From Date"
                           value={dayjs(params?.fromDate)}
                           onChange={fromDateHandle}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>
@@ -342,6 +343,7 @@ const PostedSalesInvoice = () => {
                           value={dayjs(params?.toDate)}
                           onChange={toDateHandle}
                           minDate={dayjs(params?.fromDate)}
+                          format="DD/MM/YYYY"
                         />
                       </LocalizationProvider>
                     </FormControl>

@@ -94,14 +94,14 @@ const SalesReturnList = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="From*" />
+                        <DatePicker label="From*" format="DD/MM/YYYY" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
                     <FormControl fullWidth style={{ background: "#fff" }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="To*" />
+                        <DatePicker label="To*" format="DD/MM/YYYY" />
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
