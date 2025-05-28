@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Autocomplete,
   Box,
   Grid,
   Button,
@@ -10,9 +11,6 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import PrintIcon from "@mui/icons-material/Print";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -29,17 +27,19 @@ import { useReactToPrint } from "react-to-print";
 import { LoaderDialog, Notification } from "../../ui/index";
 
 const TransferOrderReport = () => {
-  const { regionsOrExtensions } = useCommon();
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [printData, setPrintData] = useState([]);
   const [transferOrders, setTransferOrders] = useState([]);
+  const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
+  const [toStore, setToStore] = useState([]);
   const [params, setParams] = useState({
     transferType: "Store to Store",
     fromDate: dateFormatterTwo(new Date()),
     toDate: dateFormatterTwo(new Date()),
     fromStore: userDetails?.regionName,
+    fromStoreId: userDetails?.storeId,
     toStore: "",
     itemDesc: "",
   });
@@ -108,48 +108,91 @@ const TransferOrderReport = () => {
 
   const access_token = localStorage.getItem("access_token");
   const fetchTransferOrdersReport = async () => {
-    const res = await Route(
-      "GET",
-      `/Report/transferOrderReport?transferType=${params?.transferType}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&fromStore=${params?.fromStore}&toStore=${params?.toStore}&itemDesc=${params?.itemDesc}`,
-      access_token,
-      null,
-      null
-    );
-    if (res?.status === 200) {
-      setTransferOrders(
-        res?.data?.map((item, index) => ({
-          ...item,
-          id: index,
-          sl: index + 1,
-        }))
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "GET",
+        `/Report/transferOrderReport?transferType=${params?.transferType}&fromDate=${params?.fromDate}&toDate=${params?.toDate}&fromStore=${params?.fromStore}&toStore=${params?.toStore}&itemDesc=${params?.itemDesc}`,
+        access_token,
+        null,
+        null
       );
-      setPrintData(
-        res?.data?.map((item, index) => ({
-          sl: index + 1,
-          "Transfer Type": item?.transferType,
-          "Transfer Date": item?.transferDate,
-          "Transfer Order No": item?.transferOrderNo,
-          "From Store Name": item?.transferFrom,
-          "To Store Name": item?.transferTo,
-          "Item Number": item?.itemNumber,
-          "Item Description": item?.itemDescription,
-          UOM: item?.uom,
-          "Serial Number": item?.itemSerialNo,
-          "Quantity Transferred": parseInt(item?.qnty),
-          "Quantity Received": parseInt(item?.receivedQnty),
-          "Received Date": item?.receivedDate,
-          Status: item?.txnStatus,
-        }))
-      );
+      if (res?.status === 200) {
+        setTransferOrders(
+          res?.data?.map((item, index) => ({
+            ...item,
+            id: index,
+            sl: index + 1,
+          }))
+        );
+        setPrintData(
+          res?.data?.map((item, index) => ({
+            sl: index + 1,
+            "Transfer Type": item?.transferType,
+            "Transfer Date": item?.transferDate,
+            "Transfer Order No": item?.transferOrderNo,
+            "From Store Name": item?.transferFrom,
+            "To Store Name": item?.transferTo,
+            "Item Number": item?.itemNumber,
+            "Item Description": item?.itemDescription,
+            UOM: item?.uom,
+            "Serial Number": item?.itemSerialNo,
+            "Quantity Transferred": parseInt(item?.qnty),
+            "Quantity Received": parseInt(item?.receivedQnty),
+            "Received Date": item?.receivedDate,
+            Status: item?.txnStatus,
+          }))
+        );
+      }
+    } catch (err) {
+      setNotificationMessage("Error Fetching Report");
+      setSeverity("error");
+      setShowNotification(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
     fetchTransferOrdersReport();
   }, []);
+  const fetchStoreHandle = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchStore`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setRegionsOrExtensions(res?.data);
+    }
+  };
+  useEffect(() => {
+    fetchStoreHandle();
+  }, []);
+  const fetchToStoreHandle = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchTransferToStore?StoreID=${params?.fromStoreId}&storeName=${params?.fromStore}&transferType=With In Store`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setToStore(res?.data);
+    }
+  };
+  useEffect(() => {
+    fetchToStoreHandle();
+  }, [params?.fromStore, params?.transferType]);
   const transferTypeHandle = (e) => {
     setParams((prev) => ({
       ...prev,
       transferType: e?.target?.value,
+      fromStore: userDetails?.regionName,
+      fromStoreId: userDetails?.storeId,
+      toStore: "",
+      itemDesc: "",
     }));
   };
   const fromDateHandle = (e) => {
@@ -164,16 +207,19 @@ const TransferOrderReport = () => {
       toDate: dateFormatterTwo(e?.$d),
     }));
   };
-  const fromStoreHandle = (e) => {
+  const fromStoreHandle = (e, value) => {
+    console.log(value);
     setParams((prev) => ({
       ...prev,
-      fromStore: e?.target?.value,
+      fromStore: value?.id,
+      fromStoreId: parseInt(value?.storeId),
     }));
   };
-  const toStoreHandle = (e) => {
+  const toStoreHandle = (e, value) => {
+    console.log(value);
     setParams((prev) => ({
       ...prev,
-      toStore: e?.target?.value,
+      toStore: value?.id,
     }));
   };
   const itemDescriptionHandle = (e) => {
@@ -294,40 +340,66 @@ const TransferOrderReport = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl>
-                      <InputLabel id="from-select-label">From Store</InputLabel>
-                      <Select
-                        labelId="from-select-label"
-                        id="from-select"
-                        value={params?.fromStore}
-                        label="From Store"
-                        onChange={fromStoreHandle}
-                      >
-                        {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.id}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      disablePortal
+                      options={[
+                        { label: "ALL", id: "ALL" },
+                        ...(regionsOrExtensions?.map((item) => ({
+                          label: item?.name,
+                          id: item?.name,
+                          storeId: item?.id,
+                        })) || []),
+                      ]}
+                      value={params?.fromStore}
+                      onChange={fromStoreHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="From Store" />
+                      )}
+                      disabled={
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager" ||
+                        userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "Regional Accountant"
+                          ? false
+                          : true
+                      }
+                    />
                   </Grid>
                   <Grid item xs={3}>
-                    <FormControl>
-                      <InputLabel id="to-select-label">To Store</InputLabel>
-                      <Select
-                        labelId="to-select-label"
-                        id="to-select"
-                        value={params?.toStore}
-                        label="To Store"
-                        onChange={toStoreHandle}
-                      >
-                        {regionsOrExtensions?.map((item) => (
-                          <MenuItem value={item?.id} key={item?.id}>
-                            {item?.id}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      disablePortal
+                      options={
+                        params?.transferType === "Store to Store"
+                          ? [
+                              { label: "ALL", id: "ALL" },
+                              ...(regionsOrExtensions?.map((item) => ({
+                                label: item?.name,
+                                id: item?.name,
+                                storeId: item?.id,
+                              })) || []),
+                            ]
+                          : [
+                              { label: "ALL", id: "ALL" },
+                              ...(toStore?.map((item) => ({
+                                label: item?.toStoreName,
+                                id: item?.toStoreName,
+                              })) || []),
+                            ]
+                      }
+                      value={params?.toStore}
+                      onChange={toStoreHandle}
+                      renderInput={(params) => (
+                        <TextField {...params} label="To Store" />
+                      )}
+                      disabled={
+                        userDetails?.roleName === "Administrator" ||
+                        userDetails?.roleName === "General Manager" ||
+                        userDetails?.roleName === "Regional Manager" ||
+                        userDetails?.roleName === "Regional Accountant"
+                          ? false
+                          : true
+                      }
+                    />
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
@@ -379,6 +451,15 @@ const TransferOrderReport = () => {
           </Grid>
         </Grid>
       </Box>
+      {isLoading && <LoaderDialog open={isLoading} />}
+      {showNotification && severity === "error" && (
+        <Notification
+          open={showNotification}
+          setOpen={setShowNotification}
+          message={notificationMessage}
+          severity={severity}
+        />
+      )}
     </>
   );
 };

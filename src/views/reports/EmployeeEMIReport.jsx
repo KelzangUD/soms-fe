@@ -206,10 +206,13 @@ const EmployeeEMIReport = () => {
                   <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
-                      options={regionsOrExtensions?.map((item) => ({
-                        label: item?.extensionName,
-                        id: item?.id,
-                      }))}
+                      options={[
+                        { label: "ALL", id: "ALL" },
+                        ...(regionsOrExtensions?.map((item) => ({
+                          label: item?.extensionName,
+                          id: item?.id,
+                        })) || []),
+                      ]}
                       value={regionOrExtension}
                       onChange={regionOrExtensionHandle}
                       renderInput={(params) => (
