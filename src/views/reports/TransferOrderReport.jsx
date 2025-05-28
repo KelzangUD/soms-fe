@@ -208,7 +208,6 @@ const TransferOrderReport = () => {
     }));
   };
   const fromStoreHandle = (e, value) => {
-    console.log(value);
     setParams((prev) => ({
       ...prev,
       fromStore: value?.id,
