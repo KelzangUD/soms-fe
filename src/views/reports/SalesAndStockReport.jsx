@@ -28,10 +28,10 @@ import { LoaderDialog, Notification } from "../../ui/index";
 const SalesAndStockReport = () => {
   const {
     regionsOrExtensions,
-    fetchLocatorsBasedOnExtension,
-    locatorsList,
     itemsList,
     isMdUp,
+    fetchLocatorName,
+    locatorsNameList,
   } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -43,9 +43,9 @@ const SalesAndStockReport = () => {
     toDate: dateFormatterTwo(new Date()),
     store: userDetails?.regionName,
     fieldAssistant: "",
-    fieldAssistantLabel: "ALL",
+    fieldAssistantLabel: "",
     itemNo: "",
-    itemNoLabel: "ALL",
+    itemNoLabel: "",
   });
   const [salesAndStocks, setSalesAndStock] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +53,7 @@ const SalesAndStockReport = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [severity, setSeverity] = useState("info");
   useEffect(() => {
-    fetchLocatorsBasedOnExtension(params?.store);
+    fetchLocatorName(params?.store);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params?.store]);
   const fetchSalesAndStockReport = async () => {
@@ -224,7 +224,6 @@ const SalesAndStockReport = () => {
                     <Autocomplete
                       disablePortal
                       options={[
-                        { label: "ALL", id: "ALL" },
                         ...(regionsOrExtensions?.map((item) => ({
                           label: item?.extensionName,
                           id: item?.id,
@@ -249,10 +248,9 @@ const SalesAndStockReport = () => {
                     <Autocomplete
                       disablePortal
                       options={[
-                        { label: "ALL", id: "" },
-                        ...(locatorsList?.map((item) => ({
-                          label: item?.locator,
-                          id: item?.locator,
+                        ...(locatorsNameList?.map((item) => ({
+                          label: item?.locatorName,
+                          id: item?.locatorName,
                         })) || []),
                       ]}
                       value={params?.fieldAssistantLabel}
@@ -266,7 +264,6 @@ const SalesAndStockReport = () => {
                     <Autocomplete
                       disablePortal
                       options={[
-                        { label: "ALL", id: "" },
                         ...(itemsList?.map((item) => ({
                           label: item?.description,
                           id: item?.item_number,

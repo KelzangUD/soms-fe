@@ -33,6 +33,7 @@ export const CommonProvider = ({ children }) => {
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [locatorsList, setLocatorsList] = useState([]);
+  const [locatorsNameList, setLocatorsNameList] = useState([]);
 
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -280,6 +281,19 @@ export const CommonProvider = ({ children }) => {
       return res?.data;
     }
   };
+  const fetchLocatorName = async (storeName) => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchLocatorName?extension=${storeName}`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      console.log(res?.data);
+      setLocatorsNameList(res?.data);
+    }
+  };
   useEffect(() => {
     fetchSalesType();
     fetchProductsType();
@@ -335,7 +349,9 @@ export const CommonProvider = ({ children }) => {
         validateSerialNumberWithLocator,
         fetchTrasnferOrderToLocator,
         transferOrderToLocator,
-        isMdUp
+        isMdUp,
+        fetchLocatorName,
+        locatorsNameList
       }}
     >
       {children}
