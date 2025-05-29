@@ -125,6 +125,10 @@ const SalesAndStockReport = () => {
     setParams((prev) => ({
       ...prev,
       store: value?.id,
+      fieldAssistant: "",
+      fieldAssistantLabel: "",
+      itemNo: "",
+      itemNoLabel: "",
     }));
   };
   const fieldAssistantHandle = (e, value) => {
