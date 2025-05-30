@@ -36,8 +36,8 @@ const TransferOrderReport = () => {
     transferType: "Store to Store",
     fromDate: dateFormatterTwo(new Date()),
     toDate: dateFormatterTwo(new Date()),
-    fromStore: userDetails?.regionName,
-    fromStoreId: userDetails?.storeId,
+    fromStore: "ALL",
+    fromStoreId: "ALL",
     toStore: "",
     itemDesc: "",
   });

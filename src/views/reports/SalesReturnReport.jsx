@@ -49,8 +49,11 @@ const SalesReturnReport = () => {
     { field: "paymentmode", headerName: "Payment Mode", width: 150 },
     { field: "status", headerName: "Remarks", width: 150 },
   ];
-  const { locatorsList, itemsList, fetchLocatorsBasedOnExtension } =
-    useCommon();
+  const {
+    itemsList,
+    fetchLocatorName,
+    locatorsNameList,
+  } = useCommon();
 
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -146,7 +149,7 @@ const SalesReturnReport = () => {
     }));
   };
   const regionOrExtensionHandle = (e, value) => {
-    fetchLocatorsBasedOnExtension(value?.id);
+    fetchLocatorName(value?.label);
     setDetails((prev) => ({
       ...prev,
       storeName: value?.label,
@@ -294,10 +297,9 @@ const SalesReturnReport = () => {
                     <Autocomplete
                       disablePortal
                       options={[
-                        { label: "ALL", id: "" },
-                        ...(locatorsList?.map((item) => ({
-                          label: item?.locator,
-                          id: item?.locator,
+                        ...(locatorsNameList?.map((item) => ({
+                          label: item?.locatorName,
+                          id: item?.locatorName,
                         })) || []),
                       ]}
                       value={details?.fieldAssistantLabel}

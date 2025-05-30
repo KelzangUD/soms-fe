@@ -27,7 +27,7 @@ import { useCommon } from "../../contexts/CommonContext";
 import { v4 as uuidv4 } from "uuid";
 
 const SalesReportAll = () => {
-  const { fetchLocatorsBasedOnExtension, locatorsList, isMdUp } = useCommon();
+  const { isMdUp, fetchLocatorName, locatorsNameList } = useCommon();
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -54,9 +54,9 @@ const SalesReportAll = () => {
   const [severity, setSeverity] = useState("info");
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    fetchLocatorsBasedOnExtension(userDetails?.regionName);
+    fetchLocatorName(params?.extension);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userDetails?.regionName]);
+  }, [params?.extension]);
   const fetchSalesType = async () => {
     const res = await Route(
       "GET",
@@ -1991,7 +1991,7 @@ const SalesReportAll = () => {
     doc.save("Sales All-Report");
   };
 
-  const columns = sales_report_all_columns(isMdUp); 
+  const columns = sales_report_all_columns(isMdUp);
 
   return (
     <>
@@ -2107,10 +2107,9 @@ const SalesReportAll = () => {
                     <Autocomplete
                       disablePortal
                       options={[
-                        { label: "ALL", id: "" },
-                        ...(locatorsList?.map((item) => ({
-                          label: item?.locator,
-                          id: item?.locator,
+                        ...(locatorsNameList?.map((item) => ({
+                          label: item?.locatorName,
+                          id: item?.locatorName,
                         })) || []),
                       ]}
                       value={params?.fieldAssistantLabel}
@@ -2164,10 +2163,7 @@ const SalesReportAll = () => {
                   ref={contentRef}
                   mb={5}
                 >
-                  <CustomDataTable
-                    rows={salesAllReport}
-                    cols={columns}
-                  />
+                  <CustomDataTable rows={salesAllReport} cols={columns} />
                 </Grid>
               </Grid>
             </Box>
