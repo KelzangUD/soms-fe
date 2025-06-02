@@ -43,7 +43,7 @@ const EMICollection = () => {
     { field: "posNo", headerName: "POS No", width: 170 },
     { field: "customerName", headerName: "Customer Name", width: 200 },
     { field: "customerNo", headerName: "Customer No", width: 200 },
-    // { field: "address", headerName: "Organization", width: 170 },
+    { field: "organizationName", headerName: "Organization", width: 170 },
     { field: "postingDate", headerName: "Posting Date", width: 100 },
     {
       field: "status",
