@@ -5,9 +5,11 @@ import { CustomDataTable } from "../../component/common/index";
 import { LoaderDialog, Notification, RenderStatus } from "../../ui/index";
 import EmiPaymentDetails from "./EmiPaymentDetails";
 import Route from "../../routes/Route";
+import { useCommon } from "../../contexts/CommonContext";
 
 const EMICollection = () => {
   const access_token = localStorage.getItem("access_token");
+  const { isMdUp } = useCommon();
   const [emiHistory, setEmiHistory] = useState([]);
   const empID = localStorage.getItem("username");
   const [isLoading, setIsLoading] = useState(false);
@@ -39,16 +41,47 @@ const EMICollection = () => {
     }
   };
   const emi_history_columns = [
-    { field: "sl", headerName: "Sl.No", width: 30 },
-    { field: "posNo", headerName: "POS No", width: 170 },
-    { field: "customerName", headerName: "Customer Name", width: 200 },
-    { field: "customerNo", headerName: "Customer No", width: 200 },
-    { field: "organizationName", headerName: "Organization", width: 170 },
-    { field: "postingDate", headerName: "Posting Date", width: 100 },
+    {
+      field: "sl",
+      headerName: "Sl.No",
+      width: isMdUp ? "" : 30,
+      flex: isMdUp ? 30 : "",
+    },
+    {
+      field: "posNo",
+      headerName: "POS No",
+      width: isMdUp ? "" : 170,
+      flex: isMdUp ? 170 : "",
+    },
+    {
+      field: "customerName",
+      headerName: "Customer Name",
+      width: isMdUp ? "" : 200,
+      flex: isMdUp ? 200 : "",
+    },
+    {
+      field: "customerNo",
+      headerName: "Customer No",
+      width: isMdUp ? "" : 200,
+      flex: isMdUp ? 200 : "",
+    },
+    {
+      field: "organizationName",
+      headerName: "Organization",
+      width: isMdUp ? "" : 300,
+      flex: isMdUp ? 300 : "",
+    },
+    {
+      field: "postingDate",
+      headerName: "Posting Date",
+      width: isMdUp ? "" : 150,
+      flex: isMdUp ? 150 : "",
+    },
     {
       field: "status",
       headerName: "Status",
-      width: 150,
+      width: isMdUp ? "" : 150,
+      flex: isMdUp ? 150 : "",
       renderCell: (params) => (
         <RenderStatus status={params?.row?.paymentStatus} />
       ),
@@ -56,7 +89,8 @@ const EMICollection = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 150,
+      width: isMdUp ? "" : 150,
+      flex: isMdUp ? 150 : "",
       renderCell: (params) => (
         <>
           <IconButton
@@ -82,7 +116,9 @@ const EMICollection = () => {
         null
       );
       if (res?.status === 200) {
-        setEmiHistory(res?.data?.filter((item) => (item?.paymentStatus === "Active")));
+        setEmiHistory(
+          res?.data?.filter((item) => item?.paymentStatus === "Active")
+        );
       }
     } catch (err) {
       setNotificationMessage("Error Fetching Report");
