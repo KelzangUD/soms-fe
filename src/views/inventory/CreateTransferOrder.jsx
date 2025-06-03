@@ -283,6 +283,10 @@ const CreateTransferOrder = ({
               transferOrderItemDTOList?.item_Serial_Number
           )
         ) {
+          setTransferOrderDTOList((prev) => ({
+            ...prev,
+            item_Serial_Number: "",
+          }));
           setNotificationMsg("Serial Number Already Entered!");
           setSeverity("warning");
           setShowNotification(true);

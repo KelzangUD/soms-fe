@@ -50,8 +50,8 @@ const EMICollection = () => {
     {
       field: "posNo",
       headerName: "POS No",
-      width: isMdUp ? "" : 170,
-      flex: isMdUp ? 170 : "",
+      width: isMdUp ? "" : 200,
+      flex: isMdUp ? 200 : "",
     },
     {
       field: "customerName",
