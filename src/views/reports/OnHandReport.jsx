@@ -19,6 +19,7 @@ const OnHandReport = () => {
     locatorsList,
     isMdUp,
   } = useCommon();
+
   const access_token = localStorage.getItem("access_token");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const contentRef = useRef(null);
@@ -27,6 +28,7 @@ const OnHandReport = () => {
   const [details, setDetails] = useState({
     storeName: userDetails?.regionName,
     item: "ALL",
+    itemLabel: "All",
     locator_id:
       userDetails?.roleId === 37 ||
       userDetails?.roleId === 53 ||
@@ -97,6 +99,7 @@ const OnHandReport = () => {
     setDetails((prev) => ({
       ...prev,
       item: value?.id,
+      itemLabel: value?.label,
     }));
   };
   const locatorHandle = (e, value) => {
@@ -214,11 +217,11 @@ const OnHandReport = () => {
                       options={[
                         { label: "ALL", id: "ALL" },
                         ...(itemsList?.map((item) => ({
-                          label: item?.item_number,
+                          label: item?.description,
                           id: item?.item_number,
                         })) || []),
                       ]}
-                      value={details?.item}
+                      value={details?.itemLabel}
                       onChange={itemHandle}
                       renderInput={(params) => (
                         <TextField {...params} label="Item" />
