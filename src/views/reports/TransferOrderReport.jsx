@@ -292,7 +292,7 @@ const TransferOrderReport = () => {
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item container spacing={1} alignItems="center">
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl>
                       <InputLabel id="transfer-type-select-label">
                         Transfer Type
@@ -304,6 +304,7 @@ const TransferOrderReport = () => {
                         label="Transfer Type"
                         onChange={transferTypeHandle}
                       >
+                        <MenuItem value="ALL">ALL</MenuItem>
                         <MenuItem value="Store to Store">
                           Store to Store
                         </MenuItem>
@@ -311,7 +312,7 @@ const TransferOrderReport = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -323,7 +324,7 @@ const TransferOrderReport = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <FormControl>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -335,7 +336,7 @@ const TransferOrderReport = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -361,7 +362,7 @@ const TransferOrderReport = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
                       options={
@@ -397,7 +398,7 @@ const TransferOrderReport = () => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Item Description"
                       name="item_description"
@@ -405,7 +406,7 @@ const TransferOrderReport = () => {
                       onChange={itemDescriptionHandle}
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={12} md={2}>
                     <Button
                       variant="contained"
                       onClick={fetchTransferOrdersReport}

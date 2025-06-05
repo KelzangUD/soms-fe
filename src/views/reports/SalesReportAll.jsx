@@ -283,46 +283,46 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
-                {
-                  description: "Grand Total",
-                  gross_amount:
-                    res?.data?.bankCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.selling_price, 10),
-                      0
-                    ) +
-                    res?.data?.bankCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.discount_Value, 10),
-                      0
-                    ) +
-                    res?.data?.bankCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.additional_Discount, 10),
-                      0
-                    ) +
-                    res?.data?.bankCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator +
-                        parseFloat(item?.line_Discount_Amount, 10),
-                      0
-                    ) +
-                    res?.data?.bankCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.tds_Amount, 10),
-                      0
-                    ) +
-                    res?.data?.bankCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.tax_Amount, 10),
-                      0
-                    ) +
-                    res?.data?.bankCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.line_Item_Amount, 10),
-                      0
-                    ),
-                },
+                // {
+                //   description: "Grand Total For Bank Collection",
+                //   gross_amount:
+                //     res?.data?.bankCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.selling_price, 10),
+                //       0
+                //     ) +
+                //     res?.data?.bankCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.discount_Value, 10),
+                //       0
+                //     ) +
+                //     res?.data?.bankCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.additional_Discount, 10),
+                //       0
+                //     ) +
+                //     res?.data?.bankCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator +
+                //         parseFloat(item?.line_Discount_Amount, 10),
+                //       0
+                //     ) +
+                //     res?.data?.bankCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.tds_Amount, 10),
+                //       0
+                //     ) +
+                //     res?.data?.bankCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.tax_Amount, 10),
+                //       0
+                //     ) +
+                //     res?.data?.bankCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.line_Item_Amount, 10),
+                //       0
+                //     ),
+                // },
               ]
             : []),
 
@@ -732,7 +732,7 @@ const SalesReportAll = () => {
           ...(res?.data?.emiCollection?.length > 0
             ? [
                 {
-                  item_code: res?.data?.emiCollection,
+                  item_code: res?.data?.emiCollectionTitle,
                 },
                 ...res?.data?.emiCollection?.map((item) => ({
                   sl: item?.rownumber,
@@ -817,46 +817,46 @@ const SalesReportAll = () => {
                     )
                     .toFixed(2),
                 },
-                {
-                  description: "Total",
-                  gross_amount:
-                    res?.data?.emiCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.selling_price, 10),
-                      0
-                    ) +
-                    res?.data?.emiCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.discount_Value, 10),
-                      0
-                    ) +
-                    res?.data?.emiCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.additional_Discount, 10),
-                      0
-                    ) +
-                    res?.data?.emiCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator +
-                        parseFloat(item?.line_Discount_Amount, 10),
-                      0
-                    ) +
-                    res?.data?.emiCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.tds_Amount, 10),
-                      0
-                    ) +
-                    res?.data?.emiCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.tax_Amount, 10),
-                      0
-                    ) +
-                    res?.data?.emiCollection?.reduce(
-                      (accumulator, item) =>
-                        accumulator + parseFloat(item?.line_Item_Amount, 10),
-                      0
-                    ),
-                },
+                // {
+                //   description: "Grand Total For EMI Collection",
+                //   gross_amount:
+                //     res?.data?.emiCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.selling_price, 10),
+                //       0
+                //     ) +
+                //     res?.data?.emiCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.discount_Value, 10),
+                //       0
+                //     ) +
+                //     res?.data?.emiCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.additional_Discount, 10),
+                //       0
+                //     ) +
+                //     res?.data?.emiCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator +
+                //         parseFloat(item?.line_Discount_Amount, 10),
+                //       0
+                //     ) +
+                //     res?.data?.emiCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.tds_Amount, 10),
+                //       0
+                //     ) +
+                //     res?.data?.emiCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.tax_Amount, 10),
+                //       0
+                //     ) +
+                //     res?.data?.emiCollection?.reduce(
+                //       (accumulator, item) =>
+                //         accumulator + parseFloat(item?.line_Item_Amount, 10),
+                //       0
+                //     ),
+                // },
               ]
             : []),
           {
