@@ -319,6 +319,9 @@ const SalesOrder = () => {
               subInventoryId: item?.sub_Inventory,
               locatorId: item?.locator,
               pricedIdForVarientCode: item?.pricedIdForVarientCode,
+              installmentAmount: item?.installmentAmount,
+              payableAmount: item?.payableAmount,
+              emiInterestRate: item?.emiInterestRate,
             });
           } else {
             notFoundItems.push({
