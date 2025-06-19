@@ -46,25 +46,55 @@ const TransferOrderReport = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [severity, setSeverity] = useState("info");
   const transfer_order_report_columns = [
-    { field: "sl", headerName: "Sl. No", width: 40 },
+    {
+      field: "sl",
+      headerName: "Sl.No",
+      width: 40,
+    },
     {
       field: "transferType",
       headerName: "Transfer Type",
       width: 100,
     },
-    { field: "transferDate", headerName: "Transfer Date", width: 130 },
+    {
+      field: "transferDate",
+      headerName: "Transfer Date",
+      width: 110,
+    },
     {
       field: "transferOrderNo",
       headerName: "Transfer Order Number",
-      width: 150,
+      width: 180,
     },
-    { field: "transferFrom", headerName: "From Store Name", width: 200 },
-    { field: "transferTo", headerName: "To Store Name", width: 200 },
-    { field: "itemNumber", headerName: "Item Number", width: 180 },
+    {
+      field: "transferFrom",
+      headerName: "From Store Name",
+      width: 250,
+    },
+    {
+      field: "transferFromLocator",
+      headerName: "Transfer From Locator",
+      width: 200,
+    },
+    {
+      field: "transferTo",
+      headerName: "To Store Name",
+      width: 260,
+    },
+    {
+      field: "transferToLocator",
+      headerName: "Transfer To Locator",
+      width: 200,
+    },
+    {
+      field: "itemNumber",
+      headerName: "Item Number",
+      width: 180,
+    },
     {
       field: "itemDescription",
       headerName: "Item Description",
-      width: 250,
+      width: 450,
     },
     {
       field: "uom",
@@ -79,12 +109,12 @@ const TransferOrderReport = () => {
     {
       field: "qnty",
       headerName: "Qty Shifted",
-      width: 80,
+      width: 100,
     },
     {
       field: "receivedQnty",
       headerName: "Received Qty",
-      width: 90,
+      width: 100,
     },
     {
       field: "receivedDate",
