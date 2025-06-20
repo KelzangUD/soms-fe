@@ -693,8 +693,7 @@ const SalesOrder = () => {
           formData.append("cheque", placeholderFile);
         }
         formData?.append("storeName", userDetails?.regionName);
-        const data = {
-          itemLinesDtls: lineItems,
+        let data = {
           paymentLinesDtls: paymentLines,
           salesHeaderDtls: salesOrderDetails,
           linesAmountDtls: {
@@ -733,6 +732,38 @@ const SalesOrder = () => {
           },
           userId: user,
         };
+        if (salesOrderDetails?.adj_type === "EMI") {
+          data.itemLinesDtls = lineItems?.map((item) => ({
+            storeName: item?.storeName,
+            subInventoryId: item?.subInventoryId,
+            locatorId: item?.locatorId,
+            description: item?.description,
+            serialNo: item?.serialNo,
+            qty: item?.qty,
+            priceLocator: item?.priceLocator,
+            discPercentage: item?.discPercentage,
+            tdsAmount: item?.tdsAmount,
+            itemNo: item?.itemNo,
+            mrp: item?.mrp,
+            discountedAmount: item?.discountedAmount,
+            sellingPrice: item?.sellingPrice,
+            taxPercentage: item?.taxPercentage,
+            additionalDiscount: item?.additionalDiscount,
+            amountExclTax: item?.amountExclTax,
+            advanceTaxAmount: item?.advanceTaxAmount,
+            itemTotalAddedQty: item?.itemTotalAddedQty,
+            lineItemAmt: item?.lineItemAmt,
+            available: item?.available,
+            serialNoStatus: item?.serialNoStatus,
+            taxAmt: item?.taxAmt,
+            pricedIdForVarientCode: item?.pricedIdForVarientCode,
+            volumeDiscount: item?.volumeDiscount,
+            priceLocatorDTOs: item?.priceLocatorDTOs,
+          }));
+        } else {
+          data.itemLinesDtls = lineItems;
+        }
+
 
         const jsonDataBlob = new Blob([JSON.stringify(data)], {
           type: "application/json",
