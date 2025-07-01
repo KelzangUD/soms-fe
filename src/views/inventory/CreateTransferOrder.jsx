@@ -520,7 +520,7 @@ const CreateTransferOrder = ({
         setShowNotification(true);
       }
     } catch (error) {
-      setNotificationMsg(res?.response?.data?.message);
+      setNotificationMsg("Failed To Create Transfer Order");
       setSeverity("error");
       setShowNotification(true);
     } finally {
