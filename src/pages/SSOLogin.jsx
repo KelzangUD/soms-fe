@@ -40,11 +40,6 @@ const SSOLogin = () => {
       null
     );
     if (response?.status === 200) {
-      setFormData((prev) => ({
-        ...prev,
-        username: response?.data?.empID,
-        password: response?.data?.password,
-      }));
       console.log("SSO Response:", response);
       const res = await Route(
         "POST",
@@ -57,9 +52,16 @@ const SSOLogin = () => {
         null
       );
       if (res.status === 200) {
+        console.log("backend Response:", res);
         const decoded = jwtDecode(res?.data?.access_token);
-        console.log(formData);
+        setFormData((prev) => ({
+          ...prev,
+          username: response?.data?.empID,
+          password: response?.data?.password,
+        }));
+        
         if (decoded) {
+          console.log("setting form data", formData);
           const response = await Route(
             "GET",
             `/UserDtls/Module?role=${decoded?.roles[1]}&userId=${formData?.username}`,
