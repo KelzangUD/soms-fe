@@ -62,14 +62,14 @@ const SSOLogin = () => {
         
         if (decoded) {
           console.log("setting form data", formData);
-          const response = await Route(
+          const roleResponse = await Route(
             "GET",
             `/UserDtls/Module?role=${decoded?.roles[1]}&userId=${formData?.username}`,
             res?.data?.access_token,
             null,
             null
           );
-          if (response?.status === 200) {
+          if (roleResponse?.status === 200) {
             fetchUserDetails(formData?.username);
             localStorage.setItem("username", formData?.username);
             localStorage.setItem("access_token", res?.data?.access_token);
@@ -77,7 +77,7 @@ const SSOLogin = () => {
             localStorage.setItem("privileges", JSON.stringify(response?.data));
             navigate("/home/dashboard");
           } else {
-            setMessage(response?.response?.data?.message);
+            setMessage(roleResponse?.response?.data?.message);
             setSeverity("error");
             setOpen(true);
           }
