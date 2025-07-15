@@ -45,6 +45,7 @@ const SSOLogin = () => {
         username: response?.data?.empID,
         password: response?.data?.password,
       }));
+      console.log("SSO Response:", response);
       const res = await Route(
         "POST",
         "/api/v1/auth/authenticate",
@@ -57,6 +58,7 @@ const SSOLogin = () => {
       );
       if (res.status === 200) {
         const decoded = jwtDecode(res?.data?.access_token);
+        console.log(formData);
         if (decoded) {
           const response = await Route(
             "GET",
