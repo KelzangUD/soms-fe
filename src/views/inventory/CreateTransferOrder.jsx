@@ -28,7 +28,7 @@ import TransferBulkUploader from "../../assets/files/TransferBulkUploader.xls";
 import Route from "../../routes/Route";
 import { useCommon } from "../../contexts/CommonContext";
 import { dateFormatterTwo } from "../../util/CommonUtil";
-import { SuccessNotification, Title } from "../../ui/index";
+import { SuccessNotification, Title, LoaderDialog } from "../../ui/index";
 import { v4 as uuidv4 } from "uuid";
 
 const CreateTransferOrder = ({
@@ -89,6 +89,7 @@ const CreateTransferOrder = ({
   const [disabledToSubInv, setDisabledToSubInv] = useState(true);
   const [toStore, setToStore] = useState([]);
   const [fromSubInventory, setFromSubInventory] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const fetchFromSubInventory = async () => {
     const res = await Route(
       "GET",
@@ -478,43 +479,52 @@ const CreateTransferOrder = ({
     });
 
     formData.append("data", jsonDataBlob, "data.json");
-    const res = await Route(
-      "POST",
-      `/transferOrder/createTransferOrder`,
-      access_token,
-      formData,
-      null,
-      "multipart/form-data"
-    );
-    if (res?.status === 200 && res?.data?.success === true) {
-      setSeverity("success");
-      setNotificationMsg(res?.data?.responseText);
-      setShowNotification(true);
-      setParameters((prev) => ({
-        ...prev,
-        transfer_Date: dateFormatterTwo(new Date()),
-        region_NAME: "",
-        transfer_Type: "",
-        transfer_From: "",
-        transfer_From_SubInventory: "",
-        transfer_From_Locator: "",
-        selectedStore: "",
-        transfer_To: "",
-        transfer_To_Store: "",
-        transfer_To_SubInventory: "",
-        transfer_To_Locator: "",
-        transfer_Mode: "",
-        vehicle_Number: "",
-        remarks: "",
-        created_By: empID,
-        transferOrderItemDTOList: [],
-      }));
-      setSerialInputDisabled(true);
-      fetchTransferOrderList();
-    } else {
-      setNotificationMsg(res?.response?.data?.message);
+    setIsLoading(true);
+    try {
+      const res = await Route(
+        "POST",
+        `/transferOrder/createTransferOrder`,
+        access_token,
+        formData,
+        null,
+        "multipart/form-data"
+      );
+      if (res?.status === 200 && res?.data?.success === true) {
+        setSeverity("success");
+        setNotificationMsg(res?.data?.responseText);
+        setShowNotification(true);
+        setParameters((prev) => ({
+          ...prev,
+          transfer_Date: dateFormatterTwo(new Date()),
+          region_NAME: "",
+          transfer_Type: "",
+          transfer_From: "",
+          transfer_From_SubInventory: "",
+          transfer_From_Locator: "",
+          selectedStore: "",
+          transfer_To: "",
+          transfer_To_Store: "",
+          transfer_To_SubInventory: "",
+          transfer_To_Locator: "",
+          transfer_Mode: "",
+          vehicle_Number: "",
+          remarks: "",
+          created_By: empID,
+          transferOrderItemDTOList: [],
+        }));
+        setSerialInputDisabled(true);
+        fetchTransferOrderList();
+      } else {
+        setNotificationMsg(res?.response?.data?.message);
+        setSeverity("error");
+        setShowNotification(true);
+      }
+    } catch (error) {
+      setNotificationMsg("Failed To Create Transfer Order");
       setSeverity("error");
       setShowNotification(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (

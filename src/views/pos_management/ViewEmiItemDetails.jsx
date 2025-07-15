@@ -59,7 +59,7 @@ const ViewEmiItemDetails = ({ setOpen, details }) => {
                         <TextField
                           label="Mobile Number"
                           name="mobile_number"
-                          defaultValue={details?.customerNo}
+                          defaultValue={details?.mobileNo}
                           disabled
                         />
                       </Grid>
