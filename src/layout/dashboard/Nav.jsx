@@ -105,7 +105,8 @@ const Nav = () => {
       localStorage.removeItem("user");
       localStorage.removeItem("privileges");
       localStorage.removeItem("userDetails");
-      navigation("/");
+      // navigation("/");
+      navigation("https://hub.tashicell.com/dashboard")
     } else {
       setMessage(res?.response?.data?.message);
       setOpen(true);
