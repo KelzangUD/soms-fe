@@ -346,6 +346,9 @@ const Nav = () => {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
+              sx={{
+                marginLeft: 2,
+              }}
             >
               <AccountCircle
                 sx={{ height: { xs: 20, md: 25 }, width: "auto" }}
