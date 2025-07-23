@@ -15,12 +15,14 @@ import {
   MenuItem,
   Menu,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyIcon from "@mui/icons-material/Key";
+import HomeIcon from "@mui/icons-material/Home";
 import Logout from "@mui/icons-material/Logout";
 import Notification from "../../ui/Notification";
 import Route from "../../routes/Route";
@@ -106,6 +108,7 @@ const Nav = () => {
       localStorage.removeItem("privileges");
       localStorage.removeItem("userDetails");
       navigation("/");
+      // window.location.assign("https://hub.tashicell.com/dashboard");
     } else {
       setMessage(res?.response?.data?.message);
       setOpen(true);
@@ -320,6 +323,21 @@ const Nav = () => {
           </Typography>
 
           <Box>
+            <Tooltip title="Redirect to SSO">
+              <IconButton
+                size="small"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={() => {
+                  window.location.assign("https://hub.tashicell.com/dashboard");
+                }}
+                color="inherit"
+              >
+                <HomeIcon sx={{ height: { xs: 20, md: 25 }, width: "auto" }} />
+              </IconButton>
+            </Tooltip>
             <IconButton
               size="small"
               edge="end"
@@ -330,7 +348,7 @@ const Nav = () => {
               color="inherit"
             >
               <AccountCircle
-                sx={{ height: { xs: 20, md: 35 }, width: "auto" }}
+                sx={{ height: { xs: 20, md: 25 }, width: "auto" }}
               />
             </IconButton>
           </Box>
