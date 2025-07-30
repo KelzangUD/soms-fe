@@ -22,10 +22,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useCommon } from "../../contexts/CommonContext";
 
-const EmiPayment = ({ open, setOpen, setPaymentLines }) => {
+const EmiPayment = ({ open, setOpen, setPaymentLines, paymentAmount }) => {
   const { paymentType, fetchBankBasedOnPaymentType, banks } = useCommon();
   const [paymentLinesDtls, setPaymentLinesDtls] = useState({
-    paymentAmount: "",
+    paymentAmount: paymentAmount,
     paymentType: "",
     paymentTypeItem: "",
     paymentTypeName: "",
@@ -126,7 +126,7 @@ const EmiPayment = ({ open, setOpen, setPaymentLines }) => {
                         name="payment_amount"
                         required
                         onChange={paymentAmountHandle}
-                        value={paymentLinesDtls?.installmentAmountPaid}
+                        value={paymentLinesDtls?.paymentAmount}
                       />
                     </Grid>
                     <Grid item xs={3}>
