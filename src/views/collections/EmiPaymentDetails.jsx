@@ -411,6 +411,8 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                                               }
                                               color="success"
                                               variant="contained"
+                                              size="small"
+                                              sx={{ marginTop: 1 }}
                                             >
                                               Pay All
                                             </Button>
@@ -420,9 +422,10 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                                               onClick={(e) =>
                                                 paymentActionHandle(e, row)
                                               }
-                                              sx={{ marginLeft: 1 }}
+                                              sx={{ marginLeft: 1, marginTop: 1 }}
                                               color="primary"
                                               variant="contained"
+                                              size="small"
                                             >
                                               Pay Monthly
                                             </Button>
