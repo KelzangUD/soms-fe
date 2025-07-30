@@ -12,8 +12,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import PaymentIcon from "@mui/icons-material/Payment";
+import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import { PaymentDetailsTable } from "../../component/pos_management/index";
 import {
   Title,
@@ -40,6 +42,25 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
     payableAmount: "",
     paymentLinesDetails: [],
   });
+  const [paymentAmount, setPaymentAmount] = useState(null);
+  const paymentAllActionHandle = (e, row) => {
+    setEmiPaymentDetails((prev) => ({
+      ...prev,
+      installment_ID: row?.installmentId,
+      emiMonthCount: parseInt(
+        details?.remainingAmount / details?.installmentAmount
+      ),
+      paymentStatus: "Paid",
+      payableAmount: details?.remainingAmount,
+      updatedBy: localStorage?.getItem("username"),
+      monthlyInstallment:
+        row?.paymentStatus === "UnPaid"
+          ? row?.payableAmount
+          : row?.installmentAmountPaid,
+    }));
+    setPaymentAmount(details?.remainingAmount);
+    setViewEmiPayment(true);
+  };
   const paymentActionHandle = (e, row) => {
     setEmiPaymentDetails((prev) => ({
       ...prev,
@@ -53,6 +74,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
           ? row?.payableAmount
           : row?.installmentAmountPaid,
     }));
+    setPaymentAmount(row?.payableAmount);
     setViewEmiPayment(true);
   };
   const deletePaymentItemHandle = (e, indexToRemove) => {
@@ -72,13 +94,11 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
         paymentAmount: 0,
       }
     );
-    if (emiPaymentDetails?.monthlyInstallment !== totalAmount?.paymentAmount) {
-      setNotificationMsg(
-        "Total Payment Amount is not equal to Installment Payment Amount"
-      );
-      setSeverity("info");
-      setShowNotification(true);
-    } else {
+
+    if (
+      emiPaymentDetails?.monthlyInstallment === totalAmount?.paymentAmount ||
+      totalAmount?.paymentAmount === details?.remainingAmount
+    ) {
       const data = {
         installment_ID: emiPaymentDetails?.installment_ID,
         emiMonthCount: emiPaymentDetails?.emiMonthCount,
@@ -90,48 +110,55 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
           installmentAmountPaid: item?.paymentAmount,
         })),
       };
-      setIsLoading(true);
-      try {
-        let formData = new FormData();
-        if (paymentLines && paymentLines.length > 0) {
-          paymentLines?.forEach((item) => {
-            if (parseInt(item?.paymentType) === 2) {
-              formData.append("chequeFiles", item.chequeCopy);
-            } else {
-              const placeholderFile = new File([""], "cheque.png");
-              formData.append("chequeFiles", placeholderFile);
-            }
-          });
-        }
-        const jsonDataBlob = new Blob([JSON.stringify(data)], {
-          type: "application/json",
-        });
-        formData.append("details", jsonDataBlob, "data.json");
-        const res = await Route(
-          "POST",
-          `/emi/updateInstallmentPayment`,
-          access_token,
-          formData,
-          null,
-          "multipart/form-data"
-        );
-        if (res?.status === 200) {
-          setNotificationMsg("EMI Installment Successfully Paid!");
-          setSeverity("success");
-          setShowNotification(true);
-          setOpen(false);
-        } else {
-          setNotificationMsg(res?.response?.data?.message);
-          setSeverity("error");
-          setShowNotification(true);
-        }
-      } catch (err) {
-        setNotificationMsg("Failed To Make Payment");
-        setSeverity("error");
-        setShowNotification(true);
-      } finally {
-        setIsLoading(false);
-      }
+      console.log(data);
+      // setIsLoading(true);
+      // try {
+      //   let formData = new FormData();
+      //   if (paymentLines && paymentLines.length > 0) {
+      //     paymentLines?.forEach((item) => {
+      //       if (parseInt(item?.paymentType) === 2) {
+      //         formData.append("chequeFiles", item.chequeCopy);
+      //       } else {
+      //         const placeholderFile = new File([""], "cheque.png");
+      //         formData.append("chequeFiles", placeholderFile);
+      //       }
+      //     });
+      //   }
+      //   const jsonDataBlob = new Blob([JSON.stringify(data)], {
+      //     type: "application/json",
+      //   });
+      //   formData.append("details", jsonDataBlob, "data.json");
+      //   const res = await Route(
+      //     "POST",
+      //     `/emi/updateInstallmentPayment`,
+      //     access_token,
+      //     formData,
+      //     null,
+      //     "multipart/form-data"
+      //   );
+      //   if (res?.status === 200) {
+      //     setNotificationMsg("EMI Installment Successfully Paid!");
+      //     setSeverity("success");
+      //     setShowNotification(true);
+      //     setOpen(false);
+      //   } else {
+      //     setNotificationMsg(res?.response?.data?.message);
+      //     setSeverity("error");
+      //     setShowNotification(true);
+      //   }
+      // } catch (err) {
+      //   setNotificationMsg("Failed To Make Payment");
+      //   setSeverity("error");
+      //   setShowNotification(true);
+      // } finally {
+      //   setIsLoading(false);
+      // }
+    } else {
+      setNotificationMsg(
+        "Total Payment Amount is not equal to Installment Payment Amount"
+      );
+      setSeverity("info");
+      setShowNotification(true);
     }
   };
 
@@ -377,14 +404,31 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                                     <TableCell>{row?.paymentDate}</TableCell>
                                     <TableCell align="right">
                                       {row?.paymentStatus === "UnPaid" && (
-                                        <IconButton
-                                          onClick={(e) =>
-                                            paymentActionHandle(e, row)
-                                          }
-                                          color="primary"
-                                        >
-                                          <PaymentIcon />
-                                        </IconButton>
+                                        <>
+                                          <Tooltip title="Pay All Remaining Amount">
+                                            <Button
+                                              onClick={(e) =>
+                                                paymentAllActionHandle(e, row)
+                                              }
+                                              color="success"
+                                              variant="contained"
+                                            >
+                                              Pay All
+                                            </Button>
+                                          </Tooltip>
+                                          <Tooltip title="Monthly Payment">
+                                            <Button
+                                              onClick={(e) =>
+                                                paymentActionHandle(e, row)
+                                              }
+                                              sx={{ marginLeft: 1 }}
+                                              color="primary"
+                                              variant="contained"
+                                            >
+                                              Pay Monthly
+                                            </Button>
+                                          </Tooltip>
+                                        </>
                                       )}
                                     </TableCell>
                                   </TableRow>
@@ -442,6 +486,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
           open={viewEmiPayment}
           setOpen={setViewEmiPayment}
           setPaymentLines={setPaymentLines}
+          paymentAmount={paymentAmount}
         />
       )}
       {isLoading && <LoaderDialog open={isLoading} />}
