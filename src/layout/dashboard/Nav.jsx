@@ -136,12 +136,12 @@ const Nav = () => {
         </ListItemIcon>
         My Profile
       </MenuItem>
-      <MenuItem onClick={changePasswordHandle}>
+      {/* <MenuItem onClick={changePasswordHandle}>
         <ListItemIcon>
           <KeyIcon fontSize="small" />
         </ListItemIcon>
         Change Password
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem onClick={logoutHandle}>
         <ListItemIcon>
           <Logout fontSize="small" />
