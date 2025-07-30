@@ -33,7 +33,7 @@ const SSOLogin = () => {
   };
   const ssoAuth = async (token) => {
     const response = await Route(
-      "GET",
+      "POST",
       `/api/v1/auth/sso?token=${token}`,
       null,
       null,

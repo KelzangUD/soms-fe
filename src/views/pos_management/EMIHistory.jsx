@@ -42,11 +42,10 @@ const EMIHistory = () => {
     { field: "sl", headerName: "Sl.No", width: 30 },
     { field: "posNo", headerName: "POS No", width: 170 },
     { field: "customerName", headerName: "Customer Name", width: 200 },
-    { field: "customerNo", headerName: "Customer No (CID)", width: 120 },
-    // { field: "address", headerName: "Organization", width: 200 },
+    { field: "customerNo", headerName: "Customer No (CID)", width: 220 },
     { field: "postingDate", headerName: "Posting Date", width: 100 },
     {
-      field: "status",
+      field: "paymentStatus",
       headerName: "Status",
       width: 150,
       renderCell: (params) => (
@@ -94,6 +93,7 @@ const EMIHistory = () => {
   };
   useEffect(() => {
     fetchEmiHistory();
+    // eslint-disable-next-line
   }, []);
 
   return (
