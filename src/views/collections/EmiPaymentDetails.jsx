@@ -110,49 +110,48 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
           installmentAmountPaid: item?.paymentAmount,
         })),
       };
-      console.log(data);
-      // setIsLoading(true);
-      // try {
-      //   let formData = new FormData();
-      //   if (paymentLines && paymentLines.length > 0) {
-      //     paymentLines?.forEach((item) => {
-      //       if (parseInt(item?.paymentType) === 2) {
-      //         formData.append("chequeFiles", item.chequeCopy);
-      //       } else {
-      //         const placeholderFile = new File([""], "cheque.png");
-      //         formData.append("chequeFiles", placeholderFile);
-      //       }
-      //     });
-      //   }
-      //   const jsonDataBlob = new Blob([JSON.stringify(data)], {
-      //     type: "application/json",
-      //   });
-      //   formData.append("details", jsonDataBlob, "data.json");
-      //   const res = await Route(
-      //     "POST",
-      //     `/emi/updateInstallmentPayment`,
-      //     access_token,
-      //     formData,
-      //     null,
-      //     "multipart/form-data"
-      //   );
-      //   if (res?.status === 200) {
-      //     setNotificationMsg("EMI Installment Successfully Paid!");
-      //     setSeverity("success");
-      //     setShowNotification(true);
-      //     setOpen(false);
-      //   } else {
-      //     setNotificationMsg(res?.response?.data?.message);
-      //     setSeverity("error");
-      //     setShowNotification(true);
-      //   }
-      // } catch (err) {
-      //   setNotificationMsg("Failed To Make Payment");
-      //   setSeverity("error");
-      //   setShowNotification(true);
-      // } finally {
-      //   setIsLoading(false);
-      // }
+      setIsLoading(true);
+      try {
+        let formData = new FormData();
+        if (paymentLines && paymentLines.length > 0) {
+          paymentLines?.forEach((item) => {
+            if (parseInt(item?.paymentType) === 2) {
+              formData.append("chequeFiles", item.chequeCopy);
+            } else {
+              const placeholderFile = new File([""], "cheque.png");
+              formData.append("chequeFiles", placeholderFile);
+            }
+          });
+        }
+        const jsonDataBlob = new Blob([JSON.stringify(data)], {
+          type: "application/json",
+        });
+        formData.append("details", jsonDataBlob, "data.json");
+        const res = await Route(
+          "POST",
+          `/emi/updateInstallmentPayment`,
+          access_token,
+          formData,
+          null,
+          "multipart/form-data"
+        );
+        if (res?.status === 200) {
+          setNotificationMsg("EMI Installment Successfully Paid!");
+          setSeverity("success");
+          setShowNotification(true);
+          setOpen(false);
+        } else {
+          setNotificationMsg(res?.response?.data?.message);
+          setSeverity("error");
+          setShowNotification(true);
+        }
+      } catch (err) {
+        setNotificationMsg("Failed To Make Payment");
+        setSeverity("error");
+        setShowNotification(true);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       setNotificationMsg(
         "Total Payment Amount is not equal to Installment Payment Amount"
