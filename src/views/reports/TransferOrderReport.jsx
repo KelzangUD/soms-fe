@@ -31,6 +31,7 @@ const TransferOrderReport = () => {
   const [printData, setPrintData] = useState([]);
   const [transferOrders, setTransferOrders] = useState([]);
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
+  const [withInStores, setWithInStores] = useState([]);
   const [toStore, setToStore] = useState([]);
   const [params, setParams] = useState({
     transferType: "Store to Store",
@@ -197,8 +198,21 @@ const TransferOrderReport = () => {
       setRegionsOrExtensions(res?.data);
     }
   };
+  const fetchWithInStoreHandle = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchCenterStore`,
+      access_token,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setWithInStores(res?.data);
+    }
+  };
   useEffect(() => {
     fetchStoreHandle();
+    fetchWithInStoreHandle();
   }, []);
   const fetchToStoreHandle = async () => {
     const res = await Route(
@@ -371,14 +385,25 @@ const TransferOrderReport = () => {
                   <Grid item xs={12} md={3}>
                     <Autocomplete
                       disablePortal
-                      options={[
-                        { label: "ALL", id: "ALL" },
-                        ...(regionsOrExtensions?.map((item) => ({
-                          label: item?.name,
-                          id: item?.name,
-                          storeId: item?.id,
-                        })) || []),
-                      ]}
+                      options={
+                        params?.transferType === "With In Store"
+                          ? [
+                              { label: "ALL", id: "ALL" },
+                              ...(withInStores?.map((item) => ({
+                                label: item?.name,
+                                id: item?.name,
+                                storeId: item?.id,
+                              })) || []),
+                            ]
+                          : [
+                              { label: "ALL", id: "ALL" },
+                              ...(regionsOrExtensions?.map((item) => ({
+                                label: item?.name,
+                                id: item?.name,
+                                storeId: item?.id,
+                              })) || []),
+                            ]
+                      }
                       value={params?.fromStore}
                       onChange={fromStoreHandle}
                       renderInput={(params) => (
@@ -401,7 +426,15 @@ const TransferOrderReport = () => {
                         params?.transferType === "Store to Store"
                           ? [
                               { label: "ALL", id: "ALL" },
-                              ...(regionsOrExtensions?.map((item) => ({
+                              ...(toStore?.map((item) => ({
+                                label: item?.toStoreName,
+                                id: item?.toStoreName,
+                              })) || []),
+                            ]
+                          : params?.transferType === "With In Store"
+                          ? [
+                              { label: "ALL", id: "ALL" },
+                              ...(withInStores?.map((item) => ({
                                 label: item?.name,
                                 id: item?.name,
                                 storeId: item?.id,
@@ -409,9 +442,10 @@ const TransferOrderReport = () => {
                             ]
                           : [
                               { label: "ALL", id: "ALL" },
-                              ...(toStore?.map((item) => ({
-                                label: item?.toStoreName,
-                                id: item?.toStoreName,
+                              ...(regionsOrExtensions?.map((item) => ({
+                                label: item?.name,
+                                id: item?.name,
+                                storeId: item?.id,
                               })) || []),
                             ]
                       }
