@@ -31,7 +31,7 @@ const TransferOrderReport = () => {
   const [printData, setPrintData] = useState([]);
   const [transferOrders, setTransferOrders] = useState([]);
   const [regionsOrExtensions, setRegionsOrExtensions] = useState([]);
-  const [withInStores, setWithInStores] = useState([]);
+  const [storesToStores, setStoresToStores] = useState([]);
   const [toStore, setToStore] = useState([]);
   const [params, setParams] = useState({
     transferType: "Store to Store",
@@ -198,7 +198,7 @@ const TransferOrderReport = () => {
       setRegionsOrExtensions(res?.data);
     }
   };
-  const fetchWithInStoreHandle = async () => {
+  const fetchStoresToStoresHandle = async () => {
     const res = await Route(
       "GET",
       `/Common/FetchCenterStore`,
@@ -207,12 +207,12 @@ const TransferOrderReport = () => {
       null
     );
     if (res?.status === 200) {
-      setWithInStores(res?.data);
+      setStoresToStores(res?.data);
     }
   };
   useEffect(() => {
     fetchStoreHandle();
-    fetchWithInStoreHandle();
+    fetchStoresToStoresHandle();
   }, []);
   const fetchToStoreHandle = async () => {
     const res = await Route(
@@ -386,10 +386,10 @@ const TransferOrderReport = () => {
                     <Autocomplete
                       disablePortal
                       options={
-                        params?.transferType === "With In Store"
+                        params?.transferType === "Store to Store"
                           ? [
                               { label: "ALL", id: "ALL" },
-                              ...(withInStores?.map((item) => ({
+                              ...(storesToStores?.map((item) => ({
                                 label: item?.name,
                                 id: item?.name,
                                 storeId: item?.id,
@@ -426,18 +426,18 @@ const TransferOrderReport = () => {
                         params?.transferType === "Store to Store"
                           ? [
                               { label: "ALL", id: "ALL" },
-                              ...(toStore?.map((item) => ({
-                                label: item?.toStoreName,
-                                id: item?.toStoreName,
+                              ...(storesToStores?.map((item) => ({
+                                label: item?.name,
+                                id: item?.name,
+                                storeId: item?.id,
                               })) || []),
                             ]
                           : params?.transferType === "With In Store"
                           ? [
                               { label: "ALL", id: "ALL" },
-                              ...(withInStores?.map((item) => ({
-                                label: item?.name,
-                                id: item?.name,
-                                storeId: item?.id,
+                              ...(toStore?.map((item) => ({
+                                label: item?.toStoreName,
+                                id: item?.toStoreName,
                               })) || []),
                             ]
                           : [
