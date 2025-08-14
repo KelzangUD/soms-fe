@@ -299,9 +299,13 @@ export const MenuItems = [
         page: "Samsung Warranty Report",
         route: "reports/samsung-warranty-report",
       },
-       {
+      {
         page: "Employee EMI Report",
         route: "reports/employee-emi-report",
+      },
+      {
+        page: "Customers EMI Report",
+        route: "reports/customers-emi-report",
       },
       // {
       //   page: "Service Log Report",

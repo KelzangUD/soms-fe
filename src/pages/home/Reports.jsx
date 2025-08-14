@@ -16,7 +16,8 @@ import {
   SamsungWarrantyReport,
   SalesReturnList,
   SalesReturnReport,
-  EmployeeEMIReport
+  EmployeeEMIReport,
+  CustomersEmiReport
 } from "../../views/reports/index";
 
 const Reports = () => {
@@ -50,6 +51,10 @@ const Reports = () => {
         <Route
           path="/employee-emi-report"
           element={<EmployeeEMIReport />}
+        />
+        <Route
+          path="/customers-emi-report"
+          element={<CustomersEmiReport />}
         />
       </Routes>
     </>
