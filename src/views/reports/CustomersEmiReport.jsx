@@ -1,15 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Box,
-  Grid,
-  Button,
-  FormControl,
-} from "@mui/material";
+import { Box, Grid, Button, FormControl } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { LoaderDialog, Notification } from "../../ui/index";
+import { LoaderDialog, Notification, RenderStatus } from "../../ui/index";
 import { CustomDataTable, PrintSection } from "../../component/common/index";
 import Route from "../../routes/Route";
 import { exportToExcel } from "react-json-to-excel";
@@ -76,6 +71,7 @@ const CustomersEMIReport = () => {
       field: "emiStatus",
       headerName: "EMI Status",
       width: 100,
+      renderCell: (params) => <RenderStatus status={params?.row?.emiStatus} />,
     },
     {
       field: "emiFromDate",
@@ -92,11 +88,11 @@ const CustomersEMIReport = () => {
       headerName: "MRP",
       width: 90,
     },
-    {
-      field: "installmentAmount",
-      headerName: "Installment/Upfront Amount",
-      width: 175,
-    },
+    // {
+    //   field: "installmentAmount",
+    //   headerName: "Installment/Upfront Amount",
+    //   width: 175,
+    // },
     {
       field: "installmentAmountPaid",
       headerName: "Installment/Upfront Amount Paid",
@@ -111,6 +107,7 @@ const CustomersEMIReport = () => {
       field: "paymentStatus",
       headerName: "Payment Status",
       width: 110,
+      renderCell: (params) => <RenderStatus status={params?.row?.paymentStatus} />,
     },
     {
       field: "payFromDate",
@@ -162,7 +159,7 @@ const CustomersEMIReport = () => {
             "EMI Start Date": item?.emiFromDate,
             "EMI End Date": item?.emiToDate,
             MRP: item?.grossTotalAmount,
-            "Installment/Upfront Amount": item?.installmentAmount,
+            // "Installment/Upfront Amount": item?.installmentAmount,
             "Installment/Upfront Amount Paid": item?.installmentAmountPaid,
             "Outstanding Balance": item?.outstandingBalance,
             "Payment Status": item?.paymentStatus,
@@ -211,7 +208,7 @@ const CustomersEMIReport = () => {
           "EMI Start Date",
           "EMI End Date",
           "MRP",
-          "Installment/Upfront Amount",
+          // "Installment/Upfront Amount",
           "Installment/Upfront Amount Paid",
           "Outstanding Balance",
           "Payment Status",
@@ -233,7 +230,7 @@ const CustomersEMIReport = () => {
         item?.["EMI Start Date"],
         item?.["EMI End Date"],
         item?.MRP,
-        item?.["Installment/Upfront Amount"],
+        // item?.["Installment/Upfront Amount"],
         item?.["Installment/Upfront Amount Paid"],
         item?.["Outstanding Balance"],
         item?.["Payment Status"],
