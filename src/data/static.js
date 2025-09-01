@@ -252,6 +252,12 @@ export const all_item_columns = (isMdUp, editHandle) => {
       width: isMdUp ? undefined : 160,
     },
     {
+      field: "sales_type",
+      headerName: "Sales Type",
+      flex: isMdUp ? 2.5 : undefined,
+      width: isMdUp ? undefined : 260,
+    },
+    {
       field: "action",
       headerName: "Action",
       flex: isMdUp ? 0.9 : undefined,
