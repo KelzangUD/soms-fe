@@ -5,3 +5,4 @@ export { default as EMIHistory } from "./EMIHistory";
 export { default as EMIApproval } from "./EMIApproval";
 export { default as CreateEmiCustomer } from "./CreateEmiCustomer";
 export { default as EMIOrganization } from "./EMIOrganization";
+export { default as PricingDetails } from "./PricingDetails";

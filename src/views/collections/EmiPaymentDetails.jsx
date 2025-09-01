@@ -3,7 +3,7 @@ import {
   Box,
   Grid,
   Button,
-  IconButton,
+  // IconButton,
   Paper,
   TextField,
   Table,
@@ -14,8 +14,8 @@ import {
   TableRow,
   Tooltip,
 } from "@mui/material";
-import PaymentIcon from "@mui/icons-material/Payment";
-import CreditScoreIcon from "@mui/icons-material/CreditScore";
+// import PaymentIcon from "@mui/icons-material/Payment";
+// import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import { PaymentDetailsTable } from "../../component/pos_management/index";
 import {
   Title,
@@ -46,7 +46,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
   const paymentAllActionHandle = (e, row) => {
     setEmiPaymentDetails((prev) => ({
       ...prev,
-      installment_ID: row?.installmentId,
+      installment_ID: row === undefined ? 0 : row?.installmentId,
       emiMonthCount: parseInt(
         details?.remainingAmount / details?.installmentAmount
       ),
@@ -54,7 +54,9 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
       payableAmount: details?.remainingAmount,
       updatedBy: localStorage?.getItem("username"),
       monthlyInstallment:
-        row?.paymentStatus === "UnPaid"
+        row === undefined
+          ? details?.installmentAmount
+          : row?.paymentStatus === "UnPaid"
           ? row?.payableAmount
           : row?.installmentAmountPaid,
     }));
@@ -100,6 +102,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
       totalAmount?.paymentAmount === details?.remainingAmount
     ) {
       const data = {
+        emi_ID: details?.emi_ID,
         installment_ID: emiPaymentDetails?.installment_ID,
         emiMonthCount: emiPaymentDetails?.emiMonthCount,
         paymentStatus: emiPaymentDetails?.paymentStatus,
@@ -422,7 +425,10 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                                               onClick={(e) =>
                                                 paymentActionHandle(e, row)
                                               }
-                                              sx={{ marginLeft: 1, marginTop: 1 }}
+                                              sx={{
+                                                marginLeft: 1,
+                                                marginTop: 1,
+                                              }}
                                               color="primary"
                                               variant="contained"
                                               size="small"
@@ -435,6 +441,25 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                                     </TableCell>
                                   </TableRow>
                                 )
+                              )}
+                              {details?.monthlyInstallmentDetailsList?.every(
+                                (item) => item?.paymentStatus === "Paid"
+                              ) && (
+                                <TableRow>
+                                  <TableCell colSpan={7} />
+                                  <TableCell align="right">
+                                    <Tooltip title="Pay All Remaining Amount">
+                                      <Button
+                                        variant="contained"
+                                        onClick={paymentAllActionHandle}
+                                        color="success"
+                                        size="small"
+                                      >
+                                        Pay All
+                                      </Button>
+                                    </Tooltip>
+                                  </TableCell>
+                                </TableRow>
                               )}
                             </TableBody>
                           </Table>
@@ -464,6 +489,9 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                   onClick={paymentHandle}
                   color="primary"
                   size="small"
+                  sx={{
+                    marginLeft: 2,
+                  }}
                 >
                   Pay
                 </Button>

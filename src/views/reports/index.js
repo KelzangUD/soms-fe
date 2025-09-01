@@ -14,3 +14,4 @@ export { default as SamsungWarrantyReport } from "./SamsungWarrantyReport";
 export { default as SalesReturnList} from "./SalesReturnList";
 export { default as SalesReturnReport } from "./SalesReturnReport";
 export { default as EmployeeEMIReport } from "./EmployeeEMIReport";
+export { default as CustomersEmiReport } from "./CustomersEmiReport";

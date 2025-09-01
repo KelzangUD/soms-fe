@@ -98,7 +98,7 @@ const RenderStatus = (params) => {
   // React.useEffect(() => {
   //   console.log(params);
   // });
-  if (params?.status == null) {
+  if (params?.status == null || params?.status === "") {
     return "";
   }
 
