@@ -1,3 +1,6 @@
+import { IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+
 // ==================== Sales Report-All Headers =================================
 export const sales_report_all_columns = (isMdUp) => {
   return [
@@ -211,6 +214,60 @@ export const on_hand_report_columns = (isMdUp) => {
       headerName: "Locator",
       flex: isMdUp ? 2 : undefined,
       width: isMdUp ? undefined : 160,
+    },
+  ];
+};
+
+// ===================== On-Hand Report Headers ===============================
+export const all_item_columns = (isMdUp, editHandle) => {
+  return [
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      flex: isMdUp ? 5.5 : undefined,
+      width: isMdUp ? undefined : 380,
+    },
+    {
+      field: "item_number",
+      headerName: "Item Number",
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 180,
+    },
+    {
+      field: "uom",
+      headerName: "UOM",
+      flex: isMdUp ? 1.1 : undefined,
+      width: isMdUp ? undefined : 90,
+    },
+    {
+      field: "mrp",
+      headerName: "MRP",
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 160,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: isMdUp ? 0.9 : undefined,
+      width: isMdUp ? undefined : 120,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            aria-label="print"
+            size="small"
+            color="primary"
+            onClick={() => editHandle(params)}
+          >
+            <EditIcon fontSize="inherit" />
+          </IconButton>
+        </>
+      ),
     },
   ];
 };

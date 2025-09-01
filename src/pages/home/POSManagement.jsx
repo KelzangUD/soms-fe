@@ -8,6 +8,7 @@ import {
   EMIApproval,
   CreateEmiCustomer,
   EMIOrganization,
+  PricingDetails
 } from "../../views/pos_management/index";
 
 const POSManagement = () => {
@@ -21,6 +22,7 @@ const POSManagement = () => {
         <Route path="/emi-history" element={<EMIHistory />} />
         <Route path="/emi-approval" element={<EMIApproval />} />
         <Route path="/emi-organization" element={<EMIOrganization />} />
+        <Route path="/pricing-details" element={<PricingDetails />} />
       </Routes>
     </>
   );

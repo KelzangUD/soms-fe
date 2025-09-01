@@ -119,6 +119,10 @@ export const MenuItems = [
         page: "EMI Organization",
         route: "pos-management/emi-organization",
       },
+      {
+        page: "Pricing Details",
+        route: "pos-management/pricing-details",
+      },
     ],
   },
   {

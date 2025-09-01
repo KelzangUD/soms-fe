@@ -305,7 +305,7 @@ const CustomersEMIReport = () => {
                 >
                   <PrintSection
                     exportExcel={() =>
-                      exportToExcel(printData, "Employee EMI Report")
+                      exportToExcel(printData, "Customer EMI Report")
                     }
                     exportPdf={exportJsonToPdfHandle}
                     handlePrint={reactToPrintFn}
