@@ -37,7 +37,6 @@ const EditPricing = ({ open, setOpen, details, fetchAllItems }) => {
         null,
         null
       );
-      console.log(res);
       if (res?.status === 200) {
         setNotificationMessage("Price Updated Successfully");
         setSeverity("success");

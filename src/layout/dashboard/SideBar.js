@@ -229,6 +229,10 @@ export const MenuItems = [
         page: "Posted Transfer Receipts",
         route: "inventory/posted-transfer-receipt",
       },
+      {
+        page: "SAP Transfer Order",
+        route: "inventory/sap-transfer-order",
+      },
     ],
   },
   {

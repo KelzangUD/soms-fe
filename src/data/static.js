@@ -218,7 +218,7 @@ export const on_hand_report_columns = (isMdUp) => {
   ];
 };
 
-// ===================== On-Hand Report Headers ===============================
+// ===================== All Item Report Headers ===============================
 export const all_item_columns = (isMdUp, editHandle) => {
   return [
     {
@@ -274,6 +274,46 @@ export const all_item_columns = (isMdUp, editHandle) => {
           </IconButton>
         </>
       ),
+    },
+  ];
+};
+
+// ===================== SAP Transfer Headers ===============================
+export const sap_transfer_columns = (isMdUp) => {
+  return [
+    {
+      field: "sl",
+      headerName: "Sl. No",
+      flex: isMdUp ? 0.4 : undefined,
+      width: isMdUp ? undefined : 80,
+    },
+    {
+      field: "item_Number",
+      headerName: "Item Number",
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 180,
+      editable: true,
+    },
+    {
+      field: "item_Serial_Number",
+      headerName: "Serial Number",
+      flex: isMdUp ? 5.5 : undefined,
+      width: isMdUp ? undefined : 380,
+      editable: true,
+    },
+    {
+      field: "uom",
+      headerName: "UOM",
+      flex: isMdUp ? 1.1 : undefined,
+      width: isMdUp ? undefined : 90,
+      editable: true,
+    },
+    {
+      field: "qty",
+      headerName: "Qty",
+      flex: isMdUp ? 2 : undefined,
+      width: isMdUp ? undefined : 160,
+      editable: true,
     },
   ];
 };
