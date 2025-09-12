@@ -301,13 +301,13 @@ export const sap_transfer_columns = (isMdUp) => {
       width: isMdUp ? undefined : 380,
       editable: true,
     },
-    {
-      field: "uom",
-      headerName: "UOM",
-      flex: isMdUp ? 1.1 : undefined,
-      width: isMdUp ? undefined : 90,
-      editable: true,
-    },
+    // {
+    //   field: "uom",
+    //   headerName: "UOM",
+    //   flex: isMdUp ? 1.1 : undefined,
+    //   width: isMdUp ? undefined : 90,
+    //   editable: true,
+    // },
     {
       field: "qty",
       headerName: "Qty",

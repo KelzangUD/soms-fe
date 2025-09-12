@@ -67,7 +67,7 @@ const SAPTransferOrder = () => {
           sl: index + 1,
           item_Number: item?.Item_Code || "",
           item_Serial_Number: item?.Serial_Number || "",
-          uom: item?.Uom || "",
+        //   uom: item?.Uom || "",
           qty: item?.Qnty || 0,
         })),
       }));
@@ -101,7 +101,7 @@ const SAPTransferOrder = () => {
         data,
         null
       );
-      console.log(res);
+    //   console.log(res);
       if (res?.status === 200) {
         setNotificationMsg("Created SAP Transfer Order Successfully");
         setSeverity("success");
