@@ -1,5 +1,14 @@
-import React, { useState, useCallback } from "react";
-import { Box, Button, Grid, styled } from "@mui/material";
+import React, { useState, useCallback, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  styled,
+} from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
   DataGrid,
@@ -35,13 +44,15 @@ function CustomToolbar() {
 }
 
 const SAPTransferOrder = () => {
-  const { isMdUp } = useCommon();
+  const { isMdUp, fetchLocatorBasedOExtension } = useCommon();
   const username = localStorage.getItem("username");
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const access_token = localStorage.getItem("access_token");
   const [uploadButtonLabel, setUploadButtonLabel] = useState("Upload File");
   const [data, setData] = useState({
     transfer_From: 29,
-    transfer_To: 28,
+    transfer_To: null,
+    transfer_to_StoreName: "",
     transfer_To_SubInventory: "WAREH",
     transfer_To_Locator: "FRESHS",
     created_By: username,
@@ -51,6 +62,33 @@ const SAPTransferOrder = () => {
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
   const [isLoading, setIsLoading] = useState(false);
+  const [toStore, setToStore] = useState([]);
+
+  const fetchToStore = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/FetchTransferToStore?StoreID=${userDetails?.storeId}&storeName=${userDetails?.regionName}&transferType=Store To Store`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      setToStore(res?.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchToStore();
+  }, []);
+  const toStoreHandle = (value) => {
+    const { toStoreId, toStoreName } = value;
+    setData((prev) => ({
+      ...prev,
+      transfer_To: parseInt(toStoreId),
+      transfer_to_StoreName: toStoreName,
+    }));
+    fetchLocatorBasedOExtension(toStoreName);
+  };
   const fileUploadHandle = (e) => {
     setUploadButtonLabel("File Uploaded");
     const file = e?.target?.files[0];
@@ -67,7 +105,7 @@ const SAPTransferOrder = () => {
           sl: index + 1,
           item_Number: item?.Item_Code || "",
           item_Serial_Number: item?.Serial_Number || "",
-        //   uom: item?.Uom || "",
+          //   uom: item?.Uom || "",
           qty: item?.Qnty || 0,
         })),
       }));
@@ -101,7 +139,7 @@ const SAPTransferOrder = () => {
         data,
         null
       );
-    //   console.log(res);
+      //   console.log(res);
       if (res?.status === 200) {
         setNotificationMsg("Created SAP Transfer Order Successfully");
         setSeverity("success");
@@ -109,7 +147,8 @@ const SAPTransferOrder = () => {
         setData((prev) => ({
           ...prev,
           transfer_From: 29,
-          transfer_To: 28,
+          transfer_To: null,
+          transfer_to_StoreName: "",
           transfer_To_SubInventory: "WAREH",
           transfer_To_Locator: "FRESHS",
           created_By: username,
@@ -139,6 +178,26 @@ const SAPTransferOrder = () => {
           >
             <Box sx={{ width: "100%" }}>
               <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} md={3}>
+                  <FormControl>
+                    <InputLabel id="to-store-select-label">
+                      To Store*
+                    </InputLabel>
+                    <Select
+                      labelId="to-store-select-label"
+                      id="to-store-select"
+                      label="To Store"
+                      onChange={(event) => toStoreHandle(event.target.value)}
+                      // value={parameters?.selectedStore}
+                    >
+                      {toStore?.map((item) => (
+                        <MenuItem value={item} key={item?.toStoreId}>
+                          {item?.toStoreName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
                 <Grid item container spacing={1} justifyContent="flex-end">
                   <Button
                     component="label"
@@ -155,17 +214,19 @@ const SAPTransferOrder = () => {
                       multiple
                     />
                   </Button>
-                  <LoadingButton
-                    loading={isLoading}
-                    variant="contained"
-                    sx={{
-                      marginLeft: 1,
-                      alignItems: "right",
-                    }}
-                    onClick={createHandle}
-                  >
-                    Create
-                  </LoadingButton>
+                  {data?.transferOrderItemDTOList?.length > 0 && (
+                    <LoadingButton
+                      loading={isLoading}
+                      variant="contained"
+                      sx={{
+                        marginLeft: 1,
+                        alignItems: "right",
+                      }}
+                      onClick={createHandle}
+                    >
+                      Create
+                    </LoadingButton>
+                  )}
                 </Grid>
                 <Grid item container alignItems="center" xs={12} mb={5}>
                   <DataGrid
