@@ -254,7 +254,8 @@ const SalesAndStockReport = () => {
                       options={[
                         ...(locatorsNameList?.map((item) => ({
                           label: item?.locatorName,
-                          id: item?.locatorName,
+                          // id: item?.locatorName,
+                           id: item?.locator,
                         })) || []),
                       ]}
                       value={params?.fieldAssistantLabel}
