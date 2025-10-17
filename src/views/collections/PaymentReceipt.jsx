@@ -106,43 +106,6 @@ const PaymentReceipt = () => {
     }));
   };
   const fetchCustomerDetailsHandle = async () => {
-    setIsLoading(true);
-    try {
-      const res = await Route(
-        "GET",
-        `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
-        access_token,
-        null,
-        null
-      );
-      if (res?.status === 200) {
-        setNotificationMsg("Customer Details Fetch Successfully");
-        setSeverity("success");
-        setShowNotification(true);
-        setPaymentReceiptDetails((prev) => ({
-          ...prev,
-          accountCode: res?.data?.accountCode,
-          name: res?.data?.name,
-          accountId: res?.data?.accountId,
-          acctKey: res?.data?.acctKey,
-          outstandingBalance: res?.data?.billAmount,
-          invoiceNo: res?.data?.invoiceNo,
-          amount: res?.data?.billAmount,
-        }));
-      } else {
-        setNotificationMsg("Customer Details not Found!");
-        setSeverity("error");
-        setShowNotification(true);
-      }
-    } catch (err) {
-      setNotificationMsg("Customer Details not Found!");
-      setSeverity("error");
-      setShowNotification(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  useEffect(() => {
     if (
       paymentReceiptDetails?.serviceType &&
       paymentReceiptDetails?.payment &&
@@ -155,18 +118,46 @@ const PaymentReceipt = () => {
       const isServiceType2Valid = serviceType === "2" && mobileNo.length === 9;
       const isServiceType3Valid = serviceType === "3";
       if (isServiceType1Valid || isServiceType2Valid || isServiceType3Valid) {
-        fetchCustomerDetailsHandle();
+        setIsLoading(true);
+        try {
+          const res = await Route(
+            "GET",
+            `/Billing/getOutstandingDetail?serviceNo=${paymentReceiptDetails?.mobileNo}&type=${paymentReceiptDetails?.serviceType}&payment=${paymentReceiptDetails?.payment}`,
+            access_token,
+            null,
+            null
+          );
+          if (res?.status === 200) {
+            setNotificationMsg("Customer Details Fetch Successfully");
+            setSeverity("success");
+            setShowNotification(true);
+            setPaymentReceiptDetails((prev) => ({
+              ...prev,
+              accountCode: res?.data?.accountCode,
+              name: res?.data?.name,
+              accountId: res?.data?.accountId,
+              acctKey: res?.data?.acctKey,
+              outstandingBalance: res?.data?.billAmount,
+              invoiceNo: res?.data?.invoiceNo,
+              amount: res?.data?.billAmount,
+            }));
+          } else {
+            setNotificationMsg("Customer Details not Found!");
+            setSeverity("error");
+            setShowNotification(true);
+          }
+        } catch (err) {
+          setNotificationMsg("Customer Details not Found!");
+          setSeverity("error");
+          setShowNotification(true);
+        } finally {
+          setIsLoading(false);
+        }
       } else {
         setIncorrectFormat(true);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    paymentReceiptDetails?.serviceType,
-    paymentReceiptDetails?.mobileNo,
-    paymentReceiptDetails?.payment,
-  ]);
-
+  };
   const postingDateHandle = (e) => {
     setPaymentReceiptDetails((prev) => ({
       ...prev,
@@ -404,7 +395,7 @@ const PaymentReceipt = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       error={incorrectFormant}
                       label="Mobile Number/Account Code"
@@ -414,6 +405,14 @@ const PaymentReceipt = () => {
                       value={paymentReceiptDetails?.mobileNo}
                       helperText={incorrectFormant && "Incorrect Entry"}
                     />
+                  </Grid>
+                  <Grid item xs={12} md={2} alignContent="center">
+                    <Button
+                      variant="contained"
+                      onClick={fetchCustomerDetailsHandle}
+                    >
+                      Fetch Details
+                    </Button>
                   </Grid>
                 </Grid>
               </Card>
