@@ -28,7 +28,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     color: (theme.vars || theme).palette.primary.dark,
     border: `1px solid ${(theme.vars || theme).palette.primary.main}`,
   },
-  "&.PartiallyFilled, &.In-Progress, &.In-Transit, &.UnPaid": {
+  "&.PartiallyFilled, &.In-Progress, &.In-Transit, &.UnPaid, &.Pending": {
     color: (theme.vars || theme).palette.warning.dark,
     border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
   },
@@ -44,7 +44,7 @@ const Status = memo((props) => {
   let icon = null;
   if (status === "Rejected") {
     icon = <ReportProblemIcon className="icon" />;
-  } else if (status === "Open" || status === "UnPaid") {
+  } else if (status === "Open" || status === "UnPaid" || status === "Pending") {
     icon = <InfoIcon className="icon" />;
   } else if (
     status === "PartiallyFilled" ||
@@ -66,7 +66,11 @@ const Status = memo((props) => {
     status === "Paid"
   ) {
     icon = <DoneIcon className="icon" />;
-  } else if (status === "Failed" || status === "In_Active" || status === "In-Active") {
+  } else if (
+    status === "Failed" ||
+    status === "In_Active" ||
+    status === "In-Active"
+  ) {
     icon = <CloseIcon className="icon" />;
   }
 
@@ -90,6 +94,9 @@ const Status = memo((props) => {
       size="small"
       label={label}
       variant="outlined"
+      style={{
+        marginRight: 8,
+      }}
     />
   );
 });

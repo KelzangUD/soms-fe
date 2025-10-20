@@ -79,11 +79,19 @@ const EMICollection = () => {
     },
     {
       field: "status",
-      headerName: "Status",
-      width: isMdUp ? "" : 150,
-      flex: isMdUp ? 150 : "",
+      headerName: "EMI/Payment Status",
+      width: isMdUp ? "" : 180,
+      flex: isMdUp ? 180 : "",
       renderCell: (params) => (
-        <RenderStatus status={params?.row?.paymentStatus} />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <RenderStatus status={params?.row?.emiStatus} />
+          <RenderStatus status={params?.row?.paymentStatus} />
+        </div>
       ),
     },
     {
@@ -117,7 +125,7 @@ const EMICollection = () => {
       );
       if (res?.status === 200) {
         setEmiHistory(
-          res?.data?.filter((item) => item?.paymentStatus === "Active")
+          res?.data?.filter((item) => item?.emiStatus === "Active")
         );
       }
     } catch (err) {
