@@ -81,7 +81,7 @@ const EMICollection = () => {
       field: "status",
       headerName: "EMI/Payment Status",
       width: isMdUp ? "" : 180,
-      flex: isMdUp ? 180 : "",
+      flex: isMdUp ? 380 : "",
       renderCell: (params) => (
         <div
           style={{
