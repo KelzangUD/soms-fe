@@ -200,10 +200,15 @@ const AddConditionModal = ({
                         onChange={(e) => {
                           handleChange(e);
                           const selectedItem = hierarchyList.find(
-                            (item) => item?.id === e?.target?.value
+                            (item) =>
+                              item?.hierarchyId ===
+                              e?.target?.value?.hierarchyId
                           );
                           if (selectedItem) {
-                            setFieldValue("hierarchyId", selectedItem?.id);
+                            setFieldValue(
+                              "hierarchyId",
+                              selectedItem?.hierarchyId
+                            );
                             setFieldValue(
                               "hierarchyName",
                               selectedItem?.hierarchyName
@@ -216,7 +221,7 @@ const AddConditionModal = ({
                         select
                       >
                         {hierarchyList.map((item) => (
-                          <MenuItem key={item?.id} value={item?.id}>
+                          <MenuItem key={item?.hierarchyId} value={item}>
                             {item?.hierarchyName}
                           </MenuItem>
                         ))}
