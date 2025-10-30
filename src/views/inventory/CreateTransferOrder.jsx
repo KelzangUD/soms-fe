@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { DataGrid } from "@mui/x-data-grid";
 import { Notification } from "../../ui/index";
 import { Transition } from "../../component/common/index";
@@ -55,6 +56,7 @@ const CreateTransferOrder = ({
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
+  const [isLoading, setIsLoading] = useState(false);
   const [withinStoreLocator, setWithinStoreLocator] = useState([]);
   const [enableToLocator, setEnableToLocator] = useState(false);
   const [file, setFile] = useState(null);
@@ -89,7 +91,6 @@ const CreateTransferOrder = ({
   const [disabledToSubInv, setDisabledToSubInv] = useState(true);
   const [toStore, setToStore] = useState([]);
   const [fromSubInventory, setFromSubInventory] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const fetchFromSubInventory = async () => {
     const res = await Route(
       "GET",
@@ -949,7 +950,7 @@ const CreateTransferOrder = ({
                 mb: 2,
               }}
             >
-              <Button
+              <LoadingButton
                 variant="contained"
                 onClick={createHandle}
                 disabled={parameters?.transferOrderItemDTOList?.some(
@@ -957,9 +958,10 @@ const CreateTransferOrder = ({
                     item?.item_Description ===
                     "Wrong Serial No, Please check before submitting."
                 )}
+                loading={isLoading}
               >
                 Create
-              </Button>
+              </LoadingButton>
               <Button
                 variant="outlined"
                 onClick={() => setOpen(false)}

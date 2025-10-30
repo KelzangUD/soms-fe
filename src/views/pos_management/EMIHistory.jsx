@@ -49,7 +49,7 @@ const EMIHistory = () => {
       headerName: "Status",
       width: 150,
       renderCell: (params) => (
-        <RenderStatus status={params?.row?.paymentStatus} />
+        <RenderStatus status={params?.row?.emiStatus} />
       ),
     },
     {
@@ -81,7 +81,7 @@ const EMIHistory = () => {
         null
       );
       if (res?.status === 200) {
-        setEmiHistory(res?.data?.filter((item) => (item?.paymentStatus !== "Active")));
+        setEmiHistory(res?.data?.filter((item) => (item?.emiStatus !== "Active")));
       }
     } catch (err) {
       setNotificationMessage("Error Fetching Report");

@@ -28,6 +28,7 @@ import Route from "../../routes/Route";
 
 const EmiPaymentDetails = ({ setOpen, details }) => {
   const access_token = localStorage.getItem("access_token");
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -405,62 +406,65 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                                     </TableCell>
                                     <TableCell>{row?.paymentDate}</TableCell>
                                     <TableCell align="right">
-                                      {row?.paymentStatus === "UnPaid" && (
-                                        <>
-                                          <Tooltip title="Pay All Remaining Amount">
-                                            <Button
-                                              onClick={(e) =>
-                                                paymentAllActionHandle(e, row)
-                                              }
-                                              color="success"
-                                              variant="contained"
-                                              size="small"
-                                              sx={{ marginTop: 1 }}
-                                            >
-                                              Pay All
-                                            </Button>
-                                          </Tooltip>
-                                          <Tooltip title="Monthly Payment">
-                                            <Button
-                                              onClick={(e) =>
-                                                paymentActionHandle(e, row)
-                                              }
-                                              sx={{
-                                                marginLeft: 1,
-                                                marginTop: 1,
-                                              }}
-                                              color="primary"
-                                              variant="contained"
-                                              size="small"
-                                            >
-                                              Pay Monthly
-                                            </Button>
-                                          </Tooltip>
-                                        </>
-                                      )}
+                                      {row?.paymentStatus === "UnPaid" &&
+                                        userDetails?.roleId !== 54 && (
+                                          <>
+                                            <Tooltip title="Pay All Remaining Amount">
+                                              <Button
+                                                onClick={(e) =>
+                                                  paymentAllActionHandle(e, row)
+                                                }
+                                                color="success"
+                                                variant="contained"
+                                                size="small"
+                                                sx={{ marginTop: 1 }}
+                                              >
+                                                Pay All
+                                              </Button>
+                                            </Tooltip>
+                                            <Tooltip title="Monthly Payment">
+                                              <Button
+                                                onClick={(e) =>
+                                                  paymentActionHandle(e, row)
+                                                }
+                                                sx={{
+                                                  marginLeft: 1,
+                                                  marginTop: 1,
+                                                }}
+                                                color="primary"
+                                                variant="contained"
+                                                size="small"
+                                              >
+                                                Pay Monthly
+                                              </Button>
+                                            </Tooltip>
+                                          </>
+                                        )}
                                     </TableCell>
                                   </TableRow>
                                 )
                               )}
+
                               {details?.monthlyInstallmentDetailsList?.every(
                                 (item) => item?.paymentStatus === "Paid"
-                              ) && (
-                                <TableRow>
-                                  <TableCell colSpan={7} />
-                                  <TableCell align="right">
-                                    <Tooltip title="Pay All Remaining Amount">
-                                      <Button
-                                        variant="contained"
-                                        onClick={paymentAllActionHandle}
-                                        color="success"
-                                        size="small"
-                                      >
-                                        Pay All
-                                      </Button>
-                                    </Tooltip>
-                                  </TableCell>
-                                </TableRow>
-                              )}
+                              ) &&
+                                userDetails?.roleId !== 54 && (
+                                  <TableRow>
+                                    <TableCell colSpan={7} />
+                                    <TableCell align="right">
+                                      <Tooltip title="Pay All Remaining Amount">
+                                        <Button
+                                          variant="contained"
+                                          onClick={paymentAllActionHandle}
+                                          color="success"
+                                          size="small"
+                                        >
+                                          Pay All
+                                        </Button>
+                                      </Tooltip>
+                                    </TableCell>
+                                  </TableRow>
+                                )}
                             </TableBody>
                           </Table>
                         </TableContainer>
@@ -484,17 +488,19 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                 margin={2}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
-                <Button
-                  variant="contained"
-                  onClick={paymentHandle}
-                  color="primary"
-                  size="small"
-                  sx={{
-                    marginLeft: 2,
-                  }}
-                >
-                  Pay
-                </Button>
+                {userDetails?.roleId !== 54 && (
+                  <Button
+                    variant="contained"
+                    onClick={paymentHandle}
+                    color="primary"
+                    size="small"
+                    sx={{
+                      marginLeft: 2,
+                    }}
+                  >
+                    Pay
+                  </Button>
+                )}
                 <Button
                   variant="outlined"
                   onClick={() => setOpen(false)}

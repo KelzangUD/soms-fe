@@ -30,6 +30,7 @@
     "react-to-print": "^3.0.2",
     "react-window": "^1.8.10",
     "recharts": "^2.10.3",
+    "simple-excel-to-json": "^2.3.0",
     "socket.io-client": "^4.7.4",
     "uuid": "^11.0.3",
     "web-vitals": "^2.1.4",
