@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Grid, IconButton } from "@mui/material";
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import DescriptionIcon from "@mui/icons-material/Description";
 import { CustomDataTable } from "../../component/common/index";
 import { LoaderDialog, Notification, RenderStatus } from "../../ui/index";
 import ViewEmiItemDetails from "./ViewEmiItemDetails";
@@ -24,7 +25,8 @@ const EMIHistory = () => {
         `/emi/getActiveEMI_CustomerDetail?customerNo=${params?.row?.customerNo}&posNo=${params?.row?.posNo}`,
         access_token,
         null,
-        null
+        null,
+        "blob"
       );
       if (res?.status === 200) {
         setEmiDetails(res?.data);
@@ -38,6 +40,13 @@ const EMIHistory = () => {
       setIsLoading(false);
     }
   };
+
+  const fetchEmiReport = async (params) => {
+    window.open(
+      `${process.env.REACT_APP_API_URL}/emi/downloadInvoice?customerNo=${params?.row?.customerNo}`,
+      "_blank"
+    );
+  };
   const emi_history_columns = [
     { field: "sl", headerName: "Sl.No", width: 30 },
     { field: "posNo", headerName: "POS No", width: 170 },
@@ -48,9 +57,7 @@ const EMIHistory = () => {
       field: "paymentStatus",
       headerName: "Status",
       width: 150,
-      renderCell: (params) => (
-        <RenderStatus status={params?.row?.emiStatus} />
-      ),
+      renderCell: (params) => <RenderStatus status={params?.row?.emiStatus} />,
     },
     {
       field: "actions",
@@ -65,6 +72,14 @@ const EMIHistory = () => {
             color="primary"
           >
             <VisibilityIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton
+            aria-label="view"
+            size="small"
+            onClick={() => fetchEmiReport(params)}
+            color="primary"
+          >
+            <DescriptionIcon fontSize="inherit" />
           </IconButton>
         </>
       ),
@@ -81,7 +96,9 @@ const EMIHistory = () => {
         null
       );
       if (res?.status === 200) {
-        setEmiHistory(res?.data?.filter((item) => (item?.emiStatus !== "Active")));
+        setEmiHistory(
+          res?.data?.filter((item) => item?.emiStatus !== "Active")
+        );
       }
     } catch (err) {
       setNotificationMessage("Error Fetching Report");
