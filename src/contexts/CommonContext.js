@@ -341,7 +341,6 @@ export const CommonProvider = ({ children }) => {
         paymentOptions,
         fetchBankAccountName,
         bankAccountNames,
-        fetchBankAccountName,
         requisitionType,
         requisitionItems,
         transferType,

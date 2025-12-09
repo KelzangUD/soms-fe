@@ -13,8 +13,6 @@ import {
   Typography,
   Card,
 } from "@mui/material";
-import UploadIcon from "@mui/icons-material/Upload";
-import DownloadIcon from "@mui/icons-material/Download";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -57,12 +55,13 @@ const ValuePlus = () => {
     prepaidNumber: "",
     paymentAmount: "",
     paymentType: "",
+    paymentTypeValue: "",
     bankAccount: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     fetchBankAccountName(details?.paymentType);
-  }, []);
+  }, [details?.paymentType]);
   const postingDateHandle = (e) => {
     setDetails((prev) => ({
       ...prev,
@@ -82,9 +81,11 @@ const ValuePlus = () => {
     }));
   };
   const paymentTypeHandle = (e) => {
+    console.log(e?.target);
     setDetails((prev) => ({
       ...prev,
-      paymentType: e?.target?.value,
+      paymentType: e?.target?.value?.id,
+      paymentTypeValue: e?.target?.value,
     }));
   };
   const bankAccHandle = (e) => {
@@ -126,7 +127,7 @@ const ValuePlus = () => {
           emiRefrenceNo: "",
           bankAccountNumber: details?.bankAccount,
           paymentAmount: details?.paymentAmount,
-          paymentType: details?.paymentType,
+          paymentType: details?.paymentTypeValue?.type,
         },
       ],
       LinesAmount: {
@@ -300,10 +301,10 @@ const ValuePlus = () => {
                       id="payment-type-select"
                       label="Payment Type*"
                       onChange={paymentTypeHandle}
-                      value={details?.paymentType}
+                      value={details?.paymentTypeValue}
                     >
                       {paymentType?.map((item) => (
-                        <MenuItem value={item?.id} key={item?.id}>
+                        <MenuItem value={item} name={item?.type} key={item?.id}>
                           {item?.type}
                         </MenuItem>
                       ))}
