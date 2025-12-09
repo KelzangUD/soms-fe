@@ -56,11 +56,12 @@ const ValuePlus = () => {
     postingDate: dayjs(new Date()),
     prepaidNumber: "",
     paymentAmount: "",
+    paymentType: "",
     bankAccount: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    fetchBankAccountName("Cash");
+    fetchBankAccountName(details?.paymentType);
   }, []);
   const postingDateHandle = (e) => {
     setDetails((prev) => ({
@@ -80,8 +81,13 @@ const ValuePlus = () => {
       paymentAmount: e?.target?.value,
     }));
   };
+  const paymentTypeHandle = (e) => {
+    setDetails((prev) => ({
+      ...prev,
+      paymentType: e?.target?.value,
+    }));
+  };
   const bankAccHandle = (e) => {
-    console.log(e?.target);
     setDetails((prev) => ({
       ...prev,
       bankAccount: e?.target?.value,
@@ -94,12 +100,14 @@ const ValuePlus = () => {
       postingDate: dayjs(new Date()),
       prepaidNumber: "",
       paymentAmount: "",
+      paymentType: "",
       bankAccount: "",
     }));
   };
   const validationRules = [
     { key: "prepaidNumber", message: "Please Enter Prepaid Number!" },
     { key: "paymentAmount", message: "Please Enter Payment Amount!" },
+    { key: "paymentType", message: "Please Select Payment Type!" },
     { key: "bankAccount", message: "Please Select Bank A/C Name!" },
   ];
   const createHandle = async (e) => {
@@ -118,7 +126,7 @@ const ValuePlus = () => {
           emiRefrenceNo: "",
           bankAccountNumber: details?.bankAccount,
           paymentAmount: details?.paymentAmount,
-          paymentType: "Cash",
+          paymentType: details?.paymentType,
         },
       ],
       LinesAmount: {
@@ -283,13 +291,24 @@ const ValuePlus = () => {
               </Grid>
               <Grid container padding={2} spacing={1}>
                 <Grid item xs={12} md={4}>
-                  <TextField
-                    label="Payment Type"
-                    name="payment_type"
-                    disabled
-                    type="text"
-                    value="Cash"
-                  />
+                  <FormControl>
+                    <InputLabel id="payment-type-select-label">
+                      Payment Type*
+                    </InputLabel>
+                    <Select
+                      labelId="payment-type-select-label"
+                      id="payment-type-select"
+                      label="Payment Type*"
+                      onChange={paymentTypeHandle}
+                      value={details?.paymentType}
+                    >
+                      {paymentType?.map((item) => (
+                        <MenuItem value={item?.id} key={item?.id}>
+                          {item?.type}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <FormControl>
