@@ -10,7 +10,8 @@ import {
   AdvanceCollectionHistory,
   AdvanceRefund,
   AdvanceRefundHistory,
-  EmiCollection
+  EmiCollection,
+  ValuePlus,
 } from "../../views/collections/index";
 
 const Collections = () => {
@@ -25,10 +26,7 @@ const Collections = () => {
           path="/credit-or-emi-collection"
           element={<CreditOrEMICollection />}
         />
-         <Route
-          path="/emi-collection"
-          element={<EmiCollection />}
-        />
+        <Route path="/emi-collection" element={<EmiCollection />} />
         <Route path="/advance-collection" element={<AdvanceCollection />} />
         <Route
           path="/advance-collection-history"
@@ -39,6 +37,7 @@ const Collections = () => {
           path="/advance-refund-history"
           element={<AdvanceRefundHistory />}
         />
+        <Route path="/value-plus" element={<ValuePlus />} />
       </Routes>
     </>
   );

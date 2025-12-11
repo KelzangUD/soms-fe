@@ -34,6 +34,7 @@ export const CommonProvider = ({ children }) => {
   const [itemsList, setItemsList] = useState([]);
   const [locatorsList, setLocatorsList] = useState([]);
   const [locatorsNameList, setLocatorsNameList] = useState([]);
+  const [valuePlusPlan, setValuePlusPlan] = useState([]);
 
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -213,7 +214,7 @@ export const CommonProvider = ({ children }) => {
       setTransferOrderToLocator(res?.data);
     }
   };
- 
+
   const fetchLocatorBasedOExtension = async (extension) => {
     const res = await Route(
       "GET",
@@ -290,8 +291,20 @@ export const CommonProvider = ({ children }) => {
       null
     );
     if (res?.status === 200) {
-      console.log(res?.data);
       setLocatorsNameList(res?.data);
+    }
+  };
+  const fetchValuePlusPlan = async () => {
+    const res = await Route(
+      "GET",
+      `/Common/getValuePlus_Plan_Type`,
+      null,
+      null,
+      null
+    );
+    if (res?.status === 200) {
+      console.log(res);
+      setValuePlusPlan(res?.data);
     }
   };
   useEffect(() => {
@@ -310,6 +323,7 @@ export const CommonProvider = ({ children }) => {
     // fetchToStore();
     fetchRegionsOrExtensions();
     fetchItemsList();
+    fetchValuePlusPlan();
   }, []);
 
   return (
@@ -327,7 +341,6 @@ export const CommonProvider = ({ children }) => {
         paymentOptions,
         fetchBankAccountName,
         bankAccountNames,
-        fetchBankAccountName,
         requisitionType,
         requisitionItems,
         transferType,
@@ -351,7 +364,8 @@ export const CommonProvider = ({ children }) => {
         transferOrderToLocator,
         isMdUp,
         fetchLocatorName,
-        locatorsNameList
+        locatorsNameList,
+        valuePlusPlan,
       }}
     >
       {children}

@@ -6,6 +6,7 @@ import {
   PostedTransferShipment,
   TransferOrderInward,
   PostedTransferReceipt,
+  SAPTransferOrder
 } from "../../views/inventory/index";
 
 const Inventory = () => {
@@ -28,6 +29,10 @@ const Inventory = () => {
         <Route
           path="/posted-transfer-receipt"
           element={<PostedTransferReceipt />}
+        />
+        <Route
+          path="/sap-transfer-order"
+          element={<SAPTransferOrder />}
         />
       </Routes>
     </>

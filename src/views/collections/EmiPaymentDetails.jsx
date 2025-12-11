@@ -3,7 +3,7 @@ import {
   Box,
   Grid,
   Button,
-  IconButton,
+  // IconButton,
   Paper,
   TextField,
   Table,
@@ -14,8 +14,8 @@ import {
   TableRow,
   Tooltip,
 } from "@mui/material";
-import PaymentIcon from "@mui/icons-material/Payment";
-import CreditScoreIcon from "@mui/icons-material/CreditScore";
+// import PaymentIcon from "@mui/icons-material/Payment";
+// import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import { PaymentDetailsTable } from "../../component/pos_management/index";
 import {
   Title,
@@ -28,6 +28,7 @@ import Route from "../../routes/Route";
 
 const EmiPaymentDetails = ({ setOpen, details }) => {
   const access_token = localStorage.getItem("access_token");
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
   const [severity, setSeverity] = useState("info");
@@ -46,7 +47,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
   const paymentAllActionHandle = (e, row) => {
     setEmiPaymentDetails((prev) => ({
       ...prev,
-      installment_ID: row?.installmentId,
+      installment_ID: row === undefined ? 0 : row?.installmentId,
       emiMonthCount: parseInt(
         details?.remainingAmount / details?.installmentAmount
       ),
@@ -54,7 +55,9 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
       payableAmount: details?.remainingAmount,
       updatedBy: localStorage?.getItem("username"),
       monthlyInstallment:
-        row?.paymentStatus === "UnPaid"
+        row === undefined
+          ? details?.installmentAmount
+          : row?.paymentStatus === "UnPaid"
           ? row?.payableAmount
           : row?.installmentAmountPaid,
     }));
@@ -100,6 +103,7 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
       totalAmount?.paymentAmount === details?.remainingAmount
     ) {
       const data = {
+        emi_ID: details?.emi_ID,
         installment_ID: emiPaymentDetails?.installment_ID,
         emiMonthCount: emiPaymentDetails?.emiMonthCount,
         paymentStatus: emiPaymentDetails?.paymentStatus,
@@ -402,40 +406,65 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                                     </TableCell>
                                     <TableCell>{row?.paymentDate}</TableCell>
                                     <TableCell align="right">
-                                      {row?.paymentStatus === "UnPaid" && (
-                                        <>
-                                          <Tooltip title="Pay All Remaining Amount">
-                                            <Button
-                                              onClick={(e) =>
-                                                paymentAllActionHandle(e, row)
-                                              }
-                                              color="success"
-                                              variant="contained"
-                                              size="small"
-                                              sx={{ marginTop: 1 }}
-                                            >
-                                              Pay All
-                                            </Button>
-                                          </Tooltip>
-                                          <Tooltip title="Monthly Payment">
-                                            <Button
-                                              onClick={(e) =>
-                                                paymentActionHandle(e, row)
-                                              }
-                                              sx={{ marginLeft: 1, marginTop: 1 }}
-                                              color="primary"
-                                              variant="contained"
-                                              size="small"
-                                            >
-                                              Pay Monthly
-                                            </Button>
-                                          </Tooltip>
-                                        </>
-                                      )}
+                                      {row?.paymentStatus === "UnPaid" &&
+                                        userDetails?.roleId !== 54 && (
+                                          <>
+                                            <Tooltip title="Pay All Remaining Amount">
+                                              <Button
+                                                onClick={(e) =>
+                                                  paymentAllActionHandle(e, row)
+                                                }
+                                                color="success"
+                                                variant="contained"
+                                                size="small"
+                                                sx={{ marginTop: 1 }}
+                                              >
+                                                Pay All
+                                              </Button>
+                                            </Tooltip>
+                                            <Tooltip title="Monthly Payment">
+                                              <Button
+                                                onClick={(e) =>
+                                                  paymentActionHandle(e, row)
+                                                }
+                                                sx={{
+                                                  marginLeft: 1,
+                                                  marginTop: 1,
+                                                }}
+                                                color="primary"
+                                                variant="contained"
+                                                size="small"
+                                              >
+                                                Pay Monthly
+                                              </Button>
+                                            </Tooltip>
+                                          </>
+                                        )}
                                     </TableCell>
                                   </TableRow>
                                 )
                               )}
+
+                              {details?.monthlyInstallmentDetailsList?.every(
+                                (item) => item?.paymentStatus === "Paid"
+                              ) &&
+                                userDetails?.roleId !== 54 && (
+                                  <TableRow>
+                                    <TableCell colSpan={7} />
+                                    <TableCell align="right">
+                                      <Tooltip title="Pay All Remaining Amount">
+                                        <Button
+                                          variant="contained"
+                                          onClick={paymentAllActionHandle}
+                                          color="success"
+                                          size="small"
+                                        >
+                                          Pay All
+                                        </Button>
+                                      </Tooltip>
+                                    </TableCell>
+                                  </TableRow>
+                                )}
                             </TableBody>
                           </Table>
                         </TableContainer>
@@ -459,14 +488,19 @@ const EmiPaymentDetails = ({ setOpen, details }) => {
                 margin={2}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
-                <Button
-                  variant="contained"
-                  onClick={paymentHandle}
-                  color="primary"
-                  size="small"
-                >
-                  Pay
-                </Button>
+                {userDetails?.roleId !== 54 && (
+                  <Button
+                    variant="contained"
+                    onClick={paymentHandle}
+                    color="primary"
+                    size="small"
+                    sx={{
+                      marginLeft: 2,
+                    }}
+                  >
+                    Pay
+                  </Button>
+                )}
                 <Button
                   variant="outlined"
                   onClick={() => setOpen(false)}

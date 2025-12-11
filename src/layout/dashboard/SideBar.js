@@ -119,6 +119,10 @@ export const MenuItems = [
         page: "EMI Organization",
         route: "pos-management/emi-organization",
       },
+      {
+        page: "Pricing Details",
+        route: "pos-management/pricing-details",
+      },
     ],
   },
   {
@@ -165,6 +169,10 @@ export const MenuItems = [
       //   page: "Advance Refund History",
       //   route: "collections/advance-refund-history",
       // },
+      {
+        page: "Value Plus",
+        route: "collections/value-plus",
+      },
     ],
   },
   {
@@ -224,6 +232,10 @@ export const MenuItems = [
       {
         page: "Posted Transfer Receipts",
         route: "inventory/posted-transfer-receipt",
+      },
+      {
+        page: "SAP Transfer Order",
+        route: "inventory/sap-transfer-order",
       },
     ],
   },
@@ -299,9 +311,13 @@ export const MenuItems = [
         page: "Samsung Warranty Report",
         route: "reports/samsung-warranty-report",
       },
-       {
+      {
         page: "Employee EMI Report",
         route: "reports/employee-emi-report",
+      },
+      {
+        page: "Customers EMI Report",
+        route: "reports/customers-emi-report",
       },
       // {
       //   page: "Service Log Report",
