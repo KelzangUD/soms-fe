@@ -913,6 +913,11 @@ const AddLineItem = ({
                   variant="contained"
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
+                  disabled={
+                    salesType === 5 && lineItemDetails?.mrp < 30000
+                      ? true
+                      : false
+                  }
                 >
                   Submit
                 </Button>
