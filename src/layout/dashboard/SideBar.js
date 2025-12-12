@@ -169,6 +169,10 @@ export const MenuItems = [
       //   page: "Advance Refund History",
       //   route: "collections/advance-refund-history",
       // },
+      {
+        page: "Value Plus",
+        route: "collections/value-plus",
+      },
     ],
   },
   {
