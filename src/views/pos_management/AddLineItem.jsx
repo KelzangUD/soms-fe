@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Alert,
   Autocomplete,
@@ -14,7 +14,6 @@ import {
   Switch,
   TextField,
   Typography,
-  FormGroup,
 } from "@mui/material";
 import Route from "../../routes/Route";
 import { Notification, LoaderDialog } from "../../ui/index";
@@ -301,7 +300,7 @@ const AddLineItem = ({
   const fetchPriceLocatorDetails = async () => {
     const res = await Route(
       "GET",
-      `/SalesOrder/FetchPriceLocatorDtls?pricingId=${pricingID}&qty=${lineItemDetail?.qty}&salesType=${salesType}`,
+      `/SalesOrder/FetchPriceLocatorDtls?pricingId=${pricingID}&qty=${lineItemDetail?.qty}&salesType=${salesType}&upiPayment=${lineItemDetail?.upiPayment}`,
       access_token,
       null,
       null
@@ -443,7 +442,7 @@ const AddLineItem = ({
       fetchPriceLocatorDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pricingID]);
+  }, [pricingID, lineItemDetail?.upiPayment]);
 
   const subInventoryHandle = (e, value) => {
     setLineItemDetail((prev) => ({
@@ -494,7 +493,7 @@ const AddLineItem = ({
   const upiPaymentHandle = (e) => {
     setLineItemDetail((prev) => ({
       ...prev,
-      upiPayment: e?.target?.checked ? "Y" : "N",
+      upiPayment: e?.target?.value,
     }));
   };
   const fetchDownPaymentDetails = async () => {
@@ -582,6 +581,13 @@ const AddLineItem = ({
                   </Alert>
                 </Grid>
               )}
+              {salesType === 1 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    For UPI payment, please select UPI payment as "YES".
+                  </Alert>
+                </Grid>
+              )}
               <Grid
                 container
                 spacing={1}
@@ -589,22 +595,33 @@ const AddLineItem = ({
                 paddingX={2}
                 marginTop={1}
               >
-                <Grid
-                  item
-                  xs={12}
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        onChange={upiPaymentHandle}
-                        value={"Y" ? true : false}
-                      />
-                    }
-                    label="UPI Payment"
-                  />
-                </Grid>
+                {salesType === 1 && (
+                  <Grid
+                    item
+                    xs={12}
+                    mb={1}
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <Grid item xs={12} md={3}>
+                      <FormControl>
+                        <InputLabel id="upi-payment-select-label">
+                          UPI Payment
+                        </InputLabel>
+                        <Select
+                          labelId="upi-payment-select-label"
+                          id="upi-payment-select"
+                          value={lineItemDetail?.upiPayment}
+                          label="UPI Payment"
+                          onChange={upiPaymentHandle}
+                        >
+                          <MenuItem value="Y">Yes</MenuItem>
+                          <MenuItem value="N">No</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                )}
                 <Grid item xs={12} md={3}>
                   <TextField
                     id="storeName"

@@ -406,7 +406,6 @@ const SalesOrder = () => {
       advanceNo: value?.id,
     }));
   };
-
   const fetchEMIEndDate = async () => {
     const res = await Route(
       "GET",
@@ -431,7 +430,6 @@ const SalesOrder = () => {
       }
     }
   };
-
   useEffect(() => {
     emiDuration?.emiCycle !== null && fetchEMIEndDate();
   }, [emiDuration?.emiCycle, emiDuration?.fromDate]);
@@ -447,7 +445,6 @@ const SalesOrder = () => {
       fromDate: dateFormatter(e?.$d),
     }));
   };
-
   const remarksHandle = (e) => {
     setSalesOrderDetails((prev) => ({
       ...prev,
@@ -576,7 +573,6 @@ const SalesOrder = () => {
       ...totals,
     }));
   }, [lineItems]);
-
   const resetStateHandle = () => {
     setCustomersList([]);
     setSalesOrderDetails((prev) => ({
@@ -729,6 +725,8 @@ const SalesOrder = () => {
                 ? 0
                 : parseFloat(lineItems[0]?.installmentAmount).toFixed(2),
             downPaymentStatus: downPaymentStatus,
+            upiPercentage: linesAmount?.upiPercentage,
+            upiAmt: linesAmount?.upiAmt,
           },
           userId: user,
         };
@@ -763,7 +761,6 @@ const SalesOrder = () => {
         } else {
           data.itemLinesDtls = lineItems;
         }
-
 
         const jsonDataBlob = new Blob([JSON.stringify(data)], {
           type: "application/json",
