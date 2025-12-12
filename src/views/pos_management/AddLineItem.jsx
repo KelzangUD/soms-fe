@@ -914,7 +914,7 @@ const AddLineItem = ({
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
                   disabled={
-                    salesType === 5 && lineItemDetails?.mrp < 30000
+                    (salesType === 5 && lineItemDetail?.mrp < 30000)
                       ? true
                       : false
                   }
