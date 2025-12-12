@@ -170,7 +170,7 @@ const AddLineItem = ({
             emiInterestRate: "",
           }));
           setNotificationMsg(
-            "EMI Not Available for Amount less than Nu.50,000/-"
+            "EMI Not Available for Amount less than Nu.30,000/-"
           );
           setSeverity("info");
           setShowNotification(true);
