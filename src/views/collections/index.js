@@ -8,3 +8,4 @@ export { default as AdvanceCollectionHistory } from "./AdvanceCollectionHistory"
 export { default as AdvanceRefund } from "./AdvanceRefund";
 export { default as AdvanceRefundHistory } from "./AdvanceRefundHistory";
 export { default as EmiCollection } from "./EmiCollection";
+export { default as ValuePlus } from "./ValuePlus";

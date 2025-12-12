@@ -7,7 +7,7 @@ const Route = async (
   token,
   data,
   id,
-  contentType = "application/json"
+  contentType = "application/json",
 ) => {
   const headers = {
     "Content-Type": contentType,
