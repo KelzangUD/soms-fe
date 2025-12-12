@@ -133,7 +133,7 @@ const AddLineItem = ({
         null
       );
       if (res?.status === 200 && res?.data?.available === "Y") {
-        if (salesType === 5 && res?.data?.mrp < 50000) {
+        if (salesType === 5 && res?.data?.mrp < 30000) {
           setLineItemDetail((prev) => ({
             ...prev,
             priceLocator: "",
