@@ -140,7 +140,7 @@ const AddLineItem = ({
         null
       );
       if (res?.status === 200 && res?.data?.available === "Y") {
-        if (salesType === 5 && res?.data?.mrp < 50000) {
+        if (salesType === 5 && res?.data?.mrp < 30000) {
           setLineItemDetail((prev) => ({
             ...prev,
             priceLocator: "",
@@ -179,7 +179,7 @@ const AddLineItem = ({
             upiAmt: res?.data?.upiAmt,
           }));
           setNotificationMsg(
-            "EMI Not Available for Amount less than Nu.50,000/-"
+            "EMI Not Available for Amount less than Nu.30,000/-"
           );
           setSeverity("info");
           setShowNotification(true);
@@ -1001,6 +1001,11 @@ const AddLineItem = ({
                   variant="contained"
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
+                  disabled={
+                    (salesType === 5 && lineItemDetail?.mrp < 30000)
+                      ? true
+                      : false
+                  }
                 >
                   Submit
                 </Button>

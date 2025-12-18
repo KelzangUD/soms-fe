@@ -826,7 +826,9 @@ const SalesOrder = () => {
               <Grid container>
                 <Alert severity="info" sx={{ width: "100%" }}>
                   For Staff EMI, Please Select EMI Number. Customer EMI is only
-                  available between 1st and 20th of the Month
+                  available between 1st and 20th of the Month. For device price
+                  between Nu.30,000/- and Nu.39,999, please select EMI period
+                  for 6 months.
                 </Alert>
               </Grid>
               <Grid container p={2}>
