@@ -18,7 +18,7 @@ const PostedSalesReceipt = () => {
         <div style={{ textAlign: "center" }}>
           <h3>{salesOrderData?.companyName}</h3>
           <p>{salesOrderData?.customerName}</p>
-          <h4>{salesOrderData?.receiptType}</h4>
+          <h4>Tax/Invoice Receipt</h4>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
@@ -52,18 +52,43 @@ const PostedSalesReceipt = () => {
               </>
             ))}
             <div>
-              <p>Gross Total (Nu): {parseFloat(salesOrderData?.grossTotal)?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}</p>
+              <p>
+                Gross Total (Nu):{" "}
+                {parseFloat(salesOrderData?.grossTotal)?.toLocaleString(
+                  "en-US",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }
+                )}
+              </p>
             </div>
             <div>
-              <p>Tax: {parseFloat(salesOrderData?.tax)?.toLocaleString("en-US", {
+              <p>
+                GST Tax:{" "}
+                {parseFloat(salesOrderData?.tax)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                })}</p>
+                })}
+              </p>
             </div>
             <div>
+              <p>
+                UPI Tax:{" "}
+                {parseFloat(
+                  salesOrderData?.itemDetails?.reduce(
+                    (accumulator, currentObject) =>
+                      accumulator +
+                      (parseInt(currentObject?.upiAmt) || 0),
+                    0
+                  )
+                )?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </p>
+            </div>
+            {/* <div>
               <p>
                 Discount/Commission:{" "}
                 {parseFloat(salesOrderData?.discount)?.toLocaleString("en-US", {
@@ -71,45 +96,54 @@ const PostedSalesReceipt = () => {
                   maximumFractionDigits: 2,
                 })}
               </p>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <p>
-                Advance Amount: {parseFloat(salesOrderData?.advance)?.toLocaleString("en-US", {
+                Advance Amount:{" "}
+                {parseFloat(salesOrderData?.advance)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
               </p>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <p>
                 Down Payment:{" "}
                 {salesOrderData?.downPayment === "null"
                   ? parseFloat(0).toFixed(2)
-                  : parseFloat(salesOrderData?.downPayment)?.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+                  : parseFloat(salesOrderData?.downPayment)?.toLocaleString(
+                      "en-US",
+                      {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }
+                    )}
               </p>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <p>
                 EMI Service Charge:{" "}
                 {salesOrderData?.emiServiceCharge === "null"
                   ? parseFloat(0).toFixed(2)
-                  : parseFloat(salesOrderData?.emiServiceCharge)?.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+                  : parseFloat(
+                      salesOrderData?.emiServiceCharge
+                    )?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
               </p>
-            </div>
+            </div> */}
             <hr style={{ border: "1px dashed #000" }} />
             <div>
               <p>
                 Total Payment:{" "}
-                {parseFloat(salesOrderData?.totalAmount)?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {parseFloat(salesOrderData?.totalAmount)?.toLocaleString(
+                  "en-US",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }
+                )}
               </p>
             </div>
           </>
@@ -157,10 +191,13 @@ const PostedSalesReceipt = () => {
               </p>
             </div>
             <div>
-              <p>Tax (Nu.): {parseFloat(salesOrderData?.tax)?.toLocaleString("en-US", {
+              <p>
+                Tax (Nu.):{" "}
+                {parseFloat(salesOrderData?.tax)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                })}</p>
+                })}
+              </p>
             </div>
             <div>
               <p>
@@ -174,35 +211,43 @@ const PostedSalesReceipt = () => {
             <div>
               <p>
                 Total Balance Amount (Nu.):{" "}
-                {parseFloat(salesOrderData?.totalBalanceAmount)?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {parseFloat(salesOrderData?.totalBalanceAmount)?.toLocaleString(
+                  "en-US",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }
+                )}
               </p>
             </div>
             <div>
               <p>
-                Number of Installment:{" "}
-                {salesOrderData?.installmentCycle} Months
+                Number of Installment: {salesOrderData?.installmentCycle} Months
               </p>
             </div>
             <div>
               <p>
                 Equated Monthly Instalment (Nu.):{" "}
-                {parseFloat(salesOrderData?.installmentAmount)?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {parseFloat(salesOrderData?.installmentAmount)?.toLocaleString(
+                  "en-US",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }
+                )}
               </p>
             </div>
             <hr style={{ border: "1px dashed #000" }} />
             <div>
               <p>
                 Total Advance Payment (Nu.):{" "}
-                {parseFloat(salesOrderData?.downPayment)?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {parseFloat(salesOrderData?.downPayment)?.toLocaleString(
+                  "en-US",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }
+                )}
               </p>
             </div>
           </>
@@ -211,6 +256,9 @@ const PostedSalesReceipt = () => {
         <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Created By: {salesOrderData?.createdBy}</p>
+        </div>
+        <div>
+          <p>TIPL GST No: C10041246</p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>

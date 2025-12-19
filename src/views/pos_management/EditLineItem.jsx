@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Alert,
   Autocomplete,
@@ -80,6 +80,9 @@ const EditLineItem = ({
     installmentAmount: editDetails?.installmentAmount,
     downPaymentIR: editDetails?.downPaymentIR,
     emiInterestRate: editDetails?.emiInterestRate,
+    upiPayment: editDetails?.upiPayment,
+    upiPercentage: editDetails?.upiPercentage,
+    upiAmt: editDetails?.upiAmt,
   });
   const fetchOnHandItems = async () => {
     const res = await Route(
@@ -110,7 +113,9 @@ const EditLineItem = ({
         lineItemDetail?.qty
       }&emiCycle=${
         emiCycle === null ? 0 : emiCycle
-      }&downPaymentStatus=${downPaymentStatus}`,
+      }&downPaymentStatus=${downPaymentStatus}&upiPayment=${
+        lineItemDetail?.upiPayment
+      }`,
       access_token,
       null,
       null
@@ -144,6 +149,8 @@ const EditLineItem = ({
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
         emiInterestRate: res?.data?.emiInterestRate,
+        upiPercentage: res?.data?.upiPercentage,
+        upiAmt: res?.data?.upiAmt,
       }));
     } else if (res?.status === 200 && res?.data?.available === "N") {
       setNotificationMsg("Item Not Available");
@@ -158,7 +165,7 @@ const EditLineItem = ({
   const fetchItemDescriptionWithOutSerialNO = async () => {
     const res = await Route(
       "GET",
-      `/SalesOrder/FetchByDescription?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo&qty=${lineItemDetail?.qty}`,
+      `/SalesOrder/FetchByDescription?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo&qty=${lineItemDetail?.qty}&upiPayment=${lineItemDetail?.upiPayment}`,
       access_token,
       null,
       null
@@ -190,13 +197,15 @@ const EditLineItem = ({
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
         emiInterestRate: res?.data?.emiInterestRate,
+        upiPercentage: res?.data?.upiPercentage,
+        upiAmt: res?.data?.upiAmt,
       }));
     }
   };
   const fetchPriceLocatorDetails = async () => {
     const res = await Route(
       "GET",
-      `/SalesOrder/FetchPriceLocatorDtls?pricingId=${pricingID}&qty=${lineItemDetail?.qty}&salesType=${salesType}`,
+      `/SalesOrder/FetchPriceLocatorDtls?pricingId=${pricingID}&qty=${lineItemDetail?.qty}&salesType=${salesType}&upiPayment=${lineItemDetail?.upiPayment}`,
       access_token,
       null,
       null
@@ -221,6 +230,8 @@ const EditLineItem = ({
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
         emiInterestRate: res?.data?.emiInterestRate,
+        upiPercentage: res?.data?.upiPercentage,
+        upiAmt: res?.data?.upiAmt,
       }));
     }
   };
@@ -265,6 +276,12 @@ const EditLineItem = ({
     }
   }, [pricingID]);
 
+  const upiPaymentHandle = (e) => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      upiPayment: e?.target?.value,
+    }));
+  };
   const subInventoryHandle = (e, value) => {
     setLineItemDetail((prev) => ({
       ...prev,
@@ -380,6 +397,472 @@ const EditLineItem = ({
             <Grid item xs={12}>
               <Grid
                 container
+                padding={2}
+                sx={{
+                  alignItems: "center",
+                  backgroundColor: (theme) => theme.palette.bg.light,
+                  color: "#fff",
+                }}
+              >
+                <Typography variant="subtitle1">Add Line Item</Typography>
+              </Grid>
+              {salesType === 5 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    Actual Down Payment should be equal to or greater than
+                    Minimum Down Payment!
+                  </Alert>
+                </Grid>
+              )}
+              {salesType === 1 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    For UPI payment, please select UPI payment as "YES".
+                  </Alert>
+                </Grid>
+              )}
+              <Grid
+                container
+                spacing={1}
+                paddingY={1}
+                paddingX={2}
+                marginTop={1}
+              >
+                {salesType === 1 && (
+                  <Grid
+                    item
+                    xs={12}
+                    mb={1}
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <Grid item xs={12} md={3}>
+                      <FormControl>
+                        <InputLabel id="upi-payment-select-label">
+                          UPI Payment
+                        </InputLabel>
+                        <Select
+                          labelId="upi-payment-select-label"
+                          id="upi-payment-select"
+                          value={lineItemDetail?.upiPayment}
+                          label="UPI Payment"
+                          onChange={upiPaymentHandle}
+                        >
+                          <MenuItem value="Y">Yes</MenuItem>
+                          <MenuItem value="N">No</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                )}
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="storeName"
+                    label="Store Name"
+                    value={storeName}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  {userDetails?.roleName === "Administrator" ||
+                  userDetails?.roleName === "Regional Manager" ||
+                  userDetails?.roleName === "General Manager" ? (
+                    <Autocomplete
+                      disablePortal
+                      options={subInventory?.map((item) => ({
+                        id: item?.id,
+                        label: item?.id,
+                      }))}
+                      onChange={subInventoryHandle}
+                      value={lineItemDetail?.subInventoryId}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Sub-Inventory" />
+                      )}
+                    />
+                  ) : (
+                    <TextField
+                      id="sub_inventory"
+                      label="Sub-Inventory"
+                      value={lineItemDetail?.subInventoryId}
+                      disabled
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  {userDetails?.roleName === "Administrator" ||
+                  userDetails?.roleName === "Regional Manager" ||
+                  userDetails?.roleName === "General Manager" ? (
+                    <Autocomplete
+                      disablePortal
+                      options={locators?.map((item) => ({
+                        id: item?.id,
+                        label: item?.name,
+                      }))}
+                      onChange={locatorHandle}
+                      value={lineItemDetail?.locatorId}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Locator" />
+                      )}
+                    />
+                  ) : (
+                    <TextField
+                      id="locator"
+                      label="Locator"
+                      value={lineItemDetail?.locatorId}
+                      disabled
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <Autocomplete
+                    disablePortal
+                    options={onHandItems}
+                    onChange={descriptionHandle}
+                    value={lineItemDetail?.description}
+                    onInputChange={(e, inputValue) =>
+                      handleInputChange(inputValue)
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} label="Description" />
+                    )}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                spacing={1}
+                paddingY={{ xs: 0, md: 1 }}
+                paddingX={2}
+              >
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="serial_no"
+                    label="Serial No"
+                    onChange={serialNoHandle}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  container
+                  xs={12}
+                  md={3}
+                  display="flex"
+                  justifyContent="space-between"
+                >
+                  <TextField
+                    id="qty"
+                    label="Qty"
+                    value={lineItemDetail?.qty}
+                    onChange={qtyHandle}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <Autocomplete
+                    disablePortal
+                    options={
+                      lineItemDetail?.priceLocatorDTOs?.length > 0
+                        ? lineItemDetail?.priceLocatorDTOs?.map((item) => ({
+                            id: item?.pricingId,
+                            label: item?.variantCode,
+                          }))
+                        : []
+                    }
+                    disabled={
+                      lineItemDetail?.priceLocator === "Y" ? false : true
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} label="Price Locator" />
+                    )}
+                    onChange={priceLocatorHandle}
+                  />
+                </Grid>
+                {salesType === 5 ? (
+                  <Grid item xs={12} md={3}>
+                    <FormControl>
+                      <InputLabel id="down-payment-status-select-label">
+                        Down Payment Status
+                      </InputLabel>
+                      <Select
+                        labelId="down-payment-status-select-label"
+                        id="down-payment-status-select"
+                        label="Down Payment Status"
+                        onChange={(e) => setDownPaymentStatus(e?.target?.value)}
+                        value={downPaymentStatus}
+                        disabled
+                      >
+                        <MenuItem value="Yes">Yes</MenuItem>
+                        <MenuItem value="No">No</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="dis_percentage"
+                      label="Disc/Comm %"
+                      disabled
+                      value={lineItemDetail?.discPercentage}
+                    />
+                  </Grid>
+                )}
+              </Grid>
+              <Grid container spacing={1} paddingY={1} paddingX={2}>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="tds_amount"
+                    label="TDS Amount"
+                    disabled
+                    value={lineItemDetail?.tdsAmount}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="item_no"
+                    label="Item No."
+                    disabled
+                    value={lineItemDetail?.itemNo}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="mrp"
+                    label="MRP"
+                    disabled
+                    value={lineItemDetail?.mrp}
+                  />
+                </Grid>
+                {salesType === 5 && downPaymentStatus === "No" && (
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="installment_amount"
+                      label="Installment Amount"
+                      disabled
+                      value={lineItemDetail?.installmentAmount}
+                    />
+                  </Grid>
+                )}
+                {salesType !== 5 ? (
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="disc_amt"
+                      label="Disc/Comm Amount"
+                      disabled
+                      value={lineItemDetail?.discountedAmount}
+                    />
+                  </Grid>
+                ) : null}
+                {salesType === 5 && downPaymentStatus === "Yes" && (
+                  <>
+                    <Grid item xs={12} md={3}>
+                      <TextField
+                        id="minium_down_payment"
+                        label="Minimum Down Payment"
+                        disabled
+                        value={lineItemDetail?.downPayment}
+                      />
+                    </Grid>
+                  </>
+                )}
+              </Grid>
+              <Grid
+                container
+                spacing={1}
+                paddingY={{ xs: 0, md: 1 }}
+                paddingX={2}
+              >
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="gst"
+                    label="GST %"
+                    disabled
+                    value={lineItemDetail?.taxPercentage}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="gst_amt"
+                    label="GST Amount"
+                    disabled
+                    value={lineItemDetail?.taxAmt}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="upi_percentage"
+                    label="Transaction Fee Percentage"
+                    disabled
+                    value={lineItemDetail?.upiPercentage}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="upi_amount"
+                    label="Transaction Fee Amount"
+                    disabled
+                    value={lineItemDetail?.upiAmt}
+                  />
+                </Grid>
+              </Grid>
+              {salesType !== 5 ? (
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={{ xs: 0, md: 1 }}
+                  paddingX={2}
+                >
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="selling_price"
+                      label="Selling Price"
+                      disabled
+                      value={lineItemDetail?.sellingPrice}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="add_disc"
+                      label="Additional Disc"
+                      disabled
+                      value={lineItemDetail?.additionalDiscount}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="amt_excel_tax"
+                      label="Amount Excl. Tax"
+                      disabled
+                      value={lineItemDetail?.amountExclTax}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="adv_tax"
+                      label="Advance Tax Amount"
+                      value={lineItemDetail?.advanceTaxAmount}
+                    />
+                  </Grid>
+                </Grid>
+              ) : null}
+              {salesType !== 5 ? (
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={{ xs: 0, md: 1 }}
+                  paddingX={2}
+                >
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="vol_disc"
+                      label="Volume Discount"
+                      disabled
+                      value={lineItemDetail?.volumeDiscount}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="item_total_added_qty"
+                      label="Item Total Added Qty"
+                      disabled
+                      value={lineItemDetail?.itemTotalAddedQty}
+                    />
+                  </Grid>
+                </Grid>
+              ) : null}
+              {salesType === 5 ? (
+                <>
+                  <Grid
+                    container
+                    spacing={1}
+                    paddingY={{ xs: 0, md: 1 }}
+                    paddingX={2}
+                  >
+                    {downPaymentStatus === "Yes" && (
+                      <>
+                        <Grid item xs={12} md={3}>
+                          <TextField
+                            id="actual_down_payment"
+                            label="Actual Down Payment"
+                            onChange={actualDownPaymentHandle}
+                            value={lineItemDetail?.actualDownPayment}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={3}>
+                          <TextField
+                            id="payable_amount"
+                            label="Payable Amount"
+                            disabled
+                            value={lineItemDetail?.payableAmount}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={3}>
+                          <TextField
+                            id="installment_amount"
+                            label="Installment Amount"
+                            disabled
+                            value={lineItemDetail?.installmentAmount}
+                          />
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
+                </>
+              ) : null}
+              {salesType !== 5 ? (
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={1}
+                  paddingX={2}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="selling_price"
+                      label="Line Item Amount"
+                      disabled
+                      value={lineItemDetail?.lineItemAmt}
+                    />
+                  </Grid>
+                </Grid>
+              ) : null}
+
+              <Grid
+                item
+                xs={12}
+                alignItems="right"
+                paddingY={1}
+                paddingX={2}
+                marginBottom={1}
+                sx={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={submitHandle}
+                  sx={{ mr: 2 }}
+                  disabled={
+                    salesType === 5 && lineItemDetail?.mrp < 30000
+                      ? true
+                      : false
+                  }
+                >
+                  Submit
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => setOpen(false)}
+                  color="error"
+                >
+                  Close
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+        {/* <Box sx={{ width: "100%" }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12}>
+              <Grid
+                container
                 paddingX={4}
                 paddingY={2}
                 sx={{
@@ -402,6 +885,14 @@ const EditLineItem = ({
                   </Alert>
                 </Grid>
               )}
+              {salesType === 1 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    For UPI payment, please select UPI payment as "YES".
+                  </Alert>
+                </Grid>
+              )}
+
               <Grid
                 container
                 spacing={1}
@@ -409,6 +900,33 @@ const EditLineItem = ({
                 paddingX={4}
                 marginTop={1}
               >
+                {salesType === 1 && (
+                  <Grid
+                    item
+                    xs={12}
+                    mb={1}
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <Grid item xs={12} md={3}>
+                      <FormControl>
+                        <InputLabel id="upi-payment-select-label">
+                          UPI Payment
+                        </InputLabel>
+                        <Select
+                          labelId="upi-payment-select-label"
+                          id="upi-payment-select"
+                          value={lineItemDetail?.upiPayment}
+                          label="UPI Payment"
+                          onChange={upiPaymentHandle}
+                        >
+                          <MenuItem value="Y">Yes</MenuItem>
+                          <MenuItem value="N">No</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                )}
                 <Grid item xs={3}>
                   <TextField
                     id="store_name"
@@ -603,10 +1121,18 @@ const EditLineItem = ({
                   <Grid container spacing={1} paddingY={1} paddingX={4}>
                     <Grid item xs={3}>
                       <TextField
-                        id="tax_per"
-                        label="Tax %"
+                        id="gst_per"
+                        label="GST %"
                         disabled
                         value={lineItemDetail?.taxPercentage}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        id="gst_amt"
+                        label="GSt Amount"
+                        disabled
+                        value={lineItemDetail?.taxAmt}
                       />
                     </Grid>
                     <Grid item xs={3}>
@@ -623,14 +1149,6 @@ const EditLineItem = ({
                         label="Additional Disc"
                         disabled
                         value={lineItemDetail?.additionalDiscount}
-                      />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <TextField
-                        id="tax_amt"
-                        label="Tax Amount"
-                        disabled
-                        value={lineItemDetail?.taxAmt}
                       />
                     </Grid>
                   </Grid>
@@ -712,6 +1230,46 @@ const EditLineItem = ({
                   </Grid>
                 </Grid>
               )}
+              {salesType === 5 ? (
+                <>
+                  <Grid
+                    container
+                    spacing={1}
+                    paddingY={{ xs: 0, md: 1 }}
+                    paddingX={2}
+                  >
+                    {downPaymentStatus === "Yes" && (
+                      <>
+                        <Grid item xs={12} md={3}>
+                          <TextField
+                            id="actual_down_payment"
+                            label="Actual Down Payment"
+                            onChange={actualDownPaymentHandle}
+                            value={lineItemDetail?.actualDownPayment}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={3}>
+                          <TextField
+                            id="payable_amount"
+                            label="Payable Amount"
+                            disabled
+                            value={lineItemDetail?.payableAmount}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={3}>
+                          <TextField
+                            id="installment_amount"
+                            label="Installment Amount"
+                            disabled
+                            value={lineItemDetail?.installmentAmount}
+                          />
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
+                </>
+              ) : null}
+              
               <Grid
                 item
                 xs={12}
@@ -738,7 +1296,7 @@ const EditLineItem = ({
               </Grid>
             </Grid>
           </Grid>
-        </Box>
+        </Box> */}
       </Dialog>
       {showNotification && (
         <Notification

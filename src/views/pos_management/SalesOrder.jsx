@@ -325,6 +325,7 @@ const SalesOrder = () => {
               installmentAmount: item?.installmentAmount,
               payableAmount: item?.payableAmount,
               emiInterestRate: item?.emiInterestRate,
+              upiAmt: item?.upiAmt,
             });
           } else {
             notFoundItems.push({
@@ -576,6 +577,7 @@ const SalesOrder = () => {
         accumulator.downPayment += parseInt(currentObject?.downPayment) || 0;
         accumulator.actualDownPayment +=
           parseInt(currentObject?.actualDownPayment) || 0;
+        accumulator.upiAmt += parseInt(currentObject?.upiAmt) || 0;
         return accumulator;
       },
       {
@@ -587,6 +589,7 @@ const SalesOrder = () => {
         netAmount: 0,
         downPayment: 0,
         actualDownPayment: 0,
+        upiAmt: 0,
       }
     );
     setLinesAmount((prev) => ({
@@ -1144,9 +1147,33 @@ const SalesOrder = () => {
                       required
                       onChange={customerCIDHandle}
                       value={salesOrderDetails?.customerCID}
+                      sx={{
+                        mt: {
+                          xs: 0,
+                          md:
+                            salesOrderDetails?.salesType === 5 ||
+                            salesOrderDetails?.salesType === 4
+                              ? 1
+                              : 0,
+                        },
+                      }}
                     />
                   </Grid>
-                  <Grid item xs={12} md={3}>
+                  <Grid
+                    item
+                    xs={12}
+                    md={3}
+                    sx={{
+                      mt: {
+                        xs: 0,
+                        md:
+                          salesOrderDetails?.salesType === 5 ||
+                          salesOrderDetails?.salesType === 4
+                            ? 1
+                            : 0,
+                      },
+                    }}
+                  >
                     <TextField
                       label="Customer TPN"
                       name="customerTPNo"

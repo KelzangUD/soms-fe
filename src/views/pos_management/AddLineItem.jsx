@@ -831,6 +831,45 @@ const AddLineItem = ({
                   </>
                 )}
               </Grid>
+              <Grid
+                container
+                spacing={1}
+                paddingY={{ xs: 0, md: 1 }}
+                paddingX={2}
+              >
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="gst"
+                    label="GST %"
+                    disabled
+                    value={lineItemDetail?.taxPercentage}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="gst_amt"
+                    label="GST Amount"
+                    disabled
+                    value={lineItemDetail?.taxAmt}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="upi_percentage"
+                    label="Transaction Fee Percentage"
+                    disabled
+                    value={lineItemDetail?.upiPercentage}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="upi_amount"
+                    label="Transaction Fee Amount"
+                    disabled
+                    value={lineItemDetail?.upiAmt}
+                  />
+                </Grid>
+              </Grid>
               {salesType !== 5 ? (
                 <Grid
                   container
@@ -838,14 +877,6 @@ const AddLineItem = ({
                   paddingY={{ xs: 0, md: 1 }}
                   paddingX={2}
                 >
-                  <Grid item xs={12} md={3}>
-                    <TextField
-                      id="tax_per"
-                      label="Tax %"
-                      disabled
-                      value={lineItemDetail?.taxPercentage}
-                    />
-                  </Grid>
                   <Grid item xs={12} md={3}>
                     <TextField
                       id="selling_price"
@@ -864,23 +895,6 @@ const AddLineItem = ({
                   </Grid>
                   <Grid item xs={12} md={3}>
                     <TextField
-                      id="tax_amt"
-                      label="Tax Amount"
-                      disabled
-                      value={lineItemDetail?.taxAmt}
-                    />
-                  </Grid>
-                </Grid>
-              ) : null}
-              {salesType !== 5 ? (
-                <Grid
-                  container
-                  spacing={1}
-                  paddingY={{ xs: 0, md: 1 }}
-                  paddingX={2}
-                >
-                  <Grid item xs={12} md={3}>
-                    <TextField
                       id="amt_excel_tax"
                       label="Amount Excl. Tax"
                       disabled
@@ -894,6 +908,15 @@ const AddLineItem = ({
                       value={lineItemDetail?.advanceTaxAmount}
                     />
                   </Grid>
+                </Grid>
+              ) : null}
+              {salesType !== 5 ? (
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={{ xs: 0, md: 1 }}
+                  paddingX={2}
+                >
                   <Grid item xs={12} md={3}>
                     <TextField
                       id="vol_disc"
@@ -951,24 +974,6 @@ const AddLineItem = ({
                   </Grid>
                 </>
               ) : null}
-              <Grid container spacing={1} paddingY={1} paddingX={2}>
-                <Grid item xs={12} md={3}>
-                  <TextField
-                    id="upi_percentage"
-                    label="UPI Percentage"
-                    disabled
-                    value={lineItemDetail?.upiPercentage}
-                  />
-                </Grid>
-                <Grid item xs={12} md={3}>
-                  <TextField
-                    id="upi_amount"
-                    label="UPI Amount"
-                    disabled
-                    value={lineItemDetail?.upiAmt}
-                  />
-                </Grid>
-              </Grid>
               {salesType !== 5 ? (
                 <Grid
                   container
@@ -1002,7 +1007,7 @@ const AddLineItem = ({
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
                   disabled={
-                    (salesType === 5 && lineItemDetail?.mrp < 30000)
+                    salesType === 5 && lineItemDetail?.mrp < 30000
                       ? true
                       : false
                   }
