@@ -82,6 +82,9 @@ const SalesOrder = () => {
     item_Number: "",
     interest: "",
     customerTypeId: "",
+    customerTPNo: "",
+    customerCID: "",
+    customerGSTNo: "",
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0.0,
@@ -445,6 +448,24 @@ const SalesOrder = () => {
       fromDate: dateFormatter(e?.$d),
     }));
   };
+  const customerTPNNoHandle = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerTPNo: e?.target?.value,
+    }));
+  };
+  const customerCIDHandle = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerCID: e?.target?.value,
+    }));
+  };
+  const customerGSTNoHandle = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerGSTNo: e?.target?.value,
+    }));
+  };
   const remarksHandle = (e) => {
     setSalesOrderDetails((prev) => ({
       ...prev,
@@ -669,6 +690,12 @@ const SalesOrder = () => {
     if (expectedAmount !== totalPayment) {
       setNotificationMsg(message);
       setSeverity("info");
+      setShowNotification(true);
+      return false;
+    }
+    if (salesOrderDetails.customerCID === "") {
+      setNotificationMsg(message);
+      setSeverity("Please Enter Customer CID No!");
       setShowNotification(true);
       return false;
     }
@@ -1110,10 +1137,36 @@ const SalesOrder = () => {
                       </Grid>
                     </>
                   )}
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      label="Customer CID"
+                      name="customerCID"
+                      required
+                      onChange={customerCIDHandle}
+                      value={salesOrderDetails?.customerCID}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      label="Customer TPN"
+                      name="customerTPNo"
+                      onChange={customerTPNNoHandle}
+                      value={salesOrderDetails?.customerTPNo}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      label="GST payer no"
+                      name="customerGSTNo"
+                      onChange={customerGSTNoHandle}
+                      value={salesOrderDetails?.customerGSTNo}
+                      sx={{ mt: 1 }}
+                    />
+                  </Grid>
                   <Grid
                     item
                     xs={12}
-                    md={3}
+                    md={6}
                     sx={{
                       mt: {
                         xs: 0,
@@ -1121,7 +1174,7 @@ const SalesOrder = () => {
                           salesOrderDetails?.salesType === 4 ||
                           salesOrderDetails?.salesType === 5
                             ? 1
-                            : 0,
+                            : 1,
                       },
                     }}
                   >
