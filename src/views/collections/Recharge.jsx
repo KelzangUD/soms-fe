@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Alert,
   Box,
@@ -44,7 +44,8 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const Recharge = () => {
-  const { paymentType, bankAccountNames, fetchBankAccountName } = useCommon();
+  const { paymentType, bankAccountNames, fetchBankAccountName, fwa } =
+    useCommon();
   const userID = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
   const [showNotification, setShowNotification] = useState(false);
@@ -63,6 +64,8 @@ const Recharge = () => {
     userId: userID,
     type: "S",
     chequeDate: dateFormatter(new Date().toISOString()),
+    gstAmt: "",
+    grossAmt: "",
   });
   const [disableFields, setDisabledFields] = useState({
     cardOrChequeNo: true,
@@ -72,6 +75,8 @@ const Recharge = () => {
   const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [file, setFile] = useState(null);
   const [chequeCopy, setChequeCopy] = useState(null);
+  const [rechargeType, setRechargeType] = useState("Normal Payment");
+  const [disableCreate, setDisableCreate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     fetchBankAccountName(rechargeDetails?.paymentType);
@@ -88,10 +93,39 @@ const Recharge = () => {
       mobileNo: e?.target?.value,
     }));
   };
+  const rechargeTypeHandle = (e) => {
+    setRechargeType(e?.target?.value);
+    setRechargeDetails((prev) => ({
+      ...prev,
+      amount: "",
+      gstAmt: "",
+      grossAmt: "",
+    }));
+  };
   const amountHandle = (e) => {
+    const amounts = fwa?.map((item) => String(item?.amount));
+    if (amounts?.includes(e?.target?.value)) {
+      setNotificationMsg("The amount should be different than ILL Plan!");
+      setSeverity("warning");
+      setShowNotification(true);
+      setDisableCreate(true);
+    } else {
+      setDisableCreate(false);
+    }
     setRechargeDetails((prev) => ({
       ...prev,
       amount: e?.target?.value,
+      gstAmt: 0,
+      grossAmt: Number(e?.target?.value),
+    }));
+  };
+  const fwaHandle = (e) => {
+    const value = Number(e?.target?.value);
+    setRechargeDetails((prev) => ({
+      ...prev,
+      amount: e?.target?.value,
+      gstAmt: Number(e?.target?.value * 0.05).toFixed(2),
+      grossAmt: (value + value * 0.05).toFixed(2),
     }));
   };
   const paymentTypeHandle = (e) => {
@@ -179,6 +213,8 @@ const Recharge = () => {
       userId: userID,
       type: "",
       chequeDate: new Date(),
+      gstAmt: "",
+      grossAmt: "",
     }));
     setDisabledFields((prev) => ({
       ...prev,
@@ -338,7 +374,7 @@ const Recharge = () => {
               >
                 <Grid item>
                   <Typography variant="subtitle1" color="#eee">
-                    Payment Details
+                    Normal Payment Details/Prepaid ILL Package Details
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -374,17 +410,76 @@ const Recharge = () => {
                 </Alert>
               </Grid>
               <Grid container padding={2} py={2} spacing={1}>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
+                  <FormControl>
+                    <InputLabel id="recharge-type-select-label">
+                      Recharge Type*
+                    </InputLabel>
+                    <Select
+                      labelId="recharge-type-select-label"
+                      id="recharge-type-select"
+                      label="Recharge Type*"
+                      onChange={rechargeTypeHandle}
+                      value={rechargeType}
+                    >
+                      <MenuItem value="Normal Payment">Normal Payment</MenuItem>
+                      <MenuItem value="Prepaid ILL Package">
+                        Prepaid ILL Package
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  {rechargeType === "Normal Payment" ? (
+                    <TextField
+                      label="Payment Amount"
+                      name="payment_amount"
+                      onChange={amountHandle}
+                      type="number"
+                      value={rechargeDetails?.amount}
+                      required
+                    />
+                  ) : (
+                    <FormControl>
+                      <InputLabel id="recharge-type-select-label">
+                        FWA*
+                      </InputLabel>
+                      <Select
+                        labelId="recharge-type-select-label"
+                        id="recharge-type-select"
+                        label="FWA*"
+                        onChange={fwaHandle}
+                        value={rechargeDetails?.amount}
+                      >
+                        {fwa?.map((item) => (
+                          <MenuItem value={item?.amount} key={item?.plan_name}>
+                            {item?.plan_name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                </Grid>
+                <Grid item xs={12} md={3}>
                   <TextField
-                    label="Payment Amount"
-                    name="payment_amount"
-                    onChange={amountHandle}
+                    label="GST Amount"
+                    name="gst_amount"
                     type="number"
-                    value={rechargeDetails?.amount}
+                    value={rechargeDetails?.gstAmt}
                     required
+                    disabled
                   />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    label="Gross Amount"
+                    name="gross_amount"
+                    type="number"
+                    value={rechargeDetails?.grossAmt}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
                   <FormControl>
                     <InputLabel id="payment-type-select-label">
                       Payment Type*
@@ -404,7 +499,7 @@ const Recharge = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
                   <FormControl>
                     <InputLabel id="bank-ac-name-select-label">
                       Bank A/C Name*
@@ -424,37 +519,35 @@ const Recharge = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid container pl={1} spacing={1} sx={{ mt: {xs: 0, md: 0.5} }}>
-                  <Grid item xs={12} md={4}>
-                    <TextField
-                      label="Card/Cheque Number"
-                      name="cheque_no"
-                      onChange={cardOrChequeNumberHandle}
-                      value={rechargeDetails?.cardOrChequeNo}
-                      disabled={disableFields?.cardOrChequeNo}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <FormControl>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Cheque Date"
-                          disabled={disableFields?.chequeDate}
-                          onChange={chequeDateHandle}
-                          value={dayjs(rechargeDetails?.chequeDate)}
-                        />
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField
-                      type="file"
-                      label={isFileUploaded ? "File" : ""}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={chequeCopyHandle}
-                      disabled={disableFields?.chequeCopy}
-                    />
-                  </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    label="Card/Cheque Number"
+                    name="cheque_no"
+                    onChange={cardOrChequeNumberHandle}
+                    value={rechargeDetails?.cardOrChequeNo}
+                    disabled={disableFields?.cardOrChequeNo}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <FormControl>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Cheque Date"
+                        disabled={disableFields?.chequeDate}
+                        onChange={chequeDateHandle}
+                        value={dayjs(rechargeDetails?.chequeDate)}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    type="file"
+                    label={isFileUploaded ? "File" : ""}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={chequeCopyHandle}
+                    disabled={disableFields?.chequeCopy}
+                  />
                 </Grid>
               </Grid>
             </Card>
@@ -464,6 +557,7 @@ const Recharge = () => {
               variant="contained"
               sx={{ marginRight: 2 }}
               onClick={createHandle}
+              disabled={disableCreate}
             >
               Create & Post
             </Button>
@@ -474,14 +568,17 @@ const Recharge = () => {
         </Grid>
       </Box>
       {isLoading && <LoaderDialog open={isLoading} />}
-      {showNotification && (severity === "error" || severity === "info") && (
-        <Notification
-          open={showNotification}
-          setOpen={setShowNotification}
-          message={notificationMsg}
-          severity={severity}
-        />
-      )}
+      {showNotification &&
+        (severity === "error" ||
+          severity === "info" ||
+          severity === "warning") && (
+          <Notification
+            open={showNotification}
+            setOpen={setShowNotification}
+            message={notificationMsg}
+            severity={severity}
+          />
+        )}
       {showNotification && severity === "success" && (
         <SuccessNotification
           showNotification={showNotification}

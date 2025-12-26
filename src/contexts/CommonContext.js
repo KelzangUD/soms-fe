@@ -35,6 +35,7 @@ export const CommonProvider = ({ children }) => {
   const [locatorsList, setLocatorsList] = useState([]);
   const [locatorsNameList, setLocatorsNameList] = useState([]);
   const [valuePlusPlan, setValuePlusPlan] = useState([]);
+  const [fwa, setFwa] = useState([]);
 
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -307,6 +308,12 @@ export const CommonProvider = ({ children }) => {
       setValuePlusPlan(res?.data);
     }
   };
+  const fetchFWA = async () => {
+    const res = await Route("GET", "/Common/getILL_Packages", null, null, null);
+    if (res?.status === 200) {
+      setFwa(res?.data);
+    }
+  };
   useEffect(() => {
     fetchSalesType();
     fetchProductsType();
@@ -324,6 +331,7 @@ export const CommonProvider = ({ children }) => {
     fetchRegionsOrExtensions();
     fetchItemsList();
     fetchValuePlusPlan();
+    fetchFWA();
   }, []);
 
   return (
@@ -366,6 +374,7 @@ export const CommonProvider = ({ children }) => {
         fetchLocatorName,
         locatorsNameList,
         valuePlusPlan,
+        fwa,
       }}
     >
       {children}

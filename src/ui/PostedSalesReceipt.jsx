@@ -88,7 +88,7 @@ const PostedSalesReceipt = () => {
                 })}
               </p>
             </div>
-            {/* <div>
+            <div>
               <p>
                 Discount/Commission:{" "}
                 {parseFloat(salesOrderData?.discount)?.toLocaleString("en-US", {
@@ -96,7 +96,7 @@ const PostedSalesReceipt = () => {
                   maximumFractionDigits: 2,
                 })}
               </p>
-            </div> */}
+            </div>
             {/* <div>
               <p>
                 Advance Amount:{" "}

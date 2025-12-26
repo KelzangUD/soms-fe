@@ -621,6 +621,9 @@ const SalesOrder = () => {
       interest: "",
       amount: "",
       customerTypeId: "",
+      customerTPNo: "",
+      customerCID: "",
+      customerGSTNo: "",
     }));
     setPaymentLines([]);
     setPaymentLinesItem((prev) => ({
