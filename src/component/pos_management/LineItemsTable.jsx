@@ -31,11 +31,11 @@ const LineItemsTable = ({
               <TableCell>Description</TableCell>
               <TableCell align="right">Quantity</TableCell>
               <TableCell align="right">Selling Price</TableCell>
-              <TableCell align="right">Tax Amount</TableCell>
+              <TableCell align="right">GST Amount</TableCell>
               <TableCell align="right">Disc/Comm Amount</TableCell>
               <TableCell align="right">Additional Discount</TableCell>
               <TableCell align="right">TDS Amount</TableCell>
-              <TableCell align="right">Advance Tax Amount</TableCell>
+              <TableCell align="right">Transaction Fees</TableCell>
               <TableCell align="right">Discounted Amount</TableCell>
               <TableCell align="right">Line Item Amount</TableCell>
               <TableCell align="right">Action</TableCell>
@@ -61,7 +61,7 @@ const LineItemsTable = ({
                     {item?.additionalDiscount}
                   </TableCell>
                   <TableCell align="right">{item?.tdsAmount}</TableCell>
-                  <TableCell align="right">{item?.advanceTaxAmount}</TableCell>
+                  <TableCell align="right">{item?.upiAmt}</TableCell>
                   <TableCell align="right">{item?.discountedAmount}</TableCell>
                   <TableCell align="right">{item?.lineItemAmt}</TableCell>
                   <TableCell align="right">
@@ -93,7 +93,7 @@ const LineItemsTable = ({
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Tax Amount</TableCell>
+              <TableCell colSpan={1}>GST Amount</TableCell>
               <TableCell align="right">{linesAmount?.taxAmt}</TableCell>
             </TableRow>
             <TableRow>
@@ -124,7 +124,9 @@ const LineItemsTable = ({
             <TableRow>
               <TableCell colSpan={9} />
               <TableCell colSpan={1}>Down Payment Amount</TableCell>
-              <TableCell align="right">{linesAmount?.actualDownPayment}</TableCell>
+              <TableCell align="right">
+                {linesAmount?.actualDownPayment}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
@@ -135,9 +137,9 @@ const LineItemsTable = ({
             </TableRow>
             <TableRow>
               <TableCell colSpan={9} />
-              <TableCell colSpan={1}>Advance Tax Amount</TableCell>
+              <TableCell colSpan={1}>Transaction Fees</TableCell>
               <TableCell align="right">
-                {linesAmount?.advanceTaxAmount}
+                {linesAmount?.upiAmt}
               </TableCell>
             </TableRow>
             <TableRow>

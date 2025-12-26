@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Alert,
   Autocomplete,
@@ -7,9 +7,11 @@ import {
   Button,
   Dialog,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -81,6 +83,9 @@ const AddLineItem = ({
     installmentAmount: "",
     downPaymentIR: "",
     emiInterestRate: "",
+    upiPayment: "N",
+    upiPercentage: 0,
+    upiAmt: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
   const fetchSubInventory = async () => {
@@ -127,7 +132,9 @@ const AddLineItem = ({
           lineItemDetail?.qty
         }&emiCycle=${
           emiCycle === null ? 0 : emiCycle
-        }&downPaymentStatus=${downPaymentStatus}`,
+        }&downPaymentStatus=${downPaymentStatus}&upiPayment=${
+          lineItemDetail?.upiPayment
+        }`,
         access_token,
         null,
         null
@@ -168,6 +175,8 @@ const AddLineItem = ({
             installmentAmount: "",
             downPaymentIR: "",
             emiInterestRate: "",
+            upiPercentage: res?.data?.upiPercentage,
+            upiAmt: res?.data?.upiAmt,
           }));
           setNotificationMsg(
             "EMI Not Available for Amount less than Nu.30,000/-"
@@ -215,6 +224,8 @@ const AddLineItem = ({
             installmentAmount: res?.data?.installmentAmount,
             downPaymentIR: res?.data?.downPaymentIR,
             emiInterestRate: res?.data?.emiInterestRate,
+            upiPercentage: res?.data?.upiPercentage,
+            upiAmt: res?.data?.upiAmt,
           }));
         }
       } else if (res?.status === 200 && res?.data?.available === "N") {
@@ -237,7 +248,7 @@ const AddLineItem = ({
   const fetchItemDescriptionWithOutSerialNO = async () => {
     const res = await Route(
       "GET",
-      `/SalesOrder/FetchByDescription?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo&qty=${lineItemDetail?.qty}`,
+      `/SalesOrder/FetchByDescription?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo&qty=${lineItemDetail?.qty}&upiPayment=${lineItemDetail?.upiPayment}`,
       access_token,
       null,
       null
@@ -281,13 +292,15 @@ const AddLineItem = ({
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
         emiInterestRate: res?.data?.emiInterestRate,
+        upiPercentage: res?.data?.upiPercentage,
+        upiAmt: res?.data?.upiAmt,
       }));
     }
   };
   const fetchPriceLocatorDetails = async () => {
     const res = await Route(
       "GET",
-      `/SalesOrder/FetchPriceLocatorDtls?pricingId=${pricingID}&qty=${lineItemDetail?.qty}&salesType=${salesType}`,
+      `/SalesOrder/FetchPriceLocatorDtls?pricingId=${pricingID}&qty=${lineItemDetail?.qty}&salesType=${salesType}&upiPayment=${lineItemDetail?.upiPayment}`,
       access_token,
       null,
       null
@@ -327,6 +340,8 @@ const AddLineItem = ({
         downPaymentIR: res?.data?.downPaymentIR,
         emiInterestRate: res?.data?.emiInterestRate,
         lineItemAmt: res?.data?.lineItemAmt,
+        upiPercentage: res?.data?.upiPercentage,
+        upiAmt: res?.data?.upiAmt,
       }));
     }
   };
@@ -368,6 +383,8 @@ const AddLineItem = ({
         installmentAmount: lineItemDetails?.installmentAmount,
         downPaymentIR: lineItemDetails?.downPaymentIR,
         emiInterestRate: lineItemDetails?.emiInterestRate,
+        upiPercentage: lineItemDetails?.upiPercentage,
+        upiAmt: lineItemDetails?.upiAmt,
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -402,6 +419,7 @@ const AddLineItem = ({
     lineItemDetail?.subInventoryId,
     lineItemDetail?.locatorId,
     lineItemDetail?.qty,
+    lineItemDetail?.upiPayment,
   ]);
   useEffect(() => {
     if (lineItemDetail?.serialNo !== "" && lineItemDetail?.qty !== "") {
@@ -413,13 +431,18 @@ const AddLineItem = ({
       setShowNotification(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineItemDetail?.serialNo, lineItemDetail?.qty, downPaymentStatus]);
+  }, [
+    lineItemDetail?.serialNo,
+    lineItemDetail?.qty,
+    downPaymentStatus,
+    lineItemDetail?.upiPayment,
+  ]);
   useEffect(() => {
     if (pricingID !== "") {
       fetchPriceLocatorDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pricingID]);
+  }, [pricingID, lineItemDetail?.upiPayment]);
 
   const subInventoryHandle = (e, value) => {
     setLineItemDetail((prev) => ({
@@ -465,6 +488,12 @@ const AddLineItem = ({
     setLineItemDetail((prev) => ({
       ...prev,
       pricedIdForVarientCode: e?.target?.value,
+    }));
+  };
+  const upiPaymentHandle = (e) => {
+    setLineItemDetail((prev) => ({
+      ...prev,
+      upiPayment: e?.target?.value,
     }));
   };
   const fetchDownPaymentDetails = async () => {
@@ -552,6 +581,13 @@ const AddLineItem = ({
                   </Alert>
                 </Grid>
               )}
+              {salesType === 1 && (
+                <Grid container>
+                  <Alert severity="info" sx={{ width: "100%" }}>
+                    For UPI payment, please select UPI payment as "YES".
+                  </Alert>
+                </Grid>
+              )}
               <Grid
                 container
                 spacing={1}
@@ -559,6 +595,33 @@ const AddLineItem = ({
                 paddingX={2}
                 marginTop={1}
               >
+                {salesType === 1 && (
+                  <Grid
+                    item
+                    xs={12}
+                    mb={1}
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <Grid item xs={12} md={3}>
+                      <FormControl>
+                        <InputLabel id="upi-payment-select-label">
+                          UPI Payment
+                        </InputLabel>
+                        <Select
+                          labelId="upi-payment-select-label"
+                          id="upi-payment-select"
+                          value={lineItemDetail?.upiPayment}
+                          label="UPI Payment"
+                          onChange={upiPaymentHandle}
+                        >
+                          <MenuItem value="Y">Yes</MenuItem>
+                          <MenuItem value="N">No</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                )}
                 <Grid item xs={12} md={3}>
                   <TextField
                     id="storeName"
@@ -645,10 +708,17 @@ const AddLineItem = ({
                     onChange={serialNoHandle}
                   />
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid
+                  item
+                  container
+                  xs={12}
+                  md={3}
+                  display="flex"
+                  justifyContent="space-between"
+                >
                   <TextField
                     id="qty"
-                    label="Quantity"
+                    label="Qty"
                     value={lineItemDetail?.qty}
                     onChange={qtyHandle}
                   />
@@ -761,6 +831,45 @@ const AddLineItem = ({
                   </>
                 )}
               </Grid>
+              <Grid
+                container
+                spacing={1}
+                paddingY={{ xs: 0, md: 1 }}
+                paddingX={2}
+              >
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="gst"
+                    label="GST %"
+                    disabled
+                    value={lineItemDetail?.taxPercentage}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="gst_amt"
+                    label="GST Amount"
+                    disabled
+                    value={lineItemDetail?.taxAmt}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="upi_percentage"
+                    label="Transaction Fee Percentage"
+                    disabled
+                    value={lineItemDetail?.upiPercentage}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    id="upi_amount"
+                    label="Transaction Fee Amount"
+                    disabled
+                    value={lineItemDetail?.upiAmt}
+                  />
+                </Grid>
+              </Grid>
               {salesType !== 5 ? (
                 <Grid
                   container
@@ -768,14 +877,6 @@ const AddLineItem = ({
                   paddingY={{ xs: 0, md: 1 }}
                   paddingX={2}
                 >
-                  <Grid item xs={12} md={3}>
-                    <TextField
-                      id="tax_per"
-                      label="Tax %"
-                      disabled
-                      value={lineItemDetail?.taxPercentage}
-                    />
-                  </Grid>
                   <Grid item xs={12} md={3}>
                     <TextField
                       id="selling_price"
@@ -794,23 +895,6 @@ const AddLineItem = ({
                   </Grid>
                   <Grid item xs={12} md={3}>
                     <TextField
-                      id="tax_amt"
-                      label="Tax Amount"
-                      disabled
-                      value={lineItemDetail?.taxAmt}
-                    />
-                  </Grid>
-                </Grid>
-              ) : null}
-              {salesType !== 5 ? (
-                <Grid
-                  container
-                  spacing={1}
-                  paddingY={{ xs: 0, md: 1 }}
-                  paddingX={2}
-                >
-                  <Grid item xs={12} md={3}>
-                    <TextField
                       id="amt_excel_tax"
                       label="Amount Excl. Tax"
                       disabled
@@ -824,6 +908,15 @@ const AddLineItem = ({
                       value={lineItemDetail?.advanceTaxAmount}
                     />
                   </Grid>
+                </Grid>
+              ) : null}
+              {salesType !== 5 ? (
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={{ xs: 0, md: 1 }}
+                  paddingX={2}
+                >
                   <Grid item xs={12} md={3}>
                     <TextField
                       id="vol_disc"
@@ -913,6 +1006,11 @@ const AddLineItem = ({
                   variant="contained"
                   onClick={submitHandle}
                   sx={{ mr: 2 }}
+                  disabled={
+                    salesType === 5 && lineItemDetail?.mrp < 30000
+                      ? true
+                      : false
+                  }
                 >
                   Submit
                 </Button>

@@ -82,6 +82,9 @@ const SalesOrder = () => {
     item_Number: "",
     interest: "",
     customerTypeId: "",
+    customerTPNo: "",
+    customerCID: "",
+    customerGSTNo: "",
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0.0,
@@ -322,6 +325,7 @@ const SalesOrder = () => {
               installmentAmount: item?.installmentAmount,
               payableAmount: item?.payableAmount,
               emiInterestRate: item?.emiInterestRate,
+              upiAmt: item?.upiAmt,
             });
           } else {
             notFoundItems.push({
@@ -406,7 +410,6 @@ const SalesOrder = () => {
       advanceNo: value?.id,
     }));
   };
-
   const fetchEMIEndDate = async () => {
     const res = await Route(
       "GET",
@@ -431,7 +434,6 @@ const SalesOrder = () => {
       }
     }
   };
-
   useEffect(() => {
     emiDuration?.emiCycle !== null && fetchEMIEndDate();
   }, [emiDuration?.emiCycle, emiDuration?.fromDate]);
@@ -447,7 +449,24 @@ const SalesOrder = () => {
       fromDate: dateFormatter(e?.$d),
     }));
   };
-
+  const customerTPNNoHandle = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerTPNo: e?.target?.value,
+    }));
+  };
+  const customerCIDHandle = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerCID: e?.target?.value,
+    }));
+  };
+  const customerGSTNoHandle = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerGSTNo: e?.target?.value,
+    }));
+  };
   const remarksHandle = (e) => {
     setSalesOrderDetails((prev) => ({
       ...prev,
@@ -558,6 +577,7 @@ const SalesOrder = () => {
         accumulator.downPayment += parseInt(currentObject?.downPayment) || 0;
         accumulator.actualDownPayment +=
           parseInt(currentObject?.actualDownPayment) || 0;
+        accumulator.upiAmt += parseInt(currentObject?.upiAmt) || 0;
         return accumulator;
       },
       {
@@ -569,6 +589,7 @@ const SalesOrder = () => {
         netAmount: 0,
         downPayment: 0,
         actualDownPayment: 0,
+        upiAmt: 0,
       }
     );
     setLinesAmount((prev) => ({
@@ -576,7 +597,6 @@ const SalesOrder = () => {
       ...totals,
     }));
   }, [lineItems]);
-
   const resetStateHandle = () => {
     setCustomersList([]);
     setSalesOrderDetails((prev) => ({
@@ -676,6 +696,12 @@ const SalesOrder = () => {
       setShowNotification(true);
       return false;
     }
+    if (salesOrderDetails.customerCID === "") {
+      setNotificationMsg(message);
+      setSeverity("Please Enter Customer CID No!");
+      setShowNotification(true);
+      return false;
+    }
     return true;
   };
 
@@ -729,6 +755,8 @@ const SalesOrder = () => {
                 ? 0
                 : parseFloat(lineItems[0]?.installmentAmount).toFixed(2),
             downPaymentStatus: downPaymentStatus,
+            upiPercentage: linesAmount?.upiPercentage,
+            upiAmt: linesAmount?.upiAmt,
           },
           userId: user,
         };
@@ -1112,6 +1140,25 @@ const SalesOrder = () => {
                       </Grid>
                     </>
                   )}
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      label="Customer CID"
+                      name="customerCID"
+                      required
+                      onChange={customerCIDHandle}
+                      value={salesOrderDetails?.customerCID}
+                      sx={{
+                        mt: {
+                          xs: 0,
+                          md:
+                            salesOrderDetails?.salesType === 5 ||
+                            salesOrderDetails?.salesType === 4
+                              ? 1
+                              : 0,
+                        },
+                      }}
+                    />
+                  </Grid>
                   <Grid
                     item
                     xs={12}
@@ -1120,10 +1167,41 @@ const SalesOrder = () => {
                       mt: {
                         xs: 0,
                         md:
+                          salesOrderDetails?.salesType === 5 ||
+                          salesOrderDetails?.salesType === 4
+                            ? 1
+                            : 0,
+                      },
+                    }}
+                  >
+                    <TextField
+                      label="Customer TPN"
+                      name="customerTPNo"
+                      onChange={customerTPNNoHandle}
+                      value={salesOrderDetails?.customerTPNo}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      label="GST payer no"
+                      name="customerGSTNo"
+                      onChange={customerGSTNoHandle}
+                      value={salesOrderDetails?.customerGSTNo}
+                      sx={{ mt: 1 }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    md={6}
+                    sx={{
+                      mt: {
+                        xs: 0,
+                        md:
                           salesOrderDetails?.salesType === 4 ||
                           salesOrderDetails?.salesType === 5
                             ? 1
-                            : 0,
+                            : 1,
                       },
                     }}
                   >
