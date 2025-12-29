@@ -1143,25 +1143,27 @@ const SalesOrder = () => {
                       </Grid>
                     </>
                   )}
-                  <Grid item xs={12} md={3}>
-                    <TextField
-                      label="Customer CID"
-                      name="customerCID"
-                      required
-                      onChange={customerCIDHandle}
-                      value={salesOrderDetails?.customerCID}
-                      sx={{
-                        mt: {
-                          xs: 0,
-                          md:
-                            salesOrderDetails?.salesType === 5 ||
-                            salesOrderDetails?.salesType === 4
-                              ? 1
-                              : 0,
-                        },
-                      }}
-                    />
-                  </Grid>
+                  {salesOrderDetails?.salesType !== 5 && (
+                    <Grid item xs={12} md={3}>
+                      <TextField
+                        label="Customer CID"
+                        name="customerCID"
+                        required
+                        onChange={customerCIDHandle}
+                        value={salesOrderDetails?.customerCID}
+                        sx={{
+                          mt: {
+                            xs: 0,
+                            md:
+                              salesOrderDetails?.salesType === 5 ||
+                              salesOrderDetails?.salesType === 4
+                                ? 1
+                                : 0,
+                          },
+                        }}
+                      />
+                    </Grid>
+                  )}
                   <Grid
                     item
                     xs={12}
@@ -1196,7 +1198,7 @@ const SalesOrder = () => {
                   <Grid
                     item
                     xs={12}
-                    md={6}
+                    md={3}
                     sx={{
                       mt: {
                         xs: 0,
