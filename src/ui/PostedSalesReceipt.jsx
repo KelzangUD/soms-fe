@@ -31,6 +31,9 @@ const PostedSalesReceipt = () => {
           <p>Receipt Date: {salesOrderData?.rechargeDate}</p>
           <p>Customer Name: {salesOrderData?.customerName}</p>
           <p>Customer No: {salesOrderData?.customerNo}</p>
+          <p>Customer CID: {salesOrderData?.customerCID}</p>
+          <p>Customer TPN No: {salesOrderData?.customerTPNo}</p>
+          <p>Customer GST No: {salesOrderData?.customerGSTNo}</p>
           <p>Billing: {salesOrderData?.billing}</p>
           <p>
             Phone:{" "}
