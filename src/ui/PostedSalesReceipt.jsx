@@ -18,7 +18,12 @@ const PostedSalesReceipt = () => {
         <div style={{ textAlign: "center" }}>
           <h3>{salesOrderData?.companyName}</h3>
           <p>{salesOrderData?.customerName}</p>
-          <h4>Tax/Invoice Receipt</h4>
+          <h4>Tax Invoice/{salesOrderData?.receiptType}</h4>
+        </div>
+        <hr style={{ border: "1px dashed #000" }} />
+        <div>
+          <p>GST No: C10041246</p>
+          <p>TPN No: TAC00084</p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
@@ -26,6 +31,9 @@ const PostedSalesReceipt = () => {
           <p>Receipt Date: {salesOrderData?.rechargeDate}</p>
           <p>Customer Name: {salesOrderData?.customerName}</p>
           <p>Customer No: {salesOrderData?.customerNo}</p>
+          <p>Customer CID: {salesOrderData?.customerCID}</p>
+          <p>Customer TPN No: {salesOrderData?.customerTPNo}</p>
+          <p>Customer GST No: {salesOrderData?.customerGSTNo}</p>
           <p>Billing: {salesOrderData?.billing}</p>
           <p>
             Phone:{" "}
@@ -78,8 +86,7 @@ const PostedSalesReceipt = () => {
                 {parseFloat(
                   salesOrderData?.itemDetails?.reduce(
                     (accumulator, currentObject) =>
-                      accumulator +
-                      (parseInt(currentObject?.upiAmt) || 0),
+                      accumulator + (parseInt(currentObject?.upiAmt) || 0),
                     0
                   )
                 )?.toLocaleString("en-US", {
@@ -256,9 +263,6 @@ const PostedSalesReceipt = () => {
         <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Created By: {salesOrderData?.createdBy}</p>
-        </div>
-        <div>
-          <p>TIPL GST No: C10041246</p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>

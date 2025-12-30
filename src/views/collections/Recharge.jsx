@@ -98,7 +98,7 @@ const Recharge = () => {
     setRechargeDetails((prev) => ({
       ...prev,
       amount: "",
-      gstAmt: "",
+      gstAmt: 0,
       grossAmt: "",
     }));
   };
