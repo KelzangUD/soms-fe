@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Card,
+  FormHelperText,
   Grid,
   TextField,
   MenuItem,
@@ -476,16 +477,26 @@ const SalesOrder = () => {
   const uploadCSVFileHandle = (e) => {
     fetchProductDetailsBasedOnItemList(e?.target?.files[0]);
   };
+  const [addButtonClicked, setAddButtonClicked] = useState(false);
   const addButtonHandle = () => {
-    if (
-      salesOrderDetails?.salesType === "" ||
-      salesOrderDetails?.productType === "" ||
-      salesOrderDetails?.customerName === ""
-    ) {
-      setNotificationMsg("Please Fill Up Necessary Information!");
-      setSeverity("info");
-      setShowNotification(true);
-    } else {
+    setAddButtonClicked(true);
+    const requiredFields = [
+      salesOrderDetails?.salesType,
+      salesOrderDetails?.productType,
+      salesOrderDetails?.customerName,
+    ];
+    if (salesOrderDetails?.salesType === 2) {
+      requiredFields.push(
+        salesOrderDetails?.customerTPNo,
+        salesOrderDetails?.customerGSTNo
+      );
+    }
+    if (salesOrderDetails?.salesType !== 5) {
+      requiredFields?.push(salesOrderDetails?.customerCID);
+    }
+    const hasEmptyField = requiredFields.some((field) => field === "");
+
+    if (!hasEmptyField) {
       setOpenDialog(true);
     }
   };
@@ -674,6 +685,7 @@ const SalesOrder = () => {
       emiEligibleStatus: null,
       emiCustomerType: null,
     }));
+    setAddButtonClicked(false);
   };
   const validatePayment = () => {
     if (!salesOrderDetails) return false;
@@ -895,6 +907,12 @@ const SalesOrder = () => {
                           </MenuItem>
                         ))}
                       </Select>
+                      {addButtonClicked &&
+                        salesOrderDetails?.salesType === "" && (
+                          <FormHelperText sx={{ color: "warning.main" }}>
+                            Please select Sales Type!
+                          </FormHelperText>
+                        )}
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -915,6 +933,12 @@ const SalesOrder = () => {
                           </MenuItem>
                         ))}
                       </Select>
+                      {addButtonClicked &&
+                        salesOrderDetails?.productType === "" && (
+                          <FormHelperText sx={{ color: "warning.main" }}>
+                            Please select Product Type!
+                          </FormHelperText>
+                        )}
                     </FormControl>
                   </Grid>
                 </Grid>
@@ -944,7 +968,20 @@ const SalesOrder = () => {
                       }}
                       value={salesOrderDetails?.customerName}
                       renderInput={(params) => (
-                        <TextField {...params} label="Customer Name" />
+                        <TextField
+                          {...params}
+                          label="Customer Name"
+                          helperText={
+                            addButtonClicked &&
+                            salesOrderDetails?.customerName === "" && (
+                              <FormHelperText
+                                sx={{ color: "warning.main", ml: -0.5 }}
+                              >
+                                Please select Customer Name!
+                              </FormHelperText>
+                            )
+                          }
+                        />
                       )}
                     />
                   </Grid>
@@ -1161,6 +1198,17 @@ const SalesOrder = () => {
                                 : 0,
                           },
                         }}
+                        helperText={
+                          addButtonClicked &&
+                          salesOrderDetails?.salesType !== 5 &&
+                          salesOrderDetails?.customerCID === "" && (
+                            <FormHelperText
+                              sx={{ color: "warning.main", ml: -0.5 }}
+                            >
+                              Please Enter Customer CID!
+                            </FormHelperText>
+                          )
+                        }
                       />
                     </Grid>
                   )}
@@ -1184,6 +1232,17 @@ const SalesOrder = () => {
                       name="customerTPNo"
                       onChange={customerTPNNoHandle}
                       value={salesOrderDetails?.customerTPNo}
+                      helperText={
+                        addButtonClicked &&
+                        salesOrderDetails?.salesType === 2 &&
+                        salesOrderDetails?.customerTPNo === "" && (
+                          <FormHelperText
+                            sx={{ color: "warning.main", ml: -0.5 }}
+                          >
+                            Please Enter Customer TPN!
+                          </FormHelperText>
+                        )
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -1192,6 +1251,17 @@ const SalesOrder = () => {
                       name="customerGSTNo"
                       onChange={customerGSTNoHandle}
                       value={salesOrderDetails?.customerGSTNo}
+                      helperText={
+                        addButtonClicked &&
+                        salesOrderDetails?.salesType === 2 &&
+                        salesOrderDetails?.customerGSTNo === "" && (
+                          <FormHelperText
+                            sx={{ color: "warning.main", ml: -0.5 }}
+                          >
+                            Please Enter Customer GST Number!
+                          </FormHelperText>
+                        )
+                      }
                       sx={{ mt: 1 }}
                     />
                   </Grid>
