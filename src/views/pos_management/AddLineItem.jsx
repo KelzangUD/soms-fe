@@ -508,7 +508,7 @@ const AddLineItem = ({
         lineItemDetail?.downPayment === "" ? 0 : lineItemDetail?.downPayment
       }&actualDownPayment=${
         lineItemDetail?.actualDownPayment
-      }&emiCycle=${emiCycle}`,
+      }&emiCycle=${emiCycle}&gstAmount=${lineItemDetail?.taxAmt}`,
       access_token,
       null,
       null
@@ -991,7 +991,26 @@ const AddLineItem = ({
                     />
                   </Grid>
                 </Grid>
-              ) : null}
+              ) : (
+                <Grid
+                  container
+                  spacing={1}
+                  paddingY={1}
+                  paddingX={2}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      id="total_amount"
+                      label="Total Amount"
+                      disabled
+                      value={
+                        lineItemDetail?.mrp + lineItemDetail?.taxAmt
+                      }
+                    />
+                  </Grid>
+                </Grid>
+              )}
 
               <Grid
                 item
