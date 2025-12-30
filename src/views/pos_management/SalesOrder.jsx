@@ -711,12 +711,12 @@ const SalesOrder = () => {
       setShowNotification(true);
       return false;
     }
-    if (salesOrderDetails.customerCID === "") {
-      setNotificationMsg(message);
-      setSeverity("Please Enter Customer CID No!");
-      setShowNotification(true);
-      return false;
-    }
+    // if (salesOrderDetails.customerCID === "") {
+    //   setNotificationMsg(message);
+    //   setSeverity("Please Enter Customer CID No!");
+    //   setShowNotification(true);
+    //   return false;
+    // }
     return true;
   };
 
