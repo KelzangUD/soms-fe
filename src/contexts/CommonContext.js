@@ -43,15 +43,15 @@ export const CommonProvider = ({ children }) => {
   const fetchSalesType = async () => {
     const res = await Route("GET", "/Common/FetchSalesType", null, null, null);
     if (res?.status === 200) {
-      setSalesType(res?.data);
-      // const currentDate = new Date().getDate();
-      // if (currentDate <= 20) {
-      //   setSalesType(res?.data);
-      // } else {
-      //   setSalesType(
-      //     res?.data?.filter((item) => item?.type !== "EMI Customer")
-      //   );
-      // }
+      // setSalesType(res?.data);
+      const currentDate = new Date().getDate();
+      if (currentDate <= 20) {
+        setSalesType(res?.data);
+      } else {
+        setSalesType(
+          res?.data?.filter((item) => item?.type !== "EMI Customer")
+        );
+      }
     }
   };
   const fetchProductsType = async () => {
