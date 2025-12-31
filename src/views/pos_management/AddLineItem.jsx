@@ -1005,7 +1005,7 @@ const AddLineItem = ({
                       label="Total Amount"
                       disabled
                       value={
-                        lineItemDetail?.mrp + lineItemDetail?.taxAmt
+                        Number(lineItemDetail?.actualDownPayment) + Number(lineItemDetail?.payableAmount)
                       }
                     />
                   </Grid>
