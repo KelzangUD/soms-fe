@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
 
 const RechargeReceipt = () => {
@@ -15,13 +14,20 @@ const RechargeReceipt = () => {
   const rechargeDate = query.get("rechargeDate");
   const receiptType = query.get("receiptType");
   const phone = query.get("phone");
+  const gstAmt = query.get("gstAmt");
+  const totalAmount = query.get("totalAmount");
   return (
     <>
-      <div style={{ width: "250px", padding: "0", lineHeight: "1.7"}}>
+      <div style={{ width: "250px", padding: "0", lineHeight: "1.7" }}>
         <div style={{ textAlign: "center" }}>
           <h3>{companyName}</h3>
           <p>{customerName}</p>
           <h4>{receiptType}</h4>
+        </div>
+        <hr style={{ border: "1px dashed #000" }} />
+        <div>
+          <p>GST No: C10041246</p>
+          <p>TPN No: TAC00084</p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
@@ -30,7 +36,12 @@ const RechargeReceipt = () => {
           <p>Customer Name: {customerName}</p>
           <p>Customer No: {customerNo}</p>
           <p>Billing: {billing}</p>
-          <p>Phone: {(phone === "" || phone == null || phone === undefined) ? "77889977" : phone}</p>
+          <p>
+            Phone:{" "}
+            {phone === "" || phone == null || phone === undefined
+              ? "77889977"
+              : phone}
+          </p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
@@ -43,10 +54,11 @@ const RechargeReceipt = () => {
         <hr style={{ border: "1px dashed #000" }} />
         <div>
           <p>Cash: {amount}</p>
+          {gstAmt > 0.0 && <p>GST Amount: {gstAmt}</p>}
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
-          <p>Total Payment: {amount}</p>
+          <p>Total Payment: {totalAmount}</p>
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
@@ -54,9 +66,7 @@ const RechargeReceipt = () => {
         </div>
         <hr style={{ border: "1px dashed #000" }} />
         <div>
-          <p align="center">
-            Address: P.O.Box No#1502, Norzin Lam, Thimphu
-          </p>
+          <p align="center">Address: P.O.Box No#1502, Norzin Lam, Thimphu</p>
           <p align="center">Phone: +975-77889977 www.tashicell.com</p>
         </div>
       </div>

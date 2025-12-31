@@ -546,9 +546,9 @@ const SalesReturn = () => {
                         <TableCell align="right" sx={{ fontSize: "13px" }}>
                           Line Item Amount
                         </TableCell>
-                        <TableCell align="right" sx={{ fontSize: "13px" }}>
+                        {/* <TableCell align="right" sx={{ fontSize: "13px" }}>
                           Action
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -575,7 +575,7 @@ const SalesReturn = () => {
                             <TableCell align="right">
                               {item?.line_ItmAmt}
                             </TableCell>
-                            <TableCell align="right">
+                            {/* <TableCell align="right">
                               <IconButton
                                 aria-label="delete"
                                 onClick={(e) =>
@@ -585,11 +585,11 @@ const SalesReturn = () => {
                               >
                                 <DeleteIcon />
                               </IconButton>
-                            </TableCell>
+                            </TableCell> */}
                           </TableRow>
                         ))}
                       <TableRow>
-                        <TableCell colSpan={6} />
+                        <TableCell colSpan={5} />
                         <TableCell colSpan={2} align="right">
                           Gross Total
                         </TableCell>
@@ -598,7 +598,7 @@ const SalesReturn = () => {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell colSpan={6} />
+                        <TableCell colSpan={5} />
                         <TableCell colSpan={2} align="right">
                           Tax Amount
                         </TableCell>
@@ -607,7 +607,7 @@ const SalesReturn = () => {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell colSpan={6} />
+                        <TableCell colSpan={5} />
                         <TableCell colSpan={2} align="right">
                           Disc/Comm Amount
                         </TableCell>
@@ -616,7 +616,7 @@ const SalesReturn = () => {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell colSpan={6} />
+                        <TableCell colSpan={5} />
                         <TableCell colSpan={2} align="right">
                           Additional Discount
                         </TableCell>
@@ -625,7 +625,7 @@ const SalesReturn = () => {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell colSpan={6} />
+                        <TableCell colSpan={5} />
                         <TableCell colSpan={2} align="right">
                           Lots of Sales Discount
                         </TableCell>
@@ -634,7 +634,7 @@ const SalesReturn = () => {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell colSpan={6} />
+                        <TableCell colSpan={5} />
                         <TableCell colSpan={2} align="right">
                           TDS Amount
                         </TableCell>
@@ -643,7 +643,7 @@ const SalesReturn = () => {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell colSpan={6} />
+                        <TableCell colSpan={5} />
                         <TableCell colSpan={2} align="right">
                           Net Total (Nu)
                         </TableCell>
