@@ -508,7 +508,7 @@ const AddLineItem = ({
         lineItemDetail?.downPayment === "" ? 0 : lineItemDetail?.downPayment
       }&actualDownPayment=${
         lineItemDetail?.actualDownPayment
-      }&emiCycle=${emiCycle}`,
+      }&emiCycle=${emiCycle}&gstAmount=${lineItemDetail?.taxAmt}`, 
       access_token,
       null,
       null
