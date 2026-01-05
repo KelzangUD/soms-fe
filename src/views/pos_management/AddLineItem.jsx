@@ -324,6 +324,7 @@ const AddLineItem = ({
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         taxAmount: res?.data?.taxAmount,
+        taxAmt: res?.data?.taxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
