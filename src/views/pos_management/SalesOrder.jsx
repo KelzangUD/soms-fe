@@ -364,7 +364,11 @@ const SalesOrder = () => {
           ? linesAmount?.actualDownPayment
           : linesAmount?.netAmount,
     }));
-  }, [linesAmount]);
+  }, [
+    salesOrderDetails?.salesType,
+    linesAmount?.actualDownPayment,
+    linesAmount?.netAmount,
+  ]);
   const salesTypeHandle = (e) => {
     resetStateHandle();
     setSalesOrderDetails((prev) => ({
@@ -437,6 +441,7 @@ const SalesOrder = () => {
   };
   useEffect(() => {
     emiDuration?.emiCycle !== null && fetchEMIEndDate();
+    // eslint-disable-next-line
   }, [emiDuration?.emiCycle, emiDuration?.fromDate]);
   const emiCycleHandle = (e) => {
     setEmiDuration((prev) => ({
@@ -487,8 +492,8 @@ const SalesOrder = () => {
     ];
     if (salesOrderDetails?.salesType === 2) {
       requiredFields.push(
-        salesOrderDetails?.customerTPNo,
-        salesOrderDetails?.customerGSTNo
+        salesOrderDetails?.customerTPNo
+        // salesOrderDetails?.customerGSTNo
       );
     }
     if (salesOrderDetails?.salesType !== 5) {
@@ -1251,17 +1256,17 @@ const SalesOrder = () => {
                       name="customerGSTNo"
                       onChange={customerGSTNoHandle}
                       value={salesOrderDetails?.customerGSTNo}
-                      helperText={
-                        addButtonClicked &&
-                        salesOrderDetails?.salesType === 2 &&
-                        salesOrderDetails?.customerGSTNo === "" && (
-                          <FormHelperText
-                            sx={{ color: "warning.main", ml: -0.5 }}
-                          >
-                            Please Enter Customer GST Number!
-                          </FormHelperText>
-                        )
-                      }
+                      // helperText={
+                      //   addButtonClicked &&
+                      //   salesOrderDetails?.salesType === 2 &&
+                      //   salesOrderDetails?.customerGSTNo === "" && (
+                      //     <FormHelperText
+                      //       sx={{ color: "warning.main", ml: -0.5 }}
+                      //     >
+                      //       Please Enter Customer GST Number!
+                      //     </FormHelperText>
+                      //   )
+                      // }
                       sx={{ mt: 1 }}
                     />
                   </Grid>

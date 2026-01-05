@@ -7,11 +7,9 @@ import {
   Button,
   Dialog,
   FormControl,
-  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
-  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -392,6 +390,7 @@ const AddLineItem = ({
   }, [adj_type]);
   useEffect(() => {
     fetchSubInventory();
+    // eslint-disable-next-line
   }, []);
   useEffect(() => {
     fetchLocators(lineItemDetail?.subInventoryId);
@@ -526,6 +525,7 @@ const AddLineItem = ({
     if (lineItemDetail?.actualDownPayment !== "" && emiCycle) {
       fetchDownPaymentDetails();
     }
+    // eslint-disable-next-line
   }, [lineItemDetail?.actualDownPayment, emiCycle]);
   const actualDownPaymentHandle = (e) => {
     setLineItemDetail((prev) => ({
