@@ -318,7 +318,8 @@ const AddLineItem = ({
             ? parseInt(res?.data?.taxPercentage)
             : 0,
         sellingPrice: res?.data?.sellingPrice,
-        discountAmt: res?.data?.discountAmt,
+        // discountAmt: res?.data?.discountAmt,
+        discountedAmount: res?.data?.discountAmt,
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         taxAmount: res?.data?.taxAmount,
