@@ -54,6 +54,8 @@ const ValuePlus = () => {
     postingDate: dayjs(new Date()),
     prepaidNumber: "",
     paymentAmount: "",
+    gstAmount: "",
+    grossAmount: "",
     paymentType: "",
     paymentTypeValue: "",
     bankAccount: "",
@@ -75,9 +77,12 @@ const ValuePlus = () => {
     }));
   };
   const amountHandle = (e) => {
+    console.log(e?.target?.value);
     setDetails((prev) => ({
       ...prev,
       paymentAmount: e?.target?.value,
+      gstAmount: parseFloat(e?.target?.value).toFixed(2) * 0.05,
+      grossAmount: Number(e?.target?.value) + Number(e?.target?.value) * 0.05,
     }));
   };
   const paymentTypeHandle = (e) => {
@@ -126,7 +131,7 @@ const ValuePlus = () => {
         {
           emiRefrenceNo: "",
           bankAccountNumber: details?.bankAccount,
-          paymentAmount: details?.paymentAmount,
+          paymentAmount: details?.grossAmount,
           paymentType: details?.paymentTypeValue?.type,
         },
       ],
@@ -173,13 +178,13 @@ const ValuePlus = () => {
         sellingPrice: details?.paymentAmount,
         uom: "Nos",
         productGroupCode: "",
-        lineItemAmt: details?.paymentAmount,
+        lineItemAmt: details?.grossAmount,
         customeR_NUMBER: details?.prepaidNumber,
         discountType: "",
         discountPer: "0",
         storeName: "",
         linE_ID: "0",
-        taxAmt: "0",
+        taxAmt: details?.gstAmount,
         invoice_number: "",
         cash: "",
         saleS_ORDERNO: "",
@@ -213,7 +218,7 @@ const ValuePlus = () => {
         data,
         null
       );
-      console.log(res);
+      // console.log(res);
       if (res?.data?.Status === "Posted") {
         setResponseData(res?.data);
         setSeverity("success");
@@ -291,6 +296,15 @@ const ValuePlus = () => {
                 </Grid>
               </Grid>
               <Grid container padding={2} spacing={1}>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    label="GST Amount"
+                    name="gst_amount"
+                    required
+                    value={details?.gstAmount}
+                    disabled
+                  />
+                </Grid>
                 <Grid item xs={12} md={4}>
                   <FormControl>
                     <InputLabel id="payment-type-select-label">
