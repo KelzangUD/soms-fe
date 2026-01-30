@@ -106,7 +106,10 @@ const ValuePlus = () => {
       postingDate: dayjs(new Date()),
       prepaidNumber: "",
       paymentAmount: "",
+      gstAmount: "",
+      grossAmount: "",
       paymentType: "",
+      paymentTypeValue: "",
       bankAccount: "",
     }));
   };
