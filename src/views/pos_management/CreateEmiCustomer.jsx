@@ -4,9 +4,9 @@ import {
   Box,
   Button,
   Paper,
+  FormHelperText,
   Grid,
   TextField,
-  Typography,
 } from "@mui/material";
 import { Notification, LoaderDialog, Title } from "../../ui/index";
 import Route from "../../routes/Route";
@@ -35,6 +35,7 @@ const CreateEmiCustomer = () => {
   const [emiFocalDetail, setEmiFocalDetail] = useState([]);
   const [emiCustomerTypes, setEmiCustomerTypes] = useState([]);
   const [isDocUploaded, setIsDocUploaded] = useState(false);
+  const [charsIsEight, setCharsIsEight] = useState(true);
 
   const fetchEMICustomerTypes = async () => {
     const res = await Route(
@@ -90,6 +91,7 @@ const CreateEmiCustomer = () => {
     }));
   };
   const mobileNoHandle = (e) => {
+    setCharsIsEight(true);
     setCustomer((prev) => ({
       ...prev,
       mobileNo: e?.target?.value,
@@ -145,6 +147,7 @@ const CreateEmiCustomer = () => {
       attachment: "",
       createdBy: localStorage?.getItem("username"),
     }));
+    setCharsIsEight(true);
   };
   const docHandle = (e) => {
     setIsDocUploaded(true);
@@ -173,6 +176,10 @@ const CreateEmiCustomer = () => {
 
   const submitHandle = async () => {
     if (validationFunction()) {
+      if (customer?.mobileNo?.length !== 8) {
+        setCharsIsEight(false);
+        return;
+      }
       if (customer?.emiCustomerTypeId === 1 && customer?.attachment === "") {
         setSeverity("info");
         setNotificationMsg("Please Upload Necessary File!");
@@ -251,6 +258,15 @@ const CreateEmiCustomer = () => {
                       required
                       onChange={mobileNoHandle}
                       value={customer?.mobileNo}
+                      helperText={
+                        !charsIsEight && (
+                          <FormHelperText
+                            sx={{ color: "warning.main", ml: -0.5 }}
+                          >
+                            The number of characters should be eight!
+                          </FormHelperText>
+                        )
+                      }
                     />
                   </Grid>
                 </Grid>

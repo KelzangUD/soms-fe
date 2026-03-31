@@ -73,7 +73,7 @@ const PostedSalesReceipt = () => {
             </div>
             <div>
               <p>
-                GST Tax:{" "}
+                GST (@5%):{" "}
                 {parseFloat(salesOrderData?.tax)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
@@ -82,7 +82,7 @@ const PostedSalesReceipt = () => {
             </div>
             <div>
               <p>
-                UPI Tax:{" "}
+                UPI Fees:{" "}
                 {parseFloat(
                   salesOrderData?.itemDetails?.reduce(
                     (accumulator, currentObject) =>
@@ -199,7 +199,7 @@ const PostedSalesReceipt = () => {
             </div>
             <div>
               <p>
-                Tax (Nu.):{" "}
+                GST (@5%):{" "}
                 {parseFloat(salesOrderData?.tax)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,

@@ -7,11 +7,9 @@ import {
   Button,
   Dialog,
   FormControl,
-  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
-  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -86,6 +84,7 @@ const AddLineItem = ({
     upiPayment: "N",
     upiPercentage: 0,
     upiAmt: 0,
+    lineItemDetail: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
   const fetchSubInventory = async () => {
@@ -94,7 +93,7 @@ const AddLineItem = ({
       `/Common/FetchSubInventory?userId=${user}`,
       null,
       null,
-      null
+      null,
     );
     if (res?.status === 200) {
       setSubInventory(res?.data);
@@ -107,7 +106,7 @@ const AddLineItem = ({
       `/OnHand/FetchItemByDesc?storeName=${storeName}&desc=${desc}`,
       access_token,
       null,
-      null
+      null,
     );
     if (res?.status === 200) {
       setOnHandItems(
@@ -115,7 +114,7 @@ const AddLineItem = ({
           item: item?.item,
           label: item?.item_description,
           serial_controlled: item?.serial_controlled,
-        }))
+        })),
       );
     }
   };
@@ -137,7 +136,7 @@ const AddLineItem = ({
         }`,
         access_token,
         null,
-        null
+        null,
       );
       if (res?.status === 200 && res?.data?.available === "Y") {
         if (salesType === 5 && res?.data?.mrp < 30000) {
@@ -177,9 +176,10 @@ const AddLineItem = ({
             emiInterestRate: "",
             upiPercentage: res?.data?.upiPercentage,
             upiAmt: res?.data?.upiAmt,
+            serviceCharge: res?.data?.upiAmt,
           }));
           setNotificationMsg(
-            "EMI Not Available for Amount less than Nu.30,000/-"
+            "EMI Not Available for Amount less than Nu.30,000/-",
           );
           setSeverity("info");
           setShowNotification(true);
@@ -226,6 +226,7 @@ const AddLineItem = ({
             emiInterestRate: res?.data?.emiInterestRate,
             upiPercentage: res?.data?.upiPercentage,
             upiAmt: res?.data?.upiAmt,
+            serviceCharge: res?.data?.serviceCharge,
           }));
         }
       } else if (res?.status === 200 && res?.data?.available === "N") {
@@ -251,7 +252,7 @@ const AddLineItem = ({
       `/SalesOrder/FetchByDescription?salesType=${salesType}&storeName=${storeName}&item=${lineItemDetail?.itemNo}&subInventory=${lineItemDetail?.subInventoryId}&locator=${lineItemDetail?.locatorId}&serialNo&qty=${lineItemDetail?.qty}&upiPayment=${lineItemDetail?.upiPayment}`,
       access_token,
       null,
-      null
+      null,
     );
     if (res?.status === 200 && res?.data?.serialControlled !== "Y") {
       setLineItemDetail((prev) => ({
@@ -294,6 +295,7 @@ const AddLineItem = ({
         emiInterestRate: res?.data?.emiInterestRate,
         upiPercentage: res?.data?.upiPercentage,
         upiAmt: res?.data?.upiAmt,
+        serviceCharge: res?.data?.serviceCharge,
       }));
     }
   };
@@ -303,7 +305,7 @@ const AddLineItem = ({
       `/SalesOrder/FetchPriceLocatorDtls?pricingId=${pricingID}&qty=${lineItemDetail?.qty}&salesType=${salesType}&upiPayment=${lineItemDetail?.upiPayment}`,
       access_token,
       null,
-      null
+      null,
     );
     if (res?.status === 200) {
       setLineItemDetail((prev) => ({
@@ -320,10 +322,12 @@ const AddLineItem = ({
             ? parseInt(res?.data?.taxPercentage)
             : 0,
         sellingPrice: res?.data?.sellingPrice,
-        discountAmt: res?.data?.discountAmt,
+        // discountAmt: res?.data?.discountAmt,
+        discountedAmount: res?.data?.discountAmt,
         amountExclTax: res?.data?.amountExclTax,
         advanceTaxAmount: res?.data?.advanceTaxAmount,
         taxAmount: res?.data?.taxAmount,
+        taxAmt: res?.data?.taxAmount,
         volumeDiscount: res?.data?.volumeDiscount,
         itemTotalAddedQty: res?.data?.itemTotlaAddedQty,
         pricedIdForVarientCode: lineItemDetails?.pricedIdForVarientCode,
@@ -342,6 +346,7 @@ const AddLineItem = ({
         lineItemAmt: res?.data?.lineItemAmt,
         upiPercentage: res?.data?.upiPercentage,
         upiAmt: res?.data?.upiAmt,
+        serviceCharge: res?.data?.serviceCharge,
       }));
     }
   };
@@ -385,12 +390,14 @@ const AddLineItem = ({
         emiInterestRate: lineItemDetails?.emiInterestRate,
         upiPercentage: lineItemDetails?.upiPercentage,
         upiAmt: lineItemDetails?.upiAmt,
+        serviceCharge: lineItemDetails?.serviceCharge,
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adj_type]);
   useEffect(() => {
     fetchSubInventory();
+    // eslint-disable-next-line
   }, []);
   useEffect(() => {
     fetchLocators(lineItemDetail?.subInventoryId);
@@ -511,7 +518,7 @@ const AddLineItem = ({
       }&emiCycle=${emiCycle}&gstAmount=${lineItemDetail?.taxAmt}`, 
       access_token,
       null,
-      null
+      null,
     );
     if (res?.status === 200) {
       setLineItemDetail((prev) => ({
@@ -525,6 +532,7 @@ const AddLineItem = ({
     if (lineItemDetail?.actualDownPayment !== "" && emiCycle) {
       fetchDownPaymentDetails();
     }
+    // eslint-disable-next-line
   }, [lineItemDetail?.actualDownPayment, emiCycle]);
   const actualDownPaymentHandle = (e) => {
     setLineItemDetail((prev) => ({
@@ -910,6 +918,7 @@ const AddLineItem = ({
                   </Grid>
                 </Grid>
               ) : null}
+
               {salesType !== 5 ? (
                 <Grid
                   container
@@ -971,6 +980,14 @@ const AddLineItem = ({
                         </Grid>
                       </>
                     )}
+                    <Grid item xs={12} md={3}>
+                      <TextField
+                        id="upi_amount"
+                        label="Service Charge"
+                        disabled
+                        value={lineItemDetail?.serviceCharge}
+                      />
+                    </Grid>
                   </Grid>
                 </>
               ) : null}
@@ -1005,7 +1022,8 @@ const AddLineItem = ({
                       label="Total Amount"
                       disabled
                       value={
-                        Number(lineItemDetail?.actualDownPayment) + Number(lineItemDetail?.payableAmount)
+                        Number(lineItemDetail?.actualDownPayment) +
+                        Number(lineItemDetail?.payableAmount)
                       }
                     />
                   </Grid>

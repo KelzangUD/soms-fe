@@ -77,7 +77,7 @@ export const sales_report_all_columns = (isMdUp) => {
     },
     {
       field: "tax_Amount",
-      headerName: "Tax Amount",
+      headerName: "GST Amount",
       flex: isMdUp ? 1.2 : undefined,
       width: isMdUp ? undefined : 120,
       valueGetter: (params) =>
