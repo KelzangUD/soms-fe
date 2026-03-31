@@ -136,6 +136,7 @@ const SalesOrder = () => {
     taxAmt: "",
     priceLocatorDTOs: "",
     pricedIdForVarientCode: "",
+    serviceCharge: 0,
   });
   const [emiDuration, setEmiDuration] = useState({
     emiCycle: null,
@@ -157,7 +158,7 @@ const SalesOrder = () => {
       `/Customer/Common/Fetch_All_Customers?salesType=${salesOrderDetails?.salesType}&userId=${user}`,
       access_token,
       null,
-      null
+      null,
     );
     if (res?.status === 200) {
       if (res?.data?.length === 0) {
@@ -184,7 +185,7 @@ const SalesOrder = () => {
       `/Customer/Common/Fetch_Customer_Dtls?customerId=${customerID}`,
       access_token,
       null,
-      null
+      null,
     );
     if (res?.status === 200) {
       setSalesOrderDetails((prev) => ({
@@ -204,7 +205,7 @@ const SalesOrder = () => {
       `/SalesOrder/GetEMIList?employeeCode=${employeeCode}`,
       access_token,
       null,
-      null
+      null,
     );
     setIsLoading(true);
     try {
@@ -225,7 +226,7 @@ const SalesOrder = () => {
       `/SalesOrder/FetchByDescription?salesType=${salesOrderDetails?.salesType}&storeName=${userDetails?.regionName}&item=${itemNo}&subInventory=${userDetails?.subInventory}&locator=${userDetails?.locator}&serialNo&qty=1`,
       access_token,
       null,
-      null
+      null,
     );
     if (res?.status === 200) {
       setLineItemDetail((prev) => ({
@@ -249,6 +250,7 @@ const SalesOrder = () => {
         taxAmt: res?.data?.taxAmount,
         priceLocatorDTOs: res?.data?.priceLocatorDTOs,
         pricedIdForVarientCode: res?.data?.pricedIdForVarientCode,
+        serviceCharge: res?.data?.serviceCharge,
       }));
     }
   };
@@ -258,7 +260,7 @@ const SalesOrder = () => {
       `/SalesOrder/GetEMIDetails?emiNo=${emiNo}`,
       access_token,
       null,
-      null
+      null,
     );
     setIsLoading(true);
     try {
@@ -291,7 +293,7 @@ const SalesOrder = () => {
         access_token,
         data,
         null,
-        "multipart/form-data"
+        "multipart/form-data",
       );
       if (res?.status === 200) {
         const foundItems = [];
@@ -398,7 +400,7 @@ const SalesOrder = () => {
   const advanceOrEmiHandle = (e) => {
     if (e?.target?.value === "EMI") {
       fetchEMIList(
-        salesOrderDetails?.customerName?.split(" (")[1]?.split(".")[0]
+        salesOrderDetails?.customerName?.split(" (")[1]?.split(".")[0],
       );
     }
     setSalesOrderDetails((prev) => ({
@@ -419,11 +421,11 @@ const SalesOrder = () => {
     const res = await Route(
       "GET",
       `/emi/getEMI_EndDate?fromDate=${dateFormatter(
-        emiDuration?.fromDate
+        emiDuration?.fromDate,
       )}&emiCycle=${emiDuration?.emiCycle}`,
       null,
       null,
-      null
+      null,
     );
     if (res?.status === 200) {
       if (res?.data?.emiEligibleStatus === "0") {
@@ -492,7 +494,7 @@ const SalesOrder = () => {
     ];
     if (salesOrderDetails?.salesType === 2) {
       requiredFields.push(
-        salesOrderDetails?.customerTPNo
+        salesOrderDetails?.customerTPNo,
         // salesOrderDetails?.customerGSTNo
       );
     }
@@ -577,7 +579,7 @@ const SalesOrder = () => {
   };
   const deletePaymentItemHandle = (e, indexToRemove) => {
     setPaymentLines((prev) =>
-      prev.filter((_, index) => index !== indexToRemove)
+      prev.filter((_, index) => index !== indexToRemove),
     );
   };
   useEffect(() => {
@@ -606,7 +608,7 @@ const SalesOrder = () => {
         downPayment: 0,
         actualDownPayment: 0,
         upiAmt: 0,
-      }
+      },
     );
     setLinesAmount((prev) => ({
       ...prev,
@@ -676,6 +678,7 @@ const SalesOrder = () => {
       taxAmt: "",
       priceLocatorDTOs: "",
       pricedIdForVarientCode: "",
+      serviceCharge: 0,
     }));
     setEmiDuration((prev) => ({
       ...prev,
@@ -707,7 +710,7 @@ const SalesOrder = () => {
       ? paymentLines.reduce(
           (accumulator, currentObject) =>
             accumulator + (parseInt(currentObject?.paymentAmount) || 0),
-          0
+          0,
         )
       : 0;
     if (expectedAmount !== totalPayment) {
@@ -777,6 +780,7 @@ const SalesOrder = () => {
             downPaymentStatus: downPaymentStatus,
             upiPercentage: linesAmount?.upiPercentage,
             upiAmt: linesAmount?.upiAmt,
+            serviceCharge: linesAmount?.serviceCharge,
           },
           userId: user,
         };
@@ -807,6 +811,7 @@ const SalesOrder = () => {
             pricedIdForVarientCode: item?.pricedIdForVarientCode,
             volumeDiscount: item?.volumeDiscount,
             priceLocatorDTOs: item?.priceLocatorDTOs,
+            serviceCharge: item?.serviceCharge,
           }));
         } else {
           data.itemLinesDtls = lineItems;
@@ -822,7 +827,7 @@ const SalesOrder = () => {
           access_token,
           formData,
           null,
-          "multipart/form-data"
+          "multipart/form-data",
         );
         if (res?.status === 201) {
           resetStateHandle();
@@ -861,7 +866,7 @@ const SalesOrder = () => {
     const newWindow = window.open(
       `/posted-sales-receipt?${queryParams.toString()}`,
       "_blank",
-      "noopener,noreferrer"
+      "noopener,noreferrer",
     );
 
     if (newWindow) newWindow.opener = null;
@@ -1256,17 +1261,6 @@ const SalesOrder = () => {
                       name="customerGSTNo"
                       onChange={customerGSTNoHandle}
                       value={salesOrderDetails?.customerGSTNo}
-                      // helperText={
-                      //   addButtonClicked &&
-                      //   salesOrderDetails?.salesType === 2 &&
-                      //   salesOrderDetails?.customerGSTNo === "" && (
-                      //     <FormHelperText
-                      //       sx={{ color: "warning.main", ml: -0.5 }}
-                      //     >
-                      //       Please Enter Customer GST Number!
-                      //     </FormHelperText>
-                      //   )
-                      // }
                       sx={{ mt: 1 }}
                     />
                   </Grid>
