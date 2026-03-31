@@ -982,10 +982,12 @@ const AddLineItem = ({
                     )}
                     <Grid item xs={12} md={3}>
                       <TextField
-                        id="upi_amount"
+                        id="serviceCharge"
                         label="Service Charge"
                         disabled
-                        value={lineItemDetail?.serviceCharge}
+                        value={parseFloat(
+                          lineItemDetail?.serviceCharge,
+                        ).toFixed(2)}
                       />
                     </Grid>
                   </Grid>
