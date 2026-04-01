@@ -526,6 +526,7 @@ const AddLineItem = ({
         installmentAmount: res?.data?.installmentAmount,
         payableAmount: res?.data?.netPayableAmount,
         serviceCharge: res?.data?.serviceCharge,
+        taxAmt: res?.data?.taxAmt,
       }));
     }
   };
@@ -1025,10 +1026,9 @@ const AddLineItem = ({
                       label="Total Amount"
                       disabled
                       value={
-                        parseFloat(lineItemDetail?.actualDownPayment) +
-                        parseFloat(lineItemDetail?.payableAmount) +
-                        parseFloat(lineItemDetail?.serviceCharge) +
-                        parseFloat(lineItemDetail?.taxAmt)
+                        Number(lineItemDetail?.actualDownPayment) +
+                        Number(lineItemDetail?.payableAmount) +
+                        Number(lineItemDetail?.serviceCharge)
                       }
                     />
                   </Grid>
