@@ -780,7 +780,10 @@ const SalesOrder = () => {
             downPaymentStatus: downPaymentStatus,
             upiPercentage: linesAmount?.upiPercentage,
             upiAmt: linesAmount?.upiAmt,
-            serviceCharge: linesAmount?.serviceCharge,
+            serviceCharge:
+              lineItems[0]?.serviceCharge === null
+                ? 0
+                : parseFloat(lineItems[0]?.serviceCharge).toFixed(2),
           },
           userId: user,
         };
