@@ -525,7 +525,7 @@ const AddLineItem = ({
         ...prev,
         installmentAmount: res?.data?.installmentAmount,
         payableAmount: res?.data?.netPayableAmount,
-        serviceCharge: res?.data?.serviceCharge
+        serviceCharge: res?.data?.serviceCharge,
       }));
     }
   };
@@ -1026,7 +1026,8 @@ const AddLineItem = ({
                       disabled
                       value={
                         Number(lineItemDetail?.actualDownPayment) +
-                        Number(lineItemDetail?.payableAmount)
+                        Number(lineItemDetail?.payableAmount) +
+                        Number(lineItemDetail?.serviceCharge)
                       }
                     />
                   </Grid>
