@@ -525,6 +525,7 @@ const AddLineItem = ({
         ...prev,
         installmentAmount: res?.data?.installmentAmount,
         payableAmount: res?.data?.netPayableAmount,
+        serviceCharge: res?.data?.serviceCharge
       }));
     }
   };
