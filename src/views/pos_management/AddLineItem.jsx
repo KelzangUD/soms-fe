@@ -1027,8 +1027,7 @@ const AddLineItem = ({
                       disabled
                       value={
                         Number(lineItemDetail?.actualDownPayment) +
-                        Number(lineItemDetail?.payableAmount) +
-                        Number(lineItemDetail?.serviceCharge)
+                        Number(lineItemDetail?.payableAmount)
                       }
                     />
                   </Grid>
