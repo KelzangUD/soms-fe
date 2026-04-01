@@ -559,6 +559,11 @@ const AddLineItem = ({
       setOpen(false);
     }
   };
+  // Define utility once
+  const toNumber = (value) => {
+    const num = parseFloat(value);
+    return isNaN(num) ? 0 : num;
+  };
   return (
     <>
       <Dialog
@@ -1025,10 +1030,10 @@ const AddLineItem = ({
                       label="Total Amount"
                       disabled
                       value={
-                        Number(lineItemDetail?.actualDownPayment) +
-                        Number(lineItemDetail?.payableAmount) +
-                        Number(lineItemDetail?.serviceCharge) +
-                        Number(parseFloat(lineItemDetail?.taxAmt))
+                        toNumber(lineItemDetail?.actualDownPayment) +
+                        toNumber(lineItemDetail?.payableAmount) +
+                        toNumber(lineItemDetail?.serviceCharge) +
+                        toNumber(lineItemDetail?.taxAmt)
                       }
                     />
                   </Grid>
