@@ -1027,7 +1027,8 @@ const AddLineItem = ({
                       value={
                         Number(lineItemDetail?.actualDownPayment) +
                         Number(lineItemDetail?.payableAmount) +
-                        Number(lineItemDetail?.serviceCharge)
+                        Number(lineItemDetail?.serviceCharge) +
+                        Number(lineItemDetail?.taxAmt)
                       }
                     />
                   </Grid>
