@@ -200,15 +200,15 @@ const OnHandReport = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="Region/Extension" />
                       )}
-                      disabled={
-                        userDetails?.roleName === "Administrator" ||
-                        userDetails?.roleName === "General Manager" ||
-                        userDetails?.roleName === "Regional Manager" ||
-                        userDetails?.roleName === "Regional Accountant" ||
-                        userDetails?.roleName === "Contact Center CCE"
-                          ? false
-                          : true
-                      }
+                      // disabled={
+                      //   userDetails?.roleName === "Administrator" ||
+                      //   userDetails?.roleName === "General Manager" ||
+                      //   userDetails?.roleName === "Regional Manager" ||
+                      //   userDetails?.roleName === "Regional Accountant" ||
+                      //   userDetails?.roleName === "Contact Center CCE"
+                      //     ? false
+                      //     : true
+                      // }
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -258,15 +258,15 @@ const OnHandReport = () => {
                         renderInput={(params) => (
                           <TextField {...params} label="Locator" />
                         )}
-                        disabled={
-                          userDetails?.roleId === 37 ||
-                          userDetails?.roleId === 53 ||
-                          userDetails?.roleId === 54 ||
-                          userDetails?.roleId === 55 ||
-                          userDetails?.roleId === 59
-                            ? false
-                            : true
-                        }
+                        // disabled={
+                        //   userDetails?.roleId === 37 ||
+                        //   userDetails?.roleId === 53 ||
+                        //   userDetails?.roleId === 54 ||
+                        //   userDetails?.roleId === 55 ||
+                        //   userDetails?.roleId === 59
+                        //     ? false
+                        //     : true
+                        // }
                       />
                     )}
                   </Grid>

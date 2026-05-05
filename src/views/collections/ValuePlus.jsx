@@ -187,7 +187,8 @@ const ValuePlus = () => {
         discountPer: "0",
         storeName: "",
         linE_ID: "0",
-        taxAmt: details?.gstAmount,
+        taxAmt: 0,
+        // taxAmt: details?.gstAmount,
         invoice_number: "",
         cash: "",
         saleS_ORDERNO: "",
@@ -299,7 +300,7 @@ const ValuePlus = () => {
                 </Grid>
               </Grid>
               <Grid container padding={2} spacing={1}>
-                <Grid item xs={12} md={4}>
+                {/* <Grid item xs={12} md={4}>
                   <TextField
                     label="GST Amount"
                     name="gst_amount"
@@ -307,7 +308,7 @@ const ValuePlus = () => {
                     value={details?.gstAmount}
                     disabled
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} md={4}>
                   <FormControl>
                     <InputLabel id="payment-type-select-label">
