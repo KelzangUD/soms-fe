@@ -397,6 +397,43 @@ const SalesOrder = () => {
       customerName: value?.label,
     }));
   };
+  const customerNameInputHandle = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerName: e?.target?.value,
+    }));
+  };
+  const mobileNoHandler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      mobileNo: e?.target?.value,
+    }));
+  };
+  const customerNumberHandler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerNumber: e?.target?.value,
+    }));
+  };
+  const addressHandler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      address: e?.target?.value,
+    }));
+  };
+  const address1Handler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      address1: e?.target?.value,
+    }));
+  };
+  const cityHandler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      city: e?.target?.value,
+    }));
+  };
+
   const advanceOrEmiHandle = (e) => {
     if (e?.target?.value === "EMI") {
       fetchEMIList(
@@ -729,6 +766,7 @@ const SalesOrder = () => {
   };
 
   const postHandle = async () => {
+    console.log(salesOrderDetails)
     if (validatePayment()) {
       setIsLoading(true);
       try {
@@ -957,46 +995,56 @@ const SalesOrder = () => {
                 </Grid>
                 <Grid container spacing={1} py={{ sx: 0, md: 1 }} mb={1}>
                   <Grid item xs={12} md={3}>
-                    <Autocomplete
-                      disablePortal
-                      options={customersList?.map((item) => ({
-                        id: item?.customerId,
-                        label: item?.customer_NAME,
-                      }))}
-                      onChange={(event, newValue) => {
-                        if (newValue === null) {
-                          setSalesOrderDetails((prev) => ({
-                            ...prev,
-                            customerName: "",
-                            mobileNo: "",
-                            customerNumber: "",
-                            address: "",
-                            address1: "",
-                            city: "",
-                            customerTypeId: "",
-                          }));
-                        } else {
-                          customerNameHandle(event, newValue);
-                        }
-                      }}
-                      value={salesOrderDetails?.customerName}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Customer Name"
-                          helperText={
-                            addButtonClicked &&
-                            salesOrderDetails?.customerName === "" && (
-                              <FormHelperText
-                                sx={{ color: "warning.main", ml: -0.5 }}
-                              >
-                                Please select Customer Name!
-                              </FormHelperText>
-                            )
+                    {salesOrderDetails?.salesType === 1 ? (
+                      <TextField
+                        label="Customer Name"
+                        name="customerName"
+                        required
+                        value={salesOrderDetails?.customerName}
+                        onChange={customerNameInputHandle}
+                      />
+                    ) : (
+                      <Autocomplete
+                        disablePortal
+                        options={customersList?.map((item) => ({
+                          id: item?.customerId,
+                          label: item?.customer_NAME,
+                        }))}
+                        onChange={(event, newValue) => {
+                          if (newValue === null) {
+                            setSalesOrderDetails((prev) => ({
+                              ...prev,
+                              customerName: "",
+                              mobileNo: "",
+                              customerNumber: "",
+                              address: "",
+                              address1: "",
+                              city: "",
+                              customerTypeId: "",
+                            }));
+                          } else {
+                            customerNameHandle(event, newValue);
                           }
-                        />
-                      )}
-                    />
+                        }}
+                        value={salesOrderDetails?.customerName}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Customer Name"
+                            helperText={
+                              addButtonClicked &&
+                              salesOrderDetails?.customerName === "" && (
+                                <FormHelperText
+                                  sx={{ color: "warning.main", ml: -0.5 }}
+                                >
+                                  Please select Customer Name!
+                                </FormHelperText>
+                              )
+                            }
+                          />
+                        )}
+                      />
+                    )}
                   </Grid>
                   <Grid item xs={12} md={3}>
                     <TextField
@@ -1004,7 +1052,10 @@ const SalesOrder = () => {
                       name="mobile_no"
                       required
                       value={salesOrderDetails?.mobileNo}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={mobileNoHandler}
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -1013,7 +1064,10 @@ const SalesOrder = () => {
                       name="customer_no"
                       required
                       value={salesOrderDetails?.customerNumber}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={customerNumberHandler}
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -1021,7 +1075,10 @@ const SalesOrder = () => {
                       label="Address"
                       name="address"
                       value={salesOrderDetails?.address}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={addressHandler}
                     />
                   </Grid>
                 </Grid>
@@ -1031,7 +1088,10 @@ const SalesOrder = () => {
                       label="Address 1"
                       name="address 1"
                       value={salesOrderDetails?.address1}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={address1Handler}
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -1039,7 +1099,10 @@ const SalesOrder = () => {
                       label="City"
                       name="city"
                       value={salesOrderDetails?.city}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={cityHandler}
                     />
                   </Grid>
                   {salesOrderDetails?.salesType === 4 && (
