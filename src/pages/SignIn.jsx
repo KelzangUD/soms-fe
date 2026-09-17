@@ -63,9 +63,14 @@ const SignIn = () => {
         formData,
         null
       );
+      console.log("res", res)
       if (res?.status === 200) {
         const decoded = jwtDecode(res?.data?.access_token);
+
+        console.log("decoded roles", decoded?.roles[1] );
         if (decoded) {
+          console.log("token", res?.data?.access_token);
+          console.log("username", formData?.username);
           const response = await Route(
             "GET",
             `/UserDtls/Module?role=${decoded?.roles[1]}&userId=${formData?.username}`,
@@ -73,6 +78,7 @@ const SignIn = () => {
             null,
             null
           );
+          console.log("response", response)
           if (response?.status === 200) {
             fetchUserDetails(formData?.username);
             localStorage.setItem("username", formData?.username);

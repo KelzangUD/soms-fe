@@ -47,6 +47,7 @@ const SalesOrder = () => {
     paymentType,
     fetchBankBasedOnPaymentType,
     banks,
+    emiType, // Added by Tula
   } = useCommon();
   const user = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
@@ -86,6 +87,7 @@ const SalesOrder = () => {
     customerTPNo: "",
     customerCID: "",
     customerGSTNo: "",
+    emiType: "", //Added by Tula
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0.0,
@@ -149,8 +151,10 @@ const SalesOrder = () => {
     toDate: "",
     emiEligibleStatus: null,
     emiCustomerType: null,
+    emiType: null,
   });
   const [downPaymentStatus, setDownPaymentStatus] = useState("Yes");
+
 
   const fetchCustomersList = async () => {
     const res = await Route(
@@ -488,6 +492,16 @@ const SalesOrder = () => {
       emiCycle: e?.target?.value,
     }));
   };
+
+  const emiTypeHandle = (e) => {
+    setEmiDuration((prev) => ({
+      ...prev,
+      emiType: e.target.value,
+      emiCycle: null,
+      toDate: "",
+      emiEligibleStatus: null,
+    }));
+  };
   const emiFromDateHandle = (e) => {
     setEmiDuration((prev) => ({
       ...prev,
@@ -679,6 +693,7 @@ const SalesOrder = () => {
       customerTPNo: "",
       customerCID: "",
       customerGSTNo: "",
+      emiType:"",
     }));
     setPaymentLines([]);
     setPaymentLinesItem((prev) => ({
@@ -729,6 +744,7 @@ const SalesOrder = () => {
       toDate: "",
       emiEligibleStatus: null,
       emiCustomerType: null,
+      emiType: null,
     }));
     setAddButtonClicked(false);
   };
@@ -1193,6 +1209,36 @@ const SalesOrder = () => {
                   )}
                   {salesOrderDetails?.salesType === 5 && (
                     <>
+
+                    <Grid
+                        item
+                        xs={12}
+                        md={3}
+                        sx={{
+                          mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
+                        }}
+                      >
+                        <FormControl>
+                          <InputLabel id="advance-emi-select-label">
+                            EMI Type
+                          </InputLabel>
+                          <Select
+                            labelId="advance-emi-select-label"
+                            id="advance-emi-select"
+                            value={emiDuration?.emiType ?? ""}
+                            label="Advance/EMI"
+                            onChange={emiTypeHandle}
+                          >
+
+                            {emiType?.map((item) => (
+                              <MenuItem value={item?.emi_TYPE_ID} key={item?.emi_TYPE_ID}>
+                            {item?.emi_TYPE}
+                          </MenuItem>
+                        ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
                       <Grid
                         item
                         xs={12}
@@ -1208,12 +1254,21 @@ const SalesOrder = () => {
                           <Select
                             labelId="advance-emi-select-label"
                             id="advance-emi-select"
-                            value={emiDuration?.emiCycle}
+                            value={emiDuration?.emiCycle ?? ""}
                             label="Advance/EMI"
                             onChange={emiCycleHandle}
                           >
-                            <MenuItem value="6">6 Months</MenuItem>
-                            <MenuItem value="12">12 Months</MenuItem>
+                            {(emiDuration?.emiType == null || emiDuration.emiType === ""
+                              ? []
+                              : Number(emiDuration.emiType) === 1
+                                ? [6, 12]
+                                : [12, 18, 24]
+                            ).map((months) => (
+                              <MenuItem value={String(months)} key={months}>
+                                {months} Months
+                              </MenuItem>
+                            ))}
+
                           </Select>
                         </FormControl>
                       </Grid>
@@ -1581,6 +1636,7 @@ const SalesOrder = () => {
           adj_type={salesOrderDetails?.adj_type}
           user={user}
           emiCycle={emiDuration?.emiCycle}
+          emiType={emiDuration?.emiType} //Added by Tula
           downPaymentStatus={downPaymentStatus}
           setDownPaymentStatus={setDownPaymentStatus}
         />
@@ -1598,6 +1654,7 @@ const SalesOrder = () => {
           lineItems={lineItems}
           editLineItemIndex={editLineItemIndex}
           emiCycle={emiDuration?.emiCycle}
+          emiType={emiDuration?.emiType} //Added by Tula
           downPaymentStatus={downPaymentStatus}
           setDownPaymentStatus={setDownPaymentStatus}
         />

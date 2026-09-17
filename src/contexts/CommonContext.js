@@ -9,6 +9,7 @@ export const CommonProvider = ({ children }) => {
   const empId = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [salesType, setSalesType] = useState([]);
+  const [emiType, setEmiType] = useState([]);
   const [productsType, setProductsType] = useState([]);
   const [paymentType, setPaymentType] = useState([]);
   const [banks, setBanks] = useState([]);
@@ -52,6 +53,16 @@ export const CommonProvider = ({ children }) => {
           res?.data?.filter((item) => item?.type !== "EMI Customer")
         );
       }
+    }
+  };
+
+
+  //Added by Tula Ram 
+  const fetchEmiType = async () => {
+    const res = await Route("GET", "/Common/getEMIType", null, null, null);
+    console.log(res);
+    if (res?.status === 200) {
+      setEmiType(res?.data);
     }
   };
   const fetchProductsType = async () => {
@@ -329,6 +340,9 @@ export const CommonProvider = ({ children }) => {
     fetchFromSubInventory();
     fetchFromLocator();
     // fetchToStore();
+
+    //Added By Tula
+    fetchEmiType();
     fetchRegionsOrExtensions();
     fetchItemsList();
     fetchValuePlusPlan();
@@ -376,6 +390,7 @@ export const CommonProvider = ({ children }) => {
         locatorsNameList,
         valuePlusPlan,
         fwa,
+        emiType, //Added By Tula
       }}
     >
       {children}
