@@ -47,6 +47,7 @@ const SalesOrder = () => {
     paymentType,
     fetchBankBasedOnPaymentType,
     banks,
+    emiType, // Added by Tula
   } = useCommon();
   const user = localStorage.getItem("username");
   const userDetails = JSON.parse(localStorage?.getItem("userDetails"));
@@ -86,6 +87,7 @@ const SalesOrder = () => {
     customerTPNo: "",
     customerCID: "",
     customerGSTNo: "",
+    emiType: "", //Added by Tula
   });
   const [linesAmount, setLinesAmount] = useState({
     grossTotal: 0.0,
@@ -149,6 +151,7 @@ const SalesOrder = () => {
     toDate: "",
     emiEligibleStatus: null,
     emiCustomerType: null,
+    emiType: null,
   });
   const [downPaymentStatus, setDownPaymentStatus] = useState("Yes");
 
@@ -438,6 +441,43 @@ const SalesOrder = () => {
       customerName: value?.label,
     }));
   };
+  const customerNameInputHandle = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerName: e?.target?.value,
+    }));
+  };
+  const mobileNoHandler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      mobileNo: e?.target?.value,
+    }));
+  };
+  const customerNumberHandler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      customerNumber: e?.target?.value,
+    }));
+  };
+  const addressHandler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      address: e?.target?.value,
+    }));
+  };
+  const address1Handler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      address1: e?.target?.value,
+    }));
+  };
+  const cityHandler = (e) => {
+    setSalesOrderDetails((prev) => ({
+      ...prev,
+      city: e?.target?.value,
+    }));
+  };
+
   const advanceOrEmiHandle = (e) => {
     if (e?.target?.value === "EMI") {
       fetchEMIList(
@@ -490,6 +530,16 @@ const SalesOrder = () => {
     setEmiDuration((prev) => ({
       ...prev,
       emiCycle: e?.target?.value,
+    }));
+  };
+
+  const emiTypeHandle = (e) => {
+    setEmiDuration((prev) => ({
+      ...prev,
+      emiType: e.target.value,
+      emiCycle: null,
+      toDate: "",
+      emiEligibleStatus: null,
     }));
   };
   const emiFromDateHandle = (e) => {
@@ -683,6 +733,7 @@ const SalesOrder = () => {
       customerTPNo: "",
       customerCID: "",
       customerGSTNo: "",
+      emiType:"",
     }));
     setPaymentLines([]);
     setPaymentLinesItem((prev) => ({
@@ -733,6 +784,7 @@ const SalesOrder = () => {
       toDate: "",
       emiEligibleStatus: null,
       emiCustomerType: null,
+      emiType: null,
     }));
     setAddButtonClicked(false);
   };
@@ -770,6 +822,7 @@ const SalesOrder = () => {
   };
 
   const postHandle = async () => {
+    console.log(salesOrderDetails)
     if (validatePayment()) {
       setIsLoading(true);
       try {
@@ -998,46 +1051,56 @@ const SalesOrder = () => {
                 </Grid>
                 <Grid container spacing={1} py={{ sx: 0, md: 1 }} mb={1}>
                   <Grid item xs={12} md={3}>
-                    <Autocomplete
-                      disablePortal
-                      options={customersList?.map((item) => ({
-                        id: item?.customerId,
-                        label: item?.customer_NAME,
-                      }))}
-                      onChange={(event, newValue) => {
-                        if (newValue === null) {
-                          setSalesOrderDetails((prev) => ({
-                            ...prev,
-                            customerName: "",
-                            mobileNo: "",
-                            customerNumber: "",
-                            address: "",
-                            address1: "",
-                            city: "",
-                            customerTypeId: "",
-                          }));
-                        } else {
-                          customerNameHandle(event, newValue);
-                        }
-                      }}
-                      value={salesOrderDetails?.customerName}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Customer Name"
-                          helperText={
-                            addButtonClicked &&
-                            salesOrderDetails?.customerName === "" && (
-                              <FormHelperText
-                                sx={{ color: "warning.main", ml: -0.5 }}
-                              >
-                                Please select Customer Name!
-                              </FormHelperText>
-                            )
+                    {salesOrderDetails?.salesType === 1 ? (
+                      <TextField
+                        label="Customer Name"
+                        name="customerName"
+                        required
+                        value={salesOrderDetails?.customerName}
+                        onChange={customerNameInputHandle}
+                      />
+                    ) : (
+                      <Autocomplete
+                        disablePortal
+                        options={customersList?.map((item) => ({
+                          id: item?.customerId,
+                          label: item?.customer_NAME,
+                        }))}
+                        onChange={(event, newValue) => {
+                          if (newValue === null) {
+                            setSalesOrderDetails((prev) => ({
+                              ...prev,
+                              customerName: "",
+                              mobileNo: "",
+                              customerNumber: "",
+                              address: "",
+                              address1: "",
+                              city: "",
+                              customerTypeId: "",
+                            }));
+                          } else {
+                            customerNameHandle(event, newValue);
                           }
-                        />
-                      )}
-                    />
+                        }}
+                        value={salesOrderDetails?.customerName}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Customer Name"
+                            helperText={
+                              addButtonClicked &&
+                              salesOrderDetails?.customerName === "" && (
+                                <FormHelperText
+                                  sx={{ color: "warning.main", ml: -0.5 }}
+                                >
+                                  Please select Customer Name!
+                                </FormHelperText>
+                              )
+                            }
+                          />
+                        )}
+                      />
+                    )}
                   </Grid>
                   <Grid item xs={12} md={3}>
                     <TextField
@@ -1045,7 +1108,10 @@ const SalesOrder = () => {
                       name="mobile_no"
                       required
                       value={salesOrderDetails?.mobileNo}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={mobileNoHandler}
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -1054,7 +1120,10 @@ const SalesOrder = () => {
                       name="customer_no"
                       required
                       value={salesOrderDetails?.customerNumber}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={customerNumberHandler}
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -1062,7 +1131,10 @@ const SalesOrder = () => {
                       label="Address"
                       name="address"
                       value={salesOrderDetails?.address}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={addressHandler}
                     />
                   </Grid>
                 </Grid>
@@ -1072,7 +1144,10 @@ const SalesOrder = () => {
                       label="Address 1"
                       name="address 1"
                       value={salesOrderDetails?.address1}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={address1Handler}
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
@@ -1080,7 +1155,10 @@ const SalesOrder = () => {
                       label="City"
                       name="city"
                       value={salesOrderDetails?.city}
-                      disabled
+                      disabled={
+                        salesOrderDetails?.salesType === 1 ? false : true
+                      }
+                      onChange={cityHandler}
                     />
                   </Grid>
                   {salesOrderDetails?.salesType === 4 && (
@@ -1171,6 +1249,36 @@ const SalesOrder = () => {
                   )}
                   {salesOrderDetails?.salesType === 5 && (
                     <>
+
+                    <Grid
+                        item
+                        xs={12}
+                        md={3}
+                        sx={{
+                          mt: salesOrderDetails?.salesType === 4 ? 1 : 0,
+                        }}
+                      >
+                        <FormControl>
+                          <InputLabel id="advance-emi-select-label">
+                            EMI Type
+                          </InputLabel>
+                          <Select
+                            labelId="advance-emi-select-label"
+                            id="advance-emi-select"
+                            value={emiDuration?.emiType ?? ""}
+                            label="Advance/EMI"
+                            onChange={emiTypeHandle}
+                          >
+
+                            {emiType?.map((item) => (
+                              <MenuItem value={item?.emi_TYPE_ID} key={item?.emi_TYPE_ID}>
+                            {item?.emi_TYPE}
+                          </MenuItem>
+                        ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
                       <Grid
                         item
                         xs={12}
@@ -1186,12 +1294,21 @@ const SalesOrder = () => {
                           <Select
                             labelId="advance-emi-select-label"
                             id="advance-emi-select"
-                            value={emiDuration?.emiCycle}
+                            value={emiDuration?.emiCycle ?? ""}
                             label="Advance/EMI"
                             onChange={emiCycleHandle}
                           >
-                            <MenuItem value="6">6 Months</MenuItem>
-                            <MenuItem value="12">12 Months</MenuItem>
+                            {(emiDuration?.emiType == null || emiDuration.emiType === ""
+                              ? []
+                              : Number(emiDuration.emiType) === 1
+                                ? [6, 12]
+                                : [12, 18, 24]
+                            ).map((months) => (
+                              <MenuItem value={String(months)} key={months}>
+                                {months} Months
+                              </MenuItem>
+                            ))}
+
                           </Select>
                         </FormControl>
                       </Grid>
@@ -1559,6 +1676,7 @@ const SalesOrder = () => {
           adj_type={salesOrderDetails?.adj_type}
           user={user}
           emiCycle={emiDuration?.emiCycle}
+          emiType={emiDuration?.emiType} //Added by Tula
           downPaymentStatus={downPaymentStatus}
           setDownPaymentStatus={setDownPaymentStatus}
         />
@@ -1576,6 +1694,7 @@ const SalesOrder = () => {
           lineItems={lineItems}
           editLineItemIndex={editLineItemIndex}
           emiCycle={emiDuration?.emiCycle}
+          emiType={emiDuration?.emiType} //Added by Tula
           downPaymentStatus={downPaymentStatus}
           setDownPaymentStatus={setDownPaymentStatus}
         />

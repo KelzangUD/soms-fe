@@ -31,6 +31,7 @@ const AddLineItem = ({
   adj_type,
   user,
   emiCycle,
+  emiType, //Added by Tula
   downPaymentStatus,
   setDownPaymentStatus,
 }) => {
@@ -133,7 +134,7 @@ const AddLineItem = ({
           emiCycle === null ? 0 : emiCycle
         }&downPaymentStatus=${downPaymentStatus}&upiPayment=${
           lineItemDetail?.upiPayment
-        }`,
+        }${emiType != null && emiType !== "" ? `&emiType=${encodeURIComponent(emiType)}` : ""}`,
         access_token,
         null,
         null,
@@ -215,11 +216,11 @@ const AddLineItem = ({
             downPayment:
               res?.data?.downPayment === null
                 ? 0
-                : parseInt(res?.data?.downPayment).toFixed(2),
+                : Number(res?.data?.downPayment).toFixed(2),
             actualDownPayment:
               res?.data?.downPayment === null
                 ? 0
-                : parseInt(res?.data?.downPayment).toFixed(2),
+                : Number(res?.data?.downPayment).toFixed(2),
             payableAmount: res?.data?.payableAmount,
             installmentAmount: res?.data?.installmentAmount,
             downPaymentIR: res?.data?.downPaymentIR,
@@ -284,11 +285,11 @@ const AddLineItem = ({
         downPayment:
           res?.data?.downPayment === null
             ? 0
-            : parseInt(res?.data?.downPayment).toFixed(2),
+            : Number(res?.data?.downPayment).toFixed(2),
         actualDownPayment:
           res?.data?.downPayment === null
             ? 0
-            : parseInt(res?.data?.downPayment).toFixed(2),
+            : Number(res?.data?.downPayment).toFixed(2),
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -334,11 +335,11 @@ const AddLineItem = ({
         downPayment:
           res?.data?.downPayment === null
             ? 0
-            : parseInt(res?.data?.downPayment).toFixed(2),
+            : Number(res?.data?.downPayment).toFixed(2),
         actualDownPayment:
           res?.data?.downPayment === null
             ? 0
-            : parseInt(res?.data?.downPayment).toFixed(2),
+            : Number(res?.data?.downPayment).toFixed(2),
         payableAmount: res?.data?.payableAmount,
         installmentAmount: res?.data?.installmentAmount,
         downPaymentIR: res?.data?.downPaymentIR,
@@ -379,11 +380,11 @@ const AddLineItem = ({
         downPayment:
           lineItemDetails?.downPayment === null
             ? 0
-            : parseInt(lineItemDetails?.downPayment).toFixed(2),
+            : Number(lineItemDetails?.downPayment).toFixed(2),
         actualDownPayment:
           lineItemDetails?.downPayment === null
             ? 0
-            : parseInt(lineItemDetails?.downPayment).toFixed(2),
+            : Number(lineItemDetails?.downPayment).toFixed(2),
         payableAmount: lineItemDetails?.payableAmount,
         installmentAmount: lineItemDetails?.installmentAmount,
         downPaymentIR: lineItemDetails?.downPaymentIR,
@@ -515,20 +516,28 @@ const AddLineItem = ({
         lineItemDetail?.downPayment === "" ? 0 : lineItemDetail?.downPayment
       }&actualDownPayment=${
         lineItemDetail?.actualDownPayment
-      }&emiCycle=${emiCycle}&gstAmount=${lineItemDetail?.taxAmt}`,
+      }&emiCycle=${emiCycle}&gstAmount=${lineItemDetail?.taxAmt}&emiType=${emiType}`, 
       access_token,
       null,
       null,
     );
-    if (res?.status === 200) {
-      setLineItemDetail((prev) => ({
-        ...prev,
-        installmentAmount: res?.data?.installmentAmount,
-        payableAmount: res?.data?.netPayableAmount,
-        serviceCharge: res?.data?.serviceCharge,
-        taxAmt: res?.data?.taxAmt,
-      }));
+
+    const paymentDetails = res?.status === 200 ? res?.data : null;
+    if (
+      Number(paymentDetails?.emiStatusCode) === 1 &&
+      paymentDetails?.emiStatusMessage
+    ) {
+      setNotificationMsg(paymentDetails.emiStatusMessage);
+      setSeverity("warning");
+      setShowNotification(true);
     }
+    setLineItemDetail((prev) => ({
+      ...prev,
+      installmentAmount: paymentDetails?.installmentAmount ?? "",
+      payableAmount: paymentDetails?.netPayableAmount ?? "",
+      serviceCharge: paymentDetails?.serviceCharge ?? "",
+      taxAmt: paymentDetails?.taxAmt ?? "",
+    }));
   };
   useEffect(() => {
     if (lineItemDetail?.actualDownPayment !== "" && emiCycle) {
@@ -537,28 +546,41 @@ const AddLineItem = ({
     // eslint-disable-next-line
   }, [lineItemDetail?.actualDownPayment, emiCycle]);
   const actualDownPaymentHandle = (e) => {
+    const value = e.target.value;
     setLineItemDetail((prev) => ({
       ...prev,
-      actualDownPayment: e?.target?.value,
+      actualDownPayment: value,
     }));
+
+    if (
+      salesType === 5 &&
+      (value.trim() === "" ||
+        !Number.isFinite(Number(value)) ||
+        !Number.isFinite(Number(lineItemDetail?.downPayment)) ||
+        Number(value) <= Number(lineItemDetail?.downPayment))
+    ) {
+      setNotificationMsg(
+        `Actual Down Payment must be greater than the Minimum Down Payment of Nu. ${lineItemDetail?.downPayment}. Please enter a higher amount.`,
+      );
+      setSeverity("warning");
+      setShowNotification(true);
+    } else if (
+      salesType === 5 &&
+      lineItemDetail?.mrp != null &&
+      String(lineItemDetail.mrp).trim() !== "" &&
+      Number.isFinite(Number(lineItemDetail.mrp)) &&
+      Number(value) > Number(lineItemDetail.mrp)
+    ) {
+      setNotificationMsg(
+        `Actual Down Payment must be less than or equal to the MRP of Nu. ${lineItemDetail.mrp}. Please enter correct amount.`,
+      );
+      setSeverity("warning");
+      setShowNotification(true);
+    }
   };
   const submitHandle = () => {
-    if (salesType === 5) {
-      if (
-        parseInt(lineItemDetail?.actualDownPayment) >=
-        parseInt(lineItemDetail?.downPayment)
-      ) {
-        setLineItems((prev) => [...prev, lineItemDetail]);
-        setOpen(false);
-      } else {
-        setNotificationMsg("Actual Down Payment is Less than Down Payment");
-        setSeverity("warning");
-        setShowNotification(true);
-      }
-    } else {
-      setLineItems((prev) => [...prev, lineItemDetail]);
-      setOpen(false);
-    }
+    setLineItems((prev) => [...prev, lineItemDetail]);
+    setOpen(false);
   };
   return (
     <>
@@ -956,12 +978,14 @@ const AddLineItem = ({
                   >
                     {downPaymentStatus === "Yes" && (
                       <>
+
                         <Grid item xs={12} md={3}>
                           <TextField
                             id="actual_down_payment"
                             label="Actual Down Payment"
                             onChange={actualDownPaymentHandle}
                             value={lineItemDetail?.actualDownPayment}
+                            disabled={emiType !== 1}
                           />
                         </Grid>
                         <Grid item xs={12} md={3}>
