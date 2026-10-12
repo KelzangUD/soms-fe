@@ -1120,10 +1120,9 @@ const SalesOrder = () => {
                       name="customer_no"
                       required
                       value={salesOrderDetails?.customerNumber}
-                      disabled={
-                        salesOrderDetails?.salesType === 1 ? false : true
-                      }
-                      onChange={customerNumberHandler}
+                      InputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
