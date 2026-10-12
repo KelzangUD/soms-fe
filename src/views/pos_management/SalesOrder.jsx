@@ -152,6 +152,24 @@ const SalesOrder = () => {
   });
   const [downPaymentStatus, setDownPaymentStatus] = useState("Yes");
 
+  // const fetchCustomersList = async () => {
+  //   const res = await Route(
+  //     "GET",
+  //     `/Customer/Common/Fetch_All_Customers?salesType=${salesOrderDetails?.salesType}&userId=${user}`,
+  //     access_token,
+  //     null,
+  //     null
+  //   );
+  //   if (res?.status === 200) {
+  //     if (res?.data?.length === 0) {
+  //       setNotificationMsg("Customers Not Found");
+  //       setSeverity("info");
+  //       setShowNotification(true);
+  //     } else {
+  //       setCustomersList(res?.data);
+  //     }
+  //   }
+  // };
   const fetchCustomersList = async () => {
     const res = await Route(
       "GET",
@@ -160,6 +178,7 @@ const SalesOrder = () => {
       null,
       null,
     );
+
     if (res?.status === 200) {
       if (res?.data?.length === 0) {
         setNotificationMsg("Customers Not Found");
@@ -167,9 +186,31 @@ const SalesOrder = () => {
         setShowNotification(true);
       } else {
         setCustomersList(res?.data);
+
+        // Call customer details API
+        const customerID = res?.data?.[0]?.customerId;
+
+        if (customerID) {
+          const customerRes = await Route(
+            "GET",
+            `/Customer/Common/Fetch_Customer_Dtls?customerId=${customerID}`,
+            access_token,
+            null,
+            null
+          );
+
+          if (customerRes?.status === 200) {
+            setSalesOrderDetails((prev) => ({
+              ...prev,
+              customerNumber: customerRes?.data?.customer_NUMBER,
+              customerTypeId: customerRes?.data?.customerTypeId,
+            }));
+          }
+        }
       }
     }
   };
+
   const fetchCustomersDetails = async (customerID) => {
     setSalesOrderDetails((prev) => ({
       ...prev,
@@ -1009,7 +1050,7 @@ const SalesOrder = () => {
                   </Grid>
                   <Grid item xs={12} md={3}>
                     <TextField
-                      label="Customer No"
+                      label="Region/Extension Code No"
                       name="customer_no"
                       required
                       value={salesOrderDetails?.customerNumber}
